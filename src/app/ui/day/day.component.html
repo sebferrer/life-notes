@@ -1,0 +1,15 @@
+<mat-card *ngIf="day$ | async as day">
+    <mat-card-title>{{ day.date | date }}</mat-card-title>
+    <mat-card-content>
+        <mat-list>
+            <mat-list-item *ngFor="let symptom of day.symptoms">
+                {{ symptom.key }}
+                <mat-list-item *ngFor="let log of symptom.logs">
+                    {{ log.time }} : {{ log.pain }}
+                    <br/>
+                    {{ log.detail }}
+                </mat-list-item>
+            </mat-list-item>
+        </mat-list>
+    </mat-card-content>
+</mat-card>
