@@ -2,13 +2,19 @@
     <mat-card-title>{{ day.date | date }}</mat-card-title>
     <mat-card-content>
         <mat-list>
-            <mat-list-item *ngFor="let symptom of day.symptoms">
-                {{ symptom.key }}
-                <mat-list-item *ngFor="let log of symptom.logs">
-                    {{ log.time }} : {{ log.pain }}
-                    <br/>
-                    {{ log.detail }}
-                </mat-list-item>
+            <mat-list-item *ngFor="let content of day.content" [ngSwitch] = "content.type">
+                <div *ngSwitchCase="'symptomLog'">
+                    {{ content.time }} : {{ content.key }} --&rsaquo; {{ content.pain }} {{ content.detail }}
+                </div>
+                <div *ngSwitchCase="'log'">
+                    {{ content.time }} : {{ content.detail }}
+                </div>
+                <div *ngSwitchCase="'med'">
+                    {{ content.time }} : {{ content.key }} {{ content.quantity }}
+                </div>
+                <div *ngSwitchCase="'meal'">
+                    {{ content.time }} : {{ content.detail }}
+                </div>
             </mat-list-item>
         </mat-list>
     </mat-card-content>

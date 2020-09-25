@@ -10,13 +10,13 @@ import { DaysService } from 'src/app/infra';
 })
 export class HomeComponent implements OnInit {
 
-	public overviews$: Observable<IDayOverview[]>;
+	// public overviews$: Observable<IDayOverview[]>;
 
 	constructor(
-		private daysService: DaysService
+	//	private daysService: DaysService
 	) { }
 
 	public ngOnInit(): void {
-		this.overviews$ = this.daysService.getDaysOverviews();
+	//	this.overviews$ = this.daysService.getDaysOverviews();
 	}
 }

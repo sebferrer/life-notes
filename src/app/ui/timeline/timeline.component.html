@@ -1,0 +1,14 @@
+<mat-grid-list *ngIf="days$ | async as days; else loading" cols="1" gutterSize="0" class="timeline-grid">
+	<mat-grid-tile *ngFor="let day of days">
+		<mat-grid-tile-header>
+			<h3>{{ day.date | date }}</h3>
+		</mat-grid-tile-header>
+		<mat-list-item *ngFor="let symptomOverview of day.symptomOverviews">
+			{{ symptomOverview.key }} : {{ symptomOverview.pain }}
+		</mat-list-item>
+	</mat-grid-tile>
+</mat-grid-list>
+
+<ng-template #loading>
+	<mat-spinner></mat-spinner>
+</ng-template>

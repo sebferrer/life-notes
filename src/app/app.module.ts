@@ -8,12 +8,16 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './ui';
 import { DayComponent } from './ui/day';
 import { DaysService } from './infra';
+import { CalendarComponent } from './ui/calendar';
+import { TimelineComponent } from './ui/timeline';
 
 @NgModule({
 	declarations: [
 		AppComponent,
 		HomeComponent,
 		DayComponent,
+		CalendarComponent,
+		TimelineComponent
 	],
 	imports: [
 		BrowserModule,

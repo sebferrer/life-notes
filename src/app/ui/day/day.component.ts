@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { DaysService } from '../../infra';
-import { IDay } from '../../models';
 import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 
@@ -11,7 +10,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class DayComponent implements OnInit {
 
-	public day$: Observable<IDay>;
+	public day$: Observable<any>;
 
 	constructor(
 		private daysService: DaysService,
@@ -19,6 +18,6 @@ export class DayComponent implements OnInit {
 	) { }
 
 	public ngOnInit(): void {
-		this.day$ = this.daysService.getDay(this.route.snapshot.paramMap.get('date'));
+		this.day$ = this.daysService.getDayContent(this.route.snapshot.paramMap.get('date'));
 	}
 }

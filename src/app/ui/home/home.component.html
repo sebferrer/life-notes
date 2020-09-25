@@ -1,14 +1,1 @@
-<mat-grid-list *ngIf="overviews$ | async as overviews; else loading" cols="3" gutterSize="1rem">
-	<mat-grid-tile *ngFor="let overview of overviews">
-		<mat-grid-tile-header>
-			<h3>{{ overview.date | date }}</h3>
-		</mat-grid-tile-header>
-		<mat-list-item *ngFor="let symptomOverview of overview.symptomOverviews">
-			{{ symptomOverview.key }} : {{ symptomOverview.pain }}
-		</mat-list-item>
-	</mat-grid-tile>
-</mat-grid-list>
-
-<ng-template #loading>
-	<mat-spinner></mat-spinner>
-</ng-template>
+<app-timeline></app-timeline>
