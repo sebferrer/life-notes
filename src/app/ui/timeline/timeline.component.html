@@ -1,11 +1,25 @@
-<mat-grid-list *ngIf="days$ | async as days; else loading" cols="1" gutterSize="0" class="timeline-grid">
-	<mat-grid-tile *ngFor="let day of days">
+<mat-grid-list *ngIf="daysContents$ | async as daysContents; else loading" cols="1" gutterSize="0"
+	class="timeline-grid">
+	<mat-grid-tile *ngFor="let dayContent of daysContents">
 		<mat-grid-tile-header>
-			<h3>{{ day.date | date }}</h3>
+			<h3>{{ dayContent.date | date }}</h3>
 		</mat-grid-tile-header>
-		<mat-list-item *ngFor="let symptomOverview of day.symptomOverviews">
-			{{ symptomOverview.key }} : {{ symptomOverview.pain }}
-		</mat-list-item>
+		<mat-chip-list class="mat-chip-list-stacked" aria-label="Color selection">
+			<mat-chip *ngFor="let content of dayContent.content" [ngSwitch]="content.type" class="mat-chip mat-standard-chip timeline-day-item-{{ content.type }}">
+				<div *ngSwitchCase="'symptomLog'" class="symptomLog">
+                    [{{ content.type }}] {{ content.time }} : {{ content.key }} --&rsaquo; {{ content.pain }}
+				</div>
+				<div *ngSwitchCase="'log'">
+                    [{{ content.type }}] {{ content.time }} : {{ content.detail | slice:0:20 }}...
+                </div>
+                <div *ngSwitchCase="'med'">
+                    [{{ content.type }}] {{ content.time }} : {{ content.key }} {{ content.quantity }}
+                </div>
+                <div *ngSwitchCase="'meal'">
+                    [{{ content.type }}] {{ content.time }} : {{ content.detail }}
+                </div>
+			</mat-chip>
+		</mat-chip-list>
 	</mat-grid-tile>
 </mat-grid-list>
 

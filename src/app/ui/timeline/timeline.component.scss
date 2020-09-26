@@ -1,5 +1,25 @@
+mat-grid-tile {
+    text-align: left;
+}
+
 .timeline-grid {
     position: absolute;
     left: 0;
     width: 100%;
+}
+
+.timeline-day-item-symptomLog {
+    background-color: #FF3154;
+}
+
+.timeline-day-item-log {
+    background-color: #98A2AE;
+}
+
+.timeline-day-item-med {
+    background-color: #0096BF;
+}
+
+.timeline-day-item-meal {
+    background-color: #31AE1D;
 }

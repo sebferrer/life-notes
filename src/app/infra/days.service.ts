@@ -82,6 +82,86 @@ const CALENDAR: IDay[] = [{
 	}],
 	"wakeUp": "10:00",
 	"goToBed": "00:00"
+},
+{
+	"date": "2020-09-25",
+	"symptomOverviews": [{
+		"key": "ventre",
+		"pain": 0
+	},
+	{
+		"key": "tete",
+		"pain": 1
+	}],
+	"symptoms": [{
+		"type": "symptom",
+		"key": "ventre",
+		"logs": [{
+			"key": "ventre",
+			"type": "symptomLog",
+			"pain": 0,
+			"time": "12:00",
+			"detail": "rien du tout"
+		}]
+	}],
+	"logs": [{
+		"type": "log",
+		"time": "10:00",
+		"detail": "Je me suis levé, j'ai pris une douche, etc"
+	}],
+	"meds": [{
+		"type": "med",
+		"key": "loperamide",
+		"quantity": "2mg",
+		"time": "12:00"
+	}],
+	"meals": [{
+		"type": "meal",
+		"time": "12:00",
+		"detail": "poulet curry"
+	}],
+	"wakeUp": "10:00",
+	"goToBed": "00:00"
+},
+{
+	"date": "2020-09-25",
+	"symptomOverviews": [{
+		"key": "ventre",
+		"pain": 0
+	},
+	{
+		"key": "tete",
+		"pain": 1
+	}],
+	"symptoms": [{
+		"type": "symptom",
+		"key": "ventre",
+		"logs": [{
+			"key": "ventre",
+			"type": "symptomLog",
+			"pain": 0,
+			"time": "12:00",
+			"detail": "rien du tout"
+		}]
+	}],
+	"logs": [{
+		"type": "log",
+		"time": "10:00",
+		"detail": "Je me suis levé, j'ai pris une douche, etc"
+	}],
+	"meds": [{
+		"type": "med",
+		"key": "loperamide",
+		"quantity": "2mg",
+		"time": "12:00"
+	}],
+	"meals": [{
+		"type": "meal",
+		"time": "12:00",
+		"detail": "poulet curry"
+	}],
+	"wakeUp": "10:00",
+	"goToBed": "00:00"
 }];
 
 @Injectable()
@@ -97,8 +177,15 @@ export class DaysService {
 		return of(CALENDAR);
 	}
 
-	public getDayContent(date: string): Observable<any> {
-		const day = CALENDAR.find(d => d.date === date) || null;
+	public getDaysContents(): Observable<any[]> {
+		const contents = Array();
+		for (const day of CALENDAR) {
+			contents.push(this.getContent(day));
+		}
+		return of(contents);
+	}
+
+	public getContent(day: IDay): any {
 		if (day == null) {
 			return null;
 		}
@@ -123,11 +210,11 @@ export class DaysService {
 
 		dayContent.content.sort(this.getSortOrder('time'));
 
-		return of(dayContent);
+		return dayContent;
 	}
 
-	public getSortOrder(prop) {
-		return (a, b) => {
+	public getSortOrder(prop: any) {
+		return (a: any, b: any) => {
 			if (a[prop] > b[prop]) {
 				return 1;
 			} else if (a[prop] < b[prop]) {
@@ -138,7 +225,12 @@ export class DaysService {
 	}
 
 	public getDay(date: string): Observable<IDay> {
-		this.getDayContent(date);
 		return of(CALENDAR.find(day => day.date === date) || null);
+	}
+
+	public getDayContent(date: string): Observable<any> {
+		const day = CALENDAR.find(d => d.date === date) || null;
+		const dayContent = this.getContent(day);
+		return of(dayContent);
 	}
 }

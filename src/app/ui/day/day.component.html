@@ -4,16 +4,16 @@
         <mat-list>
             <mat-list-item *ngFor="let content of day.content" [ngSwitch] = "content.type">
                 <div *ngSwitchCase="'symptomLog'">
-                    {{ content.time }} : {{ content.key }} --&rsaquo; {{ content.pain }} {{ content.detail }}
+                    [{{ content.type }}] {{ content.time }} : {{ content.key }} --&rsaquo; {{ content.pain }} {{ content.detail }}
                 </div>
                 <div *ngSwitchCase="'log'">
-                    {{ content.time }} : {{ content.detail }}
+                    [{{ content.type }}] {{ content.time }} : {{ content.detail }}
                 </div>
                 <div *ngSwitchCase="'med'">
-                    {{ content.time }} : {{ content.key }} {{ content.quantity }}
+                    [{{ content.type }}] {{ content.time }} : {{ content.key }} {{ content.quantity }}
                 </div>
                 <div *ngSwitchCase="'meal'">
-                    {{ content.time }} : {{ content.detail }}
+                    [{{ content.type }}] {{ content.time }} : {{ content.detail }}
                 </div>
             </mat-list-item>
         </mat-list>

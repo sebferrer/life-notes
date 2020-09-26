@@ -10,13 +10,13 @@ import { DaysService } from 'src/app/infra';
 })
 export class TimelineComponent implements OnInit {
 
-	public days$: Observable<IDay[]>;
+	public daysContents$: Observable<any[]>;
 
 	constructor(
 		private daysService: DaysService
 	) { }
 
 	public ngOnInit(): void {
-		this.days$ = this.daysService.getDays();
+		this.daysContents$ = this.daysService.getDaysContents();
 	}
 }
