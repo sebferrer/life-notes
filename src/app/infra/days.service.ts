@@ -23,22 +23,55 @@ const CALENDAR: IDay[] = [{
 			"time": "09:00",
 			"detail": "rien du tout"
 		}]
+	},
+	{
+		"type": "symptom",
+		"key": "tete",
+		"logs": [{
+			"key": "tete",
+			"type": "symptomLog",
+			"pain": 2,
+			"time": "15:00",
+			"detail": "rien du tout"
+		}]
 	}],
 	"logs": [{
 		"type": "log",
 		"time": "10:00",
 		"detail": "Je me suis levé, j'ai pris une douche, etc"
+	},
+	{
+		"type": "log",
+		"time": "18:00",
+		"detail": "Je code"
 	}],
 	"meds": [{
 		"type": "med",
 		"key": "loperamide",
 		"quantity": "2mg",
 		"time": "14:00"
+	},
+	{
+		"type": "med",
+		"key": "ibuprofene",
+		"quantity": "400mg",
+		"time": "16:00"
+	},
+	{
+		"type": "med",
+		"key": "paracetamol",
+		"quantity": "1000mg",
+		"time": "20:00"
 	}],
 	"meals": [{
 		"type": "meal",
 		"time": "12:00",
 		"detail": "poulet curry"
+	},
+	{
+		"type": "meal",
+		"time": "20:00",
+		"detail": "quiche au thon"
 	}],
 	"wakeUp": "10:00",
 	"goToBed": "00:00"
@@ -84,7 +117,7 @@ const CALENDAR: IDay[] = [{
 	"goToBed": "00:00"
 },
 {
-	"date": "2020-09-25",
+	"date": "2020-09-24",
 	"symptomOverviews": [{
 		"key": "ventre",
 		"pain": 0
@@ -100,7 +133,18 @@ const CALENDAR: IDay[] = [{
 			"key": "ventre",
 			"type": "symptomLog",
 			"pain": 0,
-			"time": "12:00",
+			"time": "09:00",
+			"detail": "rien du tout"
+		}]
+	},
+	{
+		"type": "symptom",
+		"key": "tete",
+		"logs": [{
+			"key": "tete",
+			"type": "symptomLog",
+			"pain": 2,
+			"time": "15:00",
 			"detail": "rien du tout"
 		}]
 	}],
@@ -108,23 +152,45 @@ const CALENDAR: IDay[] = [{
 		"type": "log",
 		"time": "10:00",
 		"detail": "Je me suis levé, j'ai pris une douche, etc"
+	},
+	{
+		"type": "log",
+		"time": "18:00",
+		"detail": "Je code"
 	}],
 	"meds": [{
 		"type": "med",
 		"key": "loperamide",
 		"quantity": "2mg",
-		"time": "12:00"
+		"time": "14:00"
+	},
+	{
+		"type": "med",
+		"key": "ibuprofene",
+		"quantity": "400mg",
+		"time": "16:00"
+	},
+	{
+		"type": "med",
+		"key": "paracetamol",
+		"quantity": "1000mg",
+		"time": "20:00"
 	}],
 	"meals": [{
 		"type": "meal",
 		"time": "12:00",
 		"detail": "poulet curry"
+	},
+	{
+		"type": "meal",
+		"time": "20:00",
+		"detail": "quiche au thon"
 	}],
 	"wakeUp": "10:00",
 	"goToBed": "00:00"
 },
 {
-	"date": "2020-09-25",
+	"date": "2020-09-27",
 	"symptomOverviews": [{
 		"key": "ventre",
 		"pain": 0

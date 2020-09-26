@@ -1,25 +1,28 @@
 <mat-grid-list *ngIf="daysContents$ | async as daysContents; else loading" cols="1" gutterSize="0"
 	class="timeline-grid">
-	<mat-grid-tile *ngFor="let dayContent of daysContents">
+	<mat-grid-tile *ngFor="let dayContent of daysContents" class="timeline-tile">
 		<mat-grid-tile-header>
 			<h3>{{ dayContent.date | date }}</h3>
 		</mat-grid-tile-header>
-		<mat-chip-list class="mat-chip-list-stacked" aria-label="Color selection">
-			<mat-chip *ngFor="let content of dayContent.content" [ngSwitch]="content.type" class="mat-chip mat-standard-chip timeline-day-item-{{ content.type }}">
-				<div *ngSwitchCase="'symptomLog'" class="symptomLog">
-                    [{{ content.type }}] {{ content.time }} : {{ content.key }} --&rsaquo; {{ content.pain }}
-				</div>
-				<div *ngSwitchCase="'log'">
-                    [{{ content.type }}] {{ content.time }} : {{ content.detail | slice:0:20 }}...
-                </div>
-                <div *ngSwitchCase="'med'">
-                    [{{ content.type }}] {{ content.time }} : {{ content.key }} {{ content.quantity }}
-                </div>
-                <div *ngSwitchCase="'meal'">
-                    [{{ content.type }}] {{ content.time }} : {{ content.detail }}
-                </div>
-			</mat-chip>
-		</mat-chip-list>
+		<div class="timeline-content">
+			<mat-chip-list class="mat-chip-list-stacked">
+				<mat-chip *ngFor="let content of dayContent.content" [ngSwitch]="content.type"
+					class="mat-chip mat-standard-chip timeline-day-item-{{ content.type }}">
+					<div *ngSwitchCase="'symptomLog'" class="symptomLog">
+						{{ content.time }} : {{ content.key }} [{{ content.pain }}/5]
+					</div>
+					<div *ngSwitchCase="'log'">
+						{{ content.time }} : {{ content.detail | slice:0:20 }}...
+					</div>
+					<div *ngSwitchCase="'med'">
+						{{ content.time }} : {{ content.key }} {{ content.quantity }}
+					</div>
+					<div *ngSwitchCase="'meal'">
+						{{ content.time }} : {{ content.detail }}
+					</div>
+				</mat-chip>
+			</mat-chip-list>
+		</div>
 	</mat-grid-tile>
 </mat-grid-list>
 

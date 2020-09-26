@@ -1,11 +1,14 @@
-mat-grid-tile {
-    text-align: left;
-}
-
 .timeline-grid {
     position: absolute;
     left: 0;
     width: 100%;
+}
+
+.timeline-content {
+    margin-top: 3rem;
+    height: 47vh;
+    padding-right: 8rem;
+    overflow-y: auto;
 }
 
 .timeline-day-item-symptomLog {
