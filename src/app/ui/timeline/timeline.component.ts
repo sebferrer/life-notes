@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { IDay } from 'src/app/models';
 import { DaysService } from 'src/app/infra';
 
 @Component({

@@ -5,6 +5,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { HomeComponent } from './ui';
 import { DayComponent } from './ui/day';
+import { CalendarComponent } from './ui/calendar';
+import { TimelineComponent } from './ui/timeline';
 
 const routes: Routes = [
 	{
@@ -12,9 +14,17 @@ const routes: Routes = [
 		component: HomeComponent
 	},
 	{
+		path: 'calendar',
+		component: CalendarComponent
+	},
+	{
+		path: 'timeline',
+		component: TimelineComponent
+	},
+	{
 		path: ':date',
 		component: DayComponent
-	}
+	},
 ];
 
 @NgModule({
