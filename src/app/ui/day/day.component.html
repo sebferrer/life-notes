@@ -1,5 +1,7 @@
 <mat-card *ngIf="day$ | async as day">
-    <mat-card-title>{{ day.date | date }}</mat-card-title>
+    <mat-card-title>
+        {{ day.date | date }}
+    </mat-card-title>
     <mat-card-content>
         <mat-list>
             <mat-list-item *ngFor="let content of day.content" [ngSwitch] = "content.type">

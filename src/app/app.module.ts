@@ -1,6 +1,6 @@
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { MatButtonModule, MatCardModule, MatGridListModule, MatIconModule, MatMenuModule, MatProgressSpinnerModule, MatToolbarModule, MatListModule, MatChipsModule } from '@angular/material';
+import { MatButtonModule, MatCardModule, MatGridListModule, MatIconModule, MatMenuModule, MatProgressSpinnerModule, MatToolbarModule, MatListModule, MatChipsModule, MatDialogModule, MatFormFieldModule, MatSnackBarModule, MatInputModule } from '@angular/material';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
@@ -10,6 +10,8 @@ import { DayComponent } from './ui/day';
 import { DaysService } from './infra';
 import { CalendarComponent } from './ui/calendar';
 import { TimelineComponent } from './ui/timeline';
+import { DialogAddEventComponent } from './ui/timeline/dialog-add-event';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
 	declarations: [
@@ -17,12 +19,14 @@ import { TimelineComponent } from './ui/timeline';
 		HomeComponent,
 		DayComponent,
 		CalendarComponent,
-		TimelineComponent
+		TimelineComponent,
+		DialogAddEventComponent
 	],
 	imports: [
 		BrowserModule,
 		HttpClientModule,
 		AppRoutingModule,
+		FormsModule,
 		MatMenuModule,
 		MatButtonModule,
 		MatIconModule,
@@ -32,10 +36,17 @@ import { TimelineComponent } from './ui/timeline';
 		MatGridListModule,
 		MatListModule,
 		MatChipsModule,
-		BrowserAnimationsModule
+		MatDialogModule,
+		BrowserAnimationsModule,
+		MatFormFieldModule,
+		MatInputModule,
+		MatSnackBarModule
 	],
 	providers: [
 		DaysService
+	],
+	entryComponents: [
+		DialogAddEventComponent
 	],
 	bootstrap: [AppComponent]
 })
