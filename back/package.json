@@ -1,0 +1,37 @@
+{
+	"name": "tsnode-mongoose-sample",
+	"version": "0.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"start": "ts-node-dev src/server.ts",
+		"release": "ts-node src/server.ts"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/sebferrer/tsnode-mongoose-sample.git"
+	},
+	"author": "",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/sebferrer/tsnode-mongoose-sample/issues"
+	},
+	"homepage": "https://github.com/sebferrer/tsnode-mongoose-sample#readme",
+	"devDependencies": {
+		"@types/cors": "^2.8.7",
+		"@types/express": "^4.17.2",
+		"@types/mongoose": "^5.5.38",
+		"ts-node": "^8.5.4",
+		"ts-node-dev": "^1.0.0-pre.44",
+		"typescript": "^3.7.4"
+	},
+	"dependencies": {
+		"@types/node": "^14.11.2",
+		"@types/request": "^2.48.4",
+		"body-parser": "^1.19.0",
+		"cors": "^2.8.5",
+		"express": "^4.17.1",
+		"mongoose": "^5.8.4",
+		"request": "^2.88.2"
+	}
+}
