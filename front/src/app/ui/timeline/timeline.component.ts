@@ -3,7 +3,8 @@ import { Observable } from 'rxjs';
 import { DaysService } from 'src/app/infra';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import { DialogAddEventComponent } from './dialog-add-event';
-import { IDay } from 'src/app/models';
+import { map } from 'rxjs/operators';
+import { DayViewModel } from 'src/app/models/day.view.model';
 
 @Component({
 	selector: 'app-timeline',
@@ -12,7 +13,7 @@ import { IDay } from 'src/app/models';
 })
 export class TimelineComponent implements OnInit {
 
-	public daysContents$: Observable<any[]>;
+	public daysContents$: Observable<DayViewModel[]>;
 
 	constructor(
 		private daysService: DaysService,
@@ -21,7 +22,9 @@ export class TimelineComponent implements OnInit {
 	) { }
 
 	public ngOnInit(): void {
-		this.daysContents$ = this.daysService.getDaysContents();
+		this.daysContents$ = this.daysService.getDays().pipe(
+			map(dayContents => dayContents.map(dayContent => new DayViewModel(dayContent)))
+		);
 	}
 
 	public openDialog(type: string, date: string): void {

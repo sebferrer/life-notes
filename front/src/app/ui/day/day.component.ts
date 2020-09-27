@@ -18,6 +18,6 @@ export class DayComponent implements OnInit {
 	) { }
 
 	public ngOnInit(): void {
-		this.day$ = this.daysService.getDayContent(this.route.snapshot.paramMap.get('date'));
+		// this.day$ = this.daysService.getDayContent(this.route.snapshot.paramMap.get('date'));
 	}
 }
