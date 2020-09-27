@@ -14,7 +14,10 @@ export function calendarRoute(app: Express): void {
 
 	app.route('/api/calendar/:date')
 		.get((request, result) => {
-			controller.getById(request, result);
+			controller.getByDate(request, result);
+		})
+		.put((request, result) => {
+			controller.update(request, result);
 		})
 		.delete((request, result) => {
 			controller.delete(request, result);

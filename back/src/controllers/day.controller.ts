@@ -18,9 +18,9 @@ export class CalendarController extends AController {
 			});
 	}
 
-	public getById(request: Request, response: Response): void {
+	public getByDate(request: Request, response: Response): void {
 		DaySchema.find(
-			{ id: request.params.date },
+			{ date: request.params.date },
 			this.getFields(request),
 			(error: Error, calendar: Document[]) => {
 				if (error != null) {
@@ -31,9 +31,19 @@ export class CalendarController extends AController {
 	}
 
 	public create(request: Request, response: Response): void {
-		let newArticle = new DaySchema(request.body);
-		newArticle.save(
+		let newDay = new DaySchema(request.body);
+		newDay.save(
 			(error: Error, day: Document) => {
+				if (error) {
+					response.send(error);
+				}
+				response.json(day);
+			});
+	}
+
+	public update(request: Request, response: Response): void {
+		DaySchema.findOneAndUpdate(
+			{ date: request.params.date }, request.body, { new: true }, (error: Error, day: Document) => {
 				if (error) {
 					response.send(error);
 				}

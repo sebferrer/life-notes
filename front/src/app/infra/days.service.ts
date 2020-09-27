@@ -92,7 +92,7 @@ export class DaysService {
 	public addMeal(day: IDay, time: string, detail: string): void {
 		day.meals.push({ type: 'meal', time, detail });
 	}
-/*
+
 	public add(
 		date: string,
 		time: string,
@@ -101,32 +101,28 @@ export class DaysService {
 		pain: string,
 		detail: string,
 		quantity: string): Observable<never> {
-		const day = this.http.get<IDay[]>(
-			`${environment.backendUrl}${CALENDAR_API}`
+		const day = this.http.get<IDay>(
+			`${environment.backendUrl}${CALENDAR_API}/${date}`
 		);
-		switch (type) {
-			case 'symptomLog':
-				this.addSymptomLog(day, time, key, pain, detail);
-				break;
-			case 'log':
-				this.addLog(day, time, detail);
-				break;
-			case 'med':
-				this.addMed(day, time, key, quantity);
-				break;
-			case 'meal':
-				this.addMeal(day, time, detail);
-				break;
-		}
-		return {
-			'date': date,
-			'time': time,
-			'type': type,
-			'key': key,
-			'pain': pain,
-			'detail': detail,
-			'quantity': quantity
-		};
-		return null;
-	}*/
+		day.subscribe(d => {
+			switch (type) {
+				case 'symptomLog':
+					this.addSymptomLog(d, time, key, pain, detail);
+					break;
+				case 'log':
+					this.addLog(d, time, detail);
+					break;
+				case 'med':
+					this.addMed(d, time, key, quantity);
+					break;
+				case 'meal':
+					this.addMeal(d, time, detail);
+					break;
+			}
+			this.http.put<IDay>(
+				`${environment.backendUrl}${CALENDAR_API}/${date}`, d
+			).subscribe();
+		});
+		return of();
+	}
 }
