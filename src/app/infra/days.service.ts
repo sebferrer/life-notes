@@ -2,238 +2,17 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { IDay, IDayOverview } from '../models';
+import * as CALENDAR_JSON from './static-calendar.json';
 
-const CALENDAR: IDay[] = [{
-	"date": "2020-09-24",
-	"symptomOverviews": [{
-		"key": "ventre",
-		"pain": 0
-	},
-	{
-		"key": "tete",
-		"pain": 1
-	}],
-	"symptoms": [{
-		"type": "symptom",
-		"key": "ventre",
-		"logs": [{
-			"key": "ventre",
-			"type": "symptomLog",
-			"pain": 0,
-			"time": "09:00",
-			"detail": "rien du tout"
-		}]
-	},
-	{
-		"type": "symptom",
-		"key": "tete",
-		"logs": [{
-			"key": "tete",
-			"type": "symptomLog",
-			"pain": 2,
-			"time": "15:00",
-			"detail": "rien du tout"
-		}]
-	}],
-	"logs": [{
-		"type": "log",
-		"time": "10:00",
-		"detail": "Je me suis levé, j'ai pris une douche, etc"
-	},
-	{
-		"type": "log",
-		"time": "18:00",
-		"detail": "Je code"
-	}],
-	"meds": [{
-		"type": "med",
-		"key": "loperamide",
-		"quantity": "2mg",
-		"time": "14:00"
-	},
-	{
-		"type": "med",
-		"key": "ibuprofene",
-		"quantity": "400mg",
-		"time": "16:00"
-	},
-	{
-		"type": "med",
-		"key": "paracetamol",
-		"quantity": "1000mg",
-		"time": "20:00"
-	}],
-	"meals": [{
-		"type": "meal",
-		"time": "12:00",
-		"detail": "poulet curry"
-	},
-	{
-		"type": "meal",
-		"time": "20:00",
-		"detail": "quiche au thon"
-	}],
-	"wakeUp": "10:00",
-	"goToBed": "00:00"
-},
-{
-	"date": "2020-09-25",
-	"symptomOverviews": [{
-		"key": "ventre",
-		"pain": 0
-	},
-	{
-		"key": "tete",
-		"pain": 1
-	}],
-	"symptoms": [{
-		"type": "symptom",
-		"key": "ventre",
-		"logs": [{
-			"key": "ventre",
-			"type": "symptomLog",
-			"pain": 0,
-			"time": "12:00",
-			"detail": "rien du tout"
-		}]
-	}],
-	"logs": [{
-		"type": "log",
-		"time": "10:00",
-		"detail": "Je me suis levé, j'ai pris une douche, etc"
-	}],
-	"meds": [{
-		"type": "med",
-		"key": "loperamide",
-		"quantity": "2mg",
-		"time": "12:00"
-	}],
-	"meals": [{
-		"type": "meal",
-		"time": "12:00",
-		"detail": "poulet curry"
-	}],
-	"wakeUp": "10:00",
-	"goToBed": "00:00"
-},
-{
-	"date": "2020-09-24",
-	"symptomOverviews": [{
-		"key": "ventre",
-		"pain": 0
-	},
-	{
-		"key": "tete",
-		"pain": 1
-	}],
-	"symptoms": [{
-		"type": "symptom",
-		"key": "ventre",
-		"logs": [{
-			"key": "ventre",
-			"type": "symptomLog",
-			"pain": 0,
-			"time": "09:00",
-			"detail": "rien du tout"
-		}]
-	},
-	{
-		"type": "symptom",
-		"key": "tete",
-		"logs": [{
-			"key": "tete",
-			"type": "symptomLog",
-			"pain": 2,
-			"time": "15:00",
-			"detail": "rien du tout"
-		}]
-	}],
-	"logs": [{
-		"type": "log",
-		"time": "10:00",
-		"detail": "Je me suis levé, j'ai pris une douche, etc"
-	},
-	{
-		"type": "log",
-		"time": "18:00",
-		"detail": "Je code"
-	}],
-	"meds": [{
-		"type": "med",
-		"key": "loperamide",
-		"quantity": "2mg",
-		"time": "14:00"
-	},
-	{
-		"type": "med",
-		"key": "ibuprofene",
-		"quantity": "400mg",
-		"time": "16:00"
-	},
-	{
-		"type": "med",
-		"key": "paracetamol",
-		"quantity": "1000mg",
-		"time": "20:00"
-	}],
-	"meals": [{
-		"type": "meal",
-		"time": "12:00",
-		"detail": "poulet curry"
-	},
-	{
-		"type": "meal",
-		"time": "20:00",
-		"detail": "quiche au thon"
-	}],
-	"wakeUp": "10:00",
-	"goToBed": "00:00"
-},
-{
-	"date": "2020-09-27",
-	"symptomOverviews": [{
-		"key": "ventre",
-		"pain": 0
-	},
-	{
-		"key": "tete",
-		"pain": 1
-	}],
-	"symptoms": [{
-		"type": "symptom",
-		"key": "ventre",
-		"logs": [{
-			"key": "ventre",
-			"type": "symptomLog",
-			"pain": 0,
-			"time": "12:00",
-			"detail": "rien du tout"
-		}]
-	}],
-	"logs": [{
-		"type": "log",
-		"time": "10:00",
-		"detail": "Je me suis levé, j'ai pris une douche, etc"
-	}],
-	"meds": [{
-		"type": "med",
-		"key": "loperamide",
-		"quantity": "2mg",
-		"time": "12:00"
-	}],
-	"meals": [{
-		"type": "meal",
-		"time": "12:00",
-		"detail": "poulet curry"
-	}],
-	"wakeUp": "10:00",
-	"goToBed": "00:00"
-}];
+const CALENDAR: IDay[] = (CALENDAR_JSON as any).default;
+let DAYS_CONTENTS: any[];
 
 @Injectable()
 export class DaysService {
 
-	constructor(private http: HttpClient) { }
+	constructor(private http: HttpClient) {
+		DAYS_CONTENTS = this.calendarToDaysContent();
+	}
 
 	public getDaysOverviews(): Observable<IDayOverview[]> {
 		return of(CALENDAR);
@@ -244,11 +23,15 @@ export class DaysService {
 	}
 
 	public getDaysContents(): Observable<any[]> {
+		return of(DAYS_CONTENTS);
+	}
+
+	public calendarToDaysContent(): any[] {
 		const contents = Array();
 		for (const day of CALENDAR) {
 			contents.push(this.getContent(day));
 		}
-		return of(contents);
+		return contents;
 	}
 
 	public getContent(day: IDay): any {
@@ -291,12 +74,82 @@ export class DaysService {
 	}
 
 	public getDay(date: string): Observable<IDay> {
-		return of(CALENDAR.find(day => day.date === date) || null);
+		return of(this.getDayByDate(date));
+	}
+
+	public getDayByDate(date: string): IDay {
+		return CALENDAR.find(day => day.date === date) || null;
 	}
 
 	public getDayContent(date: string): Observable<any> {
 		const day = CALENDAR.find(d => d.date === date) || null;
 		const dayContent = this.getContent(day);
 		return of(dayContent);
+	}
+
+	public getTypeLabel(type: string): string {
+		const labels = new Map([
+			['symptomLog', 'Symptom'],
+			['log', 'Custom event'],
+			['med', 'Drug'],
+			['meal', 'Meal']]);
+
+		return labels.get(type);
+	}
+
+	public addSymptomLog(day: IDay, time: string, key: string, pain: string, detail: string): void {
+		if (!(key in day.symptoms)) {
+			const symptomLogs = Array<any>();
+			const symptom = { 'type': 'symptom', 'key': key, 'logs': symptomLogs };
+			day.symptoms.push(symptom);
+		}
+		day.symptoms[key].logs.push({ 'type': 'symptomLog', 'time': time, 'key': key, 'pain': pain, 'detail': detail });
+	}
+
+	public addLog(day: IDay, time: string, detail: string): void {
+		day.logs.push({ 'type': 'log', 'time': time, 'detail': detail });
+	}
+
+	public addMed(day: IDay, time: string, key: string, quantity: string): void {
+		day.meds.push({ 'type': 'med', 'time': time, 'key': key, 'quantity': quantity });
+	}
+
+	public addMeal(day: IDay, time: string, detail: string): void {
+		day.meals.push({ 'type': 'meal', 'time': time, 'detail': detail });
+	}
+
+	public add(
+		date: string,
+		time: string,
+		type: string,
+		key: string,
+		pain: string,
+		detail: string,
+		quantity: string): any {
+		const day = this.getDayByDate(date);
+		switch (type) {
+			case 'symptomLog':
+				this.addSymptomLog(day, time, key, pain, detail);
+				break;
+			case 'log':
+				this.addLog(day, time, detail);
+				break;
+			case 'med':
+				this.addMed(day, time, key, quantity);
+				break;
+			case 'meal':
+				this.addMeal(day, time, detail);
+				break;
+		}
+		DAYS_CONTENTS = this.calendarToDaysContent();
+		return {
+			'date': date,
+			'time': time,
+			'type': type,
+			'key': key,
+			'pain': pain,
+			'detail': detail,
+			'quantity': quantity
+		};
 	}
 }

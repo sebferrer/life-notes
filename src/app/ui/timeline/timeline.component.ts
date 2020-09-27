@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { DaysService } from 'src/app/infra';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import { DialogAddEventComponent } from './dialog-add-event';
+import { IDay } from 'src/app/models';
 
 @Component({
 	selector: 'app-timeline',
@@ -24,9 +25,12 @@ export class TimelineComponent implements OnInit {
 	}
 
 	public openDialog(type: string, date: string): void {
+		const typeLabel = this.daysService.getTypeLabel(type);
+		console.log(type);
+		console.log(typeLabel);
 		this.dialog.open(DialogAddEventComponent, {
 			width: '20rem',
-			data: { 'type': type, 'date': date }
+			data: { 'type': type, 'typeLabel': typeLabel, 'date': date }
 		}).afterClosed().subscribe(response => {
 			console.log(response);
 			if (response == null || response.answer !== 'yes') {

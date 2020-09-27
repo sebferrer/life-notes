@@ -7,9 +7,9 @@
 				<mat-icon>playlist_add</mat-icon>
 			</button>
 			<mat-menu #addEvent="matMenu">
-				<button mat-menu-item (click)="openDialog('symptom', dayContent.date)">Add symptom</button>
-				<button mat-menu-item (click)="openDialog('custom event', dayContent.date)">Add custom event</button>
-				<button mat-menu-item (click)="openDialog('drug', dayContent.date)">Add drug</button>
+				<button mat-menu-item (click)="openDialog('symptomLog', dayContent.date)">Add symptom</button>
+				<button mat-menu-item (click)="openDialog('log', dayContent.date)">Add custom event</button>
+				<button mat-menu-item (click)="openDialog('med', dayContent.date)">Add drug</button>
 				<button mat-menu-item (click)="openDialog('meal', dayContent.date)">Add meal</button>
 			</mat-menu>
 		</mat-grid-tile-header>

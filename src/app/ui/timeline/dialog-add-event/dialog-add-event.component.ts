@@ -5,7 +5,12 @@ import { DaysService } from 'src/app/infra';
 export interface IDialogData {
 	date: string;
 	type: string;
+	typeLabel: string;
+	time: string;
 	key: string;
+	pain: string;
+	detail: string;
+	quantity: string;
 }
 
 @Component({
@@ -24,8 +29,12 @@ export class DialogAddEventComponent {
 	}
 
 	public onYesClick(): void {
-		/*this.daysService.add(this.data.date).subscribe(() => {
-			this.dialogRef.close({ 'answer': 'yes' });
-		});*/
+		this.daysService.add(this.data.date,
+			this.data.time,
+			this.data.type,
+			this.data.key,
+			this.data.pain,
+			this.data.detail,
+			this.data.quantity);
 	}
 }

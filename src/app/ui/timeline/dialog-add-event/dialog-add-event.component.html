@@ -1,15 +1,50 @@
-<h1 mat-dialog-title>Add a {{ data.type }} for {{ data.date | date }}</h1>
+<h1 mat-dialog-title>Add a {{ data.typeLabel }} for {{ data.date | date }}</h1>
 <div mat-dialog-content>
     <mat-form-field>
-        <mat-label>{{ data.type }}</mat-label>
-        <input matInput [(ngModel)]="data.key">
+        <mat-label>Time</mat-label>
+        <input matInput [(ngModel)]="data.time">
     </mat-form-field>
-    <!--mat-form-field>
-        <mat-label>Pain</mat-label>
-        <input matInput [(ngModel)]="data.pain">
-    </mat-form-field-->
-</div>
-<div mat-dialog-actions>
-    <button mat-button cdkFocusInitial [mat-dialog-close]="{answer: 'yes', date: data.date, key: data.key}" (click)="onYesClick()" color="primary">Add</button>
-    <button mat-button (click)="onNoClick()">Cancel</button>
-</div>
+    <div [ngSwitch]="data.type">
+        <div *ngSwitchCase="'symptomLog'">
+            <mat-form-field>
+                <mat-label>{{ data.typeLabel }}</mat-label>
+                <input matInput [(ngModel)]="data.key">
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Pain</mat-label>
+                <input matInput [(ngModel)]="data.pain">
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Detail</mat-label>
+                <input matInput [(ngModel)]="data.detail">
+            </mat-form-field>
+        </div>
+        <div *ngSwitchCase="'log'">
+            <mat-form-field>
+                <mat-label>Detail</mat-label>
+                <input matInput [(ngModel)]="data.detail">
+            </mat-form-field>
+        </div>
+        <div *ngSwitchCase="'med'">
+            <mat-form-field>
+                <mat-label>{{ data.typeLabel }}</mat-label>
+                <input matInput [(ngModel)]="data.key">
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Quantity</mat-label>
+                <input matInput [(ngModel)]="data.quantity">
+            </mat-form-field>
+        </div>
+        <div *ngSwitchCase="'meal'">
+            <mat-form-field>
+                <mat-label>Detail</mat-label>
+                <input matInput [(ngModel)]="data.detail">
+            </mat-form-field>
+        </div>
+    </div>
+    <div mat-dialog-actions>
+        <button mat-button cdkFocusInitial
+            [mat-dialog-close]="{answer: 'yes', date: data.date, time: data.time, type: data.type, key: data.key, detail: data.detail, pain: data.pain, quantity: data.quantity}" (click)="onYesClick()"
+            color="primary">Add</button>
+        <button mat-button (click)="onNoClick()">Cancel</button>
+    </div>
