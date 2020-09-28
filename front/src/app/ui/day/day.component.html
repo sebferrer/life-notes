@@ -1,10 +1,10 @@
-<mat-card *ngIf="day$ | async as day">
+<mat-card *ngIf="dayContent$ | async as dayContent">
     <mat-card-title>
-        {{ day.date | date }}
+        {{ dayContent.date | date }}
     </mat-card-title>
     <mat-card-content>
         <mat-list>
-            <mat-list-item *ngFor="let content of day.content" [ngSwitch] = "content.type">
+            <mat-list-item *ngFor="let content of dayContent.content" [ngSwitch] = "content.type">
                 <div *ngSwitchCase="'symptomLog'">
                     [{{ content.type }}] {{ content.time }} : {{ content.key }} --&rsaquo; {{ content.pain }} {{ content.detail }}
                 </div>

@@ -3,6 +3,9 @@
 	<mat-grid-tile *ngFor="let dayContent of daysContents" class="timeline-tile">
 		<mat-grid-tile-header class="timeline-tile-header">
 			<h3>{{ dayContent.date | date }}</h3>
+			<button mat-icon-button class="go-to-day" routerLink="{{ dayContent.date }}">
+				<mat-icon>arrow_forward_ios</mat-icon>
+			</button>
 			<button mat-icon-button [matMenuTriggerFor]="addEvent" class="add-event">
 				<mat-icon>playlist_add</mat-icon>
 			</button>

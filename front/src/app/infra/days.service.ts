@@ -37,30 +37,13 @@ export class DaysService {
 		return DaysService.calendar;
 	}
 
-	public getDay(date: string): Observable<IDay[]> {
-		if (DaysService.calendar == null) {
-			DaysService.calendar = this.http.get<IDay[]>(
-				`${environment.backendUrl}${CALENDAR_API}`
-			).pipe(
-				shareReplay(1)
-			);
-		}
-		return DaysService.calendar;
+	public getDay(date: string): Observable<IDay> {
+		return this.http.get<IDay>(
+			`${environment.backendUrl}${CALENDAR_API}/${date}`
+		).pipe(
+			shareReplay(1)
+		);
 	}
-
-	/*public getDay(date: string): Observable<IDay> {
-		return of(this.getDayByDate(date));
-	}
-
-	public getDayByDate(date: string): IDay {
-		return CALENDAR.find(day => day.date === date) || null;
-	}
-
-	public getDayContent(date: string): Observable<any> {
-		const day = CALENDAR.find(d => d.date === date) || null;
-		const dayContent = this.getContent(day);
-		return of(dayContent);
-	}*/
 
 	public getTypeLabel(type: string): string {
 		const labels = new Map([
@@ -102,9 +85,7 @@ export class DaysService {
 		pain: number,
 		detail: string,
 		quantity: string): Observable<never> {
-		const day = this.http.get<IDay>(
-			`${environment.backendUrl}${CALENDAR_API}/${date}`
-		);
+		const day = this.getDay(date);
 		day.subscribe(d => {
 			switch (type) {
 				case 'symptomLog':
@@ -128,9 +109,7 @@ export class DaysService {
 	}
 
 	public deleteEvent(date: string, time: string, type: string, key: string): Observable<never> {
-		const day = this.http.get<IDay>(
-			`${environment.backendUrl}${CALENDAR_API}/${date}`
-		);
+		const day = this.getDay(date);
 
 		day.subscribe(d => {
 			switch (type) {
