@@ -1,5 +1,5 @@
 import { IDay } from './day.model';
-import { getSortOrder } from './array.utils';
+import { getSortOrder } from '../util/array.utils';
 
 export class DayViewModel {
 

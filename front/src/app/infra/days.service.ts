@@ -4,8 +4,10 @@ import { shareReplay } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { IDay, IDayOverview } from '../models';
 import { environment } from '../../environments/environment';
+import { getFormattedDate } from 'src/app/util/date.utils';
 
 const CALENDAR_API = '/api/calendar';
+const CALENDAR_FROM_API = '/api/calendar-from';
 const DAY_OVERVIEW_FIELDS = 'date,symptomOverviews';
 
 @Injectable()
@@ -28,8 +30,9 @@ export class DaysService {
 
 	public getDays(): Observable<IDay[]> {
 		if (DaysService.calendar == null) {
+			const currentDate = getFormattedDate(new Date());
 			DaysService.calendar = this.http.get<IDay[]>(
-				`${environment.backendUrl}${CALENDAR_API}`
+				`${environment.backendUrl}${CALENDAR_FROM_API}/${currentDate}`
 			).pipe(
 				shareReplay(1)
 			);
@@ -141,6 +144,20 @@ export class DaysService {
 
 	public filterTimeEvent(events: any[], time: string) {
 		return events.filter((event: { time: string; }) => event.time !== time);
+	}
+
+	public createNewDay(date: string) {
+		const day = {
+			'date': date,
+			'symptomOverviews': [],
+			'symptoms': [],
+			'logs': [],
+			'meds': [],
+			'meals': [],
+			'wakeUp': '',
+			'goToBed': ''
+		};
+		this.http.post<IDay>(`${environment.backendUrl}${CALENDAR_API}`, day).subscribe(() => {});
 	}
 
 }

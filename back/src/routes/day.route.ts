@@ -12,6 +12,11 @@ export function calendarRoute(app: Express): void {
 			controller.create(request, result);
 		});
 
+	app.route('/api/calendar-from/:date')
+		.get((request, result) => {
+			controller.getFrom(request, result);
+		});
+
 	app.route('/api/calendar/:date')
 		.get((request, result) => {
 			controller.getByDate(request, result);

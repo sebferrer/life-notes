@@ -18,6 +18,19 @@ export class CalendarController extends AController {
 			});
 	}
 
+	public getFrom(request: Request, response: Response): void {
+		DaySchema.find(
+			{ date: { $lte: request.params.date } },
+			this.getFields(request),
+			{ sort: { date: 'desc' }, limit: 50 },
+			(error: Error, calendar: Document[]) => {
+				if (error != null) {
+					response.send(error);
+				}
+				response.json(calendar);
+			})
+	}
+
 	public getByDate(request: Request, response: Response): void {
 		DaySchema.find(
 			{ date: request.params.date },

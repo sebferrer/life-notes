@@ -6,7 +6,7 @@ import { DialogAddEventComponent } from './dialog-add-event';
 import { DialogDeleteEventComponent } from './dialog-delete-event';
 import { map } from 'rxjs/operators';
 import { DayViewModel } from 'src/app/models/day.view.model';
-import { getSortOrder } from 'src/app/models/array.utils';
+import { getSortOrder } from 'src/app/util/array.utils';
 
 @Component({
 	selector: 'app-timeline',
@@ -25,7 +25,7 @@ export class TimelineComponent implements OnInit {
 
 	public ngOnInit(): void {
 		this.daysContents$ = this.daysService.getDays().pipe(
-			map(dayContents => dayContents.map(day => new DayViewModel(day)).sort(getSortOrder('date', true)))
+			map(dayContents => dayContents.map(day => new DayViewModel(day)))
 		);
 	}
 
@@ -46,7 +46,7 @@ export class TimelineComponent implements OnInit {
 		const typeLabel = this.daysService.getTypeLabel(type);
 		this.dialog.open(DialogDeleteEventComponent, {
 			width: '20rem',
-			data: { type,  typeLabel, time, date }
+			data: { type, typeLabel, time, date }
 		}).afterClosed().subscribe(response => {
 			if (response == null || response.answer !== 'yes') {
 				return;
