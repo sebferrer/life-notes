@@ -25,6 +25,12 @@ export class DialogDeleteEventComponent {
 	}
 
 	public onYesClick(): void {
-		this.dialogRef.close({ 'answer': 'yes' });
+		this.dialogRef.close({
+			'answer': 'yes',
+			'date': this.data.date,
+			'time': this.data.time,
+			'type': this.data.type,
+			'key': this.data.key
+		});
 	}
 }

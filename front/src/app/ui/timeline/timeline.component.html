@@ -1,7 +1,7 @@
 <mat-grid-list *ngIf="daysContents$ | async as daysContents; else loading" cols="1" gutterSize="0"
 	class="timeline-grid">
 	<mat-grid-tile *ngFor="let dayContent of daysContents" class="timeline-tile">
-		<mat-grid-tile-header>
+		<mat-grid-tile-header class="timeline-tile-header">
 			<h3>{{ dayContent.date | date }}</h3>
 			<button mat-icon-button [matMenuTriggerFor]="addEvent" class="add-event">
 				<mat-icon>playlist_add</mat-icon>
@@ -16,27 +16,36 @@
 				<button mat-menu-item (click)="openAddDialog('meal', dayContent.date)">Add meal</button>
 			</mat-menu>
 		</mat-grid-tile-header>
-		<div class="timeline-content">
-			<mat-chip-list class="mat-chip-list-stacked">
-				<mat-chip *ngFor="let content of dayContent.content" [ngSwitch]="content.type"
-					class="mat-chip mat-standard-chip timeline-day-item-{{ content.type }}">
-					<div *ngSwitchCase="'symptomLog'" class="symptomLog">
-						{{ content.time }} : {{ content.key }} [{{ content.pain }}/5]
-					</div>
-					<div *ngSwitchCase="'log'">
-						{{ content.time }} : {{ content.detail | slice:0:20 }}...
-					</div>
-					<div *ngSwitchCase="'med'">
-						{{ content.time }} : {{ content.key }} {{ content.quantity }}
-					</div>
-					<div *ngSwitchCase="'meal'">
-						{{ content.time }} : {{ content.detail }}
-					</div>
-					<mat-icon matChipRemove *ngIf="dayContent.removable"
-						(click)="openDeleteDialog(dayContent.date, content.time, content.type, content.key)">cancel
-					</mat-icon>
-				</mat-chip>
-			</mat-chip-list>
+		<div class="timeline-tile-content">
+			<div class="timeline-content">
+				<mat-chip-list class="mat-chip-list-stacked">
+					<div class="timeline-chips-padding"></div>
+					<mat-chip *ngFor="let content of dayContent.content" [ngSwitch]="content.type"
+						class="mat-chip mat-standard-chip timeline-day-item-{{ content.type }} event-chips">
+						<div class="event-container">
+							<div *ngSwitchCase="'symptomLog'" class="event">
+								{{ content.time }} : {{ content.key }} [{{ content.pain }}/5]
+							</div>
+							<div *ngSwitchCase="'log'" class="event">
+								{{ content.time }} : {{ content.detail | slice:0:20 }}...
+							</div>
+							<div *ngSwitchCase="'med'" class="event">
+								{{ content.time }} : {{ content.key }} {{ content.quantity }}
+							</div>
+							<div *ngSwitchCase="'meal'" class="event">
+								{{ content.time }} : {{ content.detail }}
+							</div>
+							<div class="remove-event-container">
+								<mat-icon matChipRemove *ngIf="dayContent.removable" class="remove-event"
+									(click)="openDeleteDialog(dayContent.date, content.time, content.type, content.key)">
+									cancel
+								</mat-icon>
+							</div>
+						</div>
+					</mat-chip>
+					<div class="timeline-chips-padding"></div>
+				</mat-chip-list>
+			</div>
 		</div>
 	</mat-grid-tile>
 </mat-grid-list>
