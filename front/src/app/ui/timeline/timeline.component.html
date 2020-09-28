@@ -6,18 +6,20 @@
 			<button mat-icon-button [matMenuTriggerFor]="addEvent" class="add-event">
 				<mat-icon>playlist_add</mat-icon>
 			</button>
+			<button mat-icon-button class="delete-event" (click)="toggleRemovable(dayContent)">
+				<mat-icon>delete_sweep</mat-icon>
+			</button>
 			<mat-menu #addEvent="matMenu">
-				<button mat-menu-item (click)="openDialog('symptomLog', dayContent.date)">Add symptom</button>
-				<button mat-menu-item (click)="openDialog('log', dayContent.date)">Add custom event</button>
-				<button mat-menu-item (click)="openDialog('med', dayContent.date)">Add drug</button>
-				<button mat-menu-item (click)="openDialog('meal', dayContent.date)">Add meal</button>
+				<button mat-menu-item (click)="openAddDialog('symptomLog', dayContent.date)">Add symptom</button>
+				<button mat-menu-item (click)="openAddDialog('log', dayContent.date)">Add custom event</button>
+				<button mat-menu-item (click)="openAddDialog('med', dayContent.date)">Add drug</button>
+				<button mat-menu-item (click)="openAddDialog('meal', dayContent.date)">Add meal</button>
 			</mat-menu>
 		</mat-grid-tile-header>
 		<div class="timeline-content">
 			<mat-chip-list class="mat-chip-list-stacked">
 				<mat-chip *ngFor="let content of dayContent.content" [ngSwitch]="content.type"
-					class="mat-chip mat-standard-chip timeline-day-item-{{ content.type }}"
-					(click)="deleteEvent(dayContent.date, content.time, content.type, content.key)">
+					class="mat-chip mat-standard-chip timeline-day-item-{{ content.type }}">
 					<div *ngSwitchCase="'symptomLog'" class="symptomLog">
 						{{ content.time }} : {{ content.key }} [{{ content.pain }}/5]
 					</div>
@@ -30,6 +32,9 @@
 					<div *ngSwitchCase="'meal'">
 						{{ content.time }} : {{ content.detail }}
 					</div>
+					<mat-icon matChipRemove *ngIf="dayContent.removable"
+						(click)="openDeleteDialog(dayContent.date, content.time, content.type, content.key)">cancel
+					</mat-icon>
 				</mat-chip>
 			</mat-chip-list>
 		</div>

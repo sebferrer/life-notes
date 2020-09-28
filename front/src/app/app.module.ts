@@ -12,6 +12,7 @@ import { CalendarComponent } from './ui/calendar';
 import { TimelineComponent } from './ui/timeline';
 import { DialogAddEventComponent } from './ui/timeline/dialog-add-event';
 import { FormsModule } from '@angular/forms';
+import { DialogDeleteEventComponent } from './ui/timeline/dialog-delete-event';
 
 @NgModule({
 	declarations: [
@@ -20,7 +21,8 @@ import { FormsModule } from '@angular/forms';
 		DayComponent,
 		CalendarComponent,
 		TimelineComponent,
-		DialogAddEventComponent
+		DialogAddEventComponent,
+		DialogDeleteEventComponent
 	],
 	imports: [
 		BrowserModule,
@@ -46,7 +48,8 @@ import { FormsModule } from '@angular/forms';
 		DaysService
 	],
 	entryComponents: [
-		DialogAddEventComponent
+		DialogAddEventComponent,
+		DialogDeleteEventComponent
 	],
 	bootstrap: [AppComponent]
 })

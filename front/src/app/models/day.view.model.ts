@@ -7,6 +7,7 @@ export class DayViewModel {
 	public readonly wakeUp: string;
 	public readonly goToBed: string;
 	public readonly content: Array<any>;
+	public removable: boolean;
 
 	constructor(day: IDay) {
 		this.date = day.date;
@@ -23,6 +24,8 @@ export class DayViewModel {
 		this.content.push(...day.meals);
 
 		this.content.sort(getSortOrder('time'));
+
+		this.removable = false;
 	}
 
 }
