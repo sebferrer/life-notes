@@ -8,7 +8,7 @@ export interface IDialogData {
 	typeLabel: string;
 	time: string;
 	key: string;
-	pain: string;
+	pain: number;
 	detail: string;
 	quantity: string;
 }
@@ -29,7 +29,7 @@ export class DialogAddEventComponent {
 	}
 
 	public onYesClick(): void {
-		this.daysService.add(this.data.date,
+		this.daysService.addEvent(this.data.date,
 			this.data.time,
 			this.data.type,
 			this.data.key,

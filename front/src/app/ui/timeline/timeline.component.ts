@@ -42,4 +42,8 @@ export class TimelineComponent implements OnInit {
 			this.snackBar.open(`The ${type} was successfully added for ${date}`, 'Close');
 		});
 	}
+
+	public deleteEvent(date: string, time: string, type: string, key: string): void {
+		this.daysService.deleteEvent(date, time, type, key);
+	}
 }

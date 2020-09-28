@@ -16,7 +16,8 @@
 		<div class="timeline-content">
 			<mat-chip-list class="mat-chip-list-stacked">
 				<mat-chip *ngFor="let content of dayContent.content" [ngSwitch]="content.type"
-					class="mat-chip mat-standard-chip timeline-day-item-{{ content.type }}">
+					class="mat-chip mat-standard-chip timeline-day-item-{{ content.type }}"
+					(click)="deleteEvent(dayContent.date, content.time, content.type, content.key)">
 					<div *ngSwitchCase="'symptomLog'" class="symptomLog">
 						{{ content.time }} : {{ content.key }} [{{ content.pain }}/5]
 					</div>

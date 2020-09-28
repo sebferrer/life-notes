@@ -72,13 +72,14 @@ export class DaysService {
 		return labels.get(type);
 	}
 
-	public addSymptomLog(day: IDay, time: string, key: string, pain: string, detail: string): void {
-		if (!(key in day.symptoms)) {
+	public addSymptomLog(day: IDay, time: string, key: string, pain: number, detail: string): void {
+		let symptom = day.symptoms.find(s => s.key === key);
+		if (symptom == null) {
 			const symptomLogs = Array<any>();
-			const symptom = { type: 'symptom', key, logs: symptomLogs };
+			symptom = { type: 'symptom', key, logs: symptomLogs };
 			day.symptoms.push(symptom);
 		}
-		day.symptoms[key].logs.push({ type: 'symptomLog', time, key, pain, detail });
+		day.symptoms.find(s => s.key === key).logs.push({ type: 'symptomLog', time, key, pain, detail });
 	}
 
 	public addLog(day: IDay, time: string, detail: string): void {
@@ -93,12 +94,12 @@ export class DaysService {
 		day.meals.push({ type: 'meal', time, detail });
 	}
 
-	public add(
+	public addEvent(
 		date: string,
 		time: string,
 		type: string,
 		key: string,
-		pain: string,
+		pain: number,
 		detail: string,
 		quantity: string): Observable<never> {
 		const day = this.http.get<IDay>(
@@ -125,4 +126,42 @@ export class DaysService {
 		});
 		return of();
 	}
+
+	public deleteEvent(date: string, time: string, type: string, key: string): Observable<never> {
+		const day = this.http.get<IDay>(
+			`${environment.backendUrl}${CALENDAR_API}/${date}`
+		);
+
+		day.subscribe(d => {
+			switch (type) {
+				case 'symptomLog':
+					const symptom = d.symptoms.find(s => s.key === key);
+					symptom.logs = this.filterTimeEvent(symptom.logs, time);
+					if (symptom.logs.length === 0) {
+						d.symptoms = d.symptoms.filter(s => s.key !== key);
+					}
+					break;
+				case 'log':
+					d.logs = this.filterTimeEvent(d.logs, time);
+					break;
+				case 'med':
+					d.meds = this.filterTimeEvent(d.meds, time);
+					break;
+				case 'meal':
+					d.meals = this.filterTimeEvent(d.meals, time);
+					break;
+			}
+
+			this.http.put<IDay>(
+				`${environment.backendUrl}${CALENDAR_API}/${date}`, d
+			).subscribe();
+		});
+
+		return of();
+	}
+
+	public filterTimeEvent(events: any[], time: string) {
+		return events.filter((event: { time: string; }) => event.time !== time);
+	}
+
 }
