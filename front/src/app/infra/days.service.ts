@@ -1,10 +1,11 @@
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { shareReplay } from 'rxjs/operators';
+import { from, Observable, of } from 'rxjs';
+import { map, shareReplay } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { IDay, IDayOverview } from '../models';
 import { environment } from '../../environments/environment';
 import { getFormattedDate } from 'src/app/util/date.utils';
+import { DbContext } from './database';
 
 const CALENDAR_API = '/api/calendar';
 const CALENDAR_FROM_API = '/api/calendar-from';
@@ -15,7 +16,10 @@ export class DaysService {
 	private static daysOverview: Observable<IDayOverview[]>;
 	private static calendar: Observable<IDay[]>;
 
-	constructor(private http: HttpClient) { }
+	constructor(
+		private readonly http: HttpClient,
+		private readonly dbContext: DbContext
+	) { }
 
 	public getDaysOverviews(): Observable<IDayOverview[]> {
 		if (DaysService.calendar == null) {
@@ -29,15 +33,9 @@ export class DaysService {
 	}
 
 	public getDays(): Observable<IDay[]> {
-		if (DaysService.calendar == null) {
-			const currentDate = getFormattedDate(new Date());
-			DaysService.calendar = this.http.get<IDay[]>(
-				`${environment.backendUrl}${CALENDAR_FROM_API}/${currentDate}`
-			).pipe(
-				shareReplay(1)
-			);
-		}
-		return DaysService.calendar;
+		return this.dbContext.asObservable<IDay>(
+			this.dbContext.database.allDocs({ include_docs: true, descending: true })
+		);
 	}
 
 	public getDay(date: string): Observable<IDay> {
@@ -157,7 +155,7 @@ export class DaysService {
 			'wakeUp': '',
 			'goToBed': ''
 		};
-		this.http.post<IDay>(`${environment.backendUrl}${CALENDAR_API}`, day).subscribe(() => {});
+		this.http.post<IDay>(`${environment.backendUrl}${CALENDAR_API}`, day).subscribe(() => { });
 	}
 
 }

@@ -1,17 +1,17 @@
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { MatButtonModule, MatCardModule, MatGridListModule, MatIconModule, MatMenuModule, MatProgressSpinnerModule, MatToolbarModule, MatListModule, MatChipsModule, MatDialogModule, MatFormFieldModule, MatSnackBarModule, MatInputModule } from '@angular/material';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule, MatCardModule, MatChipsModule, MatDialogModule, MatFormFieldModule, MatGridListModule, MatIconModule, MatInputModule, MatListModule, MatMenuModule, MatProgressSpinnerModule, MatSnackBarModule, MatToolbarModule } from '@angular/material';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { DbContext, DaysService } from './infra';
 import { HomeComponent } from './ui';
-import { DayComponent } from './ui/day';
-import { DaysService } from './infra';
 import { CalendarComponent } from './ui/calendar';
+import { DayComponent } from './ui/day';
 import { TimelineComponent } from './ui/timeline';
 import { DialogAddEventComponent } from './ui/timeline/dialog-add-event';
-import { FormsModule } from '@angular/forms';
 import { DialogDeleteEventComponent } from './ui/timeline/dialog-delete-event';
 
 @NgModule({
@@ -45,7 +45,8 @@ import { DialogDeleteEventComponent } from './ui/timeline/dialog-delete-event';
 		MatSnackBarModule
 	],
 	providers: [
-		DaysService
+		DaysService,
+		DbContext
 	],
 	entryComponents: [
 		DialogAddEventComponent,
