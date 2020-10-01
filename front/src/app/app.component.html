@@ -5,7 +5,16 @@
 	</button>
 	<button mat-icon-button class="menu-icon menu-icon-calendar" routerLink="/calendar" aria-label="Timeline">
         <mat-icon>apps</mat-icon>
-    </button>
+	</button>
+	<button mat-icon-button class="menu-icon menu-icon-calendar" [matMenuTriggerFor]="importExport" aria-label="Import-Export">
+        <mat-icon>import_export</mat-icon>
+	</button>
+	<mat-menu #importExport="matMenu">
+		<button mat-menu-item (click)="fileClickFire()">Import</button>
+		<button mat-menu-item (click)="exportData()">Export</button>
+		<button mat-menu-item (click)="exportHtml()">Export as HTML</button>
+	</mat-menu>
+	<input type="file" id="file-import" (change)="importData($event)">
 </mat-toolbar>
 
 <div class="content">

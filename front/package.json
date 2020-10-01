@@ -20,6 +20,7 @@
     "@angular/platform-browser": "~8.2.14",
     "@angular/platform-browser-dynamic": "~8.2.14",
     "@angular/router": "~8.2.14",
+    "axios": "^0.20.0",
     "hammerjs": "^2.0.8",
     "pouchdb": "^7.2.2",
     "rxjs": "~6.4.0",

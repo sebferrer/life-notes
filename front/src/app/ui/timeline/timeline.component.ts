@@ -6,7 +6,6 @@ import { DialogAddEventComponent } from './dialog-add-event';
 import { DialogDeleteEventComponent } from './dialog-delete-event';
 import { map } from 'rxjs/operators';
 import { DayViewModel } from 'src/app/models/day.view.model';
-import { getSortOrder } from 'src/app/util/array.utils';
 
 @Component({
 	selector: 'app-timeline',

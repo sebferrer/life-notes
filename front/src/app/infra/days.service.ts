@@ -5,9 +5,9 @@ import { IDay, IDayOverview } from '../models';
 import { getFormattedDate } from 'src/app/util/date.utils';
 import { DbContext } from './database';
 
-const CALENDAR_API = '/api/calendar';
-const CALENDAR_FROM_API = '/api/calendar-from';
-const DAY_OVERVIEW_FIELDS = 'date,symptomOverviews';
+// const CALENDAR_API = '/api/calendar';
+// const CALENDAR_FROM_API = '/api/calendar-from';
+// const DAY_OVERVIEW_FIELDS = 'date, symptomOverviews';
 
 @Injectable()
 export class DaysService {
@@ -95,6 +95,7 @@ export class DaysService {
 			}
 			this.dbContext.database.put(d);
 		});
+
 		return of();
 	}
 
@@ -122,7 +123,6 @@ export class DaysService {
 			}
 			this.dbContext.database.put(d);
 		});
-
 		return of();
 	}
 
@@ -146,15 +146,30 @@ export class DaysService {
 		return of();
 	}
 
+	public addDay(day: IDay): Observable<never> {
+		this.dbContext.database.put(day);
+		return of();
+	}
+
 	public createNewDayToday(): Observable<never> {
 		this.createNewDay(getFormattedDate(new Date()));
 		return of();
 	}
 
-	public removeDay(date: string): Observable<never>  {
+	public removeDayByDate(date: string): Observable<never> {
 		this.getDay(date).subscribe(day => {
 			this.dbContext.database.remove(day);
 		});
+		return of();
+	}
+
+	public removeDay(day: IDay): Observable<never> {
+		this.dbContext.database.remove(day);
+		return of();
+	}
+
+	public clearCalendar(): Observable<never> {
+		this.getDays().subscribe(days => days.map(day => this.removeDay(day)));
 		return of();
 	}
 
