@@ -99,7 +99,7 @@ export class DaysService {
 		return of();
 	}
 
-	public deleteEvent(date: string, time: string, type: string, key: string): Observable<never> {
+	public deleteEvent(date: string, time: string, type: string, key: string): Observable<IDay> {
 		const day = this.getDay(date);
 
 		day.subscribe(d => {
@@ -123,7 +123,7 @@ export class DaysService {
 			}
 			this.dbContext.database.put(d);
 		});
-		return of();
+		return day;
 	}
 
 	public filterTimeEvent(events: any[], time: string) {

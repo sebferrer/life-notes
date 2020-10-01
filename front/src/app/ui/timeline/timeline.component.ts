@@ -37,6 +37,7 @@ export class TimelineComponent implements OnInit {
 			if (response == null || response.answer !== 'yes') {
 				return;
 			}
+			this.ngOnInit();
 			this.snackBar.open(`The ${type} was successfully added for ${date}`, 'Close');
 		});
 	}
@@ -50,7 +51,7 @@ export class TimelineComponent implements OnInit {
 			if (response == null || response.answer !== 'yes') {
 				return;
 			}
-			this.daysService.deleteEvent(date, time, type, key);
+			this.daysService.deleteEvent(date, time, type, key).subscribe(() => { console.log("AAAA"); this.ngOnInit(); });
 			this.snackBar.open(`The ${type} was successfully deleted for ${date}`, 'Close');
 		});
 	}
