@@ -24,9 +24,6 @@ export class TimelineComponent implements OnInit {
 	) { }
 
 	public ngOnInit(): void {
-
-		this.daysService.createNewDay('2020-09-30');
-
 		this.daysContents$ = this.daysService.getDays().pipe(
 			map(dayContents => dayContents.map(day => new DayViewModel(day)))
 		);

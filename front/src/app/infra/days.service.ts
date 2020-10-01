@@ -1,9 +1,7 @@
 // import { HttpClient } from '@angular/common/http';
-import { from, Observable, of } from 'rxjs';
-import { map, shareReplay } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { IDay, IDayOverview } from '../models';
-import { environment } from '../../environments/environment';
 import { getFormattedDate } from 'src/app/util/date.utils';
 import { DbContext } from './database';
 
@@ -145,6 +143,18 @@ export class DaysService {
 			'goToBed': ''
 		};
 		this.dbContext.database.put(day).then((res: any) => { }, (err: any) => { });
+		return of();
+	}
+
+	public createNewDayToday(): Observable<never> {
+		this.createNewDay(getFormattedDate(new Date()));
+		return of();
+	}
+
+	public removeDay(date: string): Observable<never>  {
+		this.getDay(date).subscribe(day => {
+			this.dbContext.database.remove(day);
+		});
 		return of();
 	}
 
