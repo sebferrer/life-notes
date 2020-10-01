@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+// import { HttpClient } from '@angular/common/http';
 import { from, Observable, of } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
@@ -17,32 +17,25 @@ export class DaysService {
 	private static calendar: Observable<IDay[]>;
 
 	constructor(
-		private readonly http: HttpClient,
+		// private readonly http: HttpClient,
 		private readonly dbContext: DbContext
 	) { }
 
 	public getDaysOverviews(): Observable<IDayOverview[]> {
-		if (DaysService.calendar == null) {
-			DaysService.daysOverview = this.http.get<IDayOverview[]>(
-				`${environment.backendUrl}${CALENDAR_API}`
-			).pipe(
-				shareReplay(1)
-			);
-		}
-		return DaysService.daysOverview;
+		return this.dbContext.asArrayObservable<IDayOverview>(
+			this.dbContext.database.allDocs({ include_docs: true, descending: true })
+		);
 	}
 
 	public getDays(): Observable<IDay[]> {
-		return this.dbContext.asObservable<IDay>(
+		return this.dbContext.asArrayObservable<IDay>(
 			this.dbContext.database.allDocs({ include_docs: true, descending: true })
 		);
 	}
 
 	public getDay(date: string): Observable<IDay> {
-		return this.http.get<IDay>(
-			`${environment.backendUrl}${CALENDAR_API}/${date}`
-		).pipe(
-			shareReplay(1)
+		return this.dbContext.asObservable<IDay>(
+			this.dbContext.database.get(date)
 		);
 	}
 
@@ -102,9 +95,7 @@ export class DaysService {
 					this.addMeal(d, time, detail);
 					break;
 			}
-			this.http.put<IDay>(
-				`${environment.backendUrl}${CALENDAR_API}/${date}`, d
-			).subscribe();
+			this.dbContext.database.put(d);
 		});
 		return of();
 	}
@@ -131,10 +122,7 @@ export class DaysService {
 					d.meals = this.filterTimeEvent(d.meals, time);
 					break;
 			}
-
-			this.http.put<IDay>(
-				`${environment.backendUrl}${CALENDAR_API}/${date}`, d
-			).subscribe();
+			this.dbContext.database.put(d);
 		});
 
 		return of();
@@ -144,8 +132,9 @@ export class DaysService {
 		return events.filter((event: { time: string; }) => event.time !== time);
 	}
 
-	public createNewDay(date: string) {
+	public createNewDay(date: string): Observable<never> {
 		const day = {
+			'_id': date,
 			'date': date,
 			'symptomOverviews': [],
 			'symptoms': [],
@@ -155,7 +144,8 @@ export class DaysService {
 			'wakeUp': '',
 			'goToBed': ''
 		};
-		this.http.post<IDay>(`${environment.backendUrl}${CALENDAR_API}`, day).subscribe(() => { });
+		this.dbContext.database.put(day).then((res: any) => { }, (err: any) => { });
+		return of();
 	}
 
 }

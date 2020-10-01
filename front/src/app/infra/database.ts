@@ -9,9 +9,13 @@ import { map } from 'rxjs/operators';
 export class DbContext {
 	public readonly database = new PouchDB('healthy-day');
 
-	public asObservable<T>(dbSet: Promise<{ rows: { doc: T }[] }>): Observable<T[]> {
+	public asArrayObservable<T>(dbSet: Promise<{ rows: { doc: T }[] }>): Observable<T[]> {
 		return from(dbSet).pipe(
 			map(set => set.rows.map(row => row.doc))
 		);
+	}
+
+	public asObservable<T>(dbSet: Promise<any>): Observable<T> {
+		return from(dbSet);
 	}
 }
