@@ -63,7 +63,7 @@ export class ImporterExporter {
 							html += '[Med] ' + content.time + ' -- ' + content.key + content.quantity + '<br/>';
 							break;
 						case 'meal':
-							html += '[Meal] ' + content.time + ' -- ' + content.detail + '<br/>';
+							html += '[Meal] ' + content.time + ' -- ' + content.key + ' ' + content.detail + '<br/>';
 							break;
 					}
 				}
