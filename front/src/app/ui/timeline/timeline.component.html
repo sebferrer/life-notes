@@ -38,7 +38,7 @@
 								{{ content.time }} : {{ content.key }} {{ content.quantity }}
 							</div>
 							<div *ngSwitchCase="'meal'" class="event">
-								{{ content.time }} : {{ content.detail }}
+								{{ content.time }} : {{ content.key }}
 							</div>
 							<div class="remove-event-container">
 								<mat-icon matChipRemove *ngIf="dayContent.removable" class="remove-event"

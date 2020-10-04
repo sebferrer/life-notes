@@ -37,6 +37,10 @@
         </div>
         <div *ngSwitchCase="'meal'">
             <mat-form-field>
+                <mat-label>{{ data.typeLabel }}</mat-label>
+                <input matInput [(ngModel)]="data.key">
+            </mat-form-field>
+            <mat-form-field>
                 <mat-label>Detail</mat-label>
                 <input matInput [(ngModel)]="data.detail">
             </mat-form-field>

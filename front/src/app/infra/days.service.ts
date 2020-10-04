@@ -67,8 +67,8 @@ export class DaysService {
 		day.meds.push({ type: 'med', time, key, quantity });
 	}
 
-	public addMeal(day: IDay, time: string, detail: string): void {
-		day.meals.push({ type: 'meal', time, detail });
+	public addMeal(day: IDay, time: string, key: string, detail: string): void {
+		day.meals.push({ type: 'meal', time, key, detail });
 	}
 
 	public setStartEnd(day: IDay, time: string, type: string): void {
@@ -103,7 +103,7 @@ export class DaysService {
 					this.addMed(d, time, key, quantity);
 					break;
 				case 'meal':
-					this.addMeal(d, time, detail);
+					this.addMeal(d, time, key, detail);
 					break;
 				case 'wakeUp':
 				case 'goToBed':
