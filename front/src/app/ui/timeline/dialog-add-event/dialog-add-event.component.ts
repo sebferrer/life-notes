@@ -11,6 +11,8 @@ export interface IDialogData {
 	pain: number;
 	detail: string;
 	quantity: string;
+	wakeUp: string;
+	goToBed: string;
 }
 
 @Component({
@@ -29,7 +31,8 @@ export class DialogAddEventComponent {
 	}
 
 	public onYesClick(): void {
-		this.daysService.addEvent(this.data.date,
+		this.daysService.addEvent(
+			this.data.date,
 			this.data.time,
 			this.data.type,
 			this.data.key,

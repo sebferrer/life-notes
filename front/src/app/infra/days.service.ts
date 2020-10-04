@@ -42,7 +42,9 @@ export class DaysService {
 			['symptomLog', 'Symptom'],
 			['log', 'Custom event'],
 			['med', 'Drug'],
-			['meal', 'Meal']]);
+			['meal', 'Meal'],
+			['wakeUp', 'Wake up'],
+			['goToBed', 'Go to bed']]);
 
 		return labels.get(type);
 	}
@@ -69,6 +71,17 @@ export class DaysService {
 		day.meals.push({ type: 'meal', time, detail });
 	}
 
+	public setStartEnd(day: IDay, time: string, type: string): void {
+		switch (type) {
+			case 'wakeUp':
+				day.wakeUp = time;
+				break;
+			case 'goToBed':
+				day.goToBed = time;
+				break;
+		}
+	}
+
 	public addEvent(
 		date: string,
 		time: string,
@@ -92,6 +105,11 @@ export class DaysService {
 				case 'meal':
 					this.addMeal(d, time, detail);
 					break;
+				case 'wakeUp':
+				case 'goToBed':
+					this.setStartEnd(d, time, type);
+					break;
+
 			}
 			this.dbContext.database.put(d);
 		});

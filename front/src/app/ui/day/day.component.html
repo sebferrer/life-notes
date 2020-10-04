@@ -2,6 +2,10 @@
     <mat-card-title>
         {{ dayContent.date | date }}
     </mat-card-title>
+    <mat-card-subtitle>
+        <p>Wake up: {{ dayContent.wakeUp }}</p>
+        <p>Go to bed: {{ dayContent.goToBed }}</p>
+    </mat-card-subtitle>
     <mat-card-content>
         <mat-list>
             <mat-list-item *ngFor="let content of dayContent.content" [ngSwitch] = "content.type">
