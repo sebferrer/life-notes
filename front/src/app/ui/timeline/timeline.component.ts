@@ -6,6 +6,8 @@ import { DialogAddEventComponent } from './dialog-add-event';
 import { DialogDeleteEventComponent } from './dialog-delete-event';
 import { map } from 'rxjs/operators';
 import { DayViewModel } from 'src/app/models/day.view.model';
+import { DialogShowEventComponent } from './dialog-show-event';
+import { ICustomEvent } from 'src/app/models/customEvent.model';
 
 @Component({
 	selector: 'app-timeline',
@@ -28,31 +30,45 @@ export class TimelineComponent implements OnInit {
 		);
 	}
 
-	public openAddDialog(type: string, date: string): void {
+	public openShowDialog(date: string, customEvent: ICustomEvent): void {
+		this.dialog.open(DialogShowEventComponent, {
+			width: '20rem',
+			data: { date, customEvent }
+		}).afterClosed().subscribe(response => {
+			if (response == null || response.answer !== 'yes') {
+				return;
+			} else {
+				this.openAddDialog(customEvent.type, date, customEvent);
+			}
+		});
+	}
+
+	public openAddDialog(type: string, date: string, customEvent?: ICustomEvent): void {
 		const typeLabel = this.daysService.getTypeLabel(type);
 		this.dialog.open(DialogAddEventComponent, {
 			width: '20rem',
-			data: { type, typeLabel, date }
+			data: { type, typeLabel, date, customEvent }
 		}).afterClosed().subscribe(response => {
 			if (response == null || response.answer !== 'yes') {
 				return;
 			}
 			this.ngOnInit();
-			this.snackBar.open(`The ${type} was successfully added for ${date}`, 'Close');
+			const action = response.edit ? 'updated' : 'added';
+			this.snackBar.open(`The ${type} was successfully ${action} for ${date}`, 'Close');
 		});
 	}
 
-	public openDeleteDialog(date: string, time: string, type: string, key: string): void {
-		const typeLabel = this.daysService.getTypeLabel(type);
+	public openDeleteDialog(date: string, customEvent: ICustomEvent): void {
+		const typeLabel = this.daysService.getTypeLabel(customEvent.type);
 		this.dialog.open(DialogDeleteEventComponent, {
 			width: '20rem',
-			data: { type, typeLabel, time, date }
+			data: { date, typeLabel, customEvent }
 		}).afterClosed().subscribe(response => {
 			if (response == null || response.answer !== 'yes') {
 				return;
 			}
-			this.daysService.deleteEvent(date, time, type, key).subscribe(() => { this.ngOnInit(); });
-			this.snackBar.open(`The ${type} was successfully deleted for ${date}`, 'Close');
+			this.daysService.deleteEvent(date, customEvent).subscribe(() => { this.ngOnInit(); });
+			this.snackBar.open(`The ${customEvent.type} was successfully deleted for ${date}`, 'Close');
 		});
 	}
 
@@ -60,7 +76,7 @@ export class TimelineComponent implements OnInit {
 		dayViewModel.removable = dayViewModel.removable ? false : true;
 	}
 
-	public deleteEvent(date: string, time: string, type: string, key: string): void {
-		this.daysService.deleteEvent(date, time, type, key);
+	public deleteEvent(date: string, customEvent: ICustomEvent): void {
+		this.daysService.deleteEvent(date, customEvent);
 	}
 }

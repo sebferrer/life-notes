@@ -40,7 +40,11 @@
     </div>
     <div mat-dialog-actions>
         <button mat-button cdkFocusInitial
-            [mat-dialog-close]="{answer: 'yes', date: data.date, time: data.time, type: data.type, key: data.key, detail: data.detail, pain: data.pain, quantity: data.quantity}" (click)="onYesClick()"
-            color="primary">Add</button>
+        [mat-dialog-close]="{answer: 'yes', edit: data.edit, date: data.date, time: data.time, type: data.type, key: data.key, detail: data.detail, pain: data.pain, quantity: data.quantity}"
+            (click)="onYesClick()" color="primary">
+            <span *ngIf="data.edit; else addButton">Edit</span>
+            <ng-template #addButton>Add</ng-template>
+        </button>
         <button mat-button (click)="onNoClick()">Cancel</button>
     </div>
+</div>

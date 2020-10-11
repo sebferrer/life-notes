@@ -4,6 +4,12 @@ import { Injectable } from '@angular/core';
 import { IDay, IDayOverview } from '../models';
 import { getFormattedDate } from 'src/app/util/date.utils';
 import { DbContext } from './database';
+import { ILog } from '../models/log.model';
+import { IMed } from '../models/med.model';
+import { IMeal } from '../models/meal.model';
+import { ISymptom } from '../models/symptom.model';
+import { mapTo } from 'rxjs/operators';
+import { ICustomEvent } from '../models/customEvent.model';
 
 // const CALENDAR_API = '/api/calendar';
 // const CALENDAR_FROM_API = '/api/calendar-from';
@@ -49,6 +55,11 @@ export class DaysService {
 		return labels.get(type);
 	}
 
+	public getSymptomLog(day: IDay, time: string, key: string): Observable<ILog> {
+		const symptom: ISymptom = day.symptoms.find(s => s.key === key);
+		return of(symptom.logs.find(log => log.time === time));
+	}
+
 	public addSymptomLog(day: IDay, time: string, key: string, pain: number, detail: string): void {
 		let symptom = day.symptoms.find(s => s.key === key);
 		if (symptom == null) {
@@ -63,8 +74,16 @@ export class DaysService {
 		day.logs.push({ type: 'log', time, key, detail });
 	}
 
-	public addMed(day: IDay, time: string, key: string, quantity: string): void {
+	public getMed(day: IDay, time: string, key: string): Observable<IMed> {
+		return of(day.meds.find(med => med.time === time && med.key === key));
+	}
+
+	public addMed(day: IDay, time: string, key: string, quantity: number): void {
 		day.meds.push({ type: 'med', time, key, quantity });
+	}
+
+	public getMeal(day: IDay, time: string, key: string): Observable<IMeal> {
+		return of(day.meals.find(meal => meal.time === time && meal.key === key));
 	}
 
 	public addMeal(day: IDay, time: string, key: string, detail: string): void {
@@ -82,32 +101,25 @@ export class DaysService {
 		}
 	}
 
-	public addEvent(
-		date: string,
-		time: string,
-		type: string,
-		key: string,
-		pain: number,
-		detail: string,
-		quantity: string): Observable<never> {
+	public addEvent(date: string, customEvent: ICustomEvent): Observable<never> {
 		const day = this.getDay(date);
 		day.subscribe(d => {
-			switch (type) {
+			switch (customEvent.type) {
 				case 'symptomLog':
-					this.addSymptomLog(d, time, key, pain, detail);
+					this.addSymptomLog(d, customEvent.time, customEvent.key, customEvent.pain, customEvent.detail);
 					break;
 				case 'log':
-					this.addLog(d, time, key, detail);
+					this.addLog(d, customEvent.time, customEvent.key, customEvent.detail);
 					break;
 				case 'med':
-					this.addMed(d, time, key, quantity);
+					this.addMed(d, customEvent.time, customEvent.key, customEvent.quantity);
 					break;
 				case 'meal':
-					this.addMeal(d, time, key, detail);
+					this.addMeal(d, customEvent.time, customEvent.key, customEvent.detail);
 					break;
 				case 'wakeUp':
 				case 'goToBed':
-					this.setStartEnd(d, time, type);
+					this.setStartEnd(d, customEvent.time, customEvent.type);
 					break;
 
 			}
@@ -117,26 +129,33 @@ export class DaysService {
 		return of();
 	}
 
-	public deleteEvent(date: string, time: string, type: string, key: string): Observable<IDay> {
+	public editEvent(date: string, customEvent: ICustomEvent): Observable<never> {
+		this.deleteEvent(date, customEvent).subscribe(_ => {
+			this.addEvent(date, customEvent);
+		});
+		return of();
+	}
+
+	public deleteEvent(date: string, customEvent: ICustomEvent): Observable<IDay> {
 		const day = this.getDay(date);
 
 		day.subscribe(d => {
-			switch (type) {
+			switch (customEvent.type) {
 				case 'symptomLog':
-					const symptom = d.symptoms.find(s => s.key === key);
-					symptom.logs = this.filterEvent(symptom.logs, time, key);
+					const symptom = d.symptoms.find(s => s.key === customEvent.key);
+					symptom.logs = this.filterEvent(symptom.logs, customEvent.time, customEvent.key);
 					if (symptom.logs.length === 0) {
-						d.symptoms = d.symptoms.filter(s => s.key !== key);
+						d.symptoms = d.symptoms.filter(s => s.key !== customEvent.key);
 					}
 					break;
 				case 'log':
-					d.logs = this.filterEvent(d.logs, time, key);
+					d.logs = this.filterEvent(d.logs, customEvent.time, customEvent.key);
 					break;
 				case 'med':
-					d.meds = this.filterEvent(d.meds, time, key);
+					d.meds = this.filterEvent(d.meds, customEvent.time, customEvent.key);
 					break;
 				case 'meal':
-					d.meals = this.filterEvent(d.meals, time, key);
+					d.meals = this.filterEvent(d.meals, customEvent.time, customEvent.key);
 					break;
 			}
 			this.dbContext.database.put(d);

@@ -27,7 +27,7 @@
 					<div class="timeline-chips-padding"></div>
 					<mat-chip *ngFor="let content of dayContent.content" [ngSwitch]="content.type"
 						class="mat-chip mat-standard-chip timeline-day-item-{{ content.type }} event-chips">
-						<div class="event-container">
+						<div class="event-container" (click)="openShowDialog(dayContent.date, content)">
 							<div *ngSwitchCase="'symptomLog'" class="event">
 								{{ content.time }} : {{ content.key }} [{{ content.pain }}/5]
 							</div>
@@ -42,7 +42,7 @@
 							</div>
 							<div class="remove-event-container">
 								<mat-icon matChipRemove *ngIf="dayContent.removable" class="remove-event"
-									(click)="openDeleteDialog(dayContent.date, content.time, content.type, content.key)">
+									(click)="openDeleteDialog(dayContent.date, content)">
 									cancel
 								</mat-icon>
 							</div>
