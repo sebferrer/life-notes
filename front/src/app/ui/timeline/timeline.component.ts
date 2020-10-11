@@ -51,7 +51,7 @@ export class TimelineComponent implements OnInit {
 			if (response == null || response.answer !== 'yes') {
 				return;
 			}
-			this.daysService.deleteEvent(date, time, type, key).subscribe(() => { console.log("AAAA"); this.ngOnInit(); });
+			this.daysService.deleteEvent(date, time, type, key).subscribe(() => { this.ngOnInit(); });
 			this.snackBar.open(`The ${type} was successfully deleted for ${date}`, 'Close');
 		});
 	}

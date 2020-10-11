@@ -13,7 +13,7 @@
                     [{{ content.type }}] {{ content.time }} : {{ content.key }} --&rsaquo; {{ content.pain }} {{ content.detail }}
                 </div>
                 <div *ngSwitchCase="'log'">
-                    [{{ content.type }}] {{ content.time }} : {{ content.detail }}
+                    [{{ content.type }}] {{ content.time }} : {{ content.key }} {{ content.detail }}
                 </div>
                 <div *ngSwitchCase="'med'">
                     [{{ content.type }}] {{ content.time }} : {{ content.key }} {{ content.quantity }}

@@ -32,7 +32,7 @@
 								{{ content.time }} : {{ content.key }} [{{ content.pain }}/5]
 							</div>
 							<div *ngSwitchCase="'log'" class="event">
-								{{ content.time }} : {{ content.detail | slice:0:20 }}...
+								{{ content.time }} : {{ content.key }}
 							</div>
 							<div *ngSwitchCase="'med'" class="event">
 								{{ content.time }} : {{ content.key }} {{ content.quantity }}

@@ -59,8 +59,8 @@ export class DaysService {
 		day.symptoms.find(s => s.key === key).logs.push({ type: 'symptomLog', time, key, pain, detail });
 	}
 
-	public addLog(day: IDay, time: string, detail: string): void {
-		day.logs.push({ type: 'log', time, detail });
+	public addLog(day: IDay, time: string, key: string, detail: string): void {
+		day.logs.push({ type: 'log', time, key, detail });
 	}
 
 	public addMed(day: IDay, time: string, key: string, quantity: string): void {
@@ -97,7 +97,7 @@ export class DaysService {
 					this.addSymptomLog(d, time, key, pain, detail);
 					break;
 				case 'log':
-					this.addLog(d, time, detail);
+					this.addLog(d, time, key, detail);
 					break;
 				case 'med':
 					this.addMed(d, time, key, quantity);
