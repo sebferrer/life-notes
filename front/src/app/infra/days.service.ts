@@ -124,19 +124,19 @@ export class DaysService {
 			switch (type) {
 				case 'symptomLog':
 					const symptom = d.symptoms.find(s => s.key === key);
-					symptom.logs = this.filterTimeEvent(symptom.logs, time);
+					symptom.logs = this.filterEvent(symptom.logs, time, key);
 					if (symptom.logs.length === 0) {
 						d.symptoms = d.symptoms.filter(s => s.key !== key);
 					}
 					break;
 				case 'log':
-					d.logs = this.filterTimeEvent(d.logs, time);
+					d.logs = this.filterEvent(d.logs, time, key);
 					break;
 				case 'med':
-					d.meds = this.filterTimeEvent(d.meds, time);
+					d.meds = this.filterEvent(d.meds, time, key);
 					break;
 				case 'meal':
-					d.meals = this.filterTimeEvent(d.meals, time);
+					d.meals = this.filterEvent(d.meals, time, key);
 					break;
 			}
 			this.dbContext.database.put(d);
@@ -144,8 +144,8 @@ export class DaysService {
 		return day;
 	}
 
-	public filterTimeEvent(events: any[], time: string) {
-		return events.filter((event: { time: string; }) => event.time !== time);
+	public filterEvent(events: any[], time: string, key: string) {
+		return events.filter((event: { time: string; key: string; }) => event.time !== time || event.key !== key);
 	}
 
 	public createNewDay(date: string): Observable<never> {
