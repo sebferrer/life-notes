@@ -14,6 +14,7 @@ import { TimelineComponent } from './ui/timeline';
 import { DialogAddEventComponent } from './ui/timeline/dialog-add-event';
 import { DialogDeleteEventComponent } from './ui/timeline/dialog-delete-event';
 import { DialogShowEventComponent } from './ui/timeline/dialog-show-event';
+import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
 
 @NgModule({
 	declarations: [
@@ -44,7 +45,8 @@ import { DialogShowEventComponent } from './ui/timeline/dialog-show-event';
 		BrowserAnimationsModule,
 		MatFormFieldModule,
 		MatInputModule,
-		MatSnackBarModule
+		MatSnackBarModule,
+		NgxMaterialTimepickerModule
 	],
 	providers: [
 		DaysService,

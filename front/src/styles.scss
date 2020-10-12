@@ -15,10 +15,19 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .custom-modalbox {
     .mat-dialog-container {
-        overflow: hidden !important;
+        overflow: hidden;
     }
     .mat-dialog-content {
-        overflow: hidden !important;
+        overflow: hidden;
     }
 
+}
+
+.cdk-overlay-container {
+    z-index: 200;
+}
+
+
+ngx-material-timepicker-container {
+    z-index: 500;
 }
