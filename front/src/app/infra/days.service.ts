@@ -8,7 +8,7 @@ import { ILog } from '../models/log.model';
 import { IMed } from '../models/med.model';
 import { IMeal } from '../models/meal.model';
 import { ISymptom } from '../models/symptom.model';
-import { mapTo, tap, map } from 'rxjs/operators';
+import { tap, map, switchMap } from 'rxjs/operators';
 import { ICustomEvent } from '../models/customEvent.model';
 
 // const CALENDAR_API = '/api/calendar';
@@ -102,11 +102,9 @@ export class DaysService {
 	}
 
 	public addEvent(date: string, customEvent: ICustomEvent): Observable<null> {
-		console.log('add');
 		const day = this.getDay(date);
 		return day.pipe(
 			tap(d => {
-				console.log('add > day callback');
 				switch (customEvent.type) {
 					case 'symptomLog':
 						this.addSymptomLog(d, customEvent.time, customEvent.key, customEvent.pain, customEvent.detail);
@@ -132,19 +130,17 @@ export class DaysService {
 	}
 
 	public editEvent(date: string, oldCustomEvent: ICustomEvent, customEvent: ICustomEvent): Observable<null> {
-		console.log('edit');
-		return this.addEvent(date, customEvent).pipe(
-			tap(() => {
-				this.deleteEvent(date, oldCustomEvent);
+		return this.deleteEvent(date, oldCustomEvent).pipe(
+			switchMap(() => {
+				return this.addEvent(date, customEvent);
 			}),
-			map(() => null));;
+			map(() => null));
 	}
 
 	public deleteEvent(date: string, customEvent: ICustomEvent): Observable<null> {
 		const day = this.getDay(date);
 		return day.pipe(
 			tap(d => {
-				console.log('delete > day callback');
 				switch (customEvent.type) {
 					case 'symptomLog':
 						const symptom = d.symptoms.find(s => s.key === customEvent.key);
