@@ -52,7 +52,30 @@ export class TimelineComponent implements OnInit {
 			if (response == null || response.answer !== 'yes') {
 				return;
 			}
-			this.ngOnInit();
+			if (response.edit) {
+				this.daysService.editEvent(
+					date,
+					customEvent,
+					{
+						'time': response.time,
+						'type': response.type,
+						'key': response.key,
+						'pain': response.pain,
+						'detail': response.detail,
+						'quantity': response.quantity
+					}).subscribe(() => { this.ngOnInit(); });
+			} else {
+				this.daysService.addEvent(
+					date,
+					{
+						'time': response.time,
+						'type': response.type,
+						'key': response.key,
+						'pain': response.pain,
+						'detail': response.detail,
+						'quantity': response.quantity
+					}).subscribe(() => { this.ngOnInit(); });
+			}
 			const action = response.edit ? 'updated' : 'added';
 			this.snackBar.open(`The ${type} was successfully ${action} for ${date}`, 'Close');
 		});

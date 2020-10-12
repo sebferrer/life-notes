@@ -46,28 +46,15 @@ export class DialogAddEventComponent {
 	}
 
 	public onYesClick(): void {
-		if (this.data.edit) {
-			this.daysService.editEvent(
-				this.data.date,
-				{
-					'time': this.data.time,
-					'type': this.data.type,
-					'key': this.data.key,
-					'pain': this.data.pain,
-					'detail': this.data.detail,
-					'quantity': this.data.quantity
-				});
-		} else {
-			this.daysService.addEvent(
-				this.data.date,
-				{
-					'time': this.data.time,
-					'type': this.data.type,
-					'key': this.data.key,
-					'pain': this.data.pain,
-					'detail': this.data.detail,
-					'quantity': this.data.quantity
-				});
-		}
+		this.dialogRef.close({
+			'answer': 'yes',
+			'edit': this.data.edit,
+			'time': this.data.time,
+			'type': this.data.type,
+			'key': this.data.key,
+			'pain': this.data.pain,
+			'detail': this.data.detail,
+			'quantity': this.data.quantity
+		});
 	}
 }

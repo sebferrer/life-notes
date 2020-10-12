@@ -8,7 +8,7 @@ import { ILog } from '../models/log.model';
 import { IMed } from '../models/med.model';
 import { IMeal } from '../models/meal.model';
 import { ISymptom } from '../models/symptom.model';
-import { mapTo } from 'rxjs/operators';
+import { mapTo, tap, map } from 'rxjs/operators';
 import { ICustomEvent } from '../models/customEvent.model';
 
 // const CALENDAR_API = '/api/calendar';
@@ -101,66 +101,71 @@ export class DaysService {
 		}
 	}
 
-	public addEvent(date: string, customEvent: ICustomEvent): Observable<never> {
+	public addEvent(date: string, customEvent: ICustomEvent): Observable<null> {
+		console.log('add');
 		const day = this.getDay(date);
-		day.subscribe(d => {
-			switch (customEvent.type) {
-				case 'symptomLog':
-					this.addSymptomLog(d, customEvent.time, customEvent.key, customEvent.pain, customEvent.detail);
-					break;
-				case 'log':
-					this.addLog(d, customEvent.time, customEvent.key, customEvent.detail);
-					break;
-				case 'med':
-					this.addMed(d, customEvent.time, customEvent.key, customEvent.quantity);
-					break;
-				case 'meal':
-					this.addMeal(d, customEvent.time, customEvent.key, customEvent.detail);
-					break;
-				case 'wakeUp':
-				case 'goToBed':
-					this.setStartEnd(d, customEvent.time, customEvent.type);
-					break;
+		return day.pipe(
+			tap(d => {
+				console.log('add > day callback');
+				switch (customEvent.type) {
+					case 'symptomLog':
+						this.addSymptomLog(d, customEvent.time, customEvent.key, customEvent.pain, customEvent.detail);
+						break;
+					case 'log':
+						this.addLog(d, customEvent.time, customEvent.key, customEvent.detail);
+						break;
+					case 'med':
+						this.addMed(d, customEvent.time, customEvent.key, customEvent.quantity);
+						break;
+					case 'meal':
+						this.addMeal(d, customEvent.time, customEvent.key, customEvent.detail);
+						break;
+					case 'wakeUp':
+					case 'goToBed':
+						this.setStartEnd(d, customEvent.time, customEvent.type);
+						break;
 
-			}
-			this.dbContext.database.put(d);
-		});
-
-		return of();
+				}
+				this.dbContext.database.put(d);
+			}),
+			map(() => null));
 	}
 
-	public editEvent(date: string, customEvent: ICustomEvent): Observable<never> {
-		this.deleteEvent(date, customEvent).subscribe(_ => {
-			this.addEvent(date, customEvent);
-		});
-		return of();
+	public editEvent(date: string, oldCustomEvent: ICustomEvent, customEvent: ICustomEvent): Observable<null> {
+		console.log('edit');
+		return this.addEvent(date, customEvent).pipe(
+			tap(() => {
+				this.deleteEvent(date, oldCustomEvent);
+			}),
+			map(() => null));;
 	}
 
-	public deleteEvent(date: string, customEvent: ICustomEvent): Observable<IDay> {
+	public deleteEvent(date: string, customEvent: ICustomEvent): Observable<null> {
 		const day = this.getDay(date);
-
-		day.subscribe(d => {
-			switch (customEvent.type) {
-				case 'symptomLog':
-					const symptom = d.symptoms.find(s => s.key === customEvent.key);
-					symptom.logs = this.filterEvent(symptom.logs, customEvent.time, customEvent.key);
-					if (symptom.logs.length === 0) {
-						d.symptoms = d.symptoms.filter(s => s.key !== customEvent.key);
-					}
-					break;
-				case 'log':
-					d.logs = this.filterEvent(d.logs, customEvent.time, customEvent.key);
-					break;
-				case 'med':
-					d.meds = this.filterEvent(d.meds, customEvent.time, customEvent.key);
-					break;
-				case 'meal':
-					d.meals = this.filterEvent(d.meals, customEvent.time, customEvent.key);
-					break;
-			}
-			this.dbContext.database.put(d);
-		});
-		return day;
+		return day.pipe(
+			tap(d => {
+				console.log('delete > day callback');
+				switch (customEvent.type) {
+					case 'symptomLog':
+						const symptom = d.symptoms.find(s => s.key === customEvent.key);
+						symptom.logs = this.filterEvent(symptom.logs, customEvent.time, customEvent.key);
+						if (symptom.logs.length === 0) {
+							d.symptoms = d.symptoms.filter(s => s.key !== customEvent.key);
+						}
+						break;
+					case 'log':
+						d.logs = this.filterEvent(d.logs, customEvent.time, customEvent.key);
+						break;
+					case 'med':
+						d.meds = this.filterEvent(d.meds, customEvent.time, customEvent.key);
+						break;
+					case 'meal':
+						d.meals = this.filterEvent(d.meals, customEvent.time, customEvent.key);
+						break;
+				}
+				this.dbContext.database.put(d);
+			}),
+			map(() => null));
 	}
 
 	public filterEvent(events: any[], time: string, key: string) {
