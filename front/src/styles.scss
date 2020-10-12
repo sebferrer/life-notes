@@ -12,3 +12,13 @@ body {
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.custom-modalbox {
+    .mat-dialog-container {
+        overflow: hidden !important;
+    }
+    .mat-dialog-content {
+        overflow: hidden !important;
+    }
+
+}

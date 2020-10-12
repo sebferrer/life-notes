@@ -32,7 +32,9 @@ export class TimelineComponent implements OnInit {
 
 	public openShowDialog(date: string, customEvent: ICustomEvent): void {
 		this.dialog.open(DialogShowEventComponent, {
+			autoFocus: false,
 			width: '20rem',
+			panelClass: 'custom-modalbox',
 			data: { date, customEvent }
 		}).afterClosed().subscribe(response => {
 			if (response == null || response.answer !== 'yes') {
@@ -46,7 +48,9 @@ export class TimelineComponent implements OnInit {
 	public openAddDialog(type: string, date: string, customEvent?: ICustomEvent): void {
 		const typeLabel = this.daysService.getTypeLabel(type);
 		this.dialog.open(DialogAddEventComponent, {
+			autoFocus: false,
 			width: '20rem',
+			panelClass: 'custom-modalbox',
 			data: { type, typeLabel, date, customEvent }
 		}).afterClosed().subscribe(response => {
 			if (response == null || response.answer !== 'yes') {
@@ -84,7 +88,9 @@ export class TimelineComponent implements OnInit {
 	public openDeleteDialog(date: string, customEvent: ICustomEvent): void {
 		const typeLabel = this.daysService.getTypeLabel(customEvent.type);
 		this.dialog.open(DialogDeleteEventComponent, {
+			autoFocus: false,
 			width: '20rem',
+			panelClass: 'custom-modalbox',
 			data: { date, typeLabel, customEvent }
 		}).afterClosed().subscribe(response => {
 			if (response == null || response.answer !== 'yes') {
