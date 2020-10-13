@@ -1,6 +1,5 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DaysService } from 'src/app/infra';
 import { ICustomEvent } from 'src/app/models/customEvent.model';
 
 export interface IDialogData {
@@ -25,8 +24,7 @@ export interface IDialogData {
 export class DialogAddEventComponent {
 	constructor(
 		public dialogRef: MatDialogRef<DialogAddEventComponent>,
-		@Inject(MAT_DIALOG_DATA) public data: IDialogData,
-		private daysService: DaysService
+		@Inject(MAT_DIALOG_DATA) public data: IDialogData
 	) {
 		if (data.customEvent != null) {
 			data.edit = true;
@@ -36,8 +34,6 @@ export class DialogAddEventComponent {
 			data.detail = data.customEvent.detail;
 			data.pain = data.customEvent.pain;
 			data.quantity = data.customEvent.quantity;
-		} else if (data.type === 'wakeUp' || data.type === 'goToBed') {
-			data.edit = true;
 		} else {
 			data.edit = false;
 		}
