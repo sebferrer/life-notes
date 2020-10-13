@@ -17,11 +17,18 @@
 				<button mat-menu-item (click)="openAddDialog('log', dayContent.date)">Add custom event</button>
 				<button mat-menu-item (click)="openAddDialog('med', dayContent.date)">Add drug</button>
 				<button mat-menu-item (click)="openAddDialog('meal', dayContent.date)">Add meal</button>
-				<button mat-menu-item (click)="openAddDialog('wakeUp', dayContent.date)">Wake up</button>
-				<button mat-menu-item (click)="openAddDialog('goToBed', dayContent.date)">Go to bed</button>
 			</mat-menu>
 		</mat-grid-tile-header>
 		<div class="timeline-tile-content">
+			<div class="corner-decoration"></div>
+			<div class="wakeup-container" (click)="openAddDialog('wakeUp', dayContent.date)">
+				<mat-icon class="wakeup-icon">alarm</mat-icon>
+				<div class="wakeup-time">{{ dayContent.wakeUp }}</div>
+			</div>
+			<div class="gotobed-container" (click)="openAddDialog('goToBed', dayContent.date)">
+				<mat-icon class="gotobed-icon">bedtime</mat-icon>
+				<div class="gotobed-time">{{ dayContent.goToBed }}</div>
+			</div>
 			<div class="timeline-content">
 				<mat-chip-list class="mat-chip-list-stacked">
 					<div class="timeline-chips-padding"></div>

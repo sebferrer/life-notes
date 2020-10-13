@@ -36,6 +36,8 @@ export class DialogAddEventComponent {
 			data.detail = data.customEvent.detail;
 			data.pain = data.customEvent.pain;
 			data.quantity = data.customEvent.quantity;
+		} else if (data.type === 'wakeUp' || data.type === 'goToBed') {
+			data.edit = true;
 		} else {
 			data.edit = false;
 		}

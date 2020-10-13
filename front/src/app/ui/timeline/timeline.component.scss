@@ -22,6 +22,7 @@
     width: 100%;
     height: 85%;
     overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .timeline-day-item-symptomLog {
@@ -77,4 +78,77 @@
 
 .timeline-chips-padding {
     height: 0.5rem;
+}
+
+.wakeup-container {
+    position: absolute;
+    top: 15%;
+    right: 0;
+    width: 20%;
+    height: 20%;
+    background-color: #CECECE;
+    border-radius: 0 0 0 100%;
+     -moz-border-radius: 0 0 0 100%;
+     -webkit-border-radius: 0 0 0 100%;
+     z-index: 10;
+}
+
+.gotobed-container {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 20%;
+    height: 20%;
+    background-color: #CECECE;
+    border-radius: 100% 0 0 0;
+     -moz-border-radius: 100% 0 0 0;
+     -webkit-border-radius: 100% 0 0 0;
+}
+
+.wakeup-time {
+    position: relative;
+    margin-top: 5%;
+    margin-left: 20%;
+    font-size: 120%;
+    color: white;
+    z-index: 15;
+}
+
+.wakeup-icon {
+    position: absolute;
+    right: 20%;
+    top: 40%;
+    font-size: 200%;
+    color: #98A2AE;
+    z-index: 11;
+}
+
+.gotobed-time {
+    position: relative;
+    margin-top: 65%;
+    margin-left: 20%;
+    font-size: 120%;
+    color: white;
+    z-index: 15;
+}
+
+.gotobed-icon {
+    position: absolute;
+    right: 20%;
+    top: 20%;
+    font-size: 200%;
+    color: #98A2AE;
+    z-index: 11;
+}
+
+.corner-decoration {
+    position: absolute;
+    top: 15%;
+    left: 0;
+    width: 60%;
+    height: 60%;
+    background-color: #EBEBEB;
+    border-radius: 0 0 100% 0;
+    -moz-border-radius: 0 0 100% 0;
+    -webkit-border-radius: 0 0 100% 0;
 }
