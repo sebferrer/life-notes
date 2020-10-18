@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { DaysService } from 'src/app/infra';
-import { MatDialog, MatSnackBar } from '@angular/material';
 import { DialogAddEventComponent } from './dialog-add-event';
 import { DialogDeleteEventComponent } from './dialog-delete-event';
 import { map } from 'rxjs/operators';
 import { DayViewModel } from 'src/app/models/day.view.model';
 import { DialogShowEventComponent } from './dialog-show-event';
 import { ICustomEvent } from 'src/app/models/customEvent.model';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
 	selector: 'app-timeline',
