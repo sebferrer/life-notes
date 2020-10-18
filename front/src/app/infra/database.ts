@@ -7,7 +7,8 @@ import { map } from 'rxjs/operators';
 	providedIn: 'root'
 })
 export class DbContext {
-	public readonly database = new PouchDB('healthy-day');
+	public readonly daysCollection = new PouchDB('days');
+	public readonly symptomsCollection = new PouchDB('symptoms');
 
 	public asArrayObservable<T>(dbSet: Promise<{ rows: { doc: T }[] }>): Observable<T[]> {
 		return from(dbSet).pipe(

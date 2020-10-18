@@ -1,0 +1,16 @@
+<div *ngIf="symptoms$ | async as symptoms; else loading">
+    <div *ngFor="let symptom of symptoms">
+        {{ symptom.key }} : {{ symptom.label }}
+    </div>
+</div>
+
+<mat-selection-list #shoes [multiple]="false">
+    <mat-list-option *ngFor="let shoe of typesOfShoes" [value]="shoe">
+      {{shoe}}
+    </mat-list-option>
+</mat-selection-list>
+
+
+<ng-template #loading>
+    <mat-spinner></mat-spinner>
+</ng-template>

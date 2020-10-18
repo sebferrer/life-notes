@@ -6,7 +6,8 @@ export interface ISymptomOverview {
 export interface ISymptom {
 	type: string;
 	key: string;
-	logs: ISymptomLog[];
+	label?: string;
+	logs?: ISymptomLog[];
 }
 
 export interface ISymptomLog {

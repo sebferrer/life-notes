@@ -7,6 +7,7 @@ import { HomeComponent } from './ui';
 import { DayComponent } from './ui/day';
 import { CalendarComponent } from './ui/calendar';
 import { TimelineComponent } from './ui/timeline';
+import { SymptomsComponent } from './ui/symptoms';
 
 const routes: Routes = [
 	{
@@ -20,6 +21,10 @@ const routes: Routes = [
 	{
 		path: 'timeline',
 		component: TimelineComponent
+	},
+	{
+		path: 'symptoms',
+		component: SymptomsComponent
 	},
 	{
 		path: ':date',

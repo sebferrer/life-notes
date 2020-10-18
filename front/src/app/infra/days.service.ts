@@ -27,19 +27,19 @@ export class DaysService {
 
 	public getDaysOverviews(): Observable<IDayOverview[]> {
 		return this.dbContext.asArrayObservable<IDayOverview>(
-			this.dbContext.database.allDocs({ include_docs: true, descending: true })
+			this.dbContext.daysCollection.allDocs({ include_docs: true, descending: true })
 		);
 	}
 
 	public getDays(): Observable<IDay[]> {
 		return this.dbContext.asArrayObservable<IDay>(
-			this.dbContext.database.allDocs({ include_docs: true, descending: true })
+			this.dbContext.daysCollection.allDocs({ include_docs: true, descending: true })
 		);
 	}
 
 	public getDay(date: string): Observable<IDay> {
 		return this.dbContext.asObservable<IDay>(
-			this.dbContext.database.get(date)
+			this.dbContext.daysCollection.get(date)
 		);
 	}
 
@@ -50,7 +50,7 @@ export class DaysService {
 			['med', 'Drug'],
 			['meal', 'Meal'],
 			['wakeUp', 'Wake up'],
-			['goToBed', 'Go to bed']]);
+			['goToBed', 'Bed time']]);
 
 		return labels.get(type);
 	}
@@ -124,7 +124,7 @@ export class DaysService {
 						break;
 
 				}
-				this.dbContext.database.put(d);
+				this.dbContext.daysCollection.put(d);
 			}),
 			map(() => null));
 	}
@@ -159,7 +159,7 @@ export class DaysService {
 						d.meals = this.filterEvent(d.meals, customEvent.time, customEvent.key);
 						break;
 				}
-				this.dbContext.database.put(d);
+				this.dbContext.daysCollection.put(d);
 			}),
 			map(() => null));
 	}
@@ -180,12 +180,12 @@ export class DaysService {
 			'wakeUp': '',
 			'goToBed': ''
 		};
-		this.dbContext.database.put(day).then((res: any) => { }, (err: any) => { });
+		this.dbContext.daysCollection.put(day).then((res: any) => { }, (err: any) => { });
 		return of();
 	}
 
 	public addDay(day: IDay): Observable<never> {
-		this.dbContext.database.put(day);
+		this.dbContext.daysCollection.put(day);
 		return of();
 	}
 
@@ -196,13 +196,13 @@ export class DaysService {
 
 	public removeDayByDate(date: string): Observable<never> {
 		this.getDay(date).subscribe(day => {
-			this.dbContext.database.remove(day);
+			this.dbContext.daysCollection.remove(day);
 		});
 		return of();
 	}
 
 	public removeDay(day: IDay): Observable<never> {
-		this.dbContext.database.remove(day);
+		this.dbContext.daysCollection.remove(day);
 		return of();
 	}
 
