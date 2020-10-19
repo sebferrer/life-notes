@@ -1,0 +1,35 @@
+.symptom-list {
+    margin-bottom: 2rem;
+}
+
+.symptom-label-container {
+    height: 3rem;
+    padding-top: 1rem;
+    float: left;
+    display: table;
+    position: relative;
+}
+
+.symptom-label {
+    position: absolute;
+    top: 30%;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.edit-symptom {
+    display: inline-block;
+    margin-left: 1rem;
+}
+
+.delete-symptom {
+    display: inline-block;
+    margin-left: 1rem;
+}
+
+.buttons-container {
+    position: absolute;
+    top: 10%;
+    right: 30%;
+    height: 2rem;
+}

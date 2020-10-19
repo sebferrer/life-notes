@@ -27,7 +27,14 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     z-index: 200;
 }
 
+.mat-list-base .mat-list-item, .mat-list-base .mat-list-option {
+    color: rgba(0,0,0,.87);
+}
 
 ngx-material-timepicker-container {
     z-index: 500;
+}
+
+.mat-list-text {
+    display: block !important;
 }
