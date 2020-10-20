@@ -1,20 +1,24 @@
-<mat-selection-list class="symptom-list" *ngIf="symptoms$ | async as symptoms; else loading" #symptoms [multiple]="false">
-    <mat-list-option class="symptom-list-item" *ngFor="let symptom of symptoms" [value]="symptom">
-        <div class="symptom-label-container" (click)="toggleEditable(symptoms, symptom)">
-            <div class="symptom-label">{{ symptom.label }}</div>
-        </div>
-        <div class="buttons-container">
-            <button mat-icon-button class="edit-symptom" *ngIf="symptom.editable" (click)="editSymptom(symptom)">
-                <mat-icon>edit</mat-icon>
-            </button>
-            <button mat-icon-button class="delete-symptom" *ngIf="symptom.editable" (click)="deleteSymptom(symptom)">
-                <mat-icon>delete</mat-icon>
-            </button>
-        </div>
-    </mat-list-option>
-</mat-selection-list>
+<div id="symptoms-container">
+    <mat-selection-list class="symptom-list" *ngIf="symptoms$ | async as symptoms; else loading" #symptoms
+        [multiple]="false">
+        <mat-list-option class="symptom-list-item" *ngFor="let symptom of symptoms" [value]="symptom">
+            <div class="symptom-label-container" (click)="toggleEditable(symptoms, symptom)">
+                <div class="symptom-label">{{ symptom.label }}</div>
+            </div>
+            <div class="buttons-container">
+                <button mat-icon-button class="edit-symptom" *ngIf="symptom.editable" (click)="editSymptom(symptom)">
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button class="delete-symptom" *ngIf="symptom.editable"
+                    (click)="deleteSymptom(symptom)">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </div>
+        </mat-list-option>
+    </mat-selection-list>
 
-<button mat-raised-button color="primary" (click)="openAddDialog()">Add a symptom</button>
+    <button mat-raised-button color="primary" (click)="openAddDialog()">Add a symptom</button>
+</div>
 
 <ng-template #loading>
     <mat-spinner></mat-spinner>

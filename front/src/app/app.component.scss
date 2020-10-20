@@ -1,5 +1,7 @@
 mat-toolbar {
+	position: fixed;
 	margin-bottom: 1rem;
+	z-index: 150;
 }
 
 .content {
