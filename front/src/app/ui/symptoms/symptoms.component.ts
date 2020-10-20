@@ -3,6 +3,10 @@ import { SymptomsService } from '../../infra';
 import { Observable } from 'rxjs';
 import { SymptomViewModel } from 'src/app/models/symptom.view.model';
 import { map } from 'rxjs/operators';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { DialogAddSymptomComponent } from './dialog-add-symptom';
+import * as simplifyString from 'simplify-string';
 
 @Component({
 	selector: 'app-symptoms',
@@ -14,7 +18,9 @@ export class SymptomsComponent implements OnInit {
 	public symptoms$: Observable<SymptomViewModel[]>;
 
 	constructor(
-		private symptomsService: SymptomsService
+		private symptomsService: SymptomsService,
+		private dialog: MatDialog,
+		private snackBar: MatSnackBar
 	) { }
 
 	public ngOnInit(): void {
@@ -32,11 +38,41 @@ export class SymptomsComponent implements OnInit {
 		symptom.editable = symptom.editable ? false : true;
 	}
 
-	public editSymptom(): void {
-
+	public openAddDialog(key?: string, label?: string): void {
+		this.dialog.open(DialogAddSymptomComponent, {
+			autoFocus: false,
+			width: '20rem',
+			panelClass: 'custom-modalbox',
+			data: { key, label }
+		}).afterClosed().subscribe(response => {
+			if (response == null || response.answer !== 'yes') {
+				return;
+			}
+			if (response.edit) {
+				this.editSymptom(response.key, response.label);
+			} else {
+				this.addSymptom(response.label);
+			}
+			const action = response.edit ? 'updated' : 'added';
+			this.snackBar.open(`The symptom was successfully ${action}`, 'Close');
+		});
 	}
 
-	public deleteSymptom(): void {
+	public addSymptom(label: string): void {
+		const key = simplifyString(label);
+		this.symptomsService.createNewSymptom(key, label).subscribe(() => { this.ngOnInit(); });
+	}
+
+	public editSymptom(key: string, label: string): void {
+		this.symptomsService.editSymptom(
+			{
+				'type': 'symptom',
+				'key': key,
+				'label': label
+			}).subscribe(() => { this.ngOnInit(); });
+	}
+
+	public deleteSymptom(key: string): void {
 
 	}
 

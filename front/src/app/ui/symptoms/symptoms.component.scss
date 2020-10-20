@@ -4,10 +4,12 @@
 
 .symptom-label-container {
     height: 3rem;
+    width: 10rem;
     padding-top: 1rem;
     float: left;
     display: table;
     position: relative;
+    overflow-x: auto;
 }
 
 .symptom-label {
@@ -30,6 +32,6 @@
 .buttons-container {
     position: absolute;
     top: 10%;
-    right: 30%;
+    right: 0%;
     height: 2rem;
 }

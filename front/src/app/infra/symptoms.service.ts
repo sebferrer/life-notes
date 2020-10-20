@@ -27,6 +27,11 @@ export class SymptomsService {
 		return of();
 	}
 
+	public editSymptom(symptom: ISymptom): Observable<never> {
+		// this.dbContext.symptomsCollection.put(symptom);
+		return of();
+	}
+
 	public createNewSymptom(key: string, label: string): Observable<never> {
 		const day = {
 			'_id': key,

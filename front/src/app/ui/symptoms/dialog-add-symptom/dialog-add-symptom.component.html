@@ -1,0 +1,20 @@
+<h1 mat-dialog-title>
+    <span *ngIf="data.edit; else addSpan">Edit </span> 
+    <ng-template #addSpan>Add </ng-template>
+    <span>a symptom</span>
+</h1>
+<div mat-dialog-content>
+    <mat-form-field>
+        <mat-label>{{ data.label }}</mat-label>
+        <input matInput [(ngModel)]="data.label">
+    </mat-form-field>
+    <div mat-dialog-actions>
+        <button mat-button cdkFocusInitial
+        [mat-dialog-close]="{answer: 'yes', edit: data.edit, key: data.key, label: data.label}"
+            (click)="onYesClick()" color="primary">
+            <span *ngIf="data.edit; else addButton">Edit</span>
+            <ng-template #addButton>Add</ng-template>
+        </button>
+        <button mat-button (click)="onNoClick()">Cancel</button>
+    </div>
+</div>
