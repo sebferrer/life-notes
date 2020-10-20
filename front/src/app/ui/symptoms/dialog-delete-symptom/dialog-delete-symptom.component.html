@@ -1,0 +1,8 @@
+<h1 mat-dialog-title>Delete {{ data.label }}</h1>
+<div mat-dialog-content>
+    <p>Delete the symptom {{ data.label }}?</p>
+</div>
+<div mat-dialog-actions>
+    <button mat-button mat-dialog-close="" (click)="onYesClick()" color="primary">Yes</button>
+    <button mat-button cdkFocusInitial (click)="onNoClick()">No</button>
+</div>

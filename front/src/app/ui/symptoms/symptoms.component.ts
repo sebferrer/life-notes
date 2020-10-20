@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DialogAddSymptomComponent } from './dialog-add-symptom';
 import * as simplifyString from 'simplify-string';
+import { DialogDeleteSymptomComponent } from './dialog-delete-symptom';
 
 @Component({
 	selector: 'app-symptoms',
@@ -58,6 +59,21 @@ export class SymptomsComponent implements OnInit {
 		});
 	}
 
+	public openDeleteDialog(key: string, label: string): void {
+		this.dialog.open(DialogDeleteSymptomComponent, {
+			autoFocus: false,
+			width: '20rem',
+			panelClass: 'custom-modalbox',
+			data: { key, label }
+		}).afterClosed().subscribe(response => {
+			if (response == null || response.answer !== 'yes') {
+				return;
+			}
+			this.symptomsService.deleteSymptom(key).subscribe(() => { this.ngOnInit(); });
+			this.snackBar.open(`The symptom ${label} was successfully deleted`, 'Close');
+		});
+	}
+
 	public addSymptom(label: string): void {
 		const key = simplifyString(label);
 		this.symptomsService.createNewSymptom(key, label).subscribe(() => { this.ngOnInit(); });
@@ -70,10 +86,6 @@ export class SymptomsComponent implements OnInit {
 				'key': key,
 				'label': label
 			}).subscribe(() => { this.ngOnInit(); });
-	}
-
-	public deleteSymptom(key: string): void {
-
 	}
 
 }

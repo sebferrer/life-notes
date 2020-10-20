@@ -1,7 +1,8 @@
-import { Observable, of } from 'rxjs';
+import { Observable, of, from } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { DbContext } from './database';
 import { ISymptom } from '../models/symptom.model';
+import { map, tap } from 'rxjs/operators';
 
 @Injectable()
 export class SymptomsService {
@@ -27,19 +28,30 @@ export class SymptomsService {
 		return of();
 	}
 
+	public deleteSymptom(key: string): Observable<null> {
+		const symptom = this.getSymptom(key);
+		return symptom.pipe(
+			tap(s => {
+				this.dbContext.symptomsCollection.remove(s);
+			}),
+			map(() => null)
+		);
+	}
+
 	public editSymptom(symptom: ISymptom): Observable<never> {
 		// this.dbContext.symptomsCollection.put(symptom);
 		return of();
 	}
 
-	public createNewSymptom(key: string, label: string): Observable<never> {
+	public createNewSymptom(key: string, label: string): Observable<null> {
 		const day = {
 			'_id': key,
 			'key': key,
 			'label': label
 		};
-		this.dbContext.symptomsCollection.put(day).then((res: any) => { }, (err: any) => { });
-		return of();
+		return from(this.dbContext.symptomsCollection.put(day).then((res: any) => { }, (err: any) => { })).pipe(
+			map(() => null)
+		);
 	}
 
 	public removeSymptom(symptom: ISymptom): Observable<never> {
