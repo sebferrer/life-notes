@@ -1,19 +1,22 @@
 <h1 mat-dialog-title>
-    <span *ngIf="data.edit; else addSpan">Edit </span> 
+    <span *ngIf="data.edit; else addSpan">Edit </span>
     <ng-template #addSpan>Add </ng-template>
     <span>a {{ data.typeLabel }} for {{ data.date | date }}</span>
 </h1>
 <div mat-dialog-content>
     <mat-form-field>
         <mat-label>Time</mat-label>
-        <input matInput placeholder="24hr format" aria-label="24hr format" [ngxTimepicker]="fullTime" [format]="24" [(ngModel)]="data.time" readonly>  
-        <ngx-material-timepicker #fullTime></ngx-material-timepicker>  
+        <input matInput placeholder="24hr format" aria-label="24hr format" [ngxTimepicker]="fullTime" [format]="24"
+            [(ngModel)]="data.time" readonly>
+        <ngx-material-timepicker #fullTime></ngx-material-timepicker>
     </mat-form-field>
     <div [ngSwitch]="data.type">
         <div *ngSwitchCase="'symptomLog'">
             <mat-form-field>
                 <mat-label>{{ data.typeLabel }}</mat-label>
-                <input matInput [(ngModel)]="data.key">
+                <mat-select [(ngModel)]="data.key">
+                    <mat-option *ngFor="let symptom of data.symptoms" [value]="symptom.key">{{ symptom.label }}</mat-option>
+                </mat-select>
             </mat-form-field>
             <mat-form-field>
                 <mat-label>Pain</mat-label>
@@ -57,7 +60,7 @@
     </div>
     <div mat-dialog-actions>
         <button mat-button cdkFocusInitial
-        [mat-dialog-close]="{answer: 'yes', edit: data.edit, date: data.date, time: data.time, type: data.type, key: data.key, detail: data.detail, pain: data.pain, quantity: data.quantity}"
+            [mat-dialog-close]="{answer: 'yes', edit: data.edit, date: data.date, time: data.time, type: data.type, key: data.key, detail: data.detail, pain: data.pain, quantity: data.quantity}"
             (click)="onYesClick()" color="primary">
             <span *ngIf="data.edit; else addButton">Edit</span>
             <ng-template #addButton>Add</ng-template>

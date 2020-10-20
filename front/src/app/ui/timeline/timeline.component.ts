@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { DaysService } from 'src/app/infra';
+import { DaysService, SymptomsService } from 'src/app/infra';
 import { DialogAddEventComponent } from './dialog-add-event';
 import { DialogDeleteEventComponent } from './dialog-delete-event';
 import { map } from 'rxjs/operators';
@@ -9,6 +9,7 @@ import { DialogShowEventComponent } from './dialog-show-event';
 import { ICustomEvent } from 'src/app/models/customEvent.model';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ISymptom } from 'src/app/models/symptom.model';
 
 @Component({
 	selector: 'app-timeline',
@@ -18,17 +19,24 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class TimelineComponent implements OnInit {
 
 	public daysContents$: Observable<DayViewModel[]>;
+	public symptoms$: Observable<ISymptom[]>;
+	public symptomMap: Map<string, string>;
 
 	constructor(
 		private daysService: DaysService,
+		private symptomsService: SymptomsService,
 		private dialog: MatDialog,
 		private snackBar: MatSnackBar
-	) { }
+	) {
+		this.symptomMap = new Map();
+	}
 
 	public ngOnInit(): void {
 		this.daysContents$ = this.daysService.getDays().pipe(
 			map(dayContents => dayContents.map(day => new DayViewModel(day)))
 		);
+		this.symptoms$ = this.symptomsService.getSymptoms();
+		this.symptoms$.subscribe(s => s.map(x => this.symptomMap.set(x.key, x.label)));
 	}
 
 	public openShowDialog(date: string, customEvent: ICustomEvent): void {
@@ -54,36 +62,60 @@ export class TimelineComponent implements OnInit {
 			panelClass: 'custom-modalbox',
 			data: { type, typeLabel, date, customEvent }
 		}).afterClosed().subscribe(response => {
-			if (response == null || response.answer !== 'yes') {
-				return;
-			}
-			if (response.edit) {
-				this.daysService.editEvent(
-					date,
-					customEvent,
-					{
-						'time': response.time,
-						'type': response.type,
-						'key': response.key,
-						'pain': response.pain,
-						'detail': response.detail,
-						'quantity': response.quantity
-					}).subscribe(() => { this.ngOnInit(); });
-			} else {
-				this.daysService.addEvent(
-					date,
-					{
-						'time': response.time,
-						'type': response.type,
-						'key': response.key,
-						'pain': response.pain,
-						'detail': response.detail,
-						'quantity': response.quantity
-					}).subscribe(() => { this.ngOnInit(); });
-			}
-			const action = response.edit ? 'updated' : 'added';
-			this.snackBar.open(`The ${type} was successfully ${action} for ${date}`, 'Close');
+			this.postAddDialog(date, response, type, customEvent);
 		});
+	}
+
+	public openAddSymptomDialog(type: string, date: string, symptoms: ISymptom[], customEvent?: ICustomEvent): void {
+		const typeLabel = this.daysService.getTypeLabel(type);
+		this.dialog.open(DialogAddEventComponent, {
+			autoFocus: false,
+			width: '20rem',
+			panelClass: 'custom-modalbox',
+			data: { type, typeLabel, date, symptoms }
+		}).afterClosed().subscribe(response => {
+			this.postAddDialog(date, response, type, customEvent);
+		});
+	}
+
+	public postAddDialog(date: string, response: any, type: string, customEvent: ICustomEvent): void {
+		if (response == null || response.answer !== 'yes') {
+			return;
+		}
+		if (response.edit) {
+			this.editEvent(date, response, customEvent);
+		} else {
+			this.addEvent(date, response);
+		}
+		const action = response.edit ? 'updated' : 'added';
+		this.snackBar.open(`The ${type} was successfully ${action} for ${date}`, 'Close');
+	}
+
+	public editEvent(date: string, response: any, customEvent: ICustomEvent): void {
+		this.daysService.editEvent(
+			date,
+			customEvent,
+			{
+				'time': response.time,
+				'type': response.type,
+				'key': response.key,
+				'pain': response.pain,
+				'detail': response.detail,
+				'quantity': response.quantity
+			}).subscribe(() => { this.ngOnInit(); });
+	}
+
+	public addEvent(date: string, response: any) {
+		this.daysService.addEvent(
+			date,
+			{
+				'time': response.time,
+				'type': response.type,
+				'key': response.key,
+				'pain': response.pain,
+				'detail': response.detail,
+				'quantity': response.quantity
+			}).subscribe(() => { this.ngOnInit(); });
 	}
 
 	public openDeleteDialog(date: string, customEvent: ICustomEvent): void {

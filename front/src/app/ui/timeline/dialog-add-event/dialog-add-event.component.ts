@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ICustomEvent } from 'src/app/models/customEvent.model';
+import { ISymptom } from 'src/app/models/symptom.model';
 
 export interface IDialogData {
 	date: string;
@@ -14,6 +15,7 @@ export interface IDialogData {
 	wakeUp: string;
 	goToBed: string;
 	customEvent: ICustomEvent;
+	symptoms: ISymptom[];
 	edit: boolean;
 }
 
