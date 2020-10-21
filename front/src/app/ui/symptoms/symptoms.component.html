@@ -6,7 +6,7 @@
                 <div class="symptom-label">{{ symptom.label }}</div>
             </div>
             <div class="buttons-container">
-                <button mat-icon-button class="edit-symptom" *ngIf="symptom.editable" (click)="editSymptom(symptom)">
+                <button mat-icon-button class="edit-symptom" *ngIf="symptom.editable" (click)="openAddDialog(symptom)">
                     <mat-icon>edit</mat-icon>
                 </button>
                 <button mat-icon-button class="delete-symptom" *ngIf="symptom.editable"

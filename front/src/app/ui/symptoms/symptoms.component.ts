@@ -8,6 +8,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { DialogAddSymptomComponent } from './dialog-add-symptom';
 import * as simplifyString from 'simplify-string';
 import { DialogDeleteSymptomComponent } from './dialog-delete-symptom';
+import { ISymptom } from 'src/app/models/symptom.model';
 
 @Component({
 	selector: 'app-symptoms',
@@ -39,12 +40,13 @@ export class SymptomsComponent implements OnInit {
 		symptom.editable = symptom.editable ? false : true;
 	}
 
-	public openAddDialog(key?: string, label?: string): void {
+	public openAddDialog(symptom?: ISymptom): void {
+		symptom = symptom == null ? { 'type': 'symptom', 'key': null } : symptom;
 		this.dialog.open(DialogAddSymptomComponent, {
 			autoFocus: false,
 			width: '20rem',
 			panelClass: 'custom-modalbox',
-			data: { key, label }
+			data: { symptom }
 		}).afterClosed().subscribe(response => {
 			if (response == null || response.answer !== 'yes') {
 				return;
@@ -80,12 +82,7 @@ export class SymptomsComponent implements OnInit {
 	}
 
 	public editSymptom(key: string, label: string): void {
-		this.symptomsService.editSymptom(
-			{
-				'type': 'symptom',
-				'key': key,
-				'label': label
-			}).subscribe(() => { this.ngOnInit(); });
+		this.symptomsService.editSymptom(key, label).subscribe(() => { this.ngOnInit(); });
 	}
 
 }

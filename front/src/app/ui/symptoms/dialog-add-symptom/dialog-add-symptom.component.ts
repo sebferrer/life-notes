@@ -3,8 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ISymptom } from 'src/app/models/symptom.model';
 
 export interface IDialogData {
-	key: string;
-	label: string;
+	symptom: ISymptom;
 	edit: boolean;
 }
 
@@ -17,7 +16,7 @@ export class DialogAddSymptomComponent {
 		public dialogRef: MatDialogRef<DialogAddSymptomComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: IDialogData
 	) {
-		data.edit = data.key == null ? false : true;
+		data.edit = data.symptom.key == null ? false : true;
 	}
 
 	public onNoClick(): void {
@@ -28,8 +27,8 @@ export class DialogAddSymptomComponent {
 		this.dialogRef.close({
 			'answer': 'yes',
 			'edit': this.data.edit,
-			'key': this.data.key,
-			'label': this.data.label,
+			'key': this.data.symptom.key,
+			'label': this.data.symptom.label,
 		});
 	}
 }

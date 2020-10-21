@@ -38,9 +38,15 @@ export class SymptomsService {
 		);
 	}
 
-	public editSymptom(symptom: ISymptom): Observable<never> {
-		// this.dbContext.symptomsCollection.put(symptom);
-		return of();
+	public editSymptom(key: string, newLabel: string): Observable<null> {
+		const symptom = this.getSymptom(key);
+		return symptom.pipe(
+			tap(s => {
+				s.label = newLabel;
+				this.dbContext.symptomsCollection.put(s);
+			}),
+			map(() => null)
+		);
 	}
 
 	public createNewSymptom(key: string, label: string): Observable<null> {
