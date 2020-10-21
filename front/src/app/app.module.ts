@@ -15,6 +15,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSliderModule } from '@angular/material/slider';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
@@ -66,6 +67,7 @@ import { DialogDeleteSymptomComponent } from './ui/symptoms/dialog-delete-sympto
 		MatInputModule,
 		MatSnackBarModule,
 		MatSelectModule,
+		MatSliderModule,
 		NgxMaterialTimepickerModule
 	],
 	providers: [

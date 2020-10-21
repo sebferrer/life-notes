@@ -1,15 +1,14 @@
 <mat-toolbar>
-	<span>Healthy Day</span>
-	<button mat-icon-button class="menu-icon menu-icon-calendar" routerLink="" aria-label="Calendar">
+	<button mat-icon-button id="menu-icon-timeline" routerLink="" aria-label="Timeline">
         <mat-icon>view_day</mat-icon>
 	</button>
-	<button mat-icon-button class="menu-icon menu-icon-calendar" routerLink="/calendar" aria-label="Timeline">
+	<button mat-icon-button id="menu-icon-calendar" class="menu-icon" routerLink="/calendar" aria-label="Calendar">
         <mat-icon>apps</mat-icon>
 	</button>
-	<button mat-icon-button class="menu-icon menu-icon-calendar" routerLink="/symptoms" aria-label="Symptoms">
+	<button mat-icon-button id="menu-icon-symptoms" class="menu-icon" routerLink="/symptoms" aria-label="Symptoms">
         <mat-icon>spa</mat-icon>
 	</button>
-	<button mat-icon-button class="menu-icon menu-icon-calendar" [matMenuTriggerFor]="importExport" aria-label="Import-Export">
+	<button mat-icon-button id="menu-icon-import-export" class="menu-icon" [matMenuTriggerFor]="importExport" aria-label="Import-Export">
         <mat-icon>import_export</mat-icon>
 	</button>
 	<mat-menu #importExport="matMenu">

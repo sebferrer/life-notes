@@ -21,6 +21,18 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
         overflow: hidden;
     }
 
+    #pain-container {
+        mat-slider {
+            width: 70%;
+        }
+    
+        input {
+            width: 20%;
+            position: absolute;
+            top: 35%;
+            right: 0;
+        }
+    }
 }
 
 .cdk-overlay-container {

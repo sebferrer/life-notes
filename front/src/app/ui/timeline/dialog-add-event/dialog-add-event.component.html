@@ -15,12 +15,17 @@
             <mat-form-field>
                 <mat-label>{{ data.typeLabel }}</mat-label>
                 <mat-select [(ngModel)]="data.key">
-                    <mat-option *ngFor="let symptom of data.symptoms" [value]="symptom.key">{{ symptom.label }}</mat-option>
+                    <mat-option *ngFor="let symptom of data.symptoms" [value]="symptom.key">{{ symptom.label }}
+                    </mat-option>
                 </mat-select>
             </mat-form-field>
             <mat-form-field>
                 <mat-label>Pain</mat-label>
-                <input matInput [(ngModel)]="data.pain">
+                <div id="pain-container">
+                    <mat-slider [max]="5" [min]="0" [step]="1" [thumbLabel]="true" [(ngModel)]="data.pain">
+                    </mat-slider>
+                    <input matInput [(ngModel)]="data.pain" readonly>
+                </div>
             </mat-form-field>
             <mat-form-field>
                 <mat-label>Detail</mat-label>
