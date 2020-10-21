@@ -10,6 +10,7 @@ import { ICustomEvent } from 'src/app/models/customEvent.model';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ISymptom } from 'src/app/models/symptom.model';
+import { AppComponent } from 'src/app/app.component';
 
 @Component({
 	selector: 'app-timeline',
@@ -21,22 +22,23 @@ export class TimelineComponent implements OnInit {
 	public daysContents$: Observable<DayViewModel[]>;
 	public symptoms$: Observable<ISymptom[]>;
 	public symptomMap: Map<string, string>;
+	public targetSymptom: string;
 
 	constructor(
+		private app: AppComponent,
 		private daysService: DaysService,
 		private symptomsService: SymptomsService,
 		private dialog: MatDialog,
 		private snackBar: MatSnackBar
-	) {
-		this.symptomMap = new Map();
-	}
+	) { }
 
 	public ngOnInit(): void {
+		this.targetSymptom = this.app.targetSymptom;
 		this.daysContents$ = this.daysService.getDays().pipe(
 			map(dayContents => dayContents.map(day => new DayViewModel(day)))
 		);
-		this.symptoms$ = this.symptomsService.getSymptoms();
-		this.symptoms$.subscribe(s => s.map(x => this.symptomMap.set(x.key, x.label)));
+		this.symptoms$ = this.app.symptoms$;
+		this.symptomMap = this.app.symptomMap;
 	}
 
 	public openShowDialog(date: string, customEvent: ICustomEvent): void {

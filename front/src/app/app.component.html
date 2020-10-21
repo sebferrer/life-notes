@@ -1,4 +1,4 @@
-<mat-toolbar>
+<mat-toolbar *ngIf="symptoms$ | async as symptoms; else loading">
 	<button mat-icon-button id="menu-icon-timeline" routerLink="" aria-label="Timeline">
         <mat-icon>view_day</mat-icon>
 	</button>
@@ -8,6 +8,13 @@
 	<button mat-icon-button id="menu-icon-symptoms" class="menu-icon" routerLink="/symptoms" aria-label="Symptoms">
         <mat-icon>spa</mat-icon>
 	</button>
+	<button mat-icon-button id="menu-icon-target-symptom" class="menu-icon" [matMenuTriggerFor]="targetSymptom" aria-label="Symptoms">
+        <mat-icon>radio_button_checked</mat-icon>
+	</button>
+	<mat-menu #targetSymptom="matMenu">
+		<button mat-menu-item *ngFor="let symptom of symptoms" [value]="symptom.key" (click)="setTargetSymptom(symptom.key)">
+			{{ symptom.label }}</button>
+	</mat-menu>
 	<button mat-icon-button id="menu-icon-import-export" class="menu-icon" [matMenuTriggerFor]="importExport" aria-label="Import-Export">
         <mat-icon>import_export</mat-icon>
 	</button>

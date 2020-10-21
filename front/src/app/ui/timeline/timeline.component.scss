@@ -80,6 +80,44 @@
     height: 0.5rem;
 }
 
+.symptom-overview-icon {
+    position: absolute;
+    font-size: 250%;
+    top: 52%;
+    right: 6%;
+}
+
+/* pain 0 */
+.color-default {
+    /* color: #31AE1D; */
+    color: #93EA84;
+}
+
+/* pain 1 */
+.color-light-yellow {
+    color: #FFFC65;
+}
+
+/* pain 2 */
+.color-yellow {
+    color: #BFBC00;
+}
+
+/* pain 3 */
+.color-orange {
+    color: #FFC000;
+}
+
+/* pain 4 */
+.color-red {
+    color: #E40026;
+}
+
+/* pain 5 */
+.color-dark-red {
+    color: #980019;
+}
+
 .wakeup-container {
     position: absolute;
     top: 15%;

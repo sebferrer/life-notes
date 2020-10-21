@@ -73,7 +73,8 @@ import { DialogDeleteSymptomComponent } from './ui/symptoms/dialog-delete-sympto
 	providers: [
 		DaysService,
 		SymptomsService,
-		DbContext
+		DbContext,
+		AppComponent
 	],
 	entryComponents: [
 		DialogAddEventComponent,

@@ -14,7 +14,8 @@
 					<mat-icon>delete_sweep</mat-icon>
 				</button>
 				<mat-menu #addEvent="matMenu">
-					<button mat-menu-item (click)="openAddSymptomDialog('symptomLog', dayContent.date, symptoms)">Add symptom</button>
+					<button mat-menu-item (click)="openAddSymptomDialog('symptomLog', dayContent.date, symptoms)">Add
+						symptom</button>
 					<button mat-menu-item (click)="openAddDialog('log', dayContent.date)">Add custom event</button>
 					<button mat-menu-item (click)="openAddDialog('med', dayContent.date)">Add drug</button>
 					<button mat-menu-item (click)="openAddDialog('meal', dayContent.date)">Add meal</button>
@@ -29,6 +30,9 @@
 				<div class="gotobed-container" (click)="openAddDialog('goToBed', dayContent.date)">
 					<mat-icon class="gotobed-icon">bedtime</mat-icon>
 					<div class="gotobed-time">{{ dayContent.goToBed }}</div>
+				</div>
+				<div class="symptom-overview color-default">
+					<mat-icon class="symptom-overview-icon">fiber_manual_record</mat-icon>
 				</div>
 				<div class="timeline-content">
 					<mat-chip-list class="mat-chip-list-stacked">
