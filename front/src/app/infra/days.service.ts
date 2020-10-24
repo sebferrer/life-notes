@@ -43,6 +43,10 @@ export class DaysService {
 		);
 	}
 
+	public getSymptomOverview(day: IDay, key: string) {
+		return day.symptomOverviews.find(s => s.key === key);
+	}
+
 	public getTypeLabel(type: string): string {
 		const labels = new Map([
 			['symptomLog', 'Symptom'],

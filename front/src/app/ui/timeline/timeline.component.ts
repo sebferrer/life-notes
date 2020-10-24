@@ -143,9 +143,9 @@ export class TimelineComponent implements OnInit {
 		if (this.app.targetSymptomKey == null) {
 			return;
 		}
-		this.symptomsService.getSymptom(this.app.targetSymptomKey).subscribe(
-			s => {
-				const symptomOverview = { key: s.key, pain: s.pain };
+		this.daysService.getDay(date).subscribe(
+			d => {
+				const symptomOverview = this.daysService.getSymptomOverview(d, this.app.targetSymptomKey) || { key: this.app.targetSymptomKey, pain: 0 };
 				this.dialog.open(DialogEditSymptomOverviewComponent, {
 					autoFocus: false,
 					width: '20rem',
@@ -157,8 +157,7 @@ export class TimelineComponent implements OnInit {
 					}
 					this.daysService.addSymptomOverview(date, response.key, response.pain).subscribe(() => { this.ngOnInit(); });
 				});
-			}
-		);
+			});
 	}
 
 	public toggleRemovable(dayViewModel: DayViewModel): void {
