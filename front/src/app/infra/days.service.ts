@@ -70,6 +70,22 @@ export class DaysService {
 		day.symptoms.find(s => s.key === key).logs.push({ type: 'symptomLog', time, key, pain, detail });
 	}
 
+	public addSymptomOverview(date: string, key: string, pain: number): Observable<null> {
+		const day = this.getDay(date);
+		return day.pipe(
+			tap(d => {
+				let symptomOverview = d.symptomOverviews.find(s => s.key === key);
+				if (symptomOverview == null) {
+					symptomOverview = { key, pain };
+					d.symptomOverviews.push(symptomOverview);
+				} else {
+					symptomOverview.pain = pain;
+				}
+				this.dbContext.daysCollection.put(d);
+			}),
+			map(() => null));
+	}
+
 	public addLog(day: IDay, time: string, key: string, detail: string): void {
 		day.logs.push({ type: 'log', time, key, detail });
 	}

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DaysService, SymptomsService } from './infra';
 import { ImporterExporter } from './infra/importer-exporter';
 import { Observable } from 'rxjs';
-import { ISymptom } from './models/symptom.model';
+import { ISymptom, ISymptomOverview } from './models/symptom.model';
 
 @Component({
 	selector: 'app-root',
@@ -13,7 +13,7 @@ export class AppComponent implements OnInit {
 	public title = 'Healthy Day';
 	public symptoms$: Observable<ISymptom[]>;
 	public symptomMap: Map<string, string>;
-	public targetSymptom: string;
+	public targetSymptomKey: string;
 
 	constructor(
 		private daysService: DaysService,
@@ -29,8 +29,8 @@ export class AppComponent implements OnInit {
 		this.symptoms$.subscribe(s => s.map(x => this.symptomMap.set(x.key, x.label)));
 	}
 
-	public setTargetSymptom(key): void {
-		this.targetSymptom = key;
+	public setTargetSymptom(key: string): void {
+		this.targetSymptomKey = key;
 	}
 
 	public fileClickFire(): void {
@@ -38,7 +38,7 @@ export class AppComponent implements OnInit {
 		fileInput.click();
 	}
 
-	public importData(event) {
+	public importData(event: any) {
 		this.importerExporter.importData(event);
 	}
 

@@ -6,6 +6,7 @@ export interface ISymptomOverview {
 export interface ISymptom {
 	type: string;
 	key: string;
+	pain?: string;
 	label?: string;
 	logs?: ISymptomLog[];
 }

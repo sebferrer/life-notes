@@ -80,11 +80,17 @@
     height: 0.5rem;
 }
 
-.symptom-overview-icon {
+.symptom-overview-container {
     position: absolute;
-    font-size: 250%;
     top: 52%;
     right: 6%;
+    height: 10%;
+    width: 10%;
+    z-index: 10;
+}
+
+.symptom-overview-icon {
+    font-size: 250%;
 }
 
 /* pain 0 */

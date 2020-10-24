@@ -3,14 +3,16 @@ import { Observable } from 'rxjs';
 import { DaysService, SymptomsService } from 'src/app/infra';
 import { DialogAddEventComponent } from './dialog-add-event';
 import { DialogDeleteEventComponent } from './dialog-delete-event';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { DayViewModel } from 'src/app/models/day.view.model';
 import { DialogShowEventComponent } from './dialog-show-event';
+import { DialogEditSymptomOverviewComponent } from './dialog-edit-symptom-overview';
 import { ICustomEvent } from 'src/app/models/customEvent.model';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ISymptom } from 'src/app/models/symptom.model';
 import { AppComponent } from 'src/app/app.component';
+import { IDay } from 'src/app/models';
 
 @Component({
 	selector: 'app-timeline',
@@ -22,7 +24,7 @@ export class TimelineComponent implements OnInit {
 	public daysContents$: Observable<DayViewModel[]>;
 	public symptoms$: Observable<ISymptom[]>;
 	public symptomMap: Map<string, string>;
-	public targetSymptom: string;
+	public symptomPainColorMap: Map<number, string>;
 
 	constructor(
 		private app: AppComponent,
@@ -33,12 +35,13 @@ export class TimelineComponent implements OnInit {
 	) { }
 
 	public ngOnInit(): void {
-		this.targetSymptom = this.app.targetSymptom;
 		this.daysContents$ = this.daysService.getDays().pipe(
 			map(dayContents => dayContents.map(day => new DayViewModel(day)))
 		);
 		this.symptoms$ = this.app.symptoms$;
 		this.symptomMap = this.app.symptomMap;
+		this.symptomPainColorMap =
+			new Map([[0, 'default'], [1, 'light-yellow'], [2, 'yellow'], [3, 'orange'], [4, 'red'], [5, 'dark-red']]);
 	}
 
 	public openShowDialog(date: string, customEvent: ICustomEvent): void {
@@ -134,6 +137,28 @@ export class TimelineComponent implements OnInit {
 			this.daysService.deleteEvent(date, customEvent).subscribe(() => { this.ngOnInit(); });
 			this.snackBar.open(`The ${customEvent.type} was successfully deleted for ${date}`, 'Close');
 		});
+	}
+
+	public openEditSymptomOverviewDialog(date: string): void {
+		if (this.app.targetSymptomKey == null) {
+			return;
+		}
+		this.symptomsService.getSymptom(this.app.targetSymptomKey).subscribe(
+			s => {
+				const symptomOverview = { key: s.key, pain: s.pain };
+				this.dialog.open(DialogEditSymptomOverviewComponent, {
+					autoFocus: false,
+					width: '20rem',
+					panelClass: 'custom-modalbox',
+					data: { date, symptomOverview }
+				}).afterClosed().subscribe(response => {
+					if (response == null || response.answer !== 'yes') {
+						return;
+					}
+					this.daysService.addSymptomOverview(date, response.key, response.pain).subscribe(() => { this.ngOnInit(); });
+				});
+			}
+		);
 	}
 
 	public toggleRemovable(dayViewModel: DayViewModel): void {

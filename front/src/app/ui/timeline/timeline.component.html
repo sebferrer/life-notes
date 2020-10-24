@@ -31,8 +31,8 @@
 					<mat-icon class="gotobed-icon">bedtime</mat-icon>
 					<div class="gotobed-time">{{ dayContent.goToBed }}</div>
 				</div>
-				<div class="symptom-overview color-default">
-					<mat-icon class="symptom-overview-icon">fiber_manual_record</mat-icon>
+				<div class="symptom-overview-container" (click)="openEditSymptomOverviewDialog(dayContent.date)">
+					<mat-icon class="symptom-overview-icon color-{{ symptomPainColorMap.get(dayContent.getSymptomPain(app.targetSymptomKey)) }}">fiber_manual_record</mat-icon>
 				</div>
 				<div class="timeline-content">
 					<mat-chip-list class="mat-chip-list-stacked">

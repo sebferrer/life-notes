@@ -1,0 +1,20 @@
+<h1 mat-dialog-title>
+    <span>Your {{ data.symptomOverview.key }} ache today</span>
+</h1>
+<div mat-dialog-content>
+    <mat-form-field>
+        <mat-label>Pain</mat-label>
+        <div id="pain-container">
+            <mat-slider [max]="5" [min]="0" [step]="1" [thumbLabel]="true" [(ngModel)]="data.symptomOverview.pain">
+            </mat-slider>
+            <input matInput [(ngModel)]="data.symptomOverview.pain" readonly>
+        </div>
+    </mat-form-field>
+    <div mat-dialog-actions>
+        <button mat-button cdkFocusInitial
+            (click)="onYesClick()" color="primary">
+            <span>Set</span>
+        </button>
+        <button mat-button (click)="onNoClick()">Cancel</button>
+    </div>
+</div>

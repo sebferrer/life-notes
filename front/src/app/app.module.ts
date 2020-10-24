@@ -32,6 +32,7 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { SymptomsComponent } from './ui/symptoms';
 import { DialogAddSymptomComponent } from './ui/symptoms/dialog-add-symptom';
 import { DialogDeleteSymptomComponent } from './ui/symptoms/dialog-delete-symptom';
+import { DialogEditSymptomOverviewComponent } from './ui/timeline/dialog-edit-symptom-overview';
 
 @NgModule({
 	declarations: [
@@ -45,7 +46,8 @@ import { DialogDeleteSymptomComponent } from './ui/symptoms/dialog-delete-sympto
 		DialogDeleteEventComponent,
 		DialogShowEventComponent,
 		DialogAddSymptomComponent,
-		DialogDeleteSymptomComponent
+		DialogDeleteSymptomComponent,
+		DialogEditSymptomOverviewComponent
 	],
 	imports: [
 		BrowserModule,
@@ -81,7 +83,8 @@ import { DialogDeleteSymptomComponent } from './ui/symptoms/dialog-delete-sympto
 		DialogDeleteEventComponent,
 		DialogShowEventComponent,
 		DialogAddSymptomComponent,
-		DialogDeleteSymptomComponent
+		DialogDeleteSymptomComponent,
+		DialogEditSymptomOverviewComponent
 	],
 	bootstrap: [AppComponent]
 })
