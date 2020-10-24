@@ -10,7 +10,6 @@
     </mat-form-field>
     <div mat-dialog-actions>
         <button mat-button cdkFocusInitial
-        [mat-dialog-close]="{answer: 'yes', edit: data.edit, key: data.symptom.key, label: data.symptom.label}"
             (click)="onYesClick()" color="primary">
             <span *ngIf="data.edit; else addButton">Edit</span>
             <ng-template #addButton>Add</ng-template>

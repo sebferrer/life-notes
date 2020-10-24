@@ -3,6 +3,6 @@
     <p>Delete this {{ data.typeLabel }} at {{ data.time }} for {{ data.date | date }}?</p>
 </div>
 <div mat-dialog-actions>
-    <button mat-button mat-dialog-close="" (click)="onYesClick()" color="primary">Yes</button>
+    <button mat-button (click)="onYesClick()" color="primary">Yes</button>
     <button mat-button cdkFocusInitial (click)="onNoClick()">No</button>
 </div>
