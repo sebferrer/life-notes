@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, ViewChildren, QueryList } from '@angular/core';
 import { Observable } from 'rxjs';
 import { DaysService, SymptomsService } from 'src/app/infra';
 import { DialogAddEventComponent } from './dialog-add-event';
 import { DialogDeleteEventComponent } from './dialog-delete-event';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { DayViewModel } from 'src/app/models/day.view.model';
 import { DialogShowEventComponent } from './dialog-show-event';
 import { DialogEditSymptomOverviewComponent } from './dialog-edit-symptom-overview';
@@ -12,24 +12,23 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ISymptom } from 'src/app/models/symptom.model';
 import { AppComponent } from 'src/app/app.component';
-import { IDay } from 'src/app/models';
 
 @Component({
 	selector: 'app-timeline',
 	templateUrl: './timeline.component.html',
 	styleUrls: ['./timeline.component.scss']
 })
-export class TimelineComponent implements OnInit {
+export class TimelineComponent implements OnInit, AfterViewInit {
 
 	public daysContents$: Observable<DayViewModel[]>;
 	public symptoms$: Observable<ISymptom[]>;
 	public symptomMap: Map<string, string>;
 	public symptomPainColorMap: Map<number, string>;
+	@ViewChildren('dayRefs') dayRefs: QueryList<ElementRef>;
 
 	constructor(
 		private app: AppComponent,
 		private daysService: DaysService,
-		private symptomsService: SymptomsService,
 		private dialog: MatDialog,
 		private snackBar: MatSnackBar
 	) { }
@@ -42,6 +41,12 @@ export class TimelineComponent implements OnInit {
 		this.symptomMap = this.app.symptomMap;
 		this.symptomPainColorMap =
 			new Map([[0, 'default'], [1, 'light-yellow'], [2, 'yellow'], [3, 'orange'], [4, 'red'], [5, 'dark-red']]);
+	}
+
+	public ngAfterViewInit(): void {
+		/*this.dayRefs.forEach((div: any) => console.log(div.nativeElement));
+		console.log(this.dayRefs.toArray());
+		//this.myDiv.scrollIntoView();*/
 	}
 
 	public openShowDialog(date: string, customEvent: ICustomEvent): void {

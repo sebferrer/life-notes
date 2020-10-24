@@ -1,7 +1,7 @@
 <mat-grid-list *ngIf="daysContents$ | async as daysContents; else loading" cols="1" gutterSize="0"
 	class="timeline-grid">
 	<div *ngIf="symptoms$ | async as symptoms; else loading">
-		<mat-grid-tile *ngFor="let dayContent of daysContents" class="timeline-tile">
+		<mat-grid-tile *ngFor="let dayContent of daysContents" #dayRefs class="timeline-tile" id="day-{{ dayContent.date }}">
 			<mat-grid-tile-header class="timeline-tile-header">
 				<h3>{{ dayContent.date | date }}</h3>
 				<button mat-icon-button class="go-to-day" routerLink="{{ dayContent.date }}">

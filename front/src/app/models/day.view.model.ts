@@ -5,6 +5,7 @@ import { ISymptomOverview } from './symptom.model';
 export class DayViewModel {
 
 	public readonly date: string;
+	public readonly compactedDate: string;
 	public readonly wakeUp: string;
 	public readonly goToBed: string;
 	public readonly content: Array<any>;
