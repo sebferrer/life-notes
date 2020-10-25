@@ -1,0 +1,60 @@
+#calendar-container {
+    position: absolute;
+    top: 5rem;
+    left: 5%;
+    width: 90%;
+}
+
+.grid-tile {
+    display: block;
+    float: left;
+    width: 14%;
+    height: 15vh;
+}
+
+.day-label {
+    margin-left: 0.6rem;
+    margin-top: 0.3rem;
+    width: 45%;
+    padding: 0.2rem;
+}
+
+.day-label-today {
+    background-color: rgb(0, 174, 255);
+    color: white;
+    font-size: 1rem;
+    width: 45%;
+    border-radius: 100%;
+    padding: 0.2rem;
+}
+
+/* pain 0 */
+.color-default {
+    /* color: #31AE1D; */
+    background-color: #93EA84;
+}
+
+/* pain 1 */
+.color-light-yellow {
+    background-color: #FFFC65;
+}
+
+/* pain 2 */
+.color-yellow {
+    background-color: #BFBC00;
+}
+
+/* pain 3 */
+.color-orange {
+    background-color: #FFC000;
+}
+
+/* pain 4 */
+.color-red {
+    background-color: #E40026;
+}
+
+/* pain 5 */
+.color-dark-red {
+    background-color: #980019;
+}

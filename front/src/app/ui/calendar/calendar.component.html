@@ -1,13 +1,15 @@
-<mat-grid-list *ngIf="overviews$ | async as overviews; else loading" cols="3" gutterSize="1rem">
-	<mat-grid-tile *ngFor="let overview of overviews">
-		<mat-grid-tile-header>
-			<h3>{{ overview.date | date }}</h3>
-		</mat-grid-tile-header>
-		<mat-list-item *ngFor="let symptomOverview of overview.symptomOverviews">
-			{{ symptomOverview.key }} : {{ symptomOverview.pain }}
-		</mat-list-item>
-	</mat-grid-tile>
-</mat-grid-list>
+<div class="grid-list" id="calendar-container" *ngIf="overviews$ | async as overviews; else loading">
+	<div *ngFor="let overview of overviews"
+		class="grid-tile color-{{ symptomPainColorMap.get(overview.getSymptomPain(app.targetSymptomKey)) }}">
+		<div class="header">
+			<div *ngIf="today.day !== overview.detailedDate.day; else todayDiv" class="day-label">
+				{{ overview.detailedDate.day }}</div>
+			<ng-template #todayDiv>
+				<div class="day-label day-label-today">{{ overview.detailedDate.day }}</div>
+			</ng-template>
+		</div>
+	</div>
+</div>
 
 <ng-template #loading>
 	<mat-spinner></mat-spinner>

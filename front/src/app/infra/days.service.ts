@@ -3,13 +3,15 @@ import { Observable, of } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { IDay, IDayOverview } from '../models';
 import { getFormattedDate, getDetailedDate } from 'src/app/util/date.utils';
+import { getSortOrder } from 'src/app/util/array.utils';
 import { DbContext } from './database';
 import { ILog } from '../models/log.model';
 import { IMed } from '../models/med.model';
 import { IMeal } from '../models/meal.model';
 import { ISymptom } from '../models/symptom.model';
-import { tap, map, switchMap } from 'rxjs/operators';
+import { tap, map, switchMap, filter } from 'rxjs/operators';
 import { ICustomEvent } from '../models/customEvent.model';
+import { isLeapYear, getDaysInMonth } from 'date-fns';
 
 // const CALENDAR_API = '/api/calendar';
 // const CALENDAR_FROM_API = '/api/calendar-from';
@@ -29,6 +31,41 @@ export class DaysService {
 		return this.dbContext.asArrayObservable<IDayOverview>(
 			this.dbContext.daysCollection.allDocs({ include_docs: true, descending: true })
 		);
+	}
+
+	public getMonthDaysOverviews(month: number): Observable<IDayOverview[]> {
+		return this.dbContext.asArrayObservable<IDayOverview>(
+			this.dbContext.daysCollection.allDocs({ include_docs: true, descending: true })
+		).pipe(
+			map(days => this.getFilledMonthDays(days, month))
+		);
+	}
+
+	public getFilledMonthDays(days: IDayOverview[], month: number): IDayOverview[] {
+		const monthDays = [...days].filter(d => d.detailedDate.month === month);
+		const year = days[0].detailedDate.year;
+		for (let i = 1; i <= getDaysInMonth(month); i++) {
+			const day = days.find(d => d.detailedDate.year === year && d.detailedDate.month === month
+				&& d.detailedDate.day === i);
+			if (day == null) {
+				const formattedDate = year + '-' + month + '-' + i;
+				const date = new Date(Date.parse(formattedDate));
+				const emptyDay = {
+					'date': formattedDate,
+					'detailedDate': getDetailedDate(date),
+					'symptomOverviews': [],
+					'symptoms': [],
+					'logs': [],
+					'meds': [],
+					'meals': [],
+					'wakeUp': '',
+					'goToBed': ''
+				};
+				monthDays.push(emptyDay);
+			}
+		}
+		monthDays.sort(getSortOrder('date'));
+		return monthDays;
 	}
 
 	public getDays(): Observable<IDay[]> {
