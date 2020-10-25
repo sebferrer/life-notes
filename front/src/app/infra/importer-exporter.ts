@@ -3,6 +3,7 @@ import { DaysService } from './days.service';
 import { saveAs } from 'file-saver';
 import { DayViewModel } from '../models/day.view.model';
 import { IDay } from '../models';
+import { getFormattedDate, getDetailedDate } from 'src/app/util/date.utils';
 
 @Injectable({
 	providedIn: 'root'
@@ -23,6 +24,7 @@ export class ImporterExporter {
 			const jsonArr = JSON.parse(fileContent);
 			for (const jsonObj of jsonArr) {
 				const day: IDay = jsonObj;
+				day.detailedDate = getDetailedDate(new Date(Date.parse(day.date)));
 				this.daysService.addDay(day);
 			}
 		};
@@ -36,6 +38,7 @@ export class ImporterExporter {
 			const newDays: IDay[] = JSON.parse(fileContent);
 			newDays.map(day => {
 				delete day['_rev'];
+				delete day['detailedDate'];
 			});
 			const file = new File([JSON.stringify(newDays)], 'calendar.json', { type: 'application/json;charset=utf-8' });
 			saveAs(file);

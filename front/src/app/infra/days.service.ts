@@ -2,7 +2,7 @@
 import { Observable, of } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { IDay, IDayOverview } from '../models';
-import { getFormattedDate } from 'src/app/util/date.utils';
+import { getFormattedDate, getDetailedDate } from 'src/app/util/date.utils';
 import { DbContext } from './database';
 import { ILog } from '../models/log.model';
 import { IMed } from '../models/med.model';
@@ -188,10 +188,12 @@ export class DaysService {
 		return events.filter((event: { time: string; key: string; }) => event.time !== time || event.key !== key);
 	}
 
-	public createNewDay(date: string): Observable<never> {
+	public createNewDay(date: Date): Observable<never> {
+		const formattedDate = getFormattedDate(new Date());
 		const day = {
-			'_id': date,
-			'date': date,
+			'_id': formattedDate,
+			'date': formattedDate,
+			'detailedDate': getDetailedDate(date),
 			'symptomOverviews': [],
 			'symptoms': [],
 			'logs': [],
@@ -210,7 +212,7 @@ export class DaysService {
 	}
 
 	public createNewDayToday(): Observable<never> {
-		this.createNewDay(getFormattedDate(new Date()));
+		this.createNewDay(new Date());
 		return of();
 	}
 
