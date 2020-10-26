@@ -2,7 +2,7 @@
 import { Observable, of } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { IDay, IDayOverview } from '../models';
-import { getFormattedDate, getDetailedDate } from 'src/app/util/date.utils';
+import { getFormattedDate, getDetailedDate, getDateFromString } from 'src/app/util/date.utils';
 import { getSortOrder } from 'src/app/util/array.utils';
 import { DbContext } from './database';
 import { ILog } from '../models/log.model';
@@ -11,7 +11,7 @@ import { IMeal } from '../models/meal.model';
 import { ISymptom } from '../models/symptom.model';
 import { tap, map, switchMap, filter } from 'rxjs/operators';
 import { ICustomEvent } from '../models/customEvent.model';
-import { isLeapYear, getDaysInMonth } from 'date-fns';
+import { getDaysInMonth } from 'date-fns';
 
 // const CALENDAR_API = '/api/calendar';
 // const CALENDAR_FROM_API = '/api/calendar-from';
@@ -19,8 +19,6 @@ import { isLeapYear, getDaysInMonth } from 'date-fns';
 
 @Injectable()
 export class DaysService {
-	private static daysOverview: Observable<IDayOverview[]>;
-	private static calendar: Observable<IDay[]>;
 
 	constructor(
 		// private readonly http: HttpClient,
@@ -49,7 +47,7 @@ export class DaysService {
 				&& d.detailedDate.day === i);
 			if (day == null) {
 				const formattedDate = year + '-' + month + '-' + i;
-				const date = new Date(Date.parse(formattedDate));
+				const date = getDateFromString(formattedDate);
 				const emptyDay = {
 					'date': formattedDate,
 					'detailedDate': getDetailedDate(date),

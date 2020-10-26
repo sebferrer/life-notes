@@ -3,7 +3,7 @@ import { DaysService } from './days.service';
 import { saveAs } from 'file-saver';
 import { DayViewModel } from '../models/day.view.model';
 import { IDay } from '../models';
-import { getFormattedDate, getDetailedDate } from 'src/app/util/date.utils';
+import { getDateFromString, getDetailedDate } from 'src/app/util/date.utils';
 
 @Injectable({
 	providedIn: 'root'
@@ -24,7 +24,7 @@ export class ImporterExporter {
 			const jsonArr = JSON.parse(fileContent);
 			for (const jsonObj of jsonArr) {
 				const day: IDay = jsonObj;
-				day.detailedDate = getDetailedDate(new Date(Date.parse(day.date)));
+				day.detailedDate = getDetailedDate(getDateFromString(day.date));
 				this.daysService.addDay(day);
 			}
 		};
