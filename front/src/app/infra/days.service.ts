@@ -109,7 +109,7 @@ export class DaysService {
 		day.symptoms.find(s => s.key === key).logs.push({ type: 'symptomLog', time, key, pain, detail });
 	}
 
-	public addSymptomOverview(date: string, key: string, pain: number): Observable<null> {
+	public addSymptomOverview(date: string, key: string, pain: number): Observable<IDay> {
 		const day = this.getDay(date);
 		return day.pipe(
 			tap(d => {
@@ -121,8 +121,7 @@ export class DaysService {
 					symptomOverview.pain = pain;
 				}
 				this.dbContext.daysCollection.put(d);
-			}),
-			map(() => null));
+			}));
 	}
 
 	public addLog(day: IDay, time: string, key: string, detail: string): void {
@@ -156,7 +155,7 @@ export class DaysService {
 		}
 	}
 
-	public addEvent(date: string, customEvent: ICustomEvent): Observable<null> {
+	public addEvent(date: string, customEvent: ICustomEvent): Observable<IDay> {
 		const day = this.getDay(date);
 		return day.pipe(
 			tap(d => {
@@ -180,19 +179,17 @@ export class DaysService {
 
 				}
 				this.dbContext.daysCollection.put(d);
-			}),
-			map(() => null));
+			}));
 	}
 
-	public editEvent(date: string, oldCustomEvent: ICustomEvent, customEvent: ICustomEvent): Observable<null> {
+	public editEvent(date: string, oldCustomEvent: ICustomEvent, customEvent: ICustomEvent): Observable<IDay> {
 		return this.deleteEvent(date, oldCustomEvent).pipe(
 			switchMap(() => {
 				return this.addEvent(date, customEvent);
-			}),
-			map(() => null));
+			}));
 	}
 
-	public deleteEvent(date: string, customEvent: ICustomEvent): Observable<null> {
+	public deleteEvent(date: string, customEvent: ICustomEvent): Observable<IDay> {
 		const day = this.getDay(date);
 		return day.pipe(
 			tap(d => {
@@ -215,8 +212,7 @@ export class DaysService {
 						break;
 				}
 				this.dbContext.daysCollection.put(d);
-			}),
-			map(() => null));
+			}));
 	}
 
 	public filterEvent(events: any[], time: string, key: string) {
