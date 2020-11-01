@@ -40,8 +40,9 @@ export class DaysService {
 	}
 
 	public getFilledMonthDays(days: IDayOverview[], month: number, year: number): IDayOverview[] {
-		const monthDays = [...days].filter(d => d.detailedDate.month === month);
-		for (let i = 1; i <= getDaysInMonth(month); i++) {
+		const monthDays = [...days].filter(d => d.detailedDate.month === month
+			&& d.detailedDate.year === year);
+		for (let i = 1; i <= getDaysInMonth(new Date(year, month - 1)); i++) {
 			const day = days.find(d => d.detailedDate.year === year && d.detailedDate.month === month
 				&& d.detailedDate.day === i);
 			if (day == null) {

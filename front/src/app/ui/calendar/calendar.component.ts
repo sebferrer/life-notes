@@ -20,6 +20,7 @@ export class CalendarComponent implements OnInit {
 	public year: number;
 	public symptomMap: Map<string, string>;
 	public symptomPainColorMap: Map<number, string>;
+	public monthMap: Map<number, string>;
 	public today: IDetailedDate;
 
 	constructor(
@@ -38,6 +39,9 @@ export class CalendarComponent implements OnInit {
 		this.symptomMap = this.app.symptomMap;
 		this.symptomPainColorMap =
 			new Map([[0, 'default'], [1, 'light-yellow'], [2, 'yellow'], [3, 'orange'], [4, 'red'], [5, 'dark-red']]);
+		this.monthMap =
+			new Map([[1, 'January'], [2, 'February'], [3, 'March'], [4, 'April'], [5, 'May'], [6, 'June'],
+			[7, 'July'], [8, 'August'], [9, 'September'], [10, 'October'], [11, 'November'], [12, 'December']]);
 	}
 
 	public updateCalendar(month: number, year: number) {

@@ -1,6 +1,6 @@
 <div id="calendar-container" *ngIf="overviews$ | async as overviews; else loading">
 	<div class="calendar-header">
-		<div class="calender-header-label">{{ month }} | {{ year }}</div>
+		<div class="calender-header-label">{{ monthMap.get(month) }}, {{ year }}</div>
 	</div>
 	<div class="grid-list">
 		<div *ngFor="let overview of overviews"
