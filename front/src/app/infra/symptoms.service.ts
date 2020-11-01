@@ -2,7 +2,7 @@ import { Observable, of, from } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { DbContext } from './database';
 import { ISymptom } from '../models/symptom.model';
-import { map, tap } from 'rxjs/operators';
+import { map, tap, switchMap } from 'rxjs/operators';
 
 @Injectable()
 export class SymptomsService {
@@ -23,9 +23,8 @@ export class SymptomsService {
 		);
 	}
 
-	public addSymptom(symptom: ISymptom): Observable<never> {
-		this.dbContext.symptomsCollection.put(symptom);
-		return of();
+	public addSymptom(symptom: ISymptom): Observable<ISymptom> {
+		return this.dbContext.asObservable(this.dbContext.symptomsCollection.put(symptom));
 	}
 
 	public deleteSymptom(key: string): Observable<null> {
@@ -38,38 +37,43 @@ export class SymptomsService {
 		);
 	}
 
-	public editSymptom(key: string, newLabel: string): Observable<null> {
+	public editSymptom(key: string, newLabel: string): Observable<ISymptom> {
 		const symptom = this.getSymptom(key);
 		return symptom.pipe(
-			tap(s => {
+			switchMap(s => {
 				s.label = newLabel;
-				this.dbContext.symptomsCollection.put(s);
+				return this.dbContext.asObservable(this.dbContext.symptomsCollection.put(s)).pipe(
+					map(() => s)
+				);
 			}),
 			map(() => null)
 		);
 	}
 
 	public createNewSymptom(key: string, label: string): Observable<null> {
-		const day = {
+		const symptom = {
 			'_id': key,
 			'key': key,
 			'label': label
 		};
-		return from(this.dbContext.symptomsCollection.put(day).then((res: any) => { }, (err: any) => { })).pipe(
+		return this.dbContext.asObservable(this.dbContext.symptomsCollection.put(symptom)).pipe(
 			map(() => null)
 		);
 	}
 
-	public removeSymptom(symptom: ISymptom): Observable<never> {
-		this.dbContext.symptomsCollection.remove(symptom);
-		return of();
+	public removeSymptom(symptom: ISymptom): Observable<ISymptom> {
+		return this.dbContext.asObservable(this.dbContext.symptomsCollection.remove(symptom)).pipe(
+			map(() => symptom)
+		);
 	}
 
-	public removeSymptomByKey(key: string): Observable<never> {
-		this.getSymptom(key).subscribe(symptom => {
-			this.dbContext.symptomsCollection.remove(symptom);
-		});
-		return of();
+	public removeSymptomByKey(key: string): Observable<ISymptom> {
+		return this.getSymptom(key).pipe(
+			switchMap(symptom => {
+				return this.dbContext.asObservable(this.dbContext.symptomsCollection.remove(symptom)).pipe(
+					map(() => symptom)
+				);
+			}));
 	}
 
 }

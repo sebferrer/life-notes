@@ -24,7 +24,7 @@ export class AppComponent implements OnInit {
 	}
 
 	public ngOnInit(): void {
-		this.daysService.createNewDayToday();
+		this.daysService.createNewDayToday().subscribe(res => { }, error => { });
 		this.symptoms$ = this.symptomsService.getSymptoms();
 		this.symptoms$.subscribe(s => s.map(x => this.symptomMap.set(x.key, x.label)));
 	}
