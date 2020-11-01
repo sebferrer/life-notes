@@ -38,7 +38,7 @@ export class CalendarComponent implements OnInit {
 		this.updateCalendar(this.today.month, this.today.year);
 		this.symptomMap = this.app.symptomMap;
 		this.symptomPainColorMap =
-			new Map([[0, 'default'], [1, 'light-yellow'], [2, 'yellow'], [3, 'orange'], [4, 'red'], [5, 'dark-red']]);
+			new Map([[0, 'default'], [1, 'pain-1'], [2, 'pain-2'], [3, 'pain-3'], [4, 'pain-4'], [5, 'pain-5']]);
 		this.monthMap =
 			new Map([[1, 'January'], [2, 'February'], [3, 'March'], [4, 'April'], [5, 'May'], [6, 'June'],
 			[7, 'July'], [8, 'August'], [9, 'September'], [10, 'October'], [11, 'November'], [12, 'December']]);

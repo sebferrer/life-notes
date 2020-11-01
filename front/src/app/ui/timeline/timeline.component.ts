@@ -49,7 +49,7 @@ export class TimelineComponent implements OnInit, AfterViewInit {
 		this.symptoms$ = this.app.symptoms$;
 		this.symptomMap = this.app.symptomMap;
 		this.symptomPainColorMap =
-			new Map([[0, 'default'], [1, 'light-yellow'], [2, 'yellow'], [3, 'orange'], [4, 'red'], [5, 'dark-red']]);
+			new Map([[0, 'default'], [1, 'pain-1'], [2, 'pain-2'], [3, 'pain-3'], [4, 'pain-4'], [5, 'pain-5']]);
 	}
 
 	public updateDay(day: IDay): void {
