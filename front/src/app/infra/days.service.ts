@@ -1,5 +1,5 @@
 // import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable, of, from } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { IDay, IDayOverview } from '../models';
 import { getFormattedDate, getDetailedDate, getDateFromString } from 'src/app/util/date.utils';
@@ -27,13 +27,13 @@ export class DaysService {
 
 	public getDaysOverviews(): Observable<IDayOverview[]> {
 		return this.dbContext.asArrayObservable<IDayOverview>(
-			this.dbContext.daysCollection.allDocs({ include_docs: true, descending: true })
+			this.dbContext.daysCollection.allDocs()
 		);
 	}
 
 	public getMonthDaysOverviews(month: number): Observable<IDayOverview[]> {
 		return this.dbContext.asArrayObservable<IDayOverview>(
-			this.dbContext.daysCollection.allDocs({ include_docs: true, descending: true })
+			this.dbContext.daysCollection.allDocs()
 		).pipe(
 			map(days => this.getFilledMonthDays(days, month))
 		);
@@ -68,7 +68,7 @@ export class DaysService {
 
 	public getDays(): Observable<IDay[]> {
 		return this.dbContext.asArrayObservable<IDay>(
-			this.dbContext.daysCollection.allDocs({ include_docs: true, descending: true })
+			this.dbContext.daysCollection.allDocs()
 		);
 	}
 
@@ -259,9 +259,13 @@ export class DaysService {
 		return of();
 	}
 
-	public clearCalendar(): Observable<never> {
-		this.getDays().subscribe(days => days.map(day => this.removeDay(day)));
-		return of();
+	/*public destroy(): Observable<null> {
+		return from(this.dbContext.daysCollection.destroy()).pipe(
+			map(() => null)
+		);
 	}
 
+	public reset(): void {
+		this.dbContext.resetDaysCollection();
+	}*/
 }

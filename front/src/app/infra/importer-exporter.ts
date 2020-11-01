@@ -18,7 +18,7 @@ export class ImporterExporter {
 		const selectedFile = event.target.files[0];
 		const reader = new FileReader();
 
-		this.daysService.clearCalendar();
+		// this.daysService.clearCalendar();
 		reader.onload = (readerLoadEvent: any) => {
 			const fileContent = readerLoadEvent.target.result;
 			const jsonArr = JSON.parse(fileContent);

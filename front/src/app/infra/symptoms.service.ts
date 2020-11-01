@@ -13,7 +13,7 @@ export class SymptomsService {
 
 	public getSymptoms(): Observable<ISymptom[]> {
 		return this.dbContext.asArrayObservable<ISymptom>(
-			this.dbContext.symptomsCollection.allDocs({ include_docs: true, descending: true })
+			this.dbContext.symptomsCollection.allDocs()
 		);
 	}
 
