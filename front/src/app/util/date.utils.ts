@@ -1,6 +1,5 @@
 import { getWeekOfMonth, getDayOfYear, getWeek } from 'date-fns';
 import { IDetailedDate } from '../models/detailed.date';
-import { IDay } from '../models';
 
 export function getFormattedDate(date: Date) {
 	const hoursDiff = date.getHours() - date.getTimezoneOffset() / 60;

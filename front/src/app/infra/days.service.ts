@@ -3,7 +3,7 @@ import { Observable, of, from } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { IDay, IDayOverview } from '../models';
 import { getFormattedDate, getDetailedDate, getDateFromString } from 'src/app/util/date.utils';
-import { getSortOrder } from 'src/app/util/array.utils';
+import { getSortOrderLevel2 } from 'src/app/util/array.utils';
 import { DbContext } from './database';
 import { ILog } from '../models/log.model';
 import { IMed } from '../models/med.model';
@@ -31,17 +31,16 @@ export class DaysService {
 		);
 	}
 
-	public getMonthDaysOverviews(month: number): Observable<IDayOverview[]> {
+	public getMonthDaysOverviews(month: number, year: number): Observable<IDayOverview[]> {
 		return this.dbContext.asArrayObservable<IDayOverview>(
 			this.dbContext.daysCollection.allDocs()
 		).pipe(
-			map(days => this.getFilledMonthDays(days, month))
+			map(days => this.getFilledMonthDays(days, month, year))
 		);
 	}
 
-	public getFilledMonthDays(days: IDayOverview[], month: number): IDayOverview[] {
+	public getFilledMonthDays(days: IDayOverview[], month: number, year: number): IDayOverview[] {
 		const monthDays = [...days].filter(d => d.detailedDate.month === month);
-		const year = days[0].detailedDate.year;
 		for (let i = 1; i <= getDaysInMonth(month); i++) {
 			const day = days.find(d => d.detailedDate.year === year && d.detailedDate.month === month
 				&& d.detailedDate.day === i);
@@ -62,7 +61,7 @@ export class DaysService {
 				monthDays.push(emptyDay);
 			}
 		}
-		monthDays.sort(getSortOrder('date'));
+		monthDays.sort(getSortOrderLevel2('detailedDate', 'day'));
 		return monthDays;
 	}
 
