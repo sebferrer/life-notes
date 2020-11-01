@@ -1,4 +1,6 @@
 import * as PouchDB from 'pouchdb/dist/pouchdb';
+import { Observable, from } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 
 export class Collection {
 
@@ -26,7 +28,10 @@ export class Collection {
 		return this.db.remove(doc);
 	}
 
-	public reset() {
-		this.db = new PouchDB(this.id);
+	public reset(): Observable<null> {
+		return from(this.db.destroy()).pipe(
+			tap(() => { this.db = new PouchDB(this.id); }),
+			map(() => null)
+		);
 	}
 }

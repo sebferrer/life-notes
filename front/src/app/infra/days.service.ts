@@ -160,7 +160,7 @@ export class DaysService {
 	public addEvent(date: string, customEvent: ICustomEvent): Observable<IDay> {
 		const day = this.getDay(date);
 		return day.pipe(
-			switchMap (d => {
+			switchMap(d => {
 				switch (customEvent.type) {
 					case 'symptomLog':
 						this.addSymptomLog(d, customEvent.time, customEvent.key, customEvent.pain, customEvent.detail);
@@ -257,10 +257,10 @@ export class DaysService {
 	public removeDayByDate(date: string): Observable<IDay> {
 		return this.getDay(date).pipe(
 			switchMap(day => {
-			return this.dbContext.asObservable(this.dbContext.daysCollection.remove(day)).pipe(
-				map(() => day)
-			);
-		}));
+				return this.dbContext.asObservable(this.dbContext.daysCollection.remove(day)).pipe(
+					map(() => day)
+				);
+			}));
 	}
 
 	public removeDay(day: IDay): Observable<IDay> {
@@ -269,13 +269,9 @@ export class DaysService {
 		);
 	}
 
-	/*public destroy(): Observable<null> {
-		return from(this.dbContext.daysCollection.destroy()).pipe(
+	public reset(): Observable<null> {
+		return this.dbContext.daysCollection.reset().pipe(
 			map(() => null)
 		);
 	}
-
-	public reset(): void {
-		this.dbContext.resetDaysCollection();
-	}*/
 }
