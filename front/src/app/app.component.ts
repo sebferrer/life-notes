@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { DaysService, SymptomsService } from './infra';
-import { ImporterExporter } from './infra/importer-exporter';
+import { DaysService, SymptomsService, ImporterExporterService } from './infra';
 import { Observable } from 'rxjs';
-import { ISymptom, ISymptomOverview } from './models/symptom.model';
+import { ISymptom } from './models/symptom.model';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { DialogImportConfirmComponent } from './ui/dialog-import-confirm';
 
 @Component({
 	selector: 'app-root',
@@ -18,7 +20,9 @@ export class AppComponent implements OnInit {
 	constructor(
 		private daysService: DaysService,
 		private symptomsService: SymptomsService,
-		private importerExporter: ImporterExporter
+		private importerExporterService: ImporterExporterService,
+		private dialog: MatDialog,
+		private snackBar: MatSnackBar
 	) {
 		this.symptomMap = new Map();
 	}
@@ -39,14 +43,24 @@ export class AppComponent implements OnInit {
 	}
 
 	public importData(event: any) {
-		this.importerExporter.importData(event);
+		this.dialog.open(DialogImportConfirmComponent, {
+			autoFocus: false,
+			width: '20rem',
+			panelClass: 'custom-modalbox'
+		}).afterClosed().subscribe(response => {
+			if (response == null || response.answer !== 'yes') {
+				return;
+			}
+			this.importerExporterService.importData(event).subscribe(() => { });
+			this.snackBar.open(`The data has been successfully imported`, 'Close');
+		});
 	}
 
 	public exportData(): void {
-		this.importerExporter.exportData();
+		this.importerExporterService.exportData();
 	}
 
 	public exportHtml(): void {
-		this.importerExporter.exportHtml();
+		this.importerExporterService.exportHtml();
 	}
 }

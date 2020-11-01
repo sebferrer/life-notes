@@ -4,17 +4,19 @@ import { saveAs } from 'file-saver';
 import { DayViewModel } from '../models/day.view.model';
 import { IDay } from '../models';
 import { getDateFromString, getDetailedDate } from 'src/app/util/date.utils';
+import { Observable } from 'rxjs';
+import { tap, map } from 'rxjs/operators';
 
 @Injectable({
 	providedIn: 'root'
 })
-export class ImporterExporter {
+export class ImporterExporterService {
 
 	constructor(
 		private daysService: DaysService
 	) { }
 
-	public importData(event: any): void {
+	public importData(event: any): Observable<null> {
 		const selectedFile = event.target.files[0];
 		const reader = new FileReader();
 
@@ -28,9 +30,12 @@ export class ImporterExporter {
 			}
 		};
 
-		this.daysService.reset().subscribe(() => {
-			reader.readAsText(selectedFile);
-		});
+		return this.daysService.reset().pipe(
+			tap(() => {
+				reader.readAsText(selectedFile);
+			}),
+			map(() => null)
+		);
 	}
 
 	public exportData(): void {

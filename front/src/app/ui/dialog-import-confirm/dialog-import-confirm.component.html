@@ -1,0 +1,10 @@
+<h1 mat-dialog-title>Import data</h1>
+<div mat-dialog-content>
+    <p>Are you sure you want to import this data?</p>
+    <p>The current data will definitely be replaced by the new one.</p>
+    <p>Please make sure that you have exported your data beforehand.</p>
+</div>
+<div mat-dialog-actions>
+    <button mat-button mat-dialog-close="" (click)="onYesClick()" color="primary">Yes</button>
+    <button mat-button cdkFocusInitial (click)="onNoClick()">No</button>
+</div>

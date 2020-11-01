@@ -33,6 +33,7 @@ import { SymptomsComponent } from './ui/symptoms';
 import { DialogAddSymptomComponent } from './ui/symptoms/dialog-add-symptom';
 import { DialogDeleteSymptomComponent } from './ui/symptoms/dialog-delete-symptom';
 import { DialogEditSymptomOverviewComponent } from './ui/timeline/dialog-edit-symptom-overview';
+import { DialogImportConfirmComponent } from './ui/dialog-import-confirm';
 
 @NgModule({
 	declarations: [
@@ -47,7 +48,8 @@ import { DialogEditSymptomOverviewComponent } from './ui/timeline/dialog-edit-sy
 		DialogShowEventComponent,
 		DialogAddSymptomComponent,
 		DialogDeleteSymptomComponent,
-		DialogEditSymptomOverviewComponent
+		DialogEditSymptomOverviewComponent,
+		DialogImportConfirmComponent
 	],
 	imports: [
 		BrowserModule,
@@ -84,7 +86,8 @@ import { DialogEditSymptomOverviewComponent } from './ui/timeline/dialog-edit-sy
 		DialogShowEventComponent,
 		DialogAddSymptomComponent,
 		DialogDeleteSymptomComponent,
-		DialogEditSymptomOverviewComponent
+		DialogEditSymptomOverviewComponent,
+		DialogImportConfirmComponent
 	],
 	bootstrap: [AppComponent]
 })
