@@ -1,0 +1,197 @@
+.day-container {
+    position: absolute;
+    left: 0;
+    top: 3.5rem;
+    width: 100%;
+}
+
+.day-tile-header {
+    position: absolute;
+    top: 0;
+    height: 3.5rem;
+    width: 100%;
+    background-color: #9E9E9E;
+    color: white;
+    font-size: 1.2rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding-left: 0.5rem;
+}
+
+.day-tile-content {
+    position: absolute;
+    top: 3.5rem;
+    height: 28rem;
+    width: 100%;
+}
+
+.day-content {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 85%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.day-day-item-symptomLog {
+    background-color: #FF3154;
+}
+
+.day-day-item-log {
+    background-color: #98A2AE;
+}
+
+.day-day-item-med {
+    background-color: #0096BF;
+}
+
+.day-day-item-meal {
+    background-color: #31AE1D;
+}
+
+.event-chips {
+    width: 70vw !important;
+    height: 10vh !important;
+    margin-left: 1rem !important;
+}
+
+.event-container {
+    width: 100%;
+}
+
+.event {
+    display: inline;
+    float: left;
+}
+
+.remove-event-container {
+    display: inline;
+    float: right;
+    height: 1.1rem;
+}
+
+.back {
+    z-index: 100;
+}
+
+.add-event {
+    margin-left: 6rem;
+    z-index: 100;
+}
+
+.delete-event {
+    z-index: 100;
+}
+
+.day-chips-padding {
+    height: 0.5rem;
+}
+
+.symptom-overview-container {
+    position: absolute;
+    top: 45%;
+    right: 6%;
+    height: 10%;
+    width: 10%;
+    z-index: 10;
+}
+
+.symptom-overview-icon {
+    font-size: 250%;
+}
+
+.color-default {
+    /* color: #31AE1D; */
+    color: #93EA84;
+}
+
+.color-pain-1 {
+    color: #BFBC00;
+}
+
+.color-pain-2 {
+    color: #FDEC05;
+}
+
+.color-pain-3 {
+    color: #FFC000;
+}
+
+.color-pain-4 {
+    color: #E40026;
+}
+
+.color-pain-5 {
+    color: #980019;
+}
+
+.wakeup-container {
+    position: absolute;
+    right: 0;
+    width: 20%;
+    height: 20%;
+    background-color: #CECECE;
+    border-radius: 0 0 0 100%;
+     -moz-border-radius: 0 0 0 100%;
+     -webkit-border-radius: 0 0 0 100%;
+     z-index: 10;
+}
+
+.gotobed-container {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 20%;
+    height: 20%;
+    background-color: #CECECE;
+    border-radius: 100% 0 0 0;
+     -moz-border-radius: 100% 0 0 0;
+     -webkit-border-radius: 100% 0 0 0;
+}
+
+.wakeup-time {
+    position: relative;
+    margin-top: 5%;
+    margin-left: 20%;
+    font-size: 120%;
+    color: white;
+    z-index: 15;
+}
+
+.wakeup-icon {
+    position: absolute;
+    right: 20%;
+    top: 40%;
+    font-size: 200%;
+    color: #98A2AE;
+    z-index: 11;
+}
+
+.gotobed-time {
+    position: relative;
+    margin-top: 65%;
+    margin-left: 20%;
+    font-size: 120%;
+    color: white;
+    z-index: 15;
+}
+
+.gotobed-icon {
+    position: absolute;
+    right: 20%;
+    top: 20%;
+    font-size: 200%;
+    color: #98A2AE;
+    z-index: 11;
+}
+
+.corner-decoration {
+    position: absolute;
+    left: 0;
+    width: 60%;
+    height: 60%;
+    background-color: #EBEBEB;
+    border-radius: 0 0 100% 0;
+    -moz-border-radius: 0 0 100% 0;
+    -webkit-border-radius: 0 0 100% 0;
+}

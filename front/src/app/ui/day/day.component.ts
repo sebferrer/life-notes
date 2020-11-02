@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { DaysService } from '../../infra';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { DayViewModel } from 'src/app/models/day.view.model';
+import { AppComponent } from 'src/app/app.component';
 
 @Component({
 	selector: 'app-day',
@@ -12,16 +13,27 @@ import { DayViewModel } from 'src/app/models/day.view.model';
 })
 export class DayComponent implements OnInit {
 
-	public dayContent$: Observable<DayViewModel>;
+	public dayContent: DayViewModel;
+	public dayContent$: Subject<DayViewModel>;
+	public symptomMap: Map<string, string>;
+	public symptomPainColorMap: Map<number, string>;
 
 	constructor(
+		private app: AppComponent,
 		private daysService: DaysService,
 		private route: ActivatedRoute
 	) { }
 
 	public ngOnInit(): void {
-		this.dayContent$ = this.daysService.getDay(this.route.snapshot.paramMap.get('date')).pipe(
-			map(day => new DayViewModel(day))
+		this.dayContent$ = new Subject<DayViewModel>();
+		this.daysService.getDay(this.route.snapshot.paramMap.get('date')).subscribe(
+			day => {
+				this.dayContent = new DayViewModel(day);
+				this.dayContent$.next(this.dayContent);
+			}
 		);
+		this.symptomMap = this.app.symptomMap;
+		this.symptomPainColorMap =
+			new Map([[0, 'default'], [1, 'pain-1'], [2, 'pain-2'], [3, 'pain-3'], [4, 'pain-4'], [5, 'pain-5']]);
 	}
 }
