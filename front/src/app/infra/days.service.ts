@@ -84,12 +84,12 @@ export class DaysService {
 
 	public getTypeLabel(type: string): string {
 		const labels = new Map([
-			['symptomLog', 'Symptom'],
-			['log', 'Custom event'],
-			['med', 'Drug'],
-			['meal', 'Meal'],
-			['wakeUp', 'Wake up'],
-			['goToBed', 'Bed time']]);
+			['symptomLog', 'symptom'],
+			['log', 'note'],
+			['med', 'drug'],
+			['meal', 'meal'],
+			['wakeUp', 'wake up time'],
+			['goToBed', 'bed time']]);
 
 		return labels.get(type);
 	}

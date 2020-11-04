@@ -1,8 +1,8 @@
-<h1 mat-dialog-title>
+<div mat-dialog-title>
     <span *ngIf="data.edit; else addSpan">Edit </span>
     <ng-template #addSpan>Add </ng-template>
-    <span>a {{ data.typeLabel }} for {{ data.date | date }}</span>
-</h1>
+    <span>a {{ data.typeLabel }} for {{ data.monthShort }}, {{ data.detailedDate.day }}</span>
+</div>
 <div mat-dialog-content>
     <mat-form-field>
         <mat-label>Time</mat-label>

@@ -14,6 +14,9 @@ html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .custom-modalbox {
+    .mat-dialog-title {
+        font-size: 1.2rem;
+    }
     .mat-dialog-container {
         overflow: hidden;
     }
@@ -31,6 +34,18 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
             position: absolute;
             top: 35%;
             right: 0;
+        }
+    }
+}
+
+.custom-bottom-sheet {
+    .mat-line {
+        color: white;
+        .list-icon {
+            margin-right: 1rem;
+            width: 1.4rem;
+            color: white;
+            fill: white;
         }
     }
 }

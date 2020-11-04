@@ -2,9 +2,13 @@ import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ICustomEvent } from 'src/app/models/customEvent.model';
 import { ISymptom } from 'src/app/models/symptom.model';
+import { IDetailedDate } from 'src/app/models/detailed.date';
+import { getDetailedDate, getMonthMap } from 'src/app/util/date.utils';
 
 export interface IDialogData {
 	date: string;
+	detailedDate: IDetailedDate;
+	monthShort: string;
 	typeLabel: string;
 	type: string;
 	time: string;
@@ -28,6 +32,8 @@ export class DialogAddEventComponent {
 		public dialogRef: MatDialogRef<DialogAddEventComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: IDialogData
 	) {
+		data.detailedDate = getDetailedDate(new Date(data.date));
+		data.monthShort = getMonthMap(true).get(data.detailedDate.month);
 		if (data.customEvent != null) {
 			data.edit = true;
 			data.type = data.customEvent.type;

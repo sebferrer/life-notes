@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { DaysService } from 'src/app/infra';
-import { getDetailedDate } from 'src/app/util/date.utils';
+import { getDetailedDate, getMonthMap } from 'src/app/util/date.utils';
 import { DayOverviewViewModel } from 'src/app/models/day.overview.view.model';
 import { map } from 'rxjs/operators';
 import { AppComponent } from 'src/app/app.component';
@@ -39,9 +39,7 @@ export class CalendarComponent implements OnInit {
 		this.symptomMap = this.app.symptomMap;
 		this.symptomPainColorMap =
 			new Map([[0, 'default'], [1, 'pain-1'], [2, 'pain-2'], [3, 'pain-3'], [4, 'pain-4'], [5, 'pain-5']]);
-		this.monthMap =
-			new Map([[1, 'January'], [2, 'February'], [3, 'March'], [4, 'April'], [5, 'May'], [6, 'June'],
-			[7, 'July'], [8, 'August'], [9, 'September'], [10, 'October'], [11, 'November'], [12, 'December']]);
+		this.monthMap = getMonthMap();
 	}
 
 	public updateCalendar(month: number, year: number) {

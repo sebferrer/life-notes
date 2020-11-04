@@ -200,7 +200,9 @@ export class TimelineComponent implements OnInit, AfterViewInit {
 	}
 
 	public openBottomSheet(date: string): void {
-		this.bottomSheet.open(BottomSheetAddEventComponent, {})
+		this.bottomSheet.open(BottomSheetAddEventComponent, {
+			panelClass: 'custom-bottom-sheet'
+		})
 			.afterDismissed().subscribe(response => {
 				if (response == null) {
 					return;
