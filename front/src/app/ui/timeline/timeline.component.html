@@ -7,19 +7,12 @@
 				<button mat-icon-button class="go-to-day" routerLink="{{ dayContent.date }}">
 					<mat-icon>arrow_forward_ios</mat-icon>
 				</button>
-				<button mat-icon-button [matMenuTriggerFor]="addEvent" class="add-event">
+				<button mat-icon-button (click)="openBottomSheet(dayContent.date, symptoms)" class="add-event">
 					<mat-icon>playlist_add</mat-icon>
 				</button>
 				<button mat-icon-button class="delete-event" (click)="toggleRemovable(dayContent)">
 					<mat-icon>delete_sweep</mat-icon>
 				</button>
-				<mat-menu #addEvent="matMenu">
-					<button mat-menu-item (click)="openAddSymptomDialog('symptomLog', dayContent.date, symptoms)">Add
-						symptom</button>
-					<button mat-menu-item (click)="openAddDialog('log', dayContent.date)">Add custom event</button>
-					<button mat-menu-item (click)="openAddDialog('med', dayContent.date)">Add drug</button>
-					<button mat-menu-item (click)="openAddDialog('meal', dayContent.date)">Add meal</button>
-				</mat-menu>
 			</mat-grid-tile-header>
 			<div class="timeline-tile-content">
 				<div class="corner-decoration"></div>

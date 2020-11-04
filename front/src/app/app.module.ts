@@ -16,6 +16,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSliderModule } from '@angular/material/slider';
+import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
@@ -34,6 +35,7 @@ import { DialogAddSymptomComponent } from './ui/symptoms/dialog-add-symptom';
 import { DialogDeleteSymptomComponent } from './ui/symptoms/dialog-delete-symptom';
 import { DialogEditSymptomOverviewComponent } from './ui/timeline/dialog-edit-symptom-overview';
 import { DialogImportConfirmComponent } from './ui/dialog-import-confirm';
+import { BottomSheetAddEventComponent } from './ui/timeline/bottom-sheet-add-event';
 
 @NgModule({
 	declarations: [
@@ -49,7 +51,8 @@ import { DialogImportConfirmComponent } from './ui/dialog-import-confirm';
 		DialogAddSymptomComponent,
 		DialogDeleteSymptomComponent,
 		DialogEditSymptomOverviewComponent,
-		DialogImportConfirmComponent
+		DialogImportConfirmComponent,
+		BottomSheetAddEventComponent
 	],
 	imports: [
 		BrowserModule,
@@ -72,6 +75,7 @@ import { DialogImportConfirmComponent } from './ui/dialog-import-confirm';
 		MatSnackBarModule,
 		MatSelectModule,
 		MatSliderModule,
+		MatBottomSheetModule,
 		NgxMaterialTimepickerModule
 	],
 	providers: [

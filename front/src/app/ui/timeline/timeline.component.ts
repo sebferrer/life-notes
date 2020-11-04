@@ -13,6 +13,8 @@ import { ISymptom } from 'src/app/models/symptom.model';
 import { AppComponent } from 'src/app/app.component';
 import { getSortOrder } from 'src/app/util/array.utils';
 import { IDay } from 'src/app/models';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { BottomSheetAddEventComponent } from './bottom-sheet-add-event';
 
 @Component({
 	selector: 'app-timeline',
@@ -23,6 +25,7 @@ export class TimelineComponent implements OnInit, AfterViewInit {
 
 	private daysContents: DayViewModel[];
 	public daysContents$: Subject<DayViewModel[]>;
+	public symptoms: ISymptom[];
 	public symptoms$: Observable<ISymptom[]>;
 	public symptomMap: Map<string, string>;
 	public symptomPainColorMap: Map<number, string>;
@@ -32,7 +35,8 @@ export class TimelineComponent implements OnInit, AfterViewInit {
 		private app: AppComponent,
 		private daysService: DaysService,
 		private dialog: MatDialog,
-		private snackBar: MatSnackBar
+		private snackBar: MatSnackBar,
+		private bottomSheet: MatBottomSheet
 	) { }
 
 	public ngOnInit(): void {
@@ -47,6 +51,12 @@ export class TimelineComponent implements OnInit, AfterViewInit {
 			}
 		);
 		this.symptoms$ = this.app.symptoms$;
+		this.symptoms = new Array<ISymptom>();
+		this.symptoms$.subscribe(symptoms => {
+			symptoms.forEach(symptom => {
+				this.symptoms.push(symptom);
+			});
+		});
 		this.symptomMap = this.app.symptomMap;
 		this.symptomPainColorMap =
 			new Map([[0, 'default'], [1, 'pain-1'], [2, 'pain-2'], [3, 'pain-3'], [4, 'pain-4'], [5, 'pain-5']]);
@@ -187,5 +197,18 @@ export class TimelineComponent implements OnInit, AfterViewInit {
 
 	public deleteEvent(date: string, customEvent: ICustomEvent): void {
 		this.daysService.deleteEvent(date, customEvent);
+	}
+
+	public openBottomSheet(date: string): void {
+		this.bottomSheet.open(BottomSheetAddEventComponent, {})
+			.afterDismissed().subscribe(response => {
+				if (response == null) {
+					return;
+				} else if (response.type === 'symptomLog') {
+					this.openAddSymptomDialog(response.type, date, this.symptoms);
+				} else {
+					this.openAddDialog(response.type, date);
+				}
+			});
 	}
 }
