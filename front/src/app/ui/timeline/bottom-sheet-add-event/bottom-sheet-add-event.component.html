@@ -1,31 +1,29 @@
 <mat-nav-list>
     <a mat-list-item (click)="select('symptomLog')">
         <span mat-line>
-            <mat-icon class="list-icon">spa</mat-icon>Add a symptom
+            <div class="list-icon-container"><mat-icon class="list-icon">spa</mat-icon></div>
+            <span>Add a symptom</span>
         </span>
-        <!-- span mat-line>Add to a note</span-->
     </a>
 
     <a mat-list-item (click)="select('log')">
         <span mat-line>
-            <mat-icon class="list-icon">event_note</mat-icon>Add a note</span>
+            <div class="list-icon-container"><mat-icon class="list-icon">event_note</mat-icon></div>
+            <span>Add a note</span>
+        </span>
     </a>
 
     <a mat-list-item (click)="select('med')">
         <span mat-line>
-            <svg class="list-icon" viewBox="0 0 380.738 380.739">
-                <path d="M345.698,35.031C302.871-7.818,237.54-11.92,199.79,25.829L96.977,128.655l-71.141,71.129
-           c-37.75,37.761-33.637,103.082,9.19,145.943c42.838,42.826,108.17,46.928,145.919,9.189l71.129-71.141l102.825-102.814
-           C392.66,143.201,388.536,77.87,345.698,35.031z M162.61,336.559c-27.583,27.583-76.578,23.447-109.227-9.19
-           c-32.637-32.648-36.773-81.633-9.19-109.228l71.129-71.129L233.74,265.43L162.61,336.559z" />
-            </svg>
-            Add a drug
+            <div class="list-icon-container"><img src="/assets/svg/pill-capsule.svg" class="list-icon-svg" /></div>
+            <span>Add a drug</span>
         </span>
     </a>
 
     <a mat-list-item (click)="select('meal')">
         <span mat-line>
-            <mat-icon class="list-icon">local_dining</mat-icon>Add a meal
+            <div class="list-icon-container"><img src="/assets/svg/curry-chronicles.svg" class="list-icon-svg curry-chronicles-logo" /></div>
+            <span>Add a meal</span>
         </span>
     </a>
 </mat-nav-list>

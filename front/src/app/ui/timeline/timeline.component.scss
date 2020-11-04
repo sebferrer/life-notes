@@ -52,15 +52,32 @@
 }
 
 .event {
-    display: inline;
+    display: table;
+    height: 5vh;
     float: left;
+
+    .event-time {
+        display: table-cell;
+        vertical-align: middle;
+        width: 12vw;
+    }
+    .event-content {
+        display: table-cell;
+        vertical-align: middle;
+        width: 48vw;
+    }
 }
 
 .remove-event-container {
-    display: inline;
-    float: right;
-    height: 1.1rem;
+    position: absolute;
+    right: 5%;
+    top: 10%;
+
+    .remove-event {
+        font-size: 180%;
+    }
 }
+
 
 .go-to-day {
     margin-left: 1rem !important;

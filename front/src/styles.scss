@@ -41,11 +41,23 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .custom-bottom-sheet {
     .mat-line {
         color: white;
-        .list-icon {
+        .list-icon-container {
+            display: inline-block;
+            width: 3rem;
+            .list-icon {
+                margin-right: 1rem;
+                width: 1.4rem;
+                color: white;
+                fill: white;
+            }
+        }
+        .list-icon-svg {
             margin-right: 1rem;
             width: 1.4rem;
-            color: white;
-            fill: white;
+            filter: grayscale(100%) contrast(375%) invert(1);
+        }
+        .curry-chronicles-logo {
+            width: 1.7rem;
         }
     }
 }

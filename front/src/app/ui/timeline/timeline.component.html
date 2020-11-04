@@ -34,16 +34,20 @@
 							class="mat-chip mat-standard-chip timeline-day-item-{{ content.type }} event-chips">
 							<div class="event-container" (click)="openShowDialog(dayContent.date, content)">
 								<div *ngSwitchCase="'symptomLog'" class="event">
-									{{ content.time }} : {{ symptomMap.get(content.key) }} [{{ content.pain }}/5]
+									<div class="event-time">{{ content.time }}</div>
+									<div class="event-content">{{ symptomMap.get(content.key) }} [{{ content.pain }}/5]</div>
 								</div>
 								<div *ngSwitchCase="'log'" class="event">
-									{{ content.time }} : {{ content.key }}
+									<div class="event-time">{{ content.time }}</div>
+									<div class="event-content">{{ content.key }}</div>
 								</div>
 								<div *ngSwitchCase="'med'" class="event">
-									{{ content.time }} : {{ content.key }} {{ content.quantity }}mg
+									<div class="event-time">{{ content.time }}</div>
+									<div class="event-content">{{ content.key }} {{ content.quantity }}mg</div>
 								</div>
 								<div *ngSwitchCase="'meal'" class="event">
-									{{ content.time }} : {{ content.key }}
+									<div class="event-time">{{ content.time }}</div>
+									<div class="event-content">{{ content.key }}</div>
 								</div>
 								<div class="remove-event-container">
 									<mat-icon matChipRemove *ngIf="dayContent.removable" class="remove-event"
