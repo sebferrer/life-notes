@@ -3,7 +3,7 @@ import { DaysService, ImporterExporterService } from './infra';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DialogImportConfirmComponent } from './ui/dialog-import-confirm';
-import { Observable } from 'rxjs';
+import { Subject } from 'rxjs';
 import { ISymptom } from './models/symptom.model';
 import { GlobalService } from './infra/global.service';
 
@@ -14,7 +14,8 @@ import { GlobalService } from './infra/global.service';
 })
 export class AppComponent implements OnInit {
 	public title = 'Healthy Day';
-	public symptoms$: Observable<ISymptom[]>;
+	public symptoms: ISymptom[];
+	public symptoms$: Subject<ISymptom[]>;
 
 	constructor(
 		private globalService: GlobalService,
@@ -22,11 +23,21 @@ export class AppComponent implements OnInit {
 		private importerExporterService: ImporterExporterService,
 		private dialog: MatDialog,
 		private snackBar: MatSnackBar
-	) { }
+	) {
+		this.symptoms = new Array<ISymptom>();
+		this.symptoms$ = new Subject<ISymptom[]>();
+	}
 
 	public ngOnInit(): void {
 		this.daysService.createNewDayToday().subscribe(res => { }, error => { });
-		this.symptoms$ = this.globalService.symptoms$;
+		this.updateSymptoms();
+	}
+
+	public updateSymptoms() {
+		this.globalService.symptoms$.subscribe(symptoms => {
+			this.symptoms = [...symptoms];
+			this.symptoms$.next(this.symptoms);
+		});
 	}
 
 	public fileClickFire(): void {

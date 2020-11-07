@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SymptomsService } from '../../infra';
-import { Observable } from 'rxjs';
+import { Subject } from 'rxjs';
 import { SymptomViewModel } from 'src/app/models/symptom.view.model';
-import { map } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DialogAddSymptomComponent } from './dialog-add-symptom';
@@ -10,6 +9,7 @@ import * as simplifyString from 'simplify-string';
 import { DialogDeleteSymptomComponent } from './dialog-delete-symptom';
 import { ISymptom } from 'src/app/models/symptom.model';
 import { GlobalService } from 'src/app/infra/global.service';
+import { AppComponent } from 'src/app/app.component';
 
 @Component({
 	selector: 'app-symptoms',
@@ -18,19 +18,28 @@ import { GlobalService } from 'src/app/infra/global.service';
 })
 export class SymptomsComponent implements OnInit {
 
-	public symptoms$: Observable<SymptomViewModel[]>;
+	public symptoms: SymptomViewModel[];
+	public symptoms$: Subject<SymptomViewModel[]>;
 
 	constructor(
+		private app: AppComponent,
 		private globalService: GlobalService,
 		private symptomsService: SymptomsService,
 		private dialog: MatDialog,
 		private snackBar: MatSnackBar
-	) { }
+	) {
+		this.symptoms = new Array<SymptomViewModel>();
+		this.symptoms$ = new Subject<SymptomViewModel[]>();
+	}
 
 	public ngOnInit(): void {
-		this.symptoms$ = this.symptomsService.getSymptoms().pipe(
-			map(symptoms => symptoms.map(symptom => new SymptomViewModel(symptom)))
-		);
+		this.symptomsService.getSymptoms().subscribe(
+			symptoms => {
+				symptoms.forEach(symptom => {
+					this.symptoms.push(new SymptomViewModel(symptom));
+				});
+				this.symptoms$.next(this.symptoms);
+			});
 	}
 
 	public toggleEditable(symptoms: SymptomViewModel[], symptom: SymptomViewModel): void {
@@ -43,7 +52,7 @@ export class SymptomsComponent implements OnInit {
 	}
 
 	public openAddDialog(symptom?: ISymptom): void {
-		symptom = symptom == null ? { 'type': 'symptom', 'key': null } : symptom;
+		symptom = symptom == null ? { 'type': null, 'key': null } : symptom;
 		this.dialog.open(DialogAddSymptomComponent, {
 			autoFocus: false,
 			width: '20rem',
@@ -73,18 +82,34 @@ export class SymptomsComponent implements OnInit {
 			if (response == null || response.answer !== 'yes') {
 				return;
 			}
-			this.symptomsService.deleteSymptom(key).subscribe(() => { this.ngOnInit(); });
+			this.symptomsService.deleteSymptom(key).subscribe(() => {
+				this.symptoms = this.symptoms.filter(symptom => symptom.key !== key);
+				this.symptoms$.next(this.symptoms);
+				this.globalService.loadSymptoms();
+				this.app.updateSymptoms();
+			});
 			this.snackBar.open(`The symptom ${label} was successfully deleted`, 'Close');
 		});
 	}
 
 	public addSymptom(label: string): void {
-		const key = simplifyString(label);
-		this.symptomsService.createNewSymptom(key, label).subscribe(() => { this.ngOnInit(); });
+		const key: string = simplifyString(label);
+		this.symptomsService.createNewSymptom(key, label).subscribe(() => {
+			this.symptoms.push(new SymptomViewModel({ type: null, key, label }));
+			this.symptoms$.next(this.symptoms);
+			this.globalService.loadSymptoms();
+			this.app.updateSymptoms();
+		});
 	}
 
 	public editSymptom(key: string, label: string): void {
-		this.symptomsService.editSymptom(key, label).subscribe(() => { this.ngOnInit(); });
+		this.symptomsService.editSymptom(key, label).subscribe(symptom => {
+			this.symptoms = this.symptoms.filter(s => s.key !== key);
+			this.symptoms.push(new SymptomViewModel(symptom));
+			this.symptoms$.next(this.symptoms);
+			this.globalService.loadSymptoms();
+			this.app.updateSymptoms();
+		});
 	}
 
 }

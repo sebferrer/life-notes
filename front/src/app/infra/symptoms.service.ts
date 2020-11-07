@@ -45,8 +45,7 @@ export class SymptomsService {
 				return this.dbContext.asObservable(this.dbContext.symptomsCollection.put(s)).pipe(
 					map(() => s)
 				);
-			}),
-			map(() => null)
+			})
 		);
 	}
 

@@ -178,11 +178,12 @@ export class TimelineComponent implements OnInit, AfterViewInit {
 			d => {
 				const symptomOverview = this.daysService.getSymptomOverview(d, this.globalService.targetSymptomKey)
 					|| { key: this.globalService.targetSymptomKey, pain: 0 };
+				const symptomMap = this.symptomMap;
 				this.dialog.open(DialogEditSymptomOverviewComponent, {
 					autoFocus: false,
 					width: '20rem',
 					panelClass: 'custom-modalbox',
-					data: { date, symptomOverview }
+					data: { date, symptomOverview, symptomMap}
 				}).afterClosed().subscribe(response => {
 					if (response == null || response.answer !== 'yes') {
 						return;

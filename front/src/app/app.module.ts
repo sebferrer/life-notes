@@ -86,6 +86,7 @@ import { GlobalService } from './infra/global.service';
 		DaysService,
 		SymptomsService,
 		DbContext,
+		AppComponent,
 		GlobalService,
 		{
 			provide: APP_INITIALIZER,

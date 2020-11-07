@@ -5,6 +5,7 @@ import { ISymptomOverview } from 'src/app/models/symptom.model';
 export interface IDialogData {
 	date: string;
 	symptomOverview: ISymptomOverview;
+	symptomMap: Map<string, string>;
 }
 
 @Component({
