@@ -1,6 +1,6 @@
 <div mat-dialog-title>
-    <span *ngIf="data.edit; else addSpan">Edit </span>
-    <ng-template #addSpan>Add </ng-template>
+    <span *ngIf="data.edit; else addSpan">{{ "EDIT" | transloco }} </span>
+    <ng-template #addSpan><span transloco="ADD"> </span></ng-template>
     <span>a {{ data.typeLabel }} for {{ data.monthShort }}, {{ data.detailedDate.day }}</span>
 </div>
 <div mat-dialog-content>

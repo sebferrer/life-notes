@@ -22,6 +22,7 @@
     "@angular/router": "~9.1.0",
     "@material/dialog": "^6.0.0",
     "@material/snackbar": "^6.0.0",
+    "@ngneat/transloco": "^2.19.1",
     "@ngx-formly/core": "^5.5.14",
     "@ngx-formly/material": "^5.6.1",
     "@ngx-formly/schematics": "^5.5.14",

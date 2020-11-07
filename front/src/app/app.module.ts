@@ -1,5 +1,5 @@
 import { HttpClientModule } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
@@ -36,6 +36,8 @@ import { DialogDeleteSymptomComponent } from './ui/symptoms/dialog-delete-sympto
 import { DialogEditSymptomOverviewComponent } from './ui/timeline/dialog-edit-symptom-overview';
 import { DialogImportConfirmComponent } from './ui/dialog-import-confirm';
 import { BottomSheetAddEventComponent } from './ui/timeline/bottom-sheet-add-event';
+import { TranslocoRootModule } from './transloco/transloco-root.module';
+import { TranslocoService } from '@ngneat/transloco';
 
 @NgModule({
 	declarations: [
@@ -76,13 +78,24 @@ import { BottomSheetAddEventComponent } from './ui/timeline/bottom-sheet-add-eve
 		MatSelectModule,
 		MatSliderModule,
 		MatBottomSheetModule,
-		NgxMaterialTimepickerModule
+		NgxMaterialTimepickerModule,
+		TranslocoRootModule
 	],
 	providers: [
 		DaysService,
 		SymptomsService,
 		DbContext,
-		AppComponent
+		AppComponent,
+		{
+			provide: APP_INITIALIZER,
+			useFactory: (translocoService: TranslocoService) => {
+				return async () => {
+					await translocoService.load('fr').toPromise();
+				};
+			},
+			deps: [TranslocoService],
+			multi: true
+		}
 	],
 	entryComponents: [
 		DialogAddEventComponent,
