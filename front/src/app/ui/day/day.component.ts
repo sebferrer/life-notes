@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { DaysService } from '../../infra';
-import { Observable, Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { DayViewModel } from 'src/app/models/day.view.model';
-import { AppComponent } from 'src/app/app.component';
+import { GlobalService } from 'src/app/infra/global.service';
 
 @Component({
 	selector: 'app-day',
@@ -19,7 +18,7 @@ export class DayComponent implements OnInit {
 	public symptomPainColorMap: Map<number, string>;
 
 	constructor(
-		private app: AppComponent,
+		private globalService: GlobalService,
 		private daysService: DaysService,
 		private route: ActivatedRoute
 	) { }
@@ -32,7 +31,7 @@ export class DayComponent implements OnInit {
 				this.dayContent$.next(this.dayContent);
 			}
 		);
-		this.symptomMap = this.app.symptomMap;
+		this.symptomMap = this.globalService.symptomMap;
 		this.symptomPainColorMap =
 			new Map([[0, 'default'], [1, 'pain-1'], [2, 'pain-2'], [3, 'pain-3'], [4, 'pain-4'], [5, 'pain-5']]);
 	}

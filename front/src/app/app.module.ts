@@ -38,6 +38,7 @@ import { DialogImportConfirmComponent } from './ui/dialog-import-confirm';
 import { BottomSheetAddEventComponent } from './ui/timeline/bottom-sheet-add-event';
 import { TranslocoRootModule } from './transloco/transloco-root.module';
 import { TranslocoService } from '@ngneat/transloco';
+import { GlobalService } from './infra/global.service';
 
 @NgModule({
 	declarations: [
@@ -85,7 +86,7 @@ import { TranslocoService } from '@ngneat/transloco';
 		DaysService,
 		SymptomsService,
 		DbContext,
-		AppComponent,
+		GlobalService,
 		{
 			provide: APP_INITIALIZER,
 			useFactory: (translocoService: TranslocoService) => {

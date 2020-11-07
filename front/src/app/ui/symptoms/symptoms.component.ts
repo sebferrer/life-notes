@@ -9,6 +9,7 @@ import { DialogAddSymptomComponent } from './dialog-add-symptom';
 import * as simplifyString from 'simplify-string';
 import { DialogDeleteSymptomComponent } from './dialog-delete-symptom';
 import { ISymptom } from 'src/app/models/symptom.model';
+import { GlobalService } from 'src/app/infra/global.service';
 
 @Component({
 	selector: 'app-symptoms',
@@ -20,6 +21,7 @@ export class SymptomsComponent implements OnInit {
 	public symptoms$: Observable<SymptomViewModel[]>;
 
 	constructor(
+		private globalService: GlobalService,
 		private symptomsService: SymptomsService,
 		private dialog: MatDialog,
 		private snackBar: MatSnackBar

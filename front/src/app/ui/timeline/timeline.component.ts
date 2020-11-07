@@ -10,11 +10,11 @@ import { ICustomEvent } from 'src/app/models/customEvent.model';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ISymptom } from 'src/app/models/symptom.model';
-import { AppComponent } from 'src/app/app.component';
 import { getSortOrder } from 'src/app/util/array.utils';
 import { IDay } from 'src/app/models';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { BottomSheetAddEventComponent } from './bottom-sheet-add-event';
+import { GlobalService } from 'src/app/infra/global.service';
 
 @Component({
 	selector: 'app-timeline',
@@ -32,7 +32,7 @@ export class TimelineComponent implements OnInit, AfterViewInit {
 	@ViewChildren('dayRefs') dayRefs: QueryList<ElementRef>;
 
 	constructor(
-		private app: AppComponent,
+		private globalService: GlobalService,
 		private daysService: DaysService,
 		private dialog: MatDialog,
 		private snackBar: MatSnackBar,
@@ -50,14 +50,14 @@ export class TimelineComponent implements OnInit, AfterViewInit {
 				this.daysContents$.next(this.daysContents);
 			}
 		);
-		this.symptoms$ = this.app.symptoms$;
+		this.symptoms$ = this.globalService.symptoms$;
 		this.symptoms = new Array<ISymptom>();
 		this.symptoms$.subscribe(symptoms => {
 			symptoms.forEach(symptom => {
 				this.symptoms.push(symptom);
 			});
 		});
-		this.symptomMap = this.app.symptomMap;
+		this.symptomMap = this.globalService.symptomMap;
 		this.symptomPainColorMap =
 			new Map([[0, 'default'], [1, 'pain-1'], [2, 'pain-2'], [3, 'pain-3'], [4, 'pain-4'], [5, 'pain-5']]);
 	}
@@ -171,12 +171,13 @@ export class TimelineComponent implements OnInit, AfterViewInit {
 	}
 
 	public openEditSymptomOverviewDialog(date: string): void {
-		if (this.app.targetSymptomKey == null) {
+		if (this.globalService.targetSymptomKey == null) {
 			return;
 		}
 		this.daysService.getDay(date).subscribe(
 			d => {
-				const symptomOverview = this.daysService.getSymptomOverview(d, this.app.targetSymptomKey) || { key: this.app.targetSymptomKey, pain: 0 };
+				const symptomOverview = this.daysService.getSymptomOverview(d, this.globalService.targetSymptomKey)
+					|| { key: this.globalService.targetSymptomKey, pain: 0 };
 				this.dialog.open(DialogEditSymptomOverviewComponent, {
 					autoFocus: false,
 					width: '20rem',

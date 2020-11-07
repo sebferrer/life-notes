@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { DaysService, SymptomsService, ImporterExporterService } from './infra';
-import { Observable } from 'rxjs';
-import { ISymptom } from './models/symptom.model';
+import { DaysService, ImporterExporterService } from './infra';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DialogImportConfirmComponent } from './ui/dialog-import-confirm';
+import { Observable } from 'rxjs';
+import { ISymptom } from './models/symptom.model';
+import { GlobalService } from './infra/global.service';
 
 @Component({
 	selector: 'app-root',
@@ -14,27 +15,18 @@ import { DialogImportConfirmComponent } from './ui/dialog-import-confirm';
 export class AppComponent implements OnInit {
 	public title = 'Healthy Day';
 	public symptoms$: Observable<ISymptom[]>;
-	public symptomMap: Map<string, string>;
-	public targetSymptomKey: string;
 
 	constructor(
+		private globalService: GlobalService,
 		private daysService: DaysService,
-		private symptomsService: SymptomsService,
 		private importerExporterService: ImporterExporterService,
 		private dialog: MatDialog,
 		private snackBar: MatSnackBar
-	) {
-		this.symptomMap = new Map();
-	}
+	) { }
 
 	public ngOnInit(): void {
 		this.daysService.createNewDayToday().subscribe(res => { }, error => { });
-		this.symptoms$ = this.symptomsService.getSymptoms();
-		this.symptoms$.subscribe(s => s.map(x => this.symptomMap.set(x.key, x.label)));
-	}
-
-	public setTargetSymptom(key: string): void {
-		this.targetSymptomKey = key;
+		this.symptoms$ = this.globalService.symptoms$;
 	}
 
 	public fileClickFire(): void {

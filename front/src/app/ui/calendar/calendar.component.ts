@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { DaysService } from 'src/app/infra';
 import { getDetailedDate, getMonthMap } from 'src/app/util/date.utils';
 import { DayOverviewViewModel } from 'src/app/models/day.overview.view.model';
-import { map } from 'rxjs/operators';
-import { AppComponent } from 'src/app/app.component';
 import { IDetailedDate } from 'src/app/models/detailed.date';
+import { GlobalService } from 'src/app/infra/global.service';
 
 @Component({
 	selector: 'app-calendar',
@@ -24,7 +23,7 @@ export class CalendarComponent implements OnInit {
 	public today: IDetailedDate;
 
 	constructor(
-		private app: AppComponent,
+		private globalService: GlobalService,
 		private daysService: DaysService
 	) { }
 
@@ -36,7 +35,7 @@ export class CalendarComponent implements OnInit {
 		this.year = detailedDate.year;
 		this.today = getDetailedDate(new Date());
 		this.updateCalendar(this.today.month, this.today.year);
-		this.symptomMap = this.app.symptomMap;
+		this.symptomMap = this.globalService.symptomMap;
 		this.symptomPainColorMap =
 			new Map([[0, 'default'], [1, 'pain-1'], [2, 'pain-2'], [3, 'pain-3'], [4, 'pain-4'], [5, 'pain-5']]);
 		this.monthMap = getMonthMap();

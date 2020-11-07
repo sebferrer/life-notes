@@ -4,7 +4,7 @@
 	</div>
 	<div class="grid-list">
 		<div *ngFor="let overview of overviews"
-			class="grid-tile color-{{ symptomPainColorMap.get(overview.getSymptomPain(app.targetSymptomKey)) }}">
+			class="grid-tile color-{{ symptomPainColorMap.get(overview.getSymptomPain(globalService.targetSymptomKey)) }}">
 			<div class="header">
 				<div *ngIf="today.day !== overview.detailedDate.day || today.month !== overview.detailedDate.month 
 				|| today.year !== overview.detailedDate.year; else todayDiv" class="day-label">

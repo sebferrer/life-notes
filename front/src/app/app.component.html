@@ -12,7 +12,7 @@
         <mat-icon>radio_button_checked</mat-icon>
 	</button>
 	<mat-menu #targetSymptom="matMenu">
-		<button mat-menu-item *ngFor="let symptom of symptoms" [value]="symptom.key" (click)="setTargetSymptom(symptom.key)">
+		<button mat-menu-item *ngFor="let symptom of symptoms" [value]="symptom.key" (click)="globalService.targetSymptomKey = symptom.key">
 			{{ symptom.label }}</button>
 	</mat-menu>
 	<button mat-icon-button id="menu-icon-import-export" class="menu-icon" [matMenuTriggerFor]="importExport" aria-label="Import-Export">
