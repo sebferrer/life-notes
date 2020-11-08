@@ -17,6 +17,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
@@ -39,6 +40,7 @@ import { BottomSheetAddEventComponent } from './ui/timeline/bottom-sheet-add-eve
 import { TranslocoRootModule } from './transloco/transloco-root.module';
 import { TranslocoService } from '@ngneat/transloco';
 import { GlobalService } from './infra/global.service';
+import { SettingsComponent } from './ui/settings';
 
 @NgModule({
 	declarations: [
@@ -48,6 +50,7 @@ import { GlobalService } from './infra/global.service';
 		CalendarComponent,
 		TimelineComponent,
 		SymptomsComponent,
+		SettingsComponent,
 		DialogAddEventComponent,
 		DialogDeleteEventComponent,
 		DialogShowEventComponent,
@@ -79,6 +82,7 @@ import { GlobalService } from './infra/global.service';
 		MatSelectModule,
 		MatSliderModule,
 		MatBottomSheetModule,
+		MatExpansionModule,
 		NgxMaterialTimepickerModule,
 		TranslocoRootModule
 	],

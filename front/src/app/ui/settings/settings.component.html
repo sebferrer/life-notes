@@ -1,0 +1,45 @@
+<div *ngIf="symptoms$ | async as symptoms" id="settings-container">
+    <h3 class="title" transloco="SETTINGS_TITLE">Settings</h3>
+    <mat-accordion class="accordion">
+        <mat-expansion-panel hideToggle>
+            <mat-expansion-panel-header>
+                <mat-panel-title transloco="SETTINGS_SYMPTOMS_TITLE"></mat-panel-title>
+                <mat-panel-description>
+                    <span transloco="SETTINGS_SYMPTOMS_SUBTITLE"></span><mat-icon>spa</mat-icon>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+
+            <mat-form-field>
+                <mat-label transloco="DEFAULT_SYMPTOM_LABEL"></mat-label>
+                <mat-select [(value)]="selectedSymptom">
+                    <mat-option *ngFor="let symptom of symptoms" [value]="symptom.key">{{ symptom.label }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel hideToggle>
+            <mat-expansion-panel-header>
+                <mat-panel-title transloco="SETTINGS_LANGUAGE_TITLE"></mat-panel-title>
+                <mat-panel-description>
+                    <span transloco="SETTINGS_LANGUAGE_SUBTITLE"></span><mat-icon>map</mat-icon>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+
+            <mat-form-field>
+                <mat-label transloco="LANGUAGE"></mat-label>
+                <mat-select [(value)]="selectedLanguage">
+                    <mat-option value="fr" (click)="setActiveLanguage()">
+                        <div class="icon-container"><img src="/assets/svg/france.svg" class="icon-svg" /></div>
+                        {{ "FRENCH" | transloco }}
+                    </mat-option>
+                    <mat-option value="en" (click)="setActiveLanguage()">
+                        <div class="icon-container"><img src="/assets/svg/united-kingdom.svg" class="icon-svg" /></div>
+                        {{ "ENGLISH" | transloco }}
+                    </mat-option>
+                  </mat-select>
+            </mat-form-field>
+        </mat-expansion-panel>
+
+    </mat-accordion>
+</div>

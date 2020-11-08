@@ -64,5 +64,14 @@
     "EDIT_SYMPTOM": "Éditer ce symptôme",
     "ADD_SYMPTOM": "Ajouter un symptôme",
     "DELETE_SYMPTOM_DIALOG_TITLE": "Supprimer le symptôme {{ symptom }}",
-    "DELETE_SYMPTOM_DIALOG_CONTENT": "Supprimer le symptôme {{ symptom }}?"
+    "DELETE_SYMPTOM_DIALOG_CONTENT": "Supprimer le symptôme {{ symptom }}?",
+    "SETTINGS_TITLE": "Paramètres",
+    "SETTINGS_SYMPTOMS_TITLE": "Symptômes",
+    "SETTINGS_SYMPTOMS_SUBTITLE": "Gérer vos symptômes",
+    "SETTINGS_LANGUAGE_TITLE": "Langue",
+    "SETTINGS_LANGUAGE_SUBTITLE": "Paramétrer votre langue",
+    "DEFAULT_SYMPTOM_LABEL": "Symptôme par défaut",
+    "FRENCH": "Français",
+    "ENGLISH": "Anglais",
+    "LANGUAGE": "Langue"
 }

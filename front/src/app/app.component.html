@@ -5,24 +5,21 @@
 	<button mat-icon-button id="menu-icon-calendar" class="menu-icon" routerLink="/calendar" aria-label="Calendar">
         <mat-icon>apps</mat-icon>
 	</button>
-	<button mat-icon-button id="menu-icon-symptoms" class="menu-icon" routerLink="/symptoms" aria-label="Symptoms">
-        <mat-icon>spa</mat-icon>
-	</button>
 	<button mat-icon-button id="menu-icon-target-symptom" class="menu-icon" [matMenuTriggerFor]="targetSymptom" aria-label="Symptoms">
-        <mat-icon>radio_button_checked</mat-icon>
+        <mat-icon>spa</mat-icon>
 	</button>
 	<mat-menu #targetSymptom="matMenu">
 		<button mat-menu-item *ngFor="let symptom of symptoms" [value]="symptom.key" (click)="globalService.targetSymptomKey = symptom.key">
 			{{ symptom.label }}</button>
 	</mat-menu>
-	<button mat-icon-button id="menu-icon-import-export" class="menu-icon" [matMenuTriggerFor]="importExport" aria-label="Import-Export">
-        <mat-icon>import_export</mat-icon>
+	<button mat-icon-button id="menu-icon-import-export" class="menu-icon" routerLink="/settings" aria-label="Import-Export">
+        <mat-icon>settings</mat-icon>
 	</button>
-	<mat-menu #importExport="matMenu">
+	<!--mat-menu #importExport="matMenu">
 		<button mat-menu-item (click)="fileClickFire()" transloco='IMPORT'></button>
 		<button mat-menu-item (click)="exportData()" transloco='EXPORT'></button>
 		<button mat-menu-item (click)="exportHtml()" transloco='EXPORT_HTML'></button>
-	</mat-menu>
+	</mat-menu-->
 	<input type="file" id="file-import" (change)="importData($event)">
 </mat-toolbar>
 
