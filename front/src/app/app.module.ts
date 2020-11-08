@@ -92,7 +92,7 @@ import { GlobalService } from './infra/global.service';
 			provide: APP_INITIALIZER,
 			useFactory: (translocoService: TranslocoService) => {
 				return async () => {
-					await translocoService.load('en').toPromise();
+					await translocoService.load('fr').toPromise();
 				};
 			},
 			deps: [TranslocoService],
