@@ -1,10 +1,10 @@
-<h1 mat-dialog-title>Import data</h1>
+<h1 mat-dialog-title transloco="IMPORT_DIALOG_TITLE"></h1>
 <div mat-dialog-content>
-    <p>Are you sure you want to import this data?</p>
-    <p>The current data will definitely be replaced by the new one.</p>
-    <p>Please make sure that you have exported your data beforehand.</p>
+    <p transloco="IMPORT_DIALOG_CONTENT_1"></p>
+    <p transloco="IMPORT_DIALOG_CONTENT_2"></p>
+    <p transloco="IMPORT_DIALOG_CONTENT_3"></p>
 </div>
 <div mat-dialog-actions>
-    <button mat-button mat-dialog-close="" (click)="onYesClick()" color="primary">Yes</button>
-    <button mat-button cdkFocusInitial (click)="onNoClick()">No</button>
+    <button mat-button mat-dialog-close="" (click)="onYesClick()" color="primary" transloco="YES"></button>
+    <button mat-button cdkFocusInitial (click)="onNoClick()" transloco="NO"></button>
 </div>

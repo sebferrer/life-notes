@@ -19,9 +19,9 @@
         <mat-icon>import_export</mat-icon>
 	</button>
 	<mat-menu #importExport="matMenu">
-		<button mat-menu-item (click)="fileClickFire()">Import</button>
-		<button mat-menu-item (click)="exportData()">Export</button>
-		<button mat-menu-item (click)="exportHtml()">Export as HTML</button>
+		<button mat-menu-item (click)="fileClickFire()" transloco='IMPORT'></button>
+		<button mat-menu-item (click)="exportData()" transloco='EXPORT'></button>
+		<button mat-menu-item (click)="exportHtml()" transloco='EXPORT_HTML'></button>
 	</mat-menu>
 	<input type="file" id="file-import" (change)="importData($event)">
 </mat-toolbar>

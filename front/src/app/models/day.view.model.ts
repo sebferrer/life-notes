@@ -1,7 +1,6 @@
 import { IDay } from './day.model';
 import { getSortOrder } from '../util/array.utils';
 import { DayOverviewViewModel } from 'src/app/models/day.overview.view.model';
-import { ICustomEvent } from './customEvent.model';
 
 export class DayViewModel extends DayOverviewViewModel {
 

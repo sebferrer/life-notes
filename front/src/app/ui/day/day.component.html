@@ -3,7 +3,12 @@
         <button mat-icon-button class="back" routerLink="">
             <mat-icon>arrow_back_ios</mat-icon>
         </button>
-        <span>{{ dayContent.date | date }}</span>
+        <ng-template transloco let-t>
+            <span>
+                {{ t('TIMELINE_TILE_DATE',
+                    {'month': t('MONTH-SHORT-'+dayContent.detailedDate.month), 'day': dayContent.detailedDate.day, 'year': dayContent.detailedDate.year}) }}
+            </span>
+        </ng-template>
         <button mat-icon-button [matMenuTriggerFor]="addEvent" class="add-event">
             <mat-icon>playlist_add</mat-icon>
         </button>

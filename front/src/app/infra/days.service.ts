@@ -82,7 +82,7 @@ export class DaysService {
 		return day.symptomOverviews.find(s => s.key === key);
 	}
 
-	public getTypeLabel(type: string): string {
+	/*public getTypeLabel(type: string): string {
 		const labels = new Map([
 			['symptomLog', 'symptom'],
 			['log', 'note'],
@@ -91,8 +91,8 @@ export class DaysService {
 			['wakeUp', 'wake up time'],
 			['goToBed', 'bed time']]);
 
-		return labels.get(type);
-	}
+		eturn labels.get(type);
+	}*/
 
 	public getSymptomLog(day: IDay, time: string, key: string): Observable<ILog> {
 		const symptom: ISymptom = day.symptoms.find(s => s.key === key);

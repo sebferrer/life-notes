@@ -1,9 +1,10 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DaysService } from 'src/app/infra';
+import { IDetailedDate } from 'src/app/models/detailed.date';
 
 export interface IDialogData {
 	date: string;
+	detailedDate: IDetailedDate;
 	type: string;
 	time: string;
 	key: string;
@@ -16,8 +17,7 @@ export interface IDialogData {
 export class DialogDeleteEventComponent {
 	constructor(
 		public dialogRef: MatDialogRef<DialogDeleteEventComponent>,
-		@Inject(MAT_DIALOG_DATA) public data: IDialogData,
-		private daysService: DaysService
+		@Inject(MAT_DIALOG_DATA) public data: IDialogData
 	) { }
 
 	public onNoClick(): void {

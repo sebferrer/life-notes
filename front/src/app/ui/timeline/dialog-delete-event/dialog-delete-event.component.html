@@ -1,8 +1,10 @@
-<h1 mat-dialog-title>Delete {{ data.typeLabel }}</h1>
-<div mat-dialog-content>
-    <p>Delete this {{ data.typeLabel }} at {{ data.time }} for {{ data.date | date }}?</p>
-</div>
+<ng-template transloco let-t>
+    <h1 mat-dialog-title>{{ t('DELETE_EVENT_DIALOG_TITLE', { type: t(data.type) }) }}</h1>
+    <div mat-dialog-content>
+        <p>{{ t('DELETE_EVENT_DIALOG_CONTENT', { type: t(data.type), time: data.time , month: t('MONTH-'+data.detailedDate.month), day: data.detailedDate.day }) }}</p>
+    </div>
+</ng-template>
 <div mat-dialog-actions>
-    <button mat-button (click)="onYesClick()" color="primary">Yes</button>
-    <button mat-button cdkFocusInitial (click)="onNoClick()">No</button>
+    <button mat-button (click)="onYesClick()" color="primary" transloco="YES"></button>
+    <button mat-button cdkFocusInitial (click)="onNoClick()" transloco="NO"></button>
 </div>

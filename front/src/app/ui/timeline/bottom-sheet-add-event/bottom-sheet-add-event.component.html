@@ -2,28 +2,29 @@
     <a mat-list-item (click)="select('symptomLog')">
         <span mat-line>
             <div class="list-icon-container"><mat-icon class="list-icon">spa</mat-icon></div>
-            <span>Add a symptom</span>
-        </span>
-    </a>
-
-    <a mat-list-item (click)="select('log')">
-        <span mat-line>
-            <div class="list-icon-container"><mat-icon class="list-icon">event_note</mat-icon></div>
-            <span>Add a note</span>
-        </span>
-    </a>
-
-    <a mat-list-item (click)="select('med')">
-        <span mat-line>
-            <div class="list-icon-container"><img src="/assets/svg/pill-capsule.svg" class="list-icon-svg" /></div>
-            <span>Add a drug</span>
+            <span transloco="ADD_SYMPTOM_BOTTOMSHEET"></span>
         </span>
     </a>
 
     <a mat-list-item (click)="select('meal')">
         <span mat-line>
             <div class="list-icon-container"><img src="/assets/svg/curry-chronicles.svg" class="list-icon-svg curry-chronicles-logo" /></div>
-            <span>Add a meal</span>
+            <span transloco="ADD_MEAL_BOTTOMSHEET"></span>
         </span>
     </a>
+
+    <a mat-list-item (click)="select('med')">
+        <span mat-line>
+            <div class="list-icon-container"><img src="/assets/svg/pill-capsule.svg" class="list-icon-svg" /></div>
+            <span transloco="ADD_DRUG_BOTTOMSHEET"></span>
+        </span>
+    </a>
+
+    <a mat-list-item (click)="select('log')">
+        <span mat-line>
+            <div class="list-icon-container"><mat-icon class="list-icon">event_note</mat-icon></div>
+            <span transloco="ADD_NOTE_BOTTOMSHEET"></span>
+        </span>
+    </a>
+
 </mat-nav-list>

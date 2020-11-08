@@ -1,9 +1,15 @@
 <mat-grid-list *ngIf="daysContents$ | async as daysContents; else loading" cols="1" gutterSize="0"
 	class="timeline-grid">
 	<div *ngIf="symptoms$ | async as symptoms; else loading">
-		<mat-grid-tile *ngFor="let dayContent of daysContents" #dayRefs class="timeline-tile" id="day-{{ dayContent.date }}">
+		<mat-grid-tile *ngFor="let dayContent of daysContents" #dayRefs class="timeline-tile"
+			id="day-{{ dayContent.date }}">
 			<mat-grid-tile-header class="timeline-tile-header">
-				<h3>{{ dayContent.date | date }}</h3>
+				<ng-template transloco let-t>
+					<h3>
+						{{ t('TIMELINE_TILE_DATE',
+							{'month': t('MONTH-SHORT-'+dayContent.detailedDate.month), 'day': dayContent.detailedDate.day, 'year': dayContent.detailedDate.year}) }}
+					</h3>
+				</ng-template>
 				<button mat-icon-button class="go-to-day" routerLink="{{ dayContent.date }}">
 					<mat-icon>arrow_forward_ios</mat-icon>
 				</button>
@@ -25,7 +31,9 @@
 					<div class="gotobed-time">{{ dayContent.goToBed }}</div>
 				</div>
 				<div class="symptom-overview-container" (click)="openEditSymptomOverviewDialog(dayContent.date)">
-					<mat-icon class="symptom-overview-icon color-{{ symptomPainColorMap.get(dayContent.getSymptomPain(globalService.targetSymptomKey)) }}">fiber_manual_record</mat-icon>
+					<mat-icon
+						class="symptom-overview-icon color-{{ symptomPainColorMap.get(dayContent.getSymptomPain(globalService.targetSymptomKey)) }}">
+						fiber_manual_record</mat-icon>
 				</div>
 				<div class="timeline-content">
 					<mat-chip-list class="mat-chip-list-stacked">
@@ -35,7 +43,8 @@
 							<div class="event-container" (click)="openShowDialog(dayContent.date, content)">
 								<div *ngSwitchCase="'symptomLog'" class="event">
 									<div class="event-time">{{ content.time }}</div>
-									<div class="event-content">{{ symptomMap.get(content.key) }} [{{ content.pain }}/5]</div>
+									<div class="event-content">{{ symptomMap.get(content.key) }} [{{ content.pain }}/5]
+									</div>
 								</div>
 								<div *ngSwitchCase="'log'" class="event">
 									<div class="event-time">{{ content.time }}</div>

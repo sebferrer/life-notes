@@ -1,4 +1,8 @@
-<h1 mat-dialog-title>{{ data.date | date }}</h1>
+<ng-template transloco let-t>
+    <h1 mat-dialog-title>
+        {{ t('SHOW_EVENT_DIALOG_TITLE', {'month': t('MONTH-'+data.detailedDate.month), 'day': data.detailedDate.day, 'year': data.detailedDate.year}) }}
+    </h1>
+</ng-template>
 <div mat-dialog-content>
     <div><mat-label>{{ data.customEvent.time }}</mat-label></div>
     <mat-label>{{ data.customEvent.key }}</mat-label>
@@ -19,8 +23,8 @@
     </div>
     <div mat-dialog-actions>
         <button mat-button cdkFocusInitial (click)="onYesClick()"
-            color="primary">Update</button>
-        <button mat-button (click)="onNoClick()">Close</button>
+            color="primary" transloco="UPDATE"></button>
+        <button mat-button (click)="onNoClick()" transloco="CLOSE"></button>
     </div>
 </div>
 

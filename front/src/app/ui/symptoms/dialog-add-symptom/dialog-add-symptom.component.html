@@ -1,19 +1,18 @@
 <h1 mat-dialog-title>
-    <span *ngIf="data.edit; else addSpan">Edit </span> 
-    <ng-template #addSpan>Add </ng-template>
-    <span>a symptom</span>
+    <span *ngIf="data.edit; else addSpan" transloco="EDIT_SYMPTOM"></span> 
+    <ng-template #addSpan><span transloco="ADD_SYMPTOM"></span></ng-template>
 </h1>
 <div mat-dialog-content>
     <mat-form-field>
-        <mat-label>Symptom</mat-label>
+        <mat-label>{{ "SYMPTOM" | transloco | titlecase }}</mat-label>
         <input matInput [(ngModel)]="data.symptom.label">
     </mat-form-field>
     <div mat-dialog-actions>
         <button mat-button cdkFocusInitial
             (click)="onYesClick()" color="primary">
-            <span *ngIf="data.edit; else addButton">Edit</span>
-            <ng-template #addButton>Add</ng-template>
+            <span *ngIf="data.edit; else addButton" transloco="EDIT"></span>
+            <ng-template #addButton><span transloco="ADD"></span></ng-template>
         </button>
-        <button mat-button (click)="onNoClick()">Cancel</button>
+        <button mat-button (click)="onNoClick()" transloco="CANCEL"></button>
     </div>
 </div>

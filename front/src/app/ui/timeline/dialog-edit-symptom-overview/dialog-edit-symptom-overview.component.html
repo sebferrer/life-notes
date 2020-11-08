@@ -1,9 +1,11 @@
-<h1 mat-dialog-title>
-    <span>Your {{ data.symptomMap.get(data.symptomOverview.key) }} ache today</span>
-</h1>
+<ng-template transloco let-t>
+    <h1 mat-dialog-title>
+        <span>{{ t('EDIT_SYMPTOM_OVERVIEW_DIALOG_TITLE', { 'symptom': data.symptomMap.get(data.symptomOverview.key) }) }}</span>
+    </h1>
+</ng-template>
 <div mat-dialog-content>
     <mat-form-field>
-        <mat-label>Pain</mat-label>
+        <mat-label transloco="PAIN"></mat-label>
         <div id="pain-container">
             <mat-slider [max]="5" [min]="0" [step]="1" [thumbLabel]="true" [(ngModel)]="data.symptomOverview.pain">
             </mat-slider>
@@ -11,10 +13,9 @@
         </div>
     </mat-form-field>
     <div mat-dialog-actions>
-        <button mat-button cdkFocusInitial
-            (click)="onYesClick()" color="primary">
-            <span>Set</span>
+        <button mat-button cdkFocusInitial (click)="onYesClick()" color="primary">
+            <span transloco="SET"></span>
         </button>
-        <button mat-button (click)="onNoClick()">Cancel</button>
+        <button mat-button (click)="onNoClick()" transloco="CANCEL"></button>
     </div>
 </div>

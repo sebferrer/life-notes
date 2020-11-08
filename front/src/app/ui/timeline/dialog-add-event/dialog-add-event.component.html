@@ -1,11 +1,18 @@
-<div mat-dialog-title>
-    <span *ngIf="data.edit; else addSpan">{{ "EDIT" | transloco }} </span>
-    <ng-template #addSpan><span transloco="ADD"> </span></ng-template>
-    <span>a {{ data.typeLabel }} for {{ data.monthShort }}, {{ data.detailedDate.day }}</span>
-</div>
+<ng-template transloco let-t>
+    <div mat-dialog-title>
+        <span *ngIf="data.edit; else addSpan">
+            {{ t('EDIT_EVENT_DIALOG_TITLE', { type: t(data.type), monthShort: t('MONTH-SHORT-'+data.detailedDate.month), day: data.detailedDate.day }) }}
+        </span>
+        <ng-template #addSpan>
+            <span>
+                {{ t('ADD_EVENT_DIALOG_TITLE', { type: t(data.type), monthShort: t('MONTH-SHORT-'+data.detailedDate.month), day: data.detailedDate.day }) }}
+            </span>
+        </ng-template>
+    </div>
+</ng-template>
 <div mat-dialog-content>
     <mat-form-field>
-        <mat-label>Time</mat-label>
+        <mat-label transloco="TIME"></mat-label>
         <input matInput placeholder="24hr format" aria-label="24hr format" [ngxTimepicker]="fullTime" [format]="24"
             [(ngModel)]="data.time" readonly>
         <ngx-material-timepicker #fullTime></ngx-material-timepicker>
@@ -13,14 +20,14 @@
     <div [ngSwitch]="data.type">
         <div *ngSwitchCase="'symptomLog'">
             <mat-form-field>
-                <mat-label>{{ data.typeLabel }}</mat-label>
+                <mat-label>{{ data.type | transloco | titlecase }}</mat-label>
                 <mat-select [(ngModel)]="data.key">
                     <mat-option *ngFor="let symptom of data.symptoms" [value]="symptom.key">{{ symptom.label }}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
             <mat-form-field>
-                <mat-label>Pain</mat-label>
+                <mat-label transloco="PAIN"></mat-label>
                 <div id="pain-container">
                     <mat-slider [max]="5" [min]="0" [step]="1" [thumbLabel]="true" [(ngModel)]="data.pain">
                     </mat-slider>
@@ -28,47 +35,46 @@
                 </div>
             </mat-form-field>
             <mat-form-field>
-                <mat-label>Detail</mat-label>
+                <mat-label transloco="DETAIL"></mat-label>
                 <input matInput [(ngModel)]="data.detail">
             </mat-form-field>
         </div>
         <div *ngSwitchCase="'log'">
             <mat-form-field>
-                <mat-label>{{ data.typeLabel }}</mat-label>
+                <mat-label>{{ data.type | transloco | titlecase }}</mat-label>
                 <input matInput [(ngModel)]="data.key">
             </mat-form-field>
             <mat-form-field>
-                <mat-label>Detail</mat-label>
+                <mat-label transloco="DETAIL"></mat-label>
                 <input matInput [(ngModel)]="data.detail">
             </mat-form-field>
         </div>
         <div *ngSwitchCase="'med'">
             <mat-form-field>
-                <mat-label>{{ data.typeLabel }}</mat-label>
+                <mat-label>{{ data.type | transloco | titlecase }}</mat-label>
                 <input matInput [(ngModel)]="data.key">
             </mat-form-field>
             <mat-form-field>
-                <mat-label>Quantity</mat-label>
+                <mat-label transloco="QUANTITY"></mat-label>
                 <input matInput [(ngModel)]="data.quantity">
             </mat-form-field>
         </div>
         <div *ngSwitchCase="'meal'">
             <mat-form-field>
-                <mat-label>{{ data.typeLabel }}</mat-label>
+                <mat-label>{{ data.type | transloco | titlecase }}</mat-label>
                 <input matInput [(ngModel)]="data.key">
             </mat-form-field>
             <mat-form-field>
-                <mat-label>Detail</mat-label>
+                <mat-label transloco="DETAIL"></mat-label>
                 <input matInput [(ngModel)]="data.detail">
             </mat-form-field>
         </div>
     </div>
     <div mat-dialog-actions>
-        <button mat-button cdkFocusInitial
-            (click)="onYesClick()" color="primary">
-            <span *ngIf="data.edit; else addButton">Edit</span>
-            <ng-template #addButton>Add</ng-template>
+        <button mat-button cdkFocusInitial (click)="onYesClick()" color="primary">
+            <span *ngIf="data.edit; else addButton" transloco="EDIT"></span>
+            <ng-template #addButton><span transloco="ADD"></span></ng-template>
         </button>
-        <button mat-button (click)="onNoClick()">Cancel</button>
+        <button mat-button (click)="onNoClick()" transloco="CANCEL"></button>
     </div>
 </div>

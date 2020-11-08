@@ -15,6 +15,7 @@ import { IDay } from 'src/app/models';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { BottomSheetAddEventComponent } from './bottom-sheet-add-event';
 import { GlobalService } from 'src/app/infra/global.service';
+import { getDetailedDate } from 'src/app/util/date.utils';
 
 @Component({
 	selector: 'app-timeline',
@@ -80,7 +81,7 @@ export class TimelineComponent implements OnInit, AfterViewInit {
 			autoFocus: false,
 			width: '20rem',
 			panelClass: 'custom-modalbox',
-			data: { date, customEvent }
+			data: { date, 'detailedDate': getDetailedDate(new Date(date)), customEvent }
 		}).afterClosed().subscribe(response => {
 			if (response == null || response.answer !== 'yes') {
 				return;
@@ -91,24 +92,22 @@ export class TimelineComponent implements OnInit, AfterViewInit {
 	}
 
 	public openAddDialog(type: string, date: string, customEvent?: ICustomEvent): void {
-		const typeLabel = this.daysService.getTypeLabel(type);
 		this.dialog.open(DialogAddEventComponent, {
 			autoFocus: false,
 			width: '20rem',
 			panelClass: 'custom-modalbox',
-			data: { type, typeLabel, date, customEvent }
+			data: { type, date, customEvent }
 		}).afterClosed().subscribe(response => {
 			this.postAddDialog(date, response, type, customEvent);
 		});
 	}
 
 	public openAddSymptomDialog(type: string, date: string, symptoms: ISymptom[], customEvent?: ICustomEvent): void {
-		const typeLabel = this.daysService.getTypeLabel(type);
 		this.dialog.open(DialogAddEventComponent, {
 			autoFocus: false,
 			width: '20rem',
 			panelClass: 'custom-modalbox',
-			data: { type, typeLabel, date, symptoms }
+			data: { type, date, symptoms }
 		}).afterClosed().subscribe(response => {
 			this.postAddDialog(date, response, type, customEvent);
 		});
@@ -155,12 +154,11 @@ export class TimelineComponent implements OnInit, AfterViewInit {
 	}
 
 	public openDeleteDialog(date: string, customEvent: ICustomEvent): void {
-		const typeLabel = this.daysService.getTypeLabel(customEvent.type);
 		this.dialog.open(DialogDeleteEventComponent, {
 			autoFocus: false,
 			width: '20rem',
 			panelClass: 'custom-modalbox',
-			data: { date, typeLabel, customEvent }
+			data: { date, 'detailedDate': getDetailedDate(new Date(date)), 'type': customEvent.type, 'key': customEvent.key, 'time': customEvent.time }
 		}).afterClosed().subscribe(response => {
 			if (response == null || response.answer !== 'yes') {
 				return;
