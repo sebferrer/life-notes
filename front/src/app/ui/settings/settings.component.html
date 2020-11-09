@@ -5,7 +5,8 @@
             <mat-expansion-panel-header>
                 <mat-panel-title transloco="SETTINGS_SYMPTOMS_TITLE"></mat-panel-title>
                 <mat-panel-description>
-                    <span transloco="SETTINGS_SYMPTOMS_SUBTITLE"></span><mat-icon>spa</mat-icon>
+                    <span transloco="SETTINGS_SYMPTOMS_SUBTITLE"></span>
+                    <mat-icon>spa</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
 
@@ -16,13 +17,21 @@
                     </mat-option>
                 </mat-select>
             </mat-form-field>
+            <div>
+                <mat-selection-list multiple="false">
+                    <mat-list-option routerLink="/symptoms">
+                        <p class="list-item-text">{{ "SYMPTOM_MANAGE_LINK" | transloco }}</p>
+                    </mat-list-option>
+                </mat-selection-list>
+            </div>
         </mat-expansion-panel>
 
         <mat-expansion-panel hideToggle>
             <mat-expansion-panel-header>
                 <mat-panel-title transloco="SETTINGS_LANGUAGE_TITLE"></mat-panel-title>
                 <mat-panel-description>
-                    <span transloco="SETTINGS_LANGUAGE_SUBTITLE"></span><mat-icon>map</mat-icon>
+                    <span transloco="SETTINGS_LANGUAGE_SUBTITLE"></span>
+                    <mat-icon>map</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
 
@@ -37,8 +46,34 @@
                         <div class="icon-container"><img src="/assets/svg/united-kingdom.svg" class="icon-svg" /></div>
                         {{ "ENGLISH" | transloco }}
                     </mat-option>
-                  </mat-select>
+                </mat-select>
             </mat-form-field>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel hideToggle>
+            <mat-expansion-panel-header>
+                <mat-panel-title transloco="SETTINGS_IMPORT_EXPORT_TITLE"></mat-panel-title>
+                <mat-panel-description>
+                    <span transloco="SETTINGS_IMPORT_EXPORT_SUBTITLE"></span>
+                    <mat-icon>import_export</mat-icon>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+
+            <div class="import-export-buttons-container">
+                <mat-selection-list multiple="false">
+                    <mat-list-option (click)="fileClickFire()">
+                        <p class="list-item-text">{{ "IMPORT" | transloco }}</p>
+                    </mat-list-option>
+                    <mat-list-option (click)="exportData()">
+                        <p class="list-item-text">{{ "EXPORT" | transloco }}</p>
+                    </mat-list-option>
+                    <mat-list-option (click)="exportHtml()">
+                        <p class="list-item-text">{{ "EXPORT_HTML" | transloco }}</p>
+                    </mat-list-option>
+                </mat-selection-list>
+            </div>
+            <input type="file" id="file-import" (change)="importData($event)">
+
         </mat-expansion-panel>
 
     </mat-accordion>

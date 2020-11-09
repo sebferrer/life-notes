@@ -73,5 +73,8 @@
     "DEFAULT_SYMPTOM_LABEL": "Default symptom",
     "FRENCH": "French",
     "ENGLISH": "English",
-    "LANGUAGE": "Language"
+    "LANGUAGE": "Language",
+    "SETTINGS_IMPORT_EXPORT_TITLE": "Import / Export",
+    "SETTINGS_IMPORT_EXPORT_SUBTITLE": "Import or export your data",
+    "SYMPTOM_MANAGE_LINK": "Manage your symptoms"
 }

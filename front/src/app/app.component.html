@@ -12,15 +12,9 @@
 		<button mat-menu-item *ngFor="let symptom of symptoms" [value]="symptom.key" (click)="globalService.targetSymptomKey = symptom.key">
 			{{ symptom.label }}</button>
 	</mat-menu>
-	<button mat-icon-button id="menu-icon-import-export" class="menu-icon" routerLink="/settings" aria-label="Import-Export">
+	<button mat-icon-button id="menu-icon-settings" class="menu-icon" routerLink="/settings" aria-label="Settings">
         <mat-icon>settings</mat-icon>
 	</button>
-	<!--mat-menu #importExport="matMenu">
-		<button mat-menu-item (click)="fileClickFire()" transloco='IMPORT'></button>
-		<button mat-menu-item (click)="exportData()" transloco='EXPORT'></button>
-		<button mat-menu-item (click)="exportHtml()" transloco='EXPORT_HTML'></button>
-	</mat-menu-->
-	<input type="file" id="file-import" (change)="importData($event)">
 </mat-toolbar>
 
 <div class="content">
