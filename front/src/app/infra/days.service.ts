@@ -1,5 +1,5 @@
 // import { HttpClient } from '@angular/common/http';
-import { Observable, of, from } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { IDay, IDayOverview } from '../models';
 import { getFormattedDate, getDetailedDate, getDateFromString } from 'src/app/util/date.utils';
@@ -9,7 +9,7 @@ import { ILog } from '../models/log.model';
 import { IMed } from '../models/med.model';
 import { IMeal } from '../models/meal.model';
 import { ISymptom } from '../models/symptom.model';
-import { tap, map, switchMap, filter } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { ICustomEvent } from '../models/customEvent.model';
 import { getDaysInMonth } from 'date-fns';
 

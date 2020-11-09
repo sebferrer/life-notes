@@ -12,7 +12,7 @@
 
             <mat-form-field>
                 <mat-label transloco="DEFAULT_SYMPTOM_LABEL"></mat-label>
-                <mat-select [(value)]="selectedSymptom">
+                <mat-select [(value)]="selectedSymptom" (selectionChange)="setTargetSymptom()">
                     <mat-option *ngFor="let symptom of symptoms" [value]="symptom.key">{{ symptom.label }}
                     </mat-option>
                 </mat-select>
@@ -31,20 +31,24 @@
                 <mat-panel-title transloco="SETTINGS_LANGUAGE_TITLE"></mat-panel-title>
                 <mat-panel-description>
                     <span transloco="SETTINGS_LANGUAGE_SUBTITLE"></span>
-                    <mat-icon>map</mat-icon>
+                    <mat-icon>language</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
 
             <mat-form-field>
                 <mat-label transloco="LANGUAGE"></mat-label>
-                <mat-select [(value)]="selectedLanguage">
-                    <mat-option value="fr" (click)="setActiveLanguage()">
-                        <div class="icon-container"><img src="/assets/svg/france.svg" class="icon-svg" /></div>
-                        {{ "FRENCH" | transloco }}
+                <mat-select [(value)]="selectedLanguage" (selectionChange)="setActiveLanguage()">
+                    <mat-option value="fr">
+                        <div class="language-container">
+                            <div class="icon-container"><img src="/assets/svg/france.svg" class="icon-svg" /></div>
+                            <div class="language-label" transloco="FRENCH"></div>
+                        </div>
                     </mat-option>
-                    <mat-option value="en" (click)="setActiveLanguage()">
-                        <div class="icon-container"><img src="/assets/svg/united-kingdom.svg" class="icon-svg" /></div>
-                        {{ "ENGLISH" | transloco }}
+                    <mat-option value="en">
+                        <div class="language-container">
+                            <div class="icon-container"><img src="/assets/svg/united-kingdom.svg" class="icon-svg" /></div>
+                            <div class="language-label" transloco="ENGLISH"></div>
+                        </div>
                     </mat-option>
                 </mat-select>
             </mat-form-field>

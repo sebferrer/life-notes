@@ -9,6 +9,7 @@ import { Collection } from './collection';
 export class DbContext {
 	public daysCollection = new Collection('days');
 	public symptomsCollection = new Collection('symptoms');
+	public settingsCollection = new Collection('settings');
 
 	public asArrayObservable<T>(dbSet: Promise<{ rows: { doc: T }[] }>): Observable<T[]> {
 		return from(dbSet).pipe(

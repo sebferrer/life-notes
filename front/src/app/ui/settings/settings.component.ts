@@ -3,7 +3,7 @@ import { GlobalService } from 'src/app/infra/global.service';
 import { Observable } from 'rxjs';
 import { ISymptom } from 'src/app/models/symptom.model';
 import { TranslocoService } from '@ngneat/transloco';
-import { ImporterExporterService } from 'src/app/infra';
+import { ImporterExporterService, SettingsService } from 'src/app/infra';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DialogImportConfirmComponent } from '../dialog-import-confirm';
@@ -23,6 +23,7 @@ export class SettingsComponent implements OnInit {
 		private globalService: GlobalService,
 		private translocoService: TranslocoService,
 		private importerExporterService: ImporterExporterService,
+		private settingsService: SettingsService,
 		private dialog: MatDialog,
 		private snackBar: MatSnackBar
 	) { }
@@ -33,10 +34,17 @@ export class SettingsComponent implements OnInit {
 
 	public setActiveLanguage(): void {
 		this.translocoService.setActiveLang(this.selectedLanguage);
+		this.settingsService.setLanguage(this.selectedLanguage).subscribe();
+	}
+
+	public setTargetSymptom(): void {
+		this.settingsService.setTargetSymptomKey(this.selectedSymptom).subscribe();
+		this.globalService.targetSymptomKey = this.selectedSymptom;
 	}
 
 	public fileClickFire(): void {
-		const fileInput: HTMLElement = document.getElementById('file-import') as HTMLElement;
+		const fileInput: HTMLInputElement = document.getElementById('file-import') as HTMLInputElement;
+		fileInput.value = '';
 		fileInput.click();
 	}
 

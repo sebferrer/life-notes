@@ -1,4 +1,4 @@
-import { Observable, of, from } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { DbContext } from './database';
 import { ISymptom } from '../models/symptom.model';

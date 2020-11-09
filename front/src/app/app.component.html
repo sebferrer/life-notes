@@ -1,4 +1,4 @@
-<mat-toolbar *ngIf="symptoms$ | async as symptoms; else loading">
+<mat-toolbar *ngIf="symptoms$ | async as symptoms; else loading" class="mat-typography">
 	<button mat-icon-button id="menu-icon-timeline" routerLink="" aria-label="Timeline">
         <mat-icon>view_day</mat-icon>
 	</button>
@@ -8,6 +8,7 @@
 	<button mat-icon-button id="menu-icon-target-symptom" class="menu-icon" [matMenuTriggerFor]="targetSymptom" aria-label="Symptoms">
         <mat-icon>spa</mat-icon>
 	</button>
+	<p class="targetSymptomKey">{{ globalService.symptomMap.get(globalService.targetSymptomKey) }}</p>
 	<mat-menu #targetSymptom="matMenu">
 		<button mat-menu-item *ngFor="let symptom of symptoms" [value]="symptom.key" (click)="globalService.targetSymptomKey = symptom.key">
 			{{ symptom.label }}</button>
@@ -17,6 +18,6 @@
 	</button>
 </mat-toolbar>
 
-<div class="content">
+<div class="content mat-typography">
 	<router-outlet></router-outlet>
 </div>

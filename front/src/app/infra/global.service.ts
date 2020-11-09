@@ -1,11 +1,7 @@
 import { Injectable } from '@angular/core';
-import { DbContext } from './database';
 import { Observable } from 'rxjs';
 import { ISymptom } from '../models/symptom.model';
 import { SymptomsService } from './symptoms.service';
-// const CALENDAR_API = '/api/calendar';
-// const CALENDAR_FROM_API = '/api/calendar-from';
-// const DAY_OVERVIEW_FIELDS = 'date, symptomOverviews';
 
 @Injectable({ providedIn: 'root' })
 export class GlobalService {
@@ -32,7 +28,6 @@ export class GlobalService {
 	}
 
 	constructor(
-		private readonly dbContext: DbContext,
 		private symptomsService: SymptomsService
 	) {
 		this.loadSymptoms();

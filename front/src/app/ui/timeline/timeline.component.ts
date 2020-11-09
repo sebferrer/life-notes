@@ -169,7 +169,7 @@ export class TimelineComponent implements OnInit, AfterViewInit {
 	}
 
 	public openEditSymptomOverviewDialog(date: string): void {
-		if (this.globalService.targetSymptomKey == null) {
+		if (this.globalService.targetSymptomKey == null || this.globalService.targetSymptomKey === '') {
 			return;
 		}
 		this.daysService.getDay(date).subscribe(

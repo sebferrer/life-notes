@@ -22,7 +22,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { DbContext, DaysService, SymptomsService } from './infra';
+import { DbContext, DaysService, SymptomsService, SettingsService } from './infra';
 import { HomeComponent } from './ui';
 import { CalendarComponent } from './ui/calendar';
 import { DayComponent } from './ui/day';
@@ -92,11 +92,13 @@ import { SettingsComponent } from './ui/settings';
 		DbContext,
 		AppComponent,
 		GlobalService,
+		SettingsService,
 		{
 			provide: APP_INITIALIZER,
 			useFactory: (translocoService: TranslocoService) => {
 				return async () => {
 					await translocoService.load('fr').toPromise();
+					await translocoService.load('en').toPromise();
 				};
 			},
 			deps: [TranslocoService],
