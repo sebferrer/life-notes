@@ -6,19 +6,25 @@ import { SymptomsService } from './symptoms.service';
 @Injectable({ providedIn: 'root' })
 export class GlobalService {
 
-	public _targetSymptomKey: string;
+	private _targetSymptomKey: string;
 	public get targetSymptomKey(): string { return this._targetSymptomKey; }
 	public set targetSymptomKey(targetSymptom: string) {
 		this._targetSymptomKey = targetSymptom;
 	}
 
-	public _symptoms$: Observable<ISymptom[]>;
+	private _language: string;
+	public get language(): string { return this._language; }
+	public set language(language: string) {
+		this._language = language;
+	}
+
+	private _symptoms$: Observable<ISymptom[]>;
 	public get symptoms$(): Observable<ISymptom[]> { return this._symptoms$; }
 	public set symptoms$(symptoms: Observable<ISymptom[]>) {
 		this.symptoms$ = symptoms;
 	}
 
-	public _symptomMap: Map<string, string>;
+	private _symptomMap: Map<string, string>;
 	public get symptomMap(): Map<string, string> { return this._symptomMap; }
 
 	public loadSymptoms(): void {

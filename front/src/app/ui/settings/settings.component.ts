@@ -30,6 +30,8 @@ export class SettingsComponent implements OnInit {
 
 	public ngOnInit(): void {
 		this.symptoms$ = this.globalService.symptoms$;
+		this.selectedSymptom = this.globalService.targetSymptomKey;
+		this.selectedLanguage = this.globalService.language;
 	}
 
 	public setActiveLanguage(): void {

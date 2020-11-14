@@ -14,6 +14,7 @@
 .accordion {
     position: absolute;
     top: 4rem;
+    width: 100%;
 }
 
 .icon-container {
@@ -37,4 +38,17 @@
 
 .list-item-text {
     color: white;
+}
+
+.panel-title {
+    width: 35%;
+}
+
+.panel-description {
+    width: 60%;
+    color: #C7C7C7;
+}
+
+.panel-icon {
+    color: #C7C7C7;
 }

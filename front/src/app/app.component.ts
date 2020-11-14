@@ -11,7 +11,7 @@ import { TranslocoService } from '@ngneat/transloco';
 	styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-	public title = 'Healthy Day';
+	public title = 'Life Notes & Stats';
 	public symptoms: ISymptom[];
 	public symptoms$: Subject<ISymptom[]>;
 
@@ -51,6 +51,7 @@ export class AppComponent implements OnInit {
 					return;
 				}
 				this.translocoService.setActiveLang(settings.language);
+				this.globalService.language = settings.language;
 			}
 		);
 	}
