@@ -4,23 +4,30 @@
 			<app-infinite-scroll (scrolled)="loadBatch()">
 				<div *ngFor="let dayContent of daysContents" #dayRefs class="timeline-tile"
 					id="day-{{ dayContent.date }}">
-					<div-header class="timeline-tile-header">
+					<div class="timeline-tile-header">
 						<ng-template transloco let-t>
-							<h3>
+							<div class="timeline-tile-header-date">
 								{{ t('TIMELINE_TILE_DATE',
 							{'month': t('MONTH-SHORT-'+dayContent.detailedDate.month), 'day': dayContent.detailedDate.day, 'year': dayContent.detailedDate.year}) }}
-							</h3>
+							</div>
 						</ng-template>
-						<button mat-icon-button class="go-to-day" routerLink="{{ dayContent.date }}">
-							<mat-icon>arrow_forward_ios</mat-icon>
-						</button>
-						<button mat-icon-button (click)="openBottomSheet(dayContent.date, symptoms)" class="add-event">
-							<mat-icon>playlist_add</mat-icon>
-						</button>
-						<button mat-icon-button class="delete-event" (click)="toggleRemovable(dayContent)">
-							<mat-icon>delete_sweep</mat-icon>
-						</button>
-					</div-header>
+						<div class="go-to-day-container">
+							<button mat-icon-button class="go-to-day" routerLink="{{ dayContent.date }}">
+								<mat-icon>arrow_forward_ios</mat-icon>
+							</button>
+						</div>
+						<div class="add-event-container">
+							<button mat-icon-button (click)="openBottomSheet(dayContent.date, symptoms)"
+								class="add-event">
+								<mat-icon>playlist_add</mat-icon>
+							</button>
+						</div>
+						<div class="delete-event-container">
+							<button mat-icon-button class="delete-event" (click)="toggleRemovable(dayContent)">
+								<mat-icon>delete_sweep</mat-icon>
+							</button>
+						</div>
+					</div>
 					<div class="timeline-tile-content">
 						<div class="corner-decoration"></div>
 						<div class="wakeup-container" (click)="openAddDialog('wakeUp', dayContent.date)">
@@ -30,12 +37,6 @@
 						<div class="gotobed-container" (click)="openAddDialog('goToBed', dayContent.date)">
 							<mat-icon class="gotobed-icon">bedtime</mat-icon>
 							<div class="gotobed-time">{{ dayContent.goToBed }}</div>
-						</div>
-						<div class="symptom-overview-container"
-							(click)="openEditSymptomOverviewDialog(dayContent.date)">
-							<mat-icon
-								class="symptom-overview-icon color-{{ symptomPainColorMap.get(dayContent.getSymptomPain(globalService.targetSymptomKey)) }}">
-								fiber_manual_record</mat-icon>
 						</div>
 						<div class="timeline-content">
 							<mat-chip-list class="mat-chip-list-stacked">
@@ -71,6 +72,12 @@
 								</mat-chip>
 								<div class="timeline-chips-padding"></div>
 							</mat-chip-list>
+						</div>
+						<div class="symptom-overview-container"
+							(click)="openEditSymptomOverviewDialog(dayContent.date)">
+							<mat-icon
+								class="symptom-overview-icon color-{{ symptomPainColorMap.get(dayContent.getSymptomPain(globalService.targetSymptomKey)) }}">
+								fiber_manual_record</mat-icon>
 						</div>
 					</div>
 				</div>
