@@ -6,4 +6,6 @@ export interface IDetailedDate {
 	dayOfWeek: number;
 	dayOfYear: number;
 	weekOfMonth: number;
+	date: Date;
+	formattedDate: string;
 }

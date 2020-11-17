@@ -12,8 +12,9 @@ export class Collection {
 		this.db = new PouchDB(this.id);
 	}
 
-	public allDocs<T>(): Promise<{ rows: { doc: T }[] }> {
-		return this.db.allDocs({ include_docs: true, descending: true });
+	public allDocs<T>(options?): Promise<{ rows: { doc: T }[] }> {
+		options = options == null ? {} : options;
+		return this.db.allDocs(options);
 	}
 
 	public get<T>(id: string): T {

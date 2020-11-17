@@ -41,6 +41,7 @@ import { TranslocoRootModule } from './transloco/transloco-root.module';
 import { TranslocoService } from '@ngneat/transloco';
 import { GlobalService } from './infra/global.service';
 import { SettingsComponent } from './ui/settings';
+import { InfiniteScrollComponent } from './ui/infinite-scroll';
 
 @NgModule({
 	declarations: [
@@ -58,7 +59,10 @@ import { SettingsComponent } from './ui/settings';
 		DialogDeleteSymptomComponent,
 		DialogEditSymptomOverviewComponent,
 		DialogImportConfirmComponent,
-		BottomSheetAddEventComponent
+		BottomSheetAddEventComponent,
+
+		// Helpers
+		InfiniteScrollComponent
 	],
 	imports: [
 		BrowserModule,

@@ -15,7 +15,7 @@ import { IDay } from 'src/app/models';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { BottomSheetAddEventComponent } from './bottom-sheet-add-event';
 import { GlobalService } from 'src/app/infra/global.service';
-import { getDetailedDate } from 'src/app/util/date.utils';
+import { getDetailedDate, subFormattedDate } from 'src/app/util/date.utils';
 
 @Component({
 	selector: 'app-timeline',
@@ -30,6 +30,8 @@ export class TimelineComponent implements OnInit, AfterViewInit {
 	public symptoms$: Observable<ISymptom[]>;
 	public symptomMap: Map<string, string>;
 	public symptomPainColorMap: Map<number, string>;
+	private readonly BATCH_SIZE = 14;
+	private nbDays = 0;
 	@ViewChildren('dayRefs') dayRefs: QueryList<ElementRef>;
 
 	constructor(
@@ -43,14 +45,9 @@ export class TimelineComponent implements OnInit, AfterViewInit {
 	public ngOnInit(): void {
 		this.daysContents = new Array<DayViewModel>();
 		this.daysContents$ = new Subject<DayViewModel[]>();
-		this.daysService.getDays().subscribe(
-			days => {
-				days.forEach(day => {
-					this.daysContents.push(new DayViewModel(day));
-				});
-				this.daysContents$.next(this.daysContents);
-			}
-		);
+
+		this.loadBatch();
+
 		this.symptoms$ = this.globalService.symptoms$;
 		this.symptoms = new Array<ISymptom>();
 		this.symptoms$.subscribe(symptoms => {
@@ -61,6 +58,19 @@ export class TimelineComponent implements OnInit, AfterViewInit {
 		this.symptomMap = this.globalService.symptomMap;
 		this.symptomPainColorMap =
 			new Map([[0, 'default'], [1, 'pain-1'], [2, 'pain-2'], [3, 'pain-3'], [4, 'pain-4'], [5, 'pain-5']]);
+	}
+
+	public loadBatch() {
+		console.log('load batch');
+		this.daysService.getDays(this.BATCH_SIZE, this.nbDays).subscribe(
+			days => {
+				days.forEach(day => {
+					this.daysContents.push(new DayViewModel(day));
+				});
+				this.nbDays += this.BATCH_SIZE;
+				this.daysContents$.next(this.daysContents);
+			}
+		);
 	}
 
 	public updateDay(day: IDay): void {
@@ -181,7 +191,7 @@ export class TimelineComponent implements OnInit, AfterViewInit {
 					autoFocus: false,
 					width: '20rem',
 					panelClass: 'custom-modalbox',
-					data: { date, symptomOverview, symptomMap}
+					data: { date, symptomOverview, symptomMap }
 				}).afterClosed().subscribe(response => {
 					if (response == null || response.answer !== 'yes') {
 						return;

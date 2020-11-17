@@ -1,78 +1,84 @@
-<mat-grid-list *ngIf="daysContents$ | async as daysContents; else loading" cols="1" gutterSize="0"
-	class="timeline-grid">
+<div *ngIf="daysContents$ | async as daysContents; else loading" cols="1" gutterSize="0" class="timeline-grid">
 	<div *ngIf="symptoms$ | async as symptoms; else loading">
-		<mat-grid-tile *ngFor="let dayContent of daysContents" #dayRefs class="timeline-tile"
-			id="day-{{ dayContent.date }}">
-			<mat-grid-tile-header class="timeline-tile-header">
-				<ng-template transloco let-t>
-					<h3>
-						{{ t('TIMELINE_TILE_DATE',
+		<div class="tiles-container">
+			<app-infinite-scroll (scrolled)="loadBatch()">
+				<div *ngFor="let dayContent of daysContents" #dayRefs class="timeline-tile"
+					id="day-{{ dayContent.date }}">
+					<div-header class="timeline-tile-header">
+						<ng-template transloco let-t>
+							<h3>
+								{{ t('TIMELINE_TILE_DATE',
 							{'month': t('MONTH-SHORT-'+dayContent.detailedDate.month), 'day': dayContent.detailedDate.day, 'year': dayContent.detailedDate.year}) }}
-					</h3>
-				</ng-template>
-				<button mat-icon-button class="go-to-day" routerLink="{{ dayContent.date }}">
-					<mat-icon>arrow_forward_ios</mat-icon>
-				</button>
-				<button mat-icon-button (click)="openBottomSheet(dayContent.date, symptoms)" class="add-event">
-					<mat-icon>playlist_add</mat-icon>
-				</button>
-				<button mat-icon-button class="delete-event" (click)="toggleRemovable(dayContent)">
-					<mat-icon>delete_sweep</mat-icon>
-				</button>
-			</mat-grid-tile-header>
-			<div class="timeline-tile-content">
-				<div class="corner-decoration"></div>
-				<div class="wakeup-container" (click)="openAddDialog('wakeUp', dayContent.date)">
-					<mat-icon class="wakeup-icon">alarm</mat-icon>
-					<div class="wakeup-time">{{ dayContent.wakeUp }}</div>
-				</div>
-				<div class="gotobed-container" (click)="openAddDialog('goToBed', dayContent.date)">
-					<mat-icon class="gotobed-icon">bedtime</mat-icon>
-					<div class="gotobed-time">{{ dayContent.goToBed }}</div>
-				</div>
-				<div class="symptom-overview-container" (click)="openEditSymptomOverviewDialog(dayContent.date)">
-					<mat-icon
-						class="symptom-overview-icon color-{{ symptomPainColorMap.get(dayContent.getSymptomPain(globalService.targetSymptomKey)) }}">
-						fiber_manual_record</mat-icon>
-				</div>
-				<div class="timeline-content">
-					<mat-chip-list class="mat-chip-list-stacked">
-						<div class="timeline-chips-padding"></div>
-						<mat-chip *ngFor="let content of dayContent.content" [ngSwitch]="content.type"
-							class="mat-chip mat-standard-chip timeline-day-item-{{ content.type }} event-chips">
-							<div class="event-container" (click)="openShowDialog(dayContent.date, content)">
-								<div *ngSwitchCase="'symptomLog'" class="event">
-									<div class="event-time">{{ content.time }}</div>
-									<div class="event-content">{{ symptomMap.get(content.key) }} [{{ content.pain }}/5]
+							</h3>
+						</ng-template>
+						<button mat-icon-button class="go-to-day" routerLink="{{ dayContent.date }}">
+							<mat-icon>arrow_forward_ios</mat-icon>
+						</button>
+						<button mat-icon-button (click)="openBottomSheet(dayContent.date, symptoms)" class="add-event">
+							<mat-icon>playlist_add</mat-icon>
+						</button>
+						<button mat-icon-button class="delete-event" (click)="toggleRemovable(dayContent)">
+							<mat-icon>delete_sweep</mat-icon>
+						</button>
+					</div-header>
+					<div class="timeline-tile-content">
+						<div class="corner-decoration"></div>
+						<div class="wakeup-container" (click)="openAddDialog('wakeUp', dayContent.date)">
+							<mat-icon class="wakeup-icon">alarm</mat-icon>
+							<div class="wakeup-time">{{ dayContent.wakeUp }}</div>
+						</div>
+						<div class="gotobed-container" (click)="openAddDialog('goToBed', dayContent.date)">
+							<mat-icon class="gotobed-icon">bedtime</mat-icon>
+							<div class="gotobed-time">{{ dayContent.goToBed }}</div>
+						</div>
+						<div class="symptom-overview-container"
+							(click)="openEditSymptomOverviewDialog(dayContent.date)">
+							<mat-icon
+								class="symptom-overview-icon color-{{ symptomPainColorMap.get(dayContent.getSymptomPain(globalService.targetSymptomKey)) }}">
+								fiber_manual_record</mat-icon>
+						</div>
+						<div class="timeline-content">
+							<mat-chip-list class="mat-chip-list-stacked">
+								<div class="timeline-chips-padding"></div>
+								<mat-chip *ngFor="let content of dayContent.content" [ngSwitch]="content.type"
+									class="mat-chip mat-standard-chip timeline-day-item-{{ content.type }} event-chips">
+									<div class="event-container" (click)="openShowDialog(dayContent.date, content)">
+										<div *ngSwitchCase="'symptomLog'" class="event">
+											<div class="event-time">{{ content.time }}</div>
+											<div class="event-content">{{ symptomMap.get(content.key) }}
+												[{{ content.pain }}/5]
+											</div>
+										</div>
+										<div *ngSwitchCase="'log'" class="event">
+											<div class="event-time">{{ content.time }}</div>
+											<div class="event-content">{{ content.key }}</div>
+										</div>
+										<div *ngSwitchCase="'med'" class="event">
+											<div class="event-time">{{ content.time }}</div>
+											<div class="event-content">{{ content.key }} {{ content.quantity }}mg</div>
+										</div>
+										<div *ngSwitchCase="'meal'" class="event">
+											<div class="event-time">{{ content.time }}</div>
+											<div class="event-content">{{ content.key }}</div>
+										</div>
+										<div class="remove-event-container">
+											<mat-icon matChipRemove *ngIf="dayContent.removable" class="remove-event"
+												(click)="openDeleteDialog(dayContent.date, content)">
+												cancel
+											</mat-icon>
+										</div>
 									</div>
-								</div>
-								<div *ngSwitchCase="'log'" class="event">
-									<div class="event-time">{{ content.time }}</div>
-									<div class="event-content">{{ content.key }}</div>
-								</div>
-								<div *ngSwitchCase="'med'" class="event">
-									<div class="event-time">{{ content.time }}</div>
-									<div class="event-content">{{ content.key }} {{ content.quantity }}mg</div>
-								</div>
-								<div *ngSwitchCase="'meal'" class="event">
-									<div class="event-time">{{ content.time }}</div>
-									<div class="event-content">{{ content.key }}</div>
-								</div>
-								<div class="remove-event-container">
-									<mat-icon matChipRemove *ngIf="dayContent.removable" class="remove-event"
-										(click)="openDeleteDialog(dayContent.date, content)">
-										cancel
-									</mat-icon>
-								</div>
-							</div>
-						</mat-chip>
-						<div class="timeline-chips-padding"></div>
-					</mat-chip-list>
+								</mat-chip>
+								<div class="timeline-chips-padding"></div>
+							</mat-chip-list>
+						</div>
+					</div>
 				</div>
-			</div>
-		</mat-grid-tile>
+			</app-infinite-scroll>
+		</div>
+
 	</div>
-</mat-grid-list>
+</div>
 
 <ng-template #loading>
 	<mat-spinner></mat-spinner>

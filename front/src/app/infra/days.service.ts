@@ -2,8 +2,8 @@
 import { Observable, of } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { IDay, IDayOverview } from '../models';
-import { getFormattedDate, getDetailedDate, getDateFromString } from 'src/app/util/date.utils';
-import { getSortOrderLevel2 } from 'src/app/util/array.utils';
+import { getFormattedDate, getDetailedDate, getDateFromString, getDetailedDates, subFormattedDate } from 'src/app/util/date.utils';
+import { getSortOrderLevel2, getSortOrder } from 'src/app/util/array.utils';
 import { DbContext } from './database';
 import { ILog } from '../models/log.model';
 import { IMed } from '../models/med.model';
@@ -11,7 +11,7 @@ import { IMeal } from '../models/meal.model';
 import { ISymptom } from '../models/symptom.model';
 import { map, switchMap } from 'rxjs/operators';
 import { ICustomEvent } from '../models/customEvent.model';
-import { getDaysInMonth } from 'date-fns';
+import { getDaysInMonth, subDays } from 'date-fns';
 
 // const CALENDAR_API = '/api/calendar';
 // const CALENDAR_FROM_API = '/api/calendar-from';
@@ -27,13 +27,13 @@ export class DaysService {
 
 	public getDaysOverviews(): Observable<IDayOverview[]> {
 		return this.dbContext.asArrayObservable<IDayOverview>(
-			this.dbContext.daysCollection.allDocs()
+			this.dbContext.daysCollection.allDocs({ include_docs: true, descending: true })
 		);
 	}
 
 	public getMonthDaysOverviews(month: number, year: number): Observable<IDayOverview[]> {
 		return this.dbContext.asArrayObservable<IDayOverview>(
-			this.dbContext.daysCollection.allDocs()
+			this.dbContext.daysCollection.allDocs({ include_docs: true, descending: true })
 		).pipe(
 			map(days => this.getFilledMonthDays(days, month, year))
 		);
@@ -66,9 +66,46 @@ export class DaysService {
 		return monthDays;
 	}
 
-	public getDays(): Observable<IDay[]> {
+	public getDays(limit?: number, nbDays?: number): Observable<IDay[]> {
+		if (limit == null || limit == null) {
+			return this.dbContext.asArrayObservable<IDay>(
+				this.dbContext.daysCollection.allDocs({ include_docs: true, descending: true })
+			);
+		}
+		const firstDay = subDays(new Date(), nbDays);
+		const expectedDates = new Array<string>();
+		for (let i = 0; i < limit; i++) {
+			expectedDates.push(getFormattedDate(subDays(firstDay, i)));
+		}
 		return this.dbContext.asArrayObservable<IDay>(
-			this.dbContext.daysCollection.allDocs()
+			this.dbContext.daysCollection.allDocs({ include_docs: true, descending: true, keys: expectedDates })
+		).pipe(
+			map(days => days.filter(day => day != null))
+		).pipe(
+			map(days => {
+				if (days.length === expectedDates.length) {
+					return days;
+				}
+				const newDays = new Array<IDay>();
+				for (const expectedDate of expectedDates) {
+					let newDay = days.find(day => day.date === expectedDate);
+					if (newDay == null) {
+						newDay = this.buildDay(new Date(expectedDate));
+					}
+					newDays.push(newDay);
+				}
+				return newDays;
+			})
+		).pipe(
+			map(days => days.sort(getSortOrder('date', true)))
+		);
+	}
+
+	public getLastDay(): Observable<IDay> {
+		return this.dbContext.asArrayObservable<IDay>(
+			this.dbContext.daysCollection.allDocs({ include_docs: true, descending: true, limit: 1 })
+		).pipe(
+			map(days => days[0])
 		);
 	}
 
@@ -81,18 +118,6 @@ export class DaysService {
 	public getSymptomOverview(day: IDay, key: string) {
 		return day.symptomOverviews.find(s => s.key === key);
 	}
-
-	/*public getTypeLabel(type: string): string {
-		const labels = new Map([
-			['symptomLog', 'symptom'],
-			['log', 'note'],
-			['med', 'drug'],
-			['meal', 'meal'],
-			['wakeUp', 'wake up time'],
-			['goToBed', 'bed time']]);
-
-		eturn labels.get(type);
-	}*/
 
 	public getSymptomLog(day: IDay, time: string, key: string): Observable<ILog> {
 		const symptom: ISymptom = day.symptoms.find(s => s.key === key);
@@ -242,6 +267,21 @@ export class DaysService {
 		return this.dbContext.asObservable(this.dbContext.daysCollection.put(day)).pipe(
 			map(() => null)
 		);
+	}
+
+	public buildDay(date: Date): IDay {
+		const formattedDate = getFormattedDate(date);
+		return {
+			'date': formattedDate,
+			'detailedDate': getDetailedDate(date),
+			'symptomOverviews': [],
+			'symptoms': [],
+			'logs': [],
+			'meds': [],
+			'meals': [],
+			'wakeUp': '',
+			'goToBed': ''
+		};
 	}
 
 	public addDay(day: IDay): Observable<IDay> {

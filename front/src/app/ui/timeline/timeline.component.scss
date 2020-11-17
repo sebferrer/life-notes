@@ -5,8 +5,17 @@
     width: 100%;
 }
 
+.tiles-container {
+    border: 1px solid red;
+    height: 100%;
+}
+
+.timeline-tile {
+    height: 30rem;
+}
+
 .timeline-tile-header {
-    height: 15% !important;
+    height: 3rem;
 }
 
 .timeline-tile-content {
