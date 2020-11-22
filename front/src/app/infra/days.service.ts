@@ -9,7 +9,7 @@ import { ILog } from '../models/log.model';
 import { IMed } from '../models/med.model';
 import { IMeal } from '../models/meal.model';
 import { ISymptom } from '../models/symptom.model';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, catchError } from 'rxjs/operators';
 import { ICustomEvent } from '../models/customEvent.model';
 import { getDaysInMonth, subDays } from 'date-fns';
 
@@ -112,6 +112,8 @@ export class DaysService {
 	public getDay(date: string): Observable<IDay> {
 		return this.dbContext.asObservable<IDay>(
 			this.dbContext.daysCollection.get(date)
+		).pipe(
+			catchError(() => of({} as IDay))
 		);
 	}
 
