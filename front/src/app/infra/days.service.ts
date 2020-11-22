@@ -9,7 +9,7 @@ import { ILog } from '../models/log.model';
 import { IMed } from '../models/med.model';
 import { IMeal } from '../models/meal.model';
 import { ISymptom } from '../models/symptom.model';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, catchError } from 'rxjs/operators';
 import { ICustomEvent } from '../models/customEvent.model';
 import { getDaysInMonth, subDays } from 'date-fns';
 
@@ -115,6 +115,16 @@ export class DaysService {
 		);
 	}
 
+	public getOrCreateDay(date: string): Observable<IDay> {
+		return this.getDay(date).pipe(
+			catchError(
+				() => this.createNewDay(new Date(date)).pipe(
+					switchMap(day => this.getDay(day.date))
+				)
+			)
+		);
+	}
+
 	public getSymptomOverview(day: IDay, key: string) {
 		return day.symptomOverviews.find(s => s.key === key);
 	}
@@ -183,7 +193,7 @@ export class DaysService {
 	}
 
 	public addEvent(date: string, customEvent: ICustomEvent): Observable<IDay> {
-		const day = this.getDay(date);
+		const day = this.getOrCreateDay(date);
 		return day.pipe(
 			switchMap(d => {
 				switch (customEvent.type) {
@@ -246,12 +256,20 @@ export class DaysService {
 			}));
 	}
 
+	public isDayEmpty(day: IDay): boolean {
+		return day.logs.length === 0 &&
+			day.symptoms.length === 0 &&
+			day.meds.length === 0 &&
+			day.meals.length === 0 &&
+			day.wakeUp === '' && day.goToBed === '';
+	}
+
 	public filterEvent(events: any[], time: string, key: string) {
 		return events.filter((event: { time: string; key: string; }) => event.time !== time || event.key !== key);
 	}
 
-	public createNewDay(date: Date): Observable<null> {
-		const formattedDate = getFormattedDate(new Date());
+	public createNewDay(date: Date): Observable<IDay> {
+		const formattedDate = getFormattedDate(date);
 		const day = {
 			'_id': formattedDate,
 			'date': formattedDate,
@@ -265,8 +283,12 @@ export class DaysService {
 			'goToBed': ''
 		};
 		return this.dbContext.asObservable(this.dbContext.daysCollection.put(day)).pipe(
-			map(() => null)
+			map(() => day)
 		);
+	}
+
+	public createNewDayToday(): Observable<IDay> {
+		return this.createNewDay(new Date());
 	}
 
 	public buildDay(date: Date): IDay {
@@ -288,10 +310,6 @@ export class DaysService {
 		return this.dbContext.asObservable(this.dbContext.daysCollection.put(day)).pipe(
 			map(() => day)
 		);
-	}
-
-	public createNewDayToday(): Observable<null> {
-		return this.createNewDay(new Date());
 	}
 
 	public removeDayByDate(date: string): Observable<IDay> {

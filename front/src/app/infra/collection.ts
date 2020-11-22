@@ -17,7 +17,7 @@ export class Collection {
 		return this.db.allDocs(options);
 	}
 
-	public get<T>(id: string): T {
+	public get<T>(id: string): Promise<T> {
 		return this.db.get(id);
 	}
 

@@ -61,7 +61,6 @@ export class TimelineComponent implements OnInit, AfterViewInit {
 	}
 
 	public loadBatch() {
-		console.log('load batch');
 		this.daysService.getDays(this.BATCH_SIZE, this.nbDays).subscribe(
 			days => {
 				days.forEach(day => {
