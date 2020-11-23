@@ -172,7 +172,7 @@ export class TimelineComponent implements OnInit, AfterViewInit {
 			if (response == null || response.answer !== 'yes') {
 				return;
 			}
-			this.daysService.deleteEvent(date, customEvent).subscribe(day => { this.updateDay(day); });
+			this.daysService.deleteDeepEvent(date, customEvent).subscribe(day => { this.updateDay(day); });
 			this.snackBar.open(`The ${customEvent.type} was successfully deleted for ${date}`, 'Close');
 		});
 	}

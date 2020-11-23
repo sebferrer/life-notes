@@ -9,7 +9,7 @@ import { ILog } from '../models/log.model';
 import { IMed } from '../models/med.model';
 import { IMeal } from '../models/meal.model';
 import { ISymptom } from '../models/symptom.model';
-import { map, switchMap, catchError } from 'rxjs/operators';
+import { map, switchMap, catchError, tap } from 'rxjs/operators';
 import { ICustomEvent } from '../models/customEvent.model';
 import { getDaysInMonth, subDays } from 'date-fns';
 
@@ -254,6 +254,17 @@ export class DaysService {
 					map(() => d)
 				);
 			}));
+	}
+
+	public deleteDeepEvent(date: string, customEvent: ICustomEvent): Observable<IDay> {
+		return this.deleteEvent(date, customEvent).pipe(
+			switchMap(day => {
+				if (this.isDayEmpty(day)) {
+					return this.removeDayByDate(date);
+				}
+				return of(day);
+			})
+		);
 	}
 
 	public isDayEmpty(day: IDay): boolean {
