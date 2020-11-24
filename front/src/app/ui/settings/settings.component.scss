@@ -3,18 +3,34 @@
     top: 3.5rem;
     left: 0;
     width: 100%;
-}
 
-.title {
-    margin-left: 1rem;
-    margin-top: 0.8rem;
-    font-size: 1.5rem;
-}
+    .title {
+        margin-left: 1rem;
+        margin-top: 0.8rem;
+        font-size: 1.5rem;
+        color: #212121;
+    }
 
-.accordion {
-    position: absolute;
-    top: 4rem;
-    width: 100%;
+    .accordion {
+        position: absolute;
+        top: 4rem;
+        width: 100%;
+
+        .mat-expansion-panel-header {
+            .panel-title {
+                width: 35%;
+            }
+            
+            .panel-description {
+                width: 60%;
+                color: #757575;
+            }
+            
+            .panel-icon {
+                color: #757575;
+            }
+        }
+    }
 }
 
 .icon-container {
@@ -36,19 +52,17 @@
 	display: none;
 }
 
+.list-icon {
+    width: 10%;
+    float: left;
+}
+
 .list-item-text {
-    color: white;
+    color: #212121;
+    width: 80%;
+    float: left;
 }
 
-.panel-title {
-    width: 35%;
-}
-
-.panel-description {
-    width: 60%;
-    color: #C7C7C7;
-}
-
-.panel-icon {
-    color: #C7C7C7;
+.field-select {
+    width: 50%;
 }

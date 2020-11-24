@@ -8,7 +8,7 @@ $custom-typography: mat-typography-config(
 */
 html,
 body {
-	height: 100%;
+    height: 100%;
 }
 
 body {
@@ -47,21 +47,22 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .custom-bottom-sheet {
     .mat-line {
-        color: white;
+        color: #212121;
         .list-icon-container {
             display: inline-block;
             width: 3rem;
             .list-icon {
                 margin-right: 1rem;
                 width: 1.4rem;
-                color: white;
-                fill: white;
+                color: #212121;
+                fill: #212121;
             }
         }
         .list-icon-svg {
             margin-right: 1rem;
             width: 1.4rem;
-            filter: grayscale(100%) contrast(375%) invert(1);
+            filter: grayscale(100%) contrast(375%);
+            opacity: 0.874;
         }
         .curry-chronicles-logo {
             width: 1.7rem;
