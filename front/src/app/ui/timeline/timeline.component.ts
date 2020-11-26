@@ -35,7 +35,7 @@ export class TimelineComponent implements OnInit, AfterViewInit {
 	@ViewChildren('dayRefs') dayRefs: QueryList<ElementRef>;
 
 	constructor(
-		private globalService: GlobalService,
+		public globalService: GlobalService,
 		private daysService: DaysService,
 		private dialog: MatDialog,
 		private snackBar: MatSnackBar,

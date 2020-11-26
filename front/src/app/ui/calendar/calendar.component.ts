@@ -23,7 +23,7 @@ export class CalendarComponent implements OnInit {
 	public today: IDetailedDate;
 
 	constructor(
-		private globalService: GlobalService,
+		public globalService: GlobalService,
 		private daysService: DaysService
 	) { }
 

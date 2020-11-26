@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DaysService, SettingsService } from './infra';
+import { SettingsService } from './infra';
 import { Subject } from 'rxjs';
 import { ISymptom } from './models/symptom.model';
 import { GlobalService } from './infra/global.service';
@@ -16,8 +16,7 @@ export class AppComponent implements OnInit {
 	public symptoms$: Subject<ISymptom[]>;
 
 	constructor(
-		private globalService: GlobalService,
-		private daysService: DaysService,
+		public globalService: GlobalService,
 		private translocoService: TranslocoService,
 		private settingsService: SettingsService
 	) {
