@@ -1,4 +1,4 @@
-<mat-toolbar *ngIf="symptoms$ | async as symptoms; else loading" class="mat-typography">
+<mat-toolbar *ngIf="symptoms$ | async as symptoms" class="mat-typography">
 	<button mat-icon-button id="menu-icon-timeline" routerLink="" aria-label="Timeline">
         <mat-icon>view_day</mat-icon>
 	</button>
@@ -21,7 +21,3 @@
 <div class="content mat-typography">
 	<router-outlet></router-outlet>
 </div>
-
-<ng-template #loading>
-	<mat-spinner></mat-spinner>
-</ng-template>

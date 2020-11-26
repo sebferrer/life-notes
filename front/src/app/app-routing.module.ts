@@ -44,9 +44,10 @@ const routes: Routes = [
 		MatMenuModule,
 		RouterModule.forRoot(routes,
 			{
-				useHash: true,
-				scrollPositionRestoration: 'enabled'
-			}
+    useHash: true,
+    scrollPositionRestoration: 'enabled',
+    relativeLinkResolution: 'legacy'
+}
 		)
 	],
 	exports: [RouterModule],
