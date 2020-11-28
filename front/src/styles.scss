@@ -6,6 +6,8 @@ $custom-typography: mat-typography-config(
 );
 @include mat-core($custom-typography);
 */
+@import '~material-design-icons/iconfont/material-icons.css';
+
 html,
 body {
     height: 100%;
