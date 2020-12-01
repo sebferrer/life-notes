@@ -1,0 +1,10 @@
+{
+  "name": "healthy-day",
+  "integrations": {
+    "capacitor": {
+      "enabled": false
+    },
+    "cordova": {}
+  },
+  "type": "angular"
+}
