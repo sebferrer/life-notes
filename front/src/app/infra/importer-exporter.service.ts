@@ -1,19 +1,25 @@
 import { Injectable } from '@angular/core';
 import { DaysService } from './days.service';
-import { saveAs } from 'file-saver';
-import { DayViewModel } from '../models/day.view.model';
 import { IDay } from '../models';
-import { getDateFromString, getDetailedDate } from 'src/app/util/date.utils';
+import { getDateFromString, getDetailedDate, getFormattedDate } from 'src/app/util/date.utils';
 import { Observable } from 'rxjs';
 import { tap, map } from 'rxjs/operators';
+import { File as IonicFile } from '@ionic-native/file/ngx';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class ImporterExporterService {
 
+	private readonly EXTERNAL_ROOT_DIRECTORY = this.file.externalRootDirectory;
+	private readonly APP_DIRECTORY = 'life-notes/';
+	private readonly APP_DIRECTORY_FULL_PATH = this.EXTERNAL_ROOT_DIRECTORY + this.APP_DIRECTORY;
+	private readonly BACKUP_FILE = getFormattedDate(new Date()) + '.lifenotesbackup';
+	private readonly CREATE_ERROR_FILE = 'create-file-error.txt';
+
 	constructor(
-		private daysService: DaysService
+		private daysService: DaysService,
+		private file: IonicFile
 	) { }
 
 	public importData(event: any): Observable<null> {
@@ -46,41 +52,32 @@ export class ImporterExporterService {
 				delete day['_rev'];
 				delete day['detailedDate'];
 			});
-			const file = new File([JSON.stringify(newDays)], 'calendar.json', { type: 'application/json;charset=utf-8' });
-			saveAs(file);
+			const jsonBackup = JSON.stringify(newDays);
+			// const file = new File([JSON.stringify(newDays)], 'calendar.json', { type: 'application/json;charset=utf-8' });
+			// saveAs(file);
+
+			this.file.checkDir(this.EXTERNAL_ROOT_DIRECTORY, this.APP_DIRECTORY).then(
+				() => {
+					this.saveBackup(jsonBackup)
+				})
+				.catch(() => {
+					this.file.createDir(this.EXTERNAL_ROOT_DIRECTORY, this.APP_DIRECTORY, false)
+						.then(() => this.saveBackup(jsonBackup))
+				})
 		});
 	}
 
+	private saveBackup(backup: string): void {
+		this.file.createFile(this.APP_DIRECTORY_FULL_PATH, this.BACKUP_FILE, true)
+			.then(() => this.file.writeExistingFile(this.APP_DIRECTORY_FULL_PATH, this.BACKUP_FILE, backup))
+			.catch(
+				error => {
+					this.file.createFile(this.EXTERNAL_ROOT_DIRECTORY, this.CREATE_ERROR_FILE, true)
+						.then(() => this.file.writeExistingFile(this.EXTERNAL_ROOT_DIRECTORY, this.CREATE_ERROR_FILE, error))
+				})
+	}
+
 	public exportHtml(): void {
-		this.daysService.getDays().subscribe(days => {
-			let html = '';
-			for (const day of days) {
-				const dayViewModel = new DayViewModel(day);
-				html += dayViewModel.date + '<br/><br/>';
-				html += 'Wake up: ' + dayViewModel.wakeUp + '<br/>';
-				html += 'Go to bed: ' + dayViewModel.goToBed + '<br/><br/>';
-				html += 'My day: <br/>';
-				for (const content of dayViewModel.content) {
-					switch (content.type) {
-						case 'symptom':
-							html += '[Symptom] ' + content.time + ' -- ' + content.key + '(' + content.pain + '/5): ' + content.detail + '<br/>';
-							break;
-						case 'log':
-							html += '[Log] ' + content.time + ' -- ' + content.detail + '<br/>';
-							break;
-						case 'med':
-							html += '[Med] ' + content.time + ' -- ' + content.key + content.quantity + '<br/>';
-							break;
-						case 'meal':
-							html += '[Meal] ' + content.time + ' -- ' + content.key + ' ' + content.detail + '<br/>';
-							break;
-					}
-				}
-				html += '<hr/>';
-			}
-			const file = new File([html], 'calendar.html', { type: 'text/plain;charset=utf-8' });
-			saveAs(file);
-		});
 	}
 
 }

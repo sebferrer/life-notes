@@ -66,6 +66,7 @@ export class SettingsComponent implements OnInit {
 
 	public exportData(): void {
 		this.importerExporterService.exportData();
+		this.snackBar.open(`The data has been successfully saved`, 'Close');
 	}
 
 	public exportHtml(): void {
