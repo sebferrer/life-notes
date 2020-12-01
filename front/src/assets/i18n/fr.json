@@ -84,5 +84,7 @@
     "ADD_SYMPTOM_SNACKBAR": "Symptôme {{ action }} avec succès",
     "DELETE_SYMPTOM_SNACKBAR": "Le symptôme {{ label }} a été supprimé",
     "TIMELINE_ADD_EVENT_SNACKBAR": "Évènement de type {{ type }} {{ action }}",
-    "TIMELINE_DELETE_EVENT_SNACKBAR": "Lévènement de type {{ type }} a été supprimé"
+    "TIMELINE_DELETE_EVENT_SNACKBAR": "Lévènement de type {{ type }} a été supprimé",
+    "TIMELINE_NO_SYMPTOMS_WARNING_1": "Vous n'avez encore enregistré aucun symptôme.",
+    "TIMELINE_NO_SYMPTOMS_WARNING_2": "Appuyez sur le bouton \"+\" pour accéder à votre liste de symptômes et en ajouter un."
 }

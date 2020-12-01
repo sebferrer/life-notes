@@ -19,13 +19,22 @@
     </mat-form-field>
     <div [ngSwitch]="data.type">
         <div *ngSwitchCase="'symptomLog'">
-            <mat-form-field>
-                <mat-label>{{ data.type | transloco | titlecase }}</mat-label>
-                <mat-select [(ngModel)]="data.key">
-                    <mat-option *ngFor="let symptom of data.symptoms" [value]="symptom.key">{{ symptom.label }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
+            <div class="dialog-symptom-field">
+                <mat-form-field>
+                    <mat-label>{{ data.type | transloco | titlecase }}</mat-label>
+                    <mat-select [(ngModel)]="data.key">
+                        <mat-option *ngFor="let symptom of data.symptoms" [value]="symptom.key">{{ symptom.label }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <button mat-mini-fab color="primary" routerLink="/symptoms" (click)="onSymptomsClick()" class="dialog-add-symptom-list-button">
+                    <mat-icon>add</mat-icon>
+                </button>
+            </div>
+            <div *ngIf="data.symptoms.length === 0" class="empty-symptom-list-warning">
+                <p transloco="TIMELINE_NO_SYMPTOMS_WARNING_1"></p>
+                <p transloco="TIMELINE_NO_SYMPTOMS_WARNING_2"></p>
+            </div>
             <mat-form-field>
                 <mat-label transloco="PAIN"></mat-label>
                 <div id="pain-container">

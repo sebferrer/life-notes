@@ -23,6 +23,7 @@ html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .custom-modalbox {
+
     .mat-dialog-title {
         font-size: 1.2rem;
     }
@@ -31,6 +32,18 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     }
     .mat-dialog-content {
         overflow: hidden;
+    }
+    
+    .empty-symptom-list-warning {
+        font-size: 0.9rem;
+    }
+
+    .dialog-symptom-field {
+        width: 140%;
+
+        .dialog-add-symptom-list-button {
+            margin-left: 10%;
+        }
     }
 
     #pain-container {

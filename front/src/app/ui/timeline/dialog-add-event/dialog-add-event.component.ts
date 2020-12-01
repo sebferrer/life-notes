@@ -61,4 +61,8 @@ export class DialogAddEventComponent {
 			'quantity': this.data.quantity
 		});
 	}
+
+	public onSymptomsClick(): void {
+		this.dialogRef.close({ 'answer': 'symptoms' });
+	}
 }

@@ -84,5 +84,7 @@
     "ADD_SYMPTOM_SNACKBAR": "The symptom was successfully {{ action }}",
     "DELETE_SYMPTOM_SNACKBAR": "The symptom {{ label }} was successfully deleted",
     "TIMELINE_ADD_EVENT_SNACKBAR": "The {{ type }} was successfully {{ action }}",
-    "TIMELINE_DELETE_EVENT_SNACKBAR": "The {{ type }} was successfully deleted"
+    "TIMELINE_DELETE_EVENT_SNACKBAR": "The {{ type }} was successfully deleted",
+    "TIMELINE_NO_SYMPTOMS_WARNING_1": "You haven't registered any symptoms yet.",
+    "TIMELINE_NO_SYMPTOMS_WARNING_2": "Tap the \"+\" button to access your symptom list and add one."
 }
