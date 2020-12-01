@@ -71,7 +71,8 @@ export class SymptomsComponent implements OnInit {
 			}
 			const action = response.edit ? 'UPDATED' : 'ADDED';
 			this.snackBar.open(this.translocoService.translate('ADD_SYMPTOM_SNACKBAR',
-				{ action: this.translocoService.translate(action) }), 'Close');
+				{ action: this.translocoService.translate(action) }), 'Close',
+				{ duration: 2000 });
 		});
 	}
 
@@ -91,7 +92,8 @@ export class SymptomsComponent implements OnInit {
 				this.globalService.loadSymptoms();
 				this.app.updateSymptoms();
 			});
-			this.snackBar.open(this.translocoService.translate('DELETE_SYMPTOM_SNACKBAR', { label }), 'Close');
+			this.snackBar.open(this.translocoService.translate('DELETE_SYMPTOM_SNACKBAR', { label }), 'Close',
+				{ duration: 2000 });
 		});
 	}
 

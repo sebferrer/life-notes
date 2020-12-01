@@ -60,13 +60,15 @@ export class SettingsComponent implements OnInit {
 				return;
 			}
 			this.importerExporterService.importData(event).subscribe(() => { });
-			this.snackBar.open(this.translocoService.translate('DATA_IMPORT_SNACKBAR'), 'Close');
+			this.snackBar.open(this.translocoService.translate('DATA_IMPORT_SNACKBAR'), 'Close',
+				{ duration: 2000 });
 		});
 	}
 
 	public exportData(): void {
 		this.importerExporterService.exportData();
-		this.snackBar.open(this.translocoService.translate('DATA_EXPORT_SNACKBAR'), 'Close');
+		this.snackBar.open(this.translocoService.translate('DATA_EXPORT_SNACKBAR'), 'Close',
+			{ duration: 2000 });
 	}
 
 	public exportHtml(): void {

@@ -15,7 +15,7 @@ import { IDay } from 'src/app/models';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { BottomSheetAddEventComponent } from './bottom-sheet-add-event';
 import { GlobalService } from 'src/app/infra/global.service';
-import { getDetailedDate, subFormattedDate } from 'src/app/util/date.utils';
+import { getDetailedDate } from 'src/app/util/date.utils';
 import { TranslocoService } from '@ngneat/transloco';
 
 @Component({
@@ -135,7 +135,8 @@ export class TimelineComponent implements OnInit, AfterViewInit {
 		}
 		const action = response.edit ? 'UPDATED' : 'ADDED';
 		/*this.snackBar.open(this.translocoService.translate('TIMELINE_ADD_EVENT_SNACKBAR',
-			{ type: this.translocoService.translate(type), action: this.translocoService.translate(action) }), 'Close');*/
+			{ type: this.translocoService.translate(type), action: this.translocoService.translate(action) }), 'Close',
+				{ duration: 2000 });*/
 	}
 
 	public editEvent(date: string, response: any, customEvent: ICustomEvent): void {
@@ -177,7 +178,8 @@ export class TimelineComponent implements OnInit, AfterViewInit {
 			}
 			this.daysService.deleteDeepEvent(date, customEvent).subscribe(day => { this.updateDay(day); });
 			/*this.snackBar.open(this.translocoService.translate('TIMELINE_DELETE_EVENT_SNACKBAR',
-				{ type: this.translocoService.translate(customEvent.type) }), 'Close');*/
+				{ type: this.translocoService.translate(customEvent.type) }), 'Close',
+				{ duration: 2000 });*/
 		});
 	}
 
