@@ -42,6 +42,7 @@ import { TranslocoService } from '@ngneat/transloco';
 import { GlobalService } from './infra/global.service';
 import { SettingsComponent } from './ui/settings';
 import { InfiniteScrollComponent } from './ui/infinite-scroll';
+import { File as IonicFile } from '@ionic-native/file/ngx';
 
 @NgModule({
 	declarations: [
@@ -97,6 +98,7 @@ import { InfiniteScrollComponent } from './ui/infinite-scroll';
 		AppComponent,
 		GlobalService,
 		SettingsService,
+		IonicFile,
 		{
 			provide: APP_INITIALIZER,
 			useFactory: (translocoService: TranslocoService) => {
