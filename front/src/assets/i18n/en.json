@@ -76,5 +76,13 @@
     "LANGUAGE": "Language",
     "SETTINGS_IMPORT_EXPORT_TITLE": "Import / Export",
     "SETTINGS_IMPORT_EXPORT_SUBTITLE": "Import or export your data",
-    "SYMPTOM_MANAGE_LINK": "Manage your symptoms"
+    "SYMPTOM_MANAGE_LINK": "Manage your symptoms",
+    "ADDED": "added",
+    "UPDATED": "updated",
+    "DATA_IMPORT_SNACKBAR": "The data has been successfully imported",
+    "DATA_EXPORT_SNACKBAR": "Your data has been successfully saved",
+    "ADD_SYMPTOM_SNACKBAR": "The symptom was successfully {{ action }}",
+    "DELETE_SYMPTOM_SNACKBAR": "The symptom {{ label }} was successfully deleted",
+    "TIMELINE_ADD_EVENT_SNACKBAR": "The {{ type }} was successfully {{ action }}",
+    "TIMELINE_DELETE_EVENT_SNACKBAR": "The {{ type }} was successfully deleted"
 }

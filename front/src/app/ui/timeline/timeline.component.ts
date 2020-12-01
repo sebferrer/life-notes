@@ -16,6 +16,7 @@ import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { BottomSheetAddEventComponent } from './bottom-sheet-add-event';
 import { GlobalService } from 'src/app/infra/global.service';
 import { getDetailedDate, subFormattedDate } from 'src/app/util/date.utils';
+import { TranslocoService } from '@ngneat/transloco';
 
 @Component({
 	selector: 'app-timeline',
@@ -36,6 +37,7 @@ export class TimelineComponent implements OnInit, AfterViewInit {
 
 	constructor(
 		public globalService: GlobalService,
+		private translocoService: TranslocoService,
 		private daysService: DaysService,
 		private dialog: MatDialog,
 		private snackBar: MatSnackBar,
@@ -131,8 +133,9 @@ export class TimelineComponent implements OnInit, AfterViewInit {
 		} else {
 			this.addEvent(date, response);
 		}
-		const action = response.edit ? 'updated' : 'added';
-		this.snackBar.open(`The ${type} was successfully ${action} for ${date}`, 'Close');
+		const action = response.edit ? 'UPDATED' : 'ADDED';
+		/*this.snackBar.open(this.translocoService.translate('TIMELINE_ADD_EVENT_SNACKBAR',
+			{ type: this.translocoService.translate(type), action: this.translocoService.translate(action) }), 'Close');*/
 	}
 
 	public editEvent(date: string, response: any, customEvent: ICustomEvent): void {
@@ -173,7 +176,8 @@ export class TimelineComponent implements OnInit, AfterViewInit {
 				return;
 			}
 			this.daysService.deleteDeepEvent(date, customEvent).subscribe(day => { this.updateDay(day); });
-			this.snackBar.open(`The ${customEvent.type} was successfully deleted for ${date}`, 'Close');
+			/*this.snackBar.open(this.translocoService.translate('TIMELINE_DELETE_EVENT_SNACKBAR',
+				{ type: this.translocoService.translate(customEvent.type) }), 'Close');*/
 		});
 	}
 

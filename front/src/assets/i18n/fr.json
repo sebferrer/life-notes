@@ -76,5 +76,13 @@
     "LANGUAGE": "Langue",
     "SETTINGS_IMPORT_EXPORT_TITLE": "Importer / Exporter",
     "SETTINGS_IMPORT_EXPORT_SUBTITLE": "Importer ou exporter vos données",
-    "SYMPTOM_MANAGE_LINK": "Gestion de vos symtômes"
+    "SYMPTOM_MANAGE_LINK": "Gestion de vos symtômes",
+    "ADDED": "ajouté",
+    "UPDATED": "modifié",
+    "DATA_IMPORT_SNACKBAR": "Les données ont été importées avec succès",
+    "DATA_EXPORT_SNACKBAR": "Vos données ont été sauvegardées avec succès",
+    "ADD_SYMPTOM_SNACKBAR": "Symptôme {{ action }} avec succès",
+    "DELETE_SYMPTOM_SNACKBAR": "Le symptôme {{ label }} a été supprimé",
+    "TIMELINE_ADD_EVENT_SNACKBAR": "Évènement de type {{ type }} {{ action }}",
+    "TIMELINE_DELETE_EVENT_SNACKBAR": "Lévènement de type {{ type }} a été supprimé"
 }

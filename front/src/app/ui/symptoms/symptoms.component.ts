@@ -10,6 +10,7 @@ import { DialogDeleteSymptomComponent } from './dialog-delete-symptom';
 import { ISymptom } from 'src/app/models/symptom.model';
 import { GlobalService } from 'src/app/infra/global.service';
 import { AppComponent } from 'src/app/app.component';
+import { TranslocoService } from '@ngneat/transloco';
 
 @Component({
 	selector: 'app-symptoms',
@@ -23,6 +24,7 @@ export class SymptomsComponent implements OnInit {
 
 	constructor(
 		private app: AppComponent,
+		private translocoService: TranslocoService,
 		private globalService: GlobalService,
 		private symptomsService: SymptomsService,
 		private dialog: MatDialog,
@@ -67,8 +69,9 @@ export class SymptomsComponent implements OnInit {
 			} else {
 				this.addSymptom(response.label);
 			}
-			const action = response.edit ? 'updated' : 'added';
-			this.snackBar.open(`The symptom was successfully ${action}`, 'Close');
+			const action = response.edit ? 'UPDATED' : 'ADDED';
+			this.snackBar.open(this.translocoService.translate('ADD_SYMPTOM_SNACKBAR',
+				{ action: this.translocoService.translate(action) }), 'Close');
 		});
 	}
 
@@ -88,7 +91,7 @@ export class SymptomsComponent implements OnInit {
 				this.globalService.loadSymptoms();
 				this.app.updateSymptoms();
 			});
-			this.snackBar.open(`The symptom ${label} was successfully deleted`, 'Close');
+			this.snackBar.open(this.translocoService.translate('DELETE_SYMPTOM_SNACKBAR', { label }), 'Close');
 		});
 	}
 
