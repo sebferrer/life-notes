@@ -1,6 +1,6 @@
 {
   "appId": "io.ionic.starter",
-  "appName": "healthy-day",
+  "appName": "life-notes",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "www",

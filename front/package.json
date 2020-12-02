@@ -1,5 +1,5 @@
 {
-  "name": "healthy-day",
+  "name": "life-notes",
   "version": "0.0.1",
   "author": "sebferrer",
   "homepage": "http://sebferrer.fr",
@@ -63,6 +63,7 @@
     "@types/pouchdb-core": "^7.0.6",
     "codelyzer": "^6.0.0",
     "cordova-plugin-device": "^2.0.2",
+    "cordova-plugin-file": "^6.0.2",
     "cordova-plugin-ionic-keyboard": "^2.2.0",
     "cordova-plugin-ionic-webview": "^4.2.1",
     "cordova-plugin-splashscreen": "^5.0.2",
