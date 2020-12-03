@@ -1,8 +1,20 @@
 <div id="calendar-container" *ngIf="overviews$ | async as overviews; else loading">
 	<div class="calendar-header">
-		<ng-template transloco let-t>
-			<div class="calender-header-label">{{ t('CALENDAR_HEADER_DATE', { month: t('MONTH-'+month), year: year }) }}</div>
-		</ng-template>
+		<div class="previous-button">
+			<button mat-icon-button color="primary" aria-label="Previous" (click)="previous()">
+				<mat-icon>chevron_left</mat-icon>
+			</button>
+		</div>
+		<div class="calender-header-label">
+			<ng-template transloco let-t>
+				<p>{{ t('CALENDAR_HEADER_DATE', { month: t('MONTH-'+month), year: year }) }}</p>
+			</ng-template>
+		</div>
+		<div class="next-button">
+			<button mat-icon-button color="primary" aria-label="Next" (click)="next()">
+				<mat-icon>chevron_right</mat-icon>
+			</button>
+		</div>
 	</div>
 	<div class="grid-list">
 		<div *ngFor="let overview of overviews"
@@ -15,19 +27,6 @@
 					<div class="day-label day-label-today">{{ overview.detailedDate.day }}</div>
 				</ng-template>
 			</div>
-		</div>
-	</div>
-
-	<div class="buttons-container">
-		<div class="previous-button">
-			<button mat-fab color="primary" aria-label="Previous" (click)="previous()">
-				<mat-icon>chevron_left</mat-icon>
-			</button>
-		</div>
-		<div class="next-button">
-			<button mat-fab color="primary" aria-label="Next" (click)="next()">
-				<mat-icon>chevron_right</mat-icon>
-			</button>
 		</div>
 	</div>
 </div>
