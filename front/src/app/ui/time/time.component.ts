@@ -1,5 +1,4 @@
-import { Injector } from '@angular/core';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { DaysService } from 'src/app/infra';
 import { DialogAddEventComponent } from './dialog-add-event';
@@ -29,22 +28,16 @@ export abstract class ATimeComponent {
 	public symptomMap: Map<string, string>;
 	public symptomPainColorMap: Map<number, string>;
 
-	public globalService: GlobalService;
-	protected translocoService: TranslocoService;
-	protected daysService: DaysService;
-	protected dialog: MatDialog;
-	protected snackBar: MatSnackBar;
-	protected bottomSheet: MatBottomSheet;
 	protected updateCallback: (day: IDay) => void;
 
-	constructor(injector: Injector) {
-		this.globalService = injector.get(GlobalService);
-		this.translocoService = injector.get(TranslocoService);
-		this.daysService = injector.get(DaysService);
-		this.dialog = injector.get(MatDialog);
-		this.snackBar = injector.get(MatSnackBar);
-		this.bottomSheet = injector.get(MatBottomSheet);
-
+	constructor(
+		public globalService: GlobalService,
+		protected translocoService: TranslocoService,
+		protected daysService: DaysService,
+		protected dialog: MatDialog,
+		protected snackBar: MatSnackBar,
+		protected bottomSheet: MatBottomSheet
+	) {
 		this.symptoms$ = this.globalService.symptoms$;
 		this.symptoms = new Array<ISymptom>();
 		this.symptoms$.subscribe(symptoms => {

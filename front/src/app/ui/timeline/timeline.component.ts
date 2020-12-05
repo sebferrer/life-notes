@@ -1,10 +1,15 @@
-import { Injector } from '@angular/core';
 import { Component, OnInit, ElementRef, AfterViewInit, ViewChildren, QueryList } from '@angular/core';
 import { Subject } from 'rxjs';
 import { DayViewModel } from 'src/app/models/day.view.model';
 import { getSortOrder } from 'src/app/util/array.utils';
 import { IDay } from 'src/app/models';
 import { ATimeComponent } from '../time/time.component';
+import { GlobalService } from 'src/app/infra/global.service';
+import { TranslocoService } from '@ngneat/transloco';
+import { DaysService } from 'src/app/infra';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
 
 @Component({
 	selector: 'app-timeline',
@@ -19,8 +24,15 @@ export class TimelineComponent extends ATimeComponent implements OnInit, AfterVi
 	private nbDays = 0;
 	@ViewChildren('dayRefs') dayRefs: QueryList<ElementRef>;
 
-	constructor(injector: Injector) {
-		super(injector);
+	constructor(
+		public globalService: GlobalService,
+		protected translocoService: TranslocoService,
+		protected daysService: DaysService,
+		protected dialog: MatDialog,
+		protected snackBar: MatSnackBar,
+		protected bottomSheet: MatBottomSheet
+	) {
+		super(globalService, translocoService, daysService, dialog, snackBar, bottomSheet);
 		this.updateCallback = (day: IDay): void => {
 			this.daysContents = this.daysContents.filter(dayContent => dayContent.date !== day.date);
 			this.daysContents.push(new DayViewModel(day));
