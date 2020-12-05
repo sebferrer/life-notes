@@ -4,13 +4,19 @@ import { Subject } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { DayViewModel } from 'src/app/models/day.view.model';
 import { GlobalService } from 'src/app/infra/global.service';
+import { TranslocoService } from '@ngneat/transloco';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { ATimeComponent } from '../time';
+import { IDay } from 'src/app/models';
 
 @Component({
 	selector: 'app-day',
 	templateUrl: './day.component.html',
 	styleUrls: ['./day.component.scss']
 })
-export class DayComponent implements OnInit {
+export class DayComponent extends ATimeComponent implements OnInit {
 
 	public dayContent: DayViewModel;
 	public dayContent$: Subject<DayViewModel>;
@@ -18,10 +24,20 @@ export class DayComponent implements OnInit {
 	public symptomPainColorMap: Map<number, string>;
 
 	constructor(
-		private globalService: GlobalService,
-		private daysService: DaysService,
+		public globalService: GlobalService,
+		protected translocoService: TranslocoService,
+		protected daysService: DaysService,
+		protected dialog: MatDialog,
+		protected snackBar: MatSnackBar,
+		protected bottomSheet: MatBottomSheet,
 		private route: ActivatedRoute
-	) { }
+	) {
+		super(globalService, translocoService, daysService, dialog, snackBar, bottomSheet);
+		this.updateCallback = (day: IDay): void => {
+			this.dayContent = new DayViewModel(day);
+			this.dayContent$.next(this.dayContent);
+		};
+	}
 
 	public ngOnInit(): void {
 		this.dayContent$ = new Subject<DayViewModel>();
@@ -31,8 +47,6 @@ export class DayComponent implements OnInit {
 				this.dayContent$.next(this.dayContent);
 			}
 		);
-		this.symptomMap = this.globalService.symptomMap;
-		this.symptomPainColorMap =
-			new Map([[0, 'default'], [1, 'pain-1'], [2, 'pain-2'], [3, 'pain-3'], [4, 'pain-4'], [5, 'pain-5']]);
+
 	}
 }

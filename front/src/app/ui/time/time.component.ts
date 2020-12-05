@@ -15,6 +15,7 @@ import { GlobalService } from 'src/app/infra/global.service';
 import { getDetailedDate } from 'src/app/util/date.utils';
 import { TranslocoService } from '@ngneat/transloco';
 import { IDay } from 'src/app/models';
+import { DayViewModel } from 'src/app/models/day.view.model';
 
 @Component({
 	selector: 'app-time',
@@ -86,7 +87,7 @@ export abstract class ATimeComponent {
 			autoFocus: false,
 			width: '20rem',
 			panelClass: 'custom-modalbox',
-			data: { type, date, symptoms }
+			data: { type, date, symptoms, customEvent }
 		}).afterClosed().subscribe(response => {
 			this.postAddDialog(date, response, type, customEvent);
 		});
@@ -191,5 +192,9 @@ export abstract class ATimeComponent {
 					this.openAddDialog(response.type, date);
 				}
 			});
+	}
+
+	public toggleRemovable(dayViewModel: DayViewModel): void {
+		dayViewModel.removable = dayViewModel.removable ? false : true;
 	}
 }

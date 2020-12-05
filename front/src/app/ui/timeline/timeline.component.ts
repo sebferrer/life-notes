@@ -65,8 +65,4 @@ export class TimelineComponent extends ATimeComponent implements OnInit, AfterVi
 		console.log(this.dayRefs.toArray());
 		//this.myDiv.scrollIntoView();*/
 	}
-
-	public toggleRemovable(dayViewModel: DayViewModel): void {
-		dayViewModel.removable = dayViewModel.removable ? false : true;
-	}
 }

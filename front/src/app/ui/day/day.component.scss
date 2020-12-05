@@ -13,24 +13,62 @@
     background-color: #9E9E9E;
     color: white;
     font-size: 1.2rem;
+    display: table;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    padding-left: 0.5rem;
+
+    .day-tile-header-date {
+        height: 100%;
+        width: 20%;
+        font-size: 1rem;
+        padding-left: 0.5rem;
+        display: table-cell;
+        vertical-align: middle;
+    }
+
+    .go-back-container {
+        height: 100%;
+        width: 5%;
+        display: table-cell;
+        vertical-align: middle;
+        .go-back {
+            margin-left: 20%;
+        }
+    }
+    
+    .add-event-container {
+        height: 100%;
+        width: 5%;
+        display: table-cell;
+        vertical-align: middle;
+    }
+    
+    .delete-event-container {
+        height: 100%;
+        width: 5%;
+        display: table-cell;
+        vertical-align: middle;
+    }
 }
 
 .day-tile-content {
     position: absolute;
     top: 3.5rem;
-    height: 28rem;
+    height: calc(100vh - 7rem);
     width: 100%;
 }
 
 .day-content {
     position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 85%;
+    top: 0;
+    width: 75%;
+    height: 100%;
     overflow-y: auto;
     overflow-x: hidden;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+.day-content::-webkit-scrollbar { /* Chrome, Safari and Opera */
+    display: none;
 }
 
 .day-day-item-symptomLog {
@@ -53,6 +91,38 @@
     width: 70vw !important;
     height: 10vh !important;
     margin-left: 1rem !important;
+    z-index: 5;
+
+    .event-container {
+        width: 100%;
+        color: white;
+    
+        .event {
+            display: table;
+            height: 5vh;
+            float: left;
+        
+            .event-time {
+                display: table-cell;
+                vertical-align: middle;
+                width: 12vw;
+            }
+            .event-content-container {
+                display: table-cell;
+                vertical-align: middle;
+                width: 48vw;
+                .event-detail {
+                    height: 100%;
+                    overflow-y: auto;
+                    -ms-overflow-style: none;  /* IE and Edge */
+                    scrollbar-width: none;  /* Firefox */
+                }
+                .event-detail::-webkit-scrollbar { /* Chrome, Safari and Opera */
+                    display: none;
+                }
+            }
+        }
+    }
 }
 
 .event-container {
@@ -65,9 +135,13 @@
 }
 
 .remove-event-container {
-    display: inline;
-    float: right;
-    height: 1.1rem;
+    position: absolute;
+    right: 5%;
+    top: 10%;
+
+    .remove-event {
+        font-size: 180%;
+    }
 }
 
 .back {
@@ -127,9 +201,10 @@
 
 .wakeup-container {
     position: absolute;
+    top: 7rem;
     right: 0;
     width: 20%;
-    height: 20%;
+    height: 12.5%;
     background-color: #CECECE;
     border-radius: 0 0 0 100%;
      -moz-border-radius: 0 0 0 100%;
@@ -142,7 +217,7 @@
     bottom: 0;
     right: 0;
     width: 20%;
-    height: 20%;
+    height: 12.5%;
     background-color: #CECECE;
     border-radius: 100% 0 0 0;
      -moz-border-radius: 100% 0 0 0;
@@ -187,9 +262,10 @@
 
 .corner-decoration {
     position: absolute;
+    top: 7rem;
     left: 0;
     width: 60%;
-    height: 60%;
+    height: 40%;
     background-color: #EBEBEB;
     border-radius: 0 0 100% 0;
     -moz-border-radius: 0 0 100% 0;
