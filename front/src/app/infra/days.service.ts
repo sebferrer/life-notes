@@ -112,20 +112,25 @@ export class DaysService {
 	public getDay(date: string): Observable<IDay> {
 		return this.dbContext.asObservable<IDay>(
 			this.dbContext.daysCollection.get(date)
+		).pipe(
+			catchError(() => of(null))
 		);
 	}
 
 	public getOrCreateDay(date: string): Observable<IDay> {
 		return this.getDay(date).pipe(
-			catchError(
-				() => this.createNewDay(new Date(date)).pipe(
-					switchMap(day => this.getDay(day.date))
-				)
+			switchMap(
+				day => day == null ? this.createNewDay(new Date(date)).pipe(
+					switchMap(d => this.getDay(d.date))
+				) : of(day)
 			)
 		);
 	}
 
 	public getSymptomOverview(day: IDay, key: string) {
+		if (day == null) {
+			return null;
+		}
 		return day.symptomOverviews.find(s => s.key === key);
 	}
 
@@ -145,7 +150,7 @@ export class DaysService {
 	}
 
 	public addSymptomOverview(date: string, key: string, pain: number): Observable<IDay> {
-		const day = this.getDay(date);
+		const day = this.getOrCreateDay(date);
 		return day.pipe(
 			switchMap(d => {
 				let symptomOverview = d.symptomOverviews.find(s => s.key === key);
