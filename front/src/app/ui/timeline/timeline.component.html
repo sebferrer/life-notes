@@ -43,7 +43,7 @@
 								<div class="timeline-chips-padding"></div>
 								<mat-chip *ngFor="let content of dayContent.content" [ngSwitch]="content.type"
 									class="mat-chip mat-standard-chip timeline-day-item-{{ content.type }} event-chips">
-									<div class="event-container" (click)="openShowDialog(dayContent.date, content)">
+									<div class="event-container" (click)="openShowDialog(dayContent.date, content, symptoms)">
 										<div *ngSwitchCase="'symptomLog'" class="event">
 											<div class="event-time">{{ content.time }}</div>
 											<div class="event-content">{{ symptomMap.get(content.key) }}

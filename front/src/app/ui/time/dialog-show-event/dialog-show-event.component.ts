@@ -20,10 +20,10 @@ export class DialogShowEventComponent {
 	) { }
 
 	public onNoClick(): void {
-		this.dialogRef.close({ 'answer': 'no' });
+		this.dialogRef.close({ 'answer': 'no', 'type': this.data.customEvent.type });
 	}
 
 	public onYesClick(): void {
-		this.dialogRef.close({ 'answer': 'yes' });
+		this.dialogRef.close({ 'answer': 'yes', 'type': this.data.customEvent.type });
 	}
 }

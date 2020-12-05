@@ -50,7 +50,7 @@ export abstract class ATimeComponent {
 			new Map([[0, 'default'], [1, 'pain-1'], [2, 'pain-2'], [3, 'pain-3'], [4, 'pain-4'], [5, 'pain-5']]);
 	}
 
-	public openShowDialog(date: string, customEvent: ICustomEvent): void {
+	public openShowDialog(date: string, customEvent: ICustomEvent, symptoms: ISymptom[]): void {
 		this.dialog.open(DialogShowEventComponent, {
 			autoFocus: false,
 			width: '20rem',
@@ -60,7 +60,12 @@ export abstract class ATimeComponent {
 			if (response == null || response.answer !== 'yes') {
 				return;
 			} else {
-				this.openAddDialog(customEvent.type, date, customEvent);
+				if (response.type === 'symptomLog') {
+					this.openAddSymptomDialog(customEvent.type, date, symptoms, customEvent);
+				}
+				else {
+					this.openAddDialog(customEvent.type, date, customEvent);
+				}
 			}
 		});
 	}
