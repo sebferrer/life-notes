@@ -1,12 +1,14 @@
 import { IDay } from './day.model';
 import { getSortOrder } from '../util/array.utils';
 import { DayOverviewViewModel } from 'src/app/models/day.overview.view.model';
+import { ISymptomLog, ISymptom } from './symptom.model';
 
 export class DayViewModel extends DayOverviewViewModel {
 
 	public readonly wakeUp: string;
 	public readonly goToBed: string;
 	public readonly content: Array<any>;
+	public readonly symptoms: Array<ISymptom>;
 	public removable: boolean;
 
 	constructor(day: IDay) {
@@ -17,6 +19,7 @@ export class DayViewModel extends DayOverviewViewModel {
 
 		this.content = [...day.logs];
 
+		this.symptoms = [...day.symptoms];
 		for (const symptom of day.symptoms) {
 			this.content.push(...symptom.logs);
 		}

@@ -43,6 +43,7 @@ import { GlobalService } from './infra/global.service';
 import { SettingsComponent } from './ui/settings';
 import { InfiniteScrollComponent } from './ui/infinite-scroll';
 import { File as IonicFile } from '@ionic-native/file/ngx';
+import { GoogleChartsModule } from 'angular-google-charts';
 
 @NgModule({
 	declarations: [
@@ -89,7 +90,8 @@ import { File as IonicFile } from '@ionic-native/file/ngx';
 		MatBottomSheetModule,
 		MatExpansionModule,
 		NgxMaterialTimepickerModule,
-		TranslocoRootModule
+		TranslocoRootModule,
+		GoogleChartsModule
 	],
 	providers: [
 		DaysService,

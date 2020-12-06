@@ -35,6 +35,7 @@
     "@material/snackbar": "^8.0.0",
     "@ngneat/transloco": "^2.19.1",
     "@schematics/angular": "^11.0.2",
+    "angular-google-charts": "^1.1.6",
     "axios": "^0.20.0",
     "cordova-android": "9.0.0",
     "date-fns": "^2.16.1",

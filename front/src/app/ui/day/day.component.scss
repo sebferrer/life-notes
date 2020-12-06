@@ -51,6 +51,7 @@
 }
 
 .day-tile-content {
+    display: none;
     position: absolute;
     top: 3.5rem;
     height: calc(100vh - 7rem);
@@ -122,6 +123,16 @@
                 }
             }
         }
+    }
+}
+
+.day-tile-chart {
+    position: absolute;
+    top: 30vh;
+    width: 100%;
+    z-index: 5; 
+    .chart {
+        height: 30vh;
     }
 }
 

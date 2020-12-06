@@ -76,6 +76,10 @@
                     fiber_manual_record</mat-icon>
             </div>
         </div>
+        <div class="day-tile-chart">
+            <google-chart class="chart" [title]="title" [type]="type" [data]="data" [columns]="columns" [options]="options">
+            </google-chart>
+        </div>
     </div>
     <div class="corner-decoration"></div>
     <div class="wakeup-container" (click)="openAddDialog('wakeUp', dayContent.date)">
