@@ -24,6 +24,7 @@ export class DayComponent extends ATimeComponent implements OnInit {
 	public symptomMap: Map<string, string>;
 	public symptomPainColorMap: Map<number, string>;
 	public steppedAreaChart: DayChartViewModel;
+	public displayChart = false;
 
 	constructor(
 		public globalService: GlobalService,
@@ -51,5 +52,9 @@ export class DayComponent extends ATimeComponent implements OnInit {
 				this.steppedAreaChart.update(this.symptoms$, this.globalService.symptomMap, this.dayContent);
 			}
 		);
+	}
+
+	public toggleChart(): void {
+		this.displayChart = !this.displayChart;
 	}
 }

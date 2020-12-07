@@ -12,6 +12,12 @@
             {'month': t('MONTH-SHORT-'+dayContent.detailedDate.month), 'day': dayContent.detailedDate.day, 'year': dayContent.detailedDate.year}) }}
                 </div>
             </ng-template>
+            <div class="toggle-chart-container" (click)="toggleChart()">
+                <button mat-icon-button>
+                    <mat-icon *ngIf="!displayChart">bar_chart</mat-icon>
+                    <mat-icon *ngIf="displayChart">calendar_view_day</mat-icon>
+                </button>
+            </div>
             <div class="add-event-container">
                 <button mat-icon-button (click)="openBottomSheet(dayContent.date)" class="add-event">
                     <mat-icon>playlist_add</mat-icon>
@@ -23,7 +29,7 @@
                 </button>
             </div>
         </div>
-        <div class="day-tile-content">
+        <div *ngIf="!displayChart" class="day-tile-content">
             <div class="day-content">
                 <mat-chip-list class="mat-chip-list-stacked">
                     <div class="day-chips-padding"></div>
@@ -79,7 +85,7 @@
                     fiber_manual_record</mat-icon>
             </div>
         </div>
-        <div class="day-tile-chart">
+        <div *ngIf="displayChart"  class="day-tile-chart">
             <google-chart class="chart" [title]="steppedAreaChart.title" [type]="steppedAreaChart.type"
                 [data]="steppedAreaChart.data" [columns]="steppedAreaChart.columns"
                 [options]="steppedAreaChart.options">

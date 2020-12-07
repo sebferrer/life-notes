@@ -18,7 +18,7 @@
 
     .day-tile-header-date {
         height: 100%;
-        width: 20%;
+        width: 30%;
         font-size: 1rem;
         padding-left: 0.5rem;
         display: table-cell;
@@ -34,12 +34,23 @@
             margin-left: 20%;
         }
     }
+
+    .toggle-chart-container {
+        height: 100%;
+        width: 5%;
+        display: table-cell;
+        vertical-align: middle;
+    }
     
     .add-event-container {
         height: 100%;
         width: 5%;
         display: table-cell;
         vertical-align: middle;
+        .add-event {
+            margin-left: 6.5rem;
+            z-index: 100;
+        }
     }
     
     .delete-event-container {
@@ -47,11 +58,15 @@
         width: 5%;
         display: table-cell;
         vertical-align: middle;
+        .delete-event {
+            margin-left: 1rem;
+            margin-right: 1rem;
+            z-index: 100;
+        }
     }
 }
 
 .day-tile-content {
-    display: none;
     position: absolute;
     top: 3.5rem;
     height: calc(100vh - 7rem);
@@ -156,15 +171,6 @@
 }
 
 .back {
-    z-index: 100;
-}
-
-.add-event {
-    margin-left: 6rem;
-    z-index: 100;
-}
-
-.delete-event {
     z-index: 100;
 }
 
