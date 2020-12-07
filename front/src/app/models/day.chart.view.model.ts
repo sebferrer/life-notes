@@ -1,25 +1,18 @@
 import { ISymptomOverview, ISymptomLog, ISymptom } from './symptom.model';
 import { Observable } from 'rxjs';
 import { DayViewModel } from './day.view.model';
+import { AChart } from './chart.model';
 
-export class DayChartViewModel {
-	public type: string;
-	public title: string;
-	public data: any[][];
-	public columns: string[];
-	public options: any;
-	public timeSymptoms: Map<string, ISymptomOverview[]>;
-	public timeSymptomsOrder: string[];
-	public lastSymptomMap: Map<string, ISymptomLog>;
+export class DayChartViewModel extends AChart {
+	private timeSymptoms: Map<string, ISymptomOverview[]>;
+	private timeSymptomsOrder: string[];
+	private lastSymptomMap: Map<string, ISymptomLog>;
 
 	constructor(
 		type: string,
 		title: string
 	) {
-		this.type = type;
-		this.title = title;
-		this.data = new Array<Array<any>>();
-		this.columns = new Array<string>();
+		super(type, title);
 		this.options = {
 			legend: { position: 'bottom', alignment: 'start' },
 			vAxis: {

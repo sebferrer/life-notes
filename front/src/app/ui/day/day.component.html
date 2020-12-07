@@ -12,10 +12,10 @@
             {'month': t('MONTH-SHORT-'+dayContent.detailedDate.month), 'day': dayContent.detailedDate.day, 'year': dayContent.detailedDate.year}) }}
                 </div>
             </ng-template>
-            <div class="toggle-chart-container" (click)="toggleChart()">
+            <div class="toggle-chart-container" (click)="toggleCharts()">
                 <button mat-icon-button>
-                    <mat-icon *ngIf="!displayChart">bar_chart</mat-icon>
-                    <mat-icon *ngIf="displayChart">calendar_view_day</mat-icon>
+                    <mat-icon *ngIf="!displayCharts">bar_chart</mat-icon>
+                    <mat-icon *ngIf="displayCharts">table_rows</mat-icon>
                 </button>
             </div>
             <div class="add-event-container">
@@ -29,7 +29,7 @@
                 </button>
             </div>
         </div>
-        <div *ngIf="!displayChart" class="day-tile-content">
+        <div *ngIf="!displayCharts" class="day-tile-content">
             <div class="day-content">
                 <mat-chip-list class="mat-chip-list-stacked">
                     <div class="day-chips-padding"></div>
@@ -85,14 +85,18 @@
                     fiber_manual_record</mat-icon>
             </div>
         </div>
-        <div *ngIf="displayChart"  class="day-tile-chart">
-            <google-chart class="chart" [title]="steppedAreaChart.title" [type]="steppedAreaChart.type"
-                [data]="steppedAreaChart.data" [columns]="steppedAreaChart.columns"
+        <div *ngIf="displayCharts" class="day-tile-chart">
+            <google-chart *ngIf="dayContent.symptoms.length > 0" class="chart" [title]="steppedAreaChart.title"
+                [type]="steppedAreaChart.type" [data]="steppedAreaChart.data" [columns]="steppedAreaChart.columns"
                 [options]="steppedAreaChart.options">
             </google-chart>
+            <!--google-chart *ngFor="let symptom of dayContent.symptoms" class="chart" [title]="symptom.key"
+                [type]="pieCharts.get(symptom.key).type" [data]="pieCharts.get(symptom.key).data"
+                [columns]="pieCharts.get(symptom.key).columns" [options]="pieCharts.get(symptom.key).options">
+            </google-chart-->
         </div>
     </div>
-    <div class="corner-decoration"></div>
+    <div *ngIf="!displayCharts" class="corner-decoration"></div>
     <div class="wakeup-container" (click)="openAddDialog('wakeUp', dayContent.date)">
         <mat-icon class="wakeup-icon">alarm</mat-icon>
         <div class="wakeup-time">{{ dayContent.wakeUp }}</div>
