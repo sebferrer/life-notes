@@ -1,34 +1,46 @@
-<div id="calendar-container" *ngIf="overviews$ | async as overviews; else loading">
-	<div class="calendar-header">
-		<div class="previous-button">
-			<button mat-icon-button color="primary" aria-label="Previous" (click)="previous()">
-				<mat-icon>chevron_left</mat-icon>
-			</button>
-		</div>
-		<div class="calender-header-label">
-			<ng-template transloco let-t>
-				<p>{{ t('CALENDAR_HEADER_DATE', { month: t('MONTH-'+month), year: year }) }}</p>
-			</ng-template>
-		</div>
-		<div class="next-button">
-			<button mat-icon-button color="primary" aria-label="Next" (click)="next()">
-				<mat-icon>chevron_right</mat-icon>
-			</button>
-		</div>
-	</div>
-	<div class="grid-list">
-		<div *ngFor="let overview of overviews"
-			class="grid-tile color-{{ symptomPainColorMap.get(overview.getSymptomPain(globalService.targetSymptomKey)) }}"
-			routerLink="/{{ overview.date }}">
-			<div class="header">
-				<div *ngIf="today.day !== overview.detailedDate.day || today.month !== overview.detailedDate.month 
+<div *ngIf="overviews$ | async as overviews; else loading">
+	<div *ngIf="symptoms$ | async as symptoms; else loading">
+		<div id="calendar-container">
+			<div class="calendar-header">
+				<div class="previous-button">
+					<button mat-icon-button color="primary" aria-label="Previous" (click)="previous()">
+						<mat-icon>chevron_left</mat-icon>
+					</button>
+				</div>
+				<div class="calender-header-label">
+					<ng-template transloco let-t>
+						<p>{{ t('CALENDAR_HEADER_DATE', { month: t('MONTH-'+month), year: year }) }}</p>
+					</ng-template>
+				</div>
+				<div class="next-button">
+					<button mat-icon-button color="primary" aria-label="Next" (click)="next()">
+						<mat-icon>chevron_right</mat-icon>
+					</button>
+				</div>
+			</div>
+			<div class="grid-list">
+				<div *ngFor="let overview of overviews"
+					class="grid-tile color-{{ symptomPainColorMap.get(overview.getSymptomPain(globalService.targetSymptomKey)) }}"
+					routerLink="/{{ overview.date }}">
+					<div class="header">
+						<div *ngIf="today.day !== overview.detailedDate.day || today.month !== overview.detailedDate.month 
 				|| today.year !== overview.detailedDate.year; else todayDiv" class="day-label">
-					{{ overview.detailedDate.day }}</div>
-				<ng-template #todayDiv>
-					<div class="day-label day-label-today">{{ overview.detailedDate.day }}</div>
-				</ng-template>
+							{{ overview.detailedDate.day }}</div>
+						<ng-template #todayDiv>
+							<div class="day-label day-label-today">{{ overview.detailedDate.day }}</div>
+						</ng-template>
+					</div>
+				</div>
 			</div>
 		</div>
+
+		<div class="charts">
+			<google-chart *ngFor="let symptom of symptoms" class="chart" [title]="symptomMap.get(symptom.key)"
+				[type]="pieCharts.get(symptom.key).type" [data]="pieCharts.get(symptom.key).data"
+				[columns]="pieCharts.get(symptom.key).columns" [options]="pieCharts.get(symptom.key).options">
+			</google-chart>
+		</div>
+
 	</div>
 </div>
 
