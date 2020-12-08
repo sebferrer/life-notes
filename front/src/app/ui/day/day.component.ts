@@ -48,9 +48,12 @@ export class DayComponent extends ATimeComponent implements OnInit {
 
 	public ngOnInit(): void {
 		this.dayContent$ = new Subject<DayViewModel>();
-		this.daysService.getDay(this.route.snapshot.paramMap.get('date')).subscribe(
+		const date = this.route.snapshot.paramMap.get('date');
+		this.daysService.getDay(date).subscribe(
 			day => {
-				this.dayContent = new DayViewModel(day);
+				this.dayContent = day == null ?
+					new DayViewModel(this.daysService.buildDay(new Date(date))) :
+					new DayViewModel(day);
 				this.dayContent$.next(this.dayContent);
 				this.steppedAreaChart.update(this.symptoms$, this.globalService.symptomMap, this.dayContent);
 				/*day.symptoms.forEach(symptom => {
