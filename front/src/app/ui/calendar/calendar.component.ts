@@ -50,6 +50,9 @@ export class CalendarComponent implements OnInit {
 	}
 
 	public organizeSymptoms(symptoms: ISymptom[]): ISymptom[] {
+		if (symptoms.length === 0) {
+			return symptoms;
+		}
 		const targetSymptom = this.symptoms.find(symptom => symptom.key === this.globalService.targetSymptomKey);
 		symptoms = symptoms.filter(symptom => symptom.key !== this.globalService.targetSymptomKey);
 		symptoms.unshift(targetSymptom);
