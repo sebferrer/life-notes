@@ -1,4 +1,5 @@
 <div id="symptoms-container">
+    <h3 class="title" transloco="SYMPTOMS_TITLE"></h3>
     <mat-selection-list class="symptom-list" *ngIf="symptoms$ | async as symptoms; else loading" #symptoms
         [multiple]="false">
         <mat-list-option class="symptom-list-item" *ngFor="let symptom of symptoms" [value]="symptom">

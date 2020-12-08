@@ -44,6 +44,7 @@ import { SettingsComponent } from './ui/settings';
 import { InfiniteScrollComponent } from './ui/infinite-scroll';
 import { File as IonicFile } from '@ionic-native/file/ngx';
 import { GoogleChartsModule } from 'angular-google-charts';
+import { DialogNoSymptomWarningComponent } from './ui/dialog-no-symptom-warning';
 
 @NgModule({
 	declarations: [
@@ -61,6 +62,7 @@ import { GoogleChartsModule } from 'angular-google-charts';
 		DialogDeleteSymptomComponent,
 		DialogEditSymptomOverviewComponent,
 		DialogImportConfirmComponent,
+		DialogNoSymptomWarningComponent,
 		BottomSheetAddEventComponent,
 
 		// Helpers
@@ -120,7 +122,8 @@ import { GoogleChartsModule } from 'angular-google-charts';
 		DialogAddSymptomComponent,
 		DialogDeleteSymptomComponent,
 		DialogEditSymptomOverviewComponent,
-		DialogImportConfirmComponent
+		DialogImportConfirmComponent,
+		DialogNoSymptomWarningComponent
 	],
 	bootstrap: [AppComponent]
 })

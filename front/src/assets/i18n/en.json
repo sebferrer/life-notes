@@ -86,5 +86,10 @@
     "TIMELINE_ADD_EVENT_SNACKBAR": "The {{ type }} was successfully {{ action }}",
     "TIMELINE_DELETE_EVENT_SNACKBAR": "The {{ type }} was successfully deleted",
     "TIMELINE_NO_SYMPTOMS_WARNING_1": "You haven't registered any symptoms yet.",
-    "TIMELINE_NO_SYMPTOMS_WARNING_2": "Tap the \"+\" button to access your symptom list and add one."
+    "TIMELINE_NO_SYMPTOMS_WARNING_2": "Tap the \"+\" button to access your symptom list and add one.",
+    "NO_SYMPTOM_WARNING_DIALOG_TITLE": "No symptom",
+    "CREATE_SYMPTOM_BUTTON": "Create your first symptom",
+    "NO_SYMPTOM_WARNING_DIALOG_CONTENT_1": "Life Notes works using and monitoring your symptoms.",
+    "NO_SYMPTOM_WARNING_DIALOG_CONTENT_2": "Using this app, you will daily add your symptoms evolution, but first, you have to create them. You currently have no registered symptoms, so in order to use this app correctly, the first thing you should do is to add the symptoms you'd like to minitor (e.g headache, stomachache, etc...)",
+    "SYMPTOMS_TITLE": "Your symptom list"
 }

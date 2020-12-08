@@ -4,6 +4,8 @@ import { Subject } from 'rxjs';
 import { ISymptom } from './models/symptom.model';
 import { GlobalService } from './infra/global.service';
 import { TranslocoService } from '@ngneat/transloco';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogNoSymptomWarningComponent } from './ui/dialog-no-symptom-warning';
 
 @Component({
 	selector: 'app-root',
@@ -18,7 +20,8 @@ export class AppComponent implements OnInit {
 	constructor(
 		public globalService: GlobalService,
 		private translocoService: TranslocoService,
-		private settingsService: SettingsService
+		private settingsService: SettingsService,
+		private dialog: MatDialog,
 	) {
 		this.symptoms = new Array<ISymptom>();
 		this.symptoms$ = new Subject<ISymptom[]>();
@@ -60,5 +63,19 @@ export class AppComponent implements OnInit {
 				this.globalService.targetSymptomKey = settings.targetSymptomKey;
 			}
 		);
+	}
+
+	public noSymptomWarning() {
+		if (this.symptoms.length === 0) {
+			this.dialog.open(DialogNoSymptomWarningComponent, {
+				autoFocus: false,
+				width: '20rem',
+				panelClass: 'custom-modalbox'
+			}).afterClosed().subscribe(response => {
+				if (response == null || response.answer !== 'yes') {
+					return;
+				}
+			});
+		}
 	}
 }

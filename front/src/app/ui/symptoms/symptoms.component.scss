@@ -1,11 +1,21 @@
 #symptoms-container {
     position: absolute;
     top: 3.5rem;
-    width: 70%;
+    left: 0;
+    width: 100%;
+
+    .title {
+        margin-left: 1rem;
+        margin-top: 0.8rem;
+        font-size: 1.5rem;
+        color: #212121;
+    }
 }
 
 .symptom-list {
     margin-bottom: 2rem;
+    width: 80%;
+    margin-left: 10%
 }
 
 .symptom-label-container {

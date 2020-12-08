@@ -1,20 +1,27 @@
 <mat-toolbar *ngIf="symptoms$ | async as symptoms" class="mat-typography">
 	<button mat-icon-button id="menu-icon-timeline" routerLink="" aria-label="Timeline">
-        <mat-icon>view_day</mat-icon>
+		<mat-icon>view_day</mat-icon>
 	</button>
 	<button mat-icon-button id="menu-icon-calendar" class="menu-icon" routerLink="/calendar" aria-label="Calendar">
-        <mat-icon>apps</mat-icon>
+		<mat-icon>apps</mat-icon>
 	</button>
-	<button mat-icon-button id="menu-icon-target-symptom" class="menu-icon" [matMenuTriggerFor]="targetSymptom" aria-label="Symptoms">
-        <mat-icon>spa</mat-icon>
+	<button *ngIf="symptoms.length === 0 else noSymptomButton" mat-icon-button id="menu-icon-target-symptom"
+		class="menu-icon" aria-label="Symptoms" (click)="noSymptomWarning()">
+		<mat-icon>spa</mat-icon>
 	</button>
+	<ng-template #noSymptomButton>
+		<button mat-icon-button id="menu-icon-target-symptom" class="menu-icon" [matMenuTriggerFor]="targetSymptom" aria-label="Symptoms">
+			<mat-icon>spa</mat-icon>
+		</button>
+	</ng-template>
 	<p class="targetSymptomKey">{{ globalService.symptomMap.get(globalService.targetSymptomKey) }}</p>
 	<mat-menu #targetSymptom="matMenu">
-		<button mat-menu-item *ngFor="let symptom of symptoms" [value]="symptom.key" (click)="globalService.targetSymptomKey = symptom.key">
+		<button mat-menu-item *ngFor="let symptom of symptoms" [value]="symptom.key"
+			(click)="globalService.targetSymptomKey = symptom.key">
 			{{ symptom.label }}</button>
 	</mat-menu>
 	<button mat-icon-button id="menu-icon-settings" class="menu-icon" routerLink="/settings" aria-label="Settings">
-        <mat-icon>settings</mat-icon>
+		<mat-icon>settings</mat-icon>
 	</button>
 </mat-toolbar>
 

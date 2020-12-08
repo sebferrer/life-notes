@@ -86,5 +86,10 @@
     "TIMELINE_ADD_EVENT_SNACKBAR": "Évènement de type {{ type }} {{ action }}",
     "TIMELINE_DELETE_EVENT_SNACKBAR": "Lévènement de type {{ type }} a été supprimé",
     "TIMELINE_NO_SYMPTOMS_WARNING_1": "Vous n'avez encore enregistré aucun symptôme.",
-    "TIMELINE_NO_SYMPTOMS_WARNING_2": "Appuyez sur le bouton \"+\" pour accéder à votre liste de symptômes et en ajouter un."
+    "TIMELINE_NO_SYMPTOMS_WARNING_2": "Appuyez sur le bouton \"+\" pour accéder à votre liste de symptômes et en ajouter un.",
+    "NO_SYMPTOM_WARNING_DIALOG_TITLE": "Aucun symptôme",
+    "CREATE_SYMPTOM_BUTTON": "Créer votre premier symptôme",
+    "NO_SYMPTOM_WARNING_DIALOG_CONTENT_1": "Life Notes fonctionne en analysant et suivant vos symptômes.",
+    "NO_SYMPTOM_WARNING_DIALOG_CONTENT_2": "En utilisant cette application, vous ajouterez quotidiennement l'évolution de vos symptômes, mais vous devez dans un premier temps les créer. Vous n'avez actuellement aucun symptôme enregistré, donc pour utiliser correctement cette application, la première chose à faire est d'ajouter les symptômes que vous souhaitez surveiller (par exemple : maux de tête, maux d'estomac, etc...)",
+    "SYMPTOMS_TITLE": "Votre liste de symptômes"
 }
