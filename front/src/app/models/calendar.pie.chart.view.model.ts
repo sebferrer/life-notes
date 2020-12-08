@@ -1,7 +1,4 @@
-import { ISymptomOverview, ISymptomLog, ISymptom } from './symptom.model';
 import { DayOverviewViewModel } from 'src/app/models/day.overview.view.model';
-import { Observable } from 'rxjs';
-import { DayViewModel } from './day.view.model';
 import { AChart } from './chart.model';
 
 export class CalendarPieChartViewModel extends AChart {
