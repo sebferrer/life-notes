@@ -89,6 +89,9 @@ export class SymptomsComponent implements OnInit {
 			this.symptomsService.deleteSymptom(key).subscribe(() => {
 				this.symptoms = this.symptoms.filter(symptom => symptom.key !== key);
 				this.symptoms$.next(this.symptoms);
+				if (this.globalService.targetSymptomKey === key) {
+					this.globalService.targetSymptomKey = null;
+				}
 				this.globalService.loadSymptoms();
 				this.app.updateSymptoms();
 			});

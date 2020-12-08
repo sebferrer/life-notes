@@ -50,7 +50,7 @@ export class CalendarComponent implements OnInit {
 	}
 
 	public organizeSymptoms(symptoms: ISymptom[]): ISymptom[] {
-		if (symptoms.length === 0) {
+		if (symptoms.length === 0 || this.globalService.targetSymptomKey == null) {
 			return symptoms;
 		}
 		const targetSymptom = this.symptoms.find(symptom => symptom.key === this.globalService.targetSymptomKey);

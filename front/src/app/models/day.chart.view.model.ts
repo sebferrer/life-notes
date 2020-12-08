@@ -38,7 +38,7 @@ export class DayChartViewModel extends AChart {
 			dayContent.symptoms.forEach(symptom => {
 				symptom.logs.forEach(
 					symptomLog => {
-						const symptomLabel = symptomMap.get(symptom.key);
+						const symptomLabel = symptomMap.get(symptom.key) == null ? symptom.key : symptomMap.get(symptom.key);
 						if (!this.columns.includes(symptomLabel)) {
 							this.columns.push(symptomLabel);
 						}
