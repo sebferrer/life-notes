@@ -7,6 +7,7 @@ import { IDetailedDate } from 'src/app/models/detailed.date';
 import { GlobalService } from 'src/app/infra/global.service';
 import { CalendarPieChartViewModel } from 'src/app/models/calendar.pie.chart.view.model';
 import { ISymptom } from 'src/app/models/symptom.model';
+import { SleepChartViewModel } from 'src/app/models/sleep.chart.view.model';
 
 @Component({
 	selector: 'app-calendar',
@@ -26,12 +27,14 @@ export class CalendarComponent implements OnInit {
 	public monthMap: Map<number, string>;
 	public today: IDetailedDate;
 	public pieCharts: Map<string, CalendarPieChartViewModel>;
+	public sleepChart: SleepChartViewModel;
 
 	constructor(
 		public globalService: GlobalService,
 		private daysService: DaysService
 	) {
 		this.pieCharts = new Map<string, CalendarPieChartViewModel>();
+		this.sleepChart = new SleepChartViewModel('LineChart', 'Month sleep');
 		this.symptoms = new Array<ISymptom>();
 		this.symptoms$ = new BehaviorSubject<ISymptom[]>(new Array<ISymptom>());
 		this.overviews = new Array<DayOverviewViewModel>();
@@ -74,6 +77,7 @@ export class CalendarComponent implements OnInit {
 				this.pieCharts.get(symptom.key).update(this.overviews);
 			});
 		})
+		this.sleepChart.update(this.overviews);
 	}
 
 	public updateCalendar(month: number, year: number) {

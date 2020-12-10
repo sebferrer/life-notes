@@ -35,9 +35,13 @@
 		</div>
 
 		<div class="charts">
-			<google-chart *ngFor="let symptom of organizeSymptoms(symptoms)" class="chart" [title]="symptomMap.get(symptom.key)"
-				[type]="pieCharts.get(symptom.key).type" [data]="pieCharts.get(symptom.key).data"
-				[columns]="pieCharts.get(symptom.key).columns" [options]="pieCharts.get(symptom.key).options">
+			<google-chart *ngFor="let symptom of organizeSymptoms(symptoms)" class="chart"
+				[title]="symptomMap.get(symptom.key)" [type]="pieCharts.get(symptom.key).type"
+				[data]="pieCharts.get(symptom.key).data" [columns]="pieCharts.get(symptom.key).columns"
+				[options]="pieCharts.get(symptom.key).options">
+			</google-chart>
+			<google-chart class="chart" [title]="sleepChart.title" [type]="sleepChart.type" [data]="sleepChart.data"
+				[columns]="sleepChart.columns" [options]="sleepChart.options">
 			</google-chart>
 		</div>
 
