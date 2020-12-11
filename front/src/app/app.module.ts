@@ -45,6 +45,7 @@ import { InfiniteScrollComponent } from './ui/infinite-scroll';
 import { File as IonicFile } from '@ionic-native/file/ngx';
 import { GoogleChartsModule } from 'angular-google-charts';
 import { DialogNoSymptomWarningComponent } from './ui/dialog-no-symptom-warning';
+import { SleepChartComponent } from './ui/sleep-chart';
 
 @NgModule({
 	declarations: [
@@ -55,6 +56,7 @@ import { DialogNoSymptomWarningComponent } from './ui/dialog-no-symptom-warning'
 		TimelineComponent,
 		SymptomsComponent,
 		SettingsComponent,
+		SleepChartComponent,
 		DialogAddEventComponent,
 		DialogDeleteEventComponent,
 		DialogShowEventComponent,
