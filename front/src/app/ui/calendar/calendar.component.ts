@@ -8,6 +8,7 @@ import { GlobalService } from 'src/app/infra/global.service';
 import { CalendarPieChartViewModel } from 'src/app/models/calendar.pie.chart.view.model';
 import { ISymptom } from 'src/app/models/symptom.model';
 import { SleepChartViewModel } from 'src/app/models/sleep.chart.view.model';
+import { TranslocoService } from '@ngneat/transloco';
 
 @Component({
 	selector: 'app-calendar',
@@ -31,10 +32,11 @@ export class CalendarComponent implements OnInit {
 
 	constructor(
 		public globalService: GlobalService,
-		private daysService: DaysService
+		private daysService: DaysService,
+		public translocoService: TranslocoService
 	) {
 		this.pieCharts = new Map<string, CalendarPieChartViewModel>();
-		this.sleepChart = new SleepChartViewModel('LineChart', 'Month sleep');
+		this.sleepChart = new SleepChartViewModel('LineChart', 'MONTHLY_SLEEP', this.translocoService);
 		this.symptoms = new Array<ISymptom>();
 		this.symptoms$ = new BehaviorSubject<ISymptom[]>(new Array<ISymptom>());
 		this.overviews = new Array<DayOverviewViewModel>();

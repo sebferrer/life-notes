@@ -2,31 +2,47 @@ import { AChart } from './chart.model';
 import { DayOverviewViewModel } from './day.overview.view.model';
 import { timeToMinutes, formatMinutes } from '../util/time.util';
 import { IGChartTick } from './g.chart.tick.model';
+import { TranslocoService } from '@ngneat/transloco';
 
 export class SleepChartViewModel extends AChart {
 
 	private readonly MAX_MINUTES = 1440;
 	private readonly PIVOT_TIME = 900;
+	private translocoService: TranslocoService;
 
 	constructor(
 		type: string,
-		title: string
+		title: string,
+		translocoService: TranslocoService
 	) {
-		super(type, title);
+		super(type, translocoService.translate(title));
+		this.translocoService = translocoService;
 		this.options = {
 			legend: { position: 'bottom', alignment: 'start' },
+			/*curveType: 'function',*/
 			vAxis: {
-				title: 'Time',
+				title: this.translocoService.translate('TIME'),
 				gridlineColor: '#fff',
 				viewWindow: {}
+			},
+			tooltip: {
+
 			}
 		};
-		this.columns = ['Day', 'Bed time'];
+		this.columns = [
+			this.translocoService.translate('DAY'),
+			this.translocoService.translate('BED_TIME'),
+			{ type: 'string', role: 'tooltip' }
+		];
+	}
+
+	private formatTooltip(day: string, time: number): string {
+		return 'Day ' + day + '\n' + formatMinutes(time);
 	}
 
 	public update(overviews: DayOverviewViewModel[]): void {
-		let min = -120;
-		let max = 240;
+		let min = -240;
+		let max = 120;
 		const ticks = Array<IGChartTick>();
 		this.data = new Array<Array<string | number>>();
 		overviews.forEach(overview => {
@@ -35,9 +51,13 @@ export class SleepChartViewModel extends AChart {
 			if (bedTimeMinutes > this.PIVOT_TIME) {
 				bedTimeMinutes = -(this.MAX_MINUTES - bedTimeMinutes);
 			}
-			this.data.push([day, bedTimeMinutes]);
+			bedTimeMinutes = -bedTimeMinutes;
 			if (Number.isInteger(bedTimeMinutes)) {
-				ticks.push({ v: bedTimeMinutes, f: formatMinutes(bedTimeMinutes) });
+				this.data.push([day, bedTimeMinutes, this.formatTooltip(day, -bedTimeMinutes)]);
+				ticks.push({ v: bedTimeMinutes, f: formatMinutes(-bedTimeMinutes) });
+			}
+			else {
+				this.data.push([day, null, null]);
 			}
 			if (bedTimeMinutes < min) {
 				min = bedTimeMinutes;

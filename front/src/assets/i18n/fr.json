@@ -91,5 +91,8 @@
     "CREATE_SYMPTOM_BUTTON": "Créer votre premier symptôme",
     "NO_SYMPTOM_WARNING_DIALOG_CONTENT_1": "Life Notes fonctionne en analysant et suivant vos symptômes.",
     "NO_SYMPTOM_WARNING_DIALOG_CONTENT_2": "En utilisant cette application, vous ajouterez quotidiennement l'évolution de vos symptômes, mais vous devez dans un premier temps les créer. Vous n'avez actuellement aucun symptôme enregistré, donc pour utiliser correctement cette application, la première chose à faire est d'ajouter les symptômes que vous souhaitez surveiller (par exemple : maux de tête, maux d'estomac, etc...)",
-    "SYMPTOMS_TITLE": "Votre liste de symptômes"
+    "SYMPTOMS_TITLE": "Votre liste de symptômes",
+    "MONTHLY_SLEEP": "Votre sommeil ce mois-ci",
+    "BED_TIME": "Heure de coucher",
+    "DAY": "Jour"
 }
