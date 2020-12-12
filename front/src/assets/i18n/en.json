@@ -92,7 +92,12 @@
     "NO_SYMPTOM_WARNING_DIALOG_CONTENT_1": "Life Notes works using and monitoring your symptoms.",
     "NO_SYMPTOM_WARNING_DIALOG_CONTENT_2": "Using this app, you will daily add your symptoms evolution, but first, you have to create them. You currently have no registered symptoms, so in order to use this app correctly, the first thing you should do is to add the symptoms you'd like to minitor (e.g headache, stomachache, etc...)",
     "SYMPTOMS_TITLE": "Your symptom list",
-    "MONTHLY_SLEEP": "Your sleep this month",
+    "MONTHLY_BEDTIME": "Your bed time this month",
+    "MONTHLY_WAKEUPTIME": "Your wake up time this month",
     "BED_TIME": "Bed time",
-    "DAY": "Day"
+    "WAKEUP_TIME": "Wake up time",
+    "DAY": "Day",
+    "MIN": "Min",
+    "MAX": "Max",
+    "AVG": "Avg"
 }

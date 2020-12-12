@@ -9,6 +9,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatListModule } from '@angular/material/list';
+import { MatTableModule } from '@angular/material/table';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -83,6 +84,7 @@ import { SleepChartComponent } from './ui/sleep-chart';
 		MatCardModule,
 		MatGridListModule,
 		MatListModule,
+		MatTableModule,
 		MatChipsModule,
 		MatDialogModule,
 		BrowserAnimationsModule,

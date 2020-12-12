@@ -4,7 +4,7 @@ import { timeToMinutes, formatMinutes } from '../util/time.util';
 import { IGChartTick } from './g.chart.tick.model';
 import { TranslocoService } from '@ngneat/transloco';
 
-export class SleepChartViewModel extends AChart {
+export class BedTimeChartViewModel extends AChart {
 
 	private readonly MAX_MINUTES = 1440;
 	private readonly PIVOT_TIME = 900;
@@ -15,7 +15,7 @@ export class SleepChartViewModel extends AChart {
 		title: string,
 		translocoService: TranslocoService
 	) {
-		super(type, translocoService.translate(title));
+		super(type, title);
 		this.translocoService = translocoService;
 		this.options = {
 			legend: { position: 'bottom', alignment: 'start' },
@@ -23,10 +23,8 @@ export class SleepChartViewModel extends AChart {
 			vAxis: {
 				title: this.translocoService.translate('TIME'),
 				gridlineColor: '#fff',
+				baselineColor: '#368AC6',
 				viewWindow: {}
-			},
-			tooltip: {
-
 			}
 		};
 		this.columns = [
@@ -37,14 +35,18 @@ export class SleepChartViewModel extends AChart {
 	}
 
 	private formatTooltip(day: string, time: number): string {
-		return 'Day ' + day + '\n' + formatMinutes(time);
+		return this.translocoService.translate('DAY') + ' ' + day + '\n' + formatMinutes(time);
 	}
 
 	public update(overviews: DayOverviewViewModel[]): void {
-		let min = -240;
-		let max = 120;
+		let chartMin = 0;
+		let chartMax = 120;
 		const ticks = Array<IGChartTick>();
 		this.data = new Array<Array<string | number>>();
+		let min = this.MAX_MINUTES;
+		let max = -this.MAX_MINUTES;
+		let timeSum = 0;
+		this.nbData = 0;
 		overviews.forEach(overview => {
 			const day = overview.detailedDate.day.toString();
 			let bedTimeMinutes = timeToMinutes(overview.bedTime);
@@ -55,18 +57,33 @@ export class SleepChartViewModel extends AChart {
 			if (Number.isInteger(bedTimeMinutes)) {
 				this.data.push([day, bedTimeMinutes, this.formatTooltip(day, -bedTimeMinutes)]);
 				ticks.push({ v: bedTimeMinutes, f: formatMinutes(-bedTimeMinutes) });
+				this.nbData++;
+
+				if (bedTimeMinutes < min) {
+					min = bedTimeMinutes;
+				}
+				if (bedTimeMinutes > max) {
+					max = bedTimeMinutes;
+				}
+				timeSum += bedTimeMinutes;
 			}
 			else {
 				this.data.push([day, null, null]);
 			}
-			if (bedTimeMinutes < min) {
-				min = bedTimeMinutes;
-			} else if (bedTimeMinutes > max) {
-				max = bedTimeMinutes;
+			if (bedTimeMinutes < chartMin) {
+				chartMin = bedTimeMinutes;
+			} else if (bedTimeMinutes > chartMax) {
+				chartMax = bedTimeMinutes;
 			}
 		});
-		this.options.vAxis.viewWindow.min = min;
-		this.options.vAxis.viewWindow.max = max;
+		this.minimum = formatMinutes(-max);
+		this.maximum = formatMinutes(-min);
+		this.average = formatMinutes(-Math.trunc(timeSum / this.nbData));
+		ticks.push({ v: chartMin, f: formatMinutes(-chartMin) });
+		ticks.push({ v: chartMax, f: formatMinutes(-chartMax) });
+		ticks.push({ v: 0, f: formatMinutes(0) });
+		this.options.vAxis.viewWindow.min = chartMin;
+		this.options.vAxis.viewWindow.max = chartMax;
 		this.options.vAxis.ticks = ticks;
 		this.data.sort((a, b) => (a as any) - (b as any));
 	}

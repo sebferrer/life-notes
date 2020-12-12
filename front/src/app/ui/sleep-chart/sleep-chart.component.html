@@ -1,3 +1,44 @@
-<google-chart class="chart" [title]="sleepChart.title" [type]="sleepChart.type" [data]="sleepChart.data"
-    [columns]="sleepChart.columns" [options]="sleepChart.options">
-</google-chart>
+<div class="chart-container">
+    <label class="chart-label" transloco="MONTHLY_WAKEUPTIME"></label>
+    <google-chart *ngIf="wakeUpChart.nbData > 0" class="chart" [title]="wakeUpChart.title" [type]="wakeUpChart.type"
+        [data]="wakeUpChart.data" [columns]="wakeUpChart.columns" [options]="wakeUpChart.options">
+    </google-chart>
+    <table mat-table [dataSource]="getWakeUpDataSource()" class="mat-elevation-z0">
+        <ng-container matColumnDef="min">
+            <th mat-header-cell *matHeaderCellDef transloco="MIN"></th>
+            <td mat-cell *matCellDef="let element"> {{ element.min }} </td>
+        </ng-container>
+        <ng-container matColumnDef="avg">
+            <th mat-header-cell *matHeaderCellDef transloco="AVG"></th>
+            <td mat-cell *matCellDef="let element"> {{ element.avg }} </td>
+        </ng-container>
+        <ng-container matColumnDef="max">
+            <th mat-header-cell *matHeaderCellDef transloco="MAX"> Max </th>
+            <td mat-cell *matCellDef="let element"> {{ element.max }} </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+</div>
+<div class="chart-container">
+    <label class="chart-label" transloco="MONTHLY_BEDTIME"></label>
+    <google-chart *ngIf="bedTimeChart.nbData > 0" class="chart" [title]="bedTimeChart.title" [type]="bedTimeChart.type"
+        [data]="bedTimeChart.data" [columns]="bedTimeChart.columns" [options]="bedTimeChart.options">
+    </google-chart>
+    <table mat-table [dataSource]="getBedTimeDataSource()" class="mat-elevation-z0">
+        <ng-container matColumnDef="min">
+            <th mat-header-cell *matHeaderCellDef transloco="MIN"></th>
+            <td mat-cell *matCellDef="let element"> {{ element.min }} </td>
+        </ng-container>
+        <ng-container matColumnDef="avg">
+            <th mat-header-cell *matHeaderCellDef transloco="AVG"></th>
+            <td mat-cell *matCellDef="let element"> {{ element.avg }} </td>
+        </ng-container>
+        <ng-container matColumnDef="max">
+            <th mat-header-cell *matHeaderCellDef transloco="MAX"> Max </th>
+            <td mat-cell *matCellDef="let element"> {{ element.max }} </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+</div>

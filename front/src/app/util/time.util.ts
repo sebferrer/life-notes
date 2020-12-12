@@ -9,6 +9,9 @@ export function timeToSeconds(time: string, separator?: string): number {
 }
 
 export function formatMinutes(minutes: number): string {
+	if (minutes === 1440) {
+		return '';
+	}
 	const hours = Math.trunc(minutes / 60);
 	const remains = minutes % 60;
 	if (minutes >= 0) {
@@ -16,5 +19,8 @@ export function formatMinutes(minutes: number): string {
 		const fRemains = remains > 9 ? remains.toString() : '0' + remains;
 		return fHours + ':' + fRemains;
 	}
-	return formatMinutes(1440 + minutes);
+	if (minutes > -1440) {
+		return formatMinutes(1440 + minutes);
+	}
+	return '';
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Subject, Observable, BehaviorSubject } from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
 import { DaysService } from 'src/app/infra';
 import { getDetailedDate } from 'src/app/util/date.utils';
 import { DayOverviewViewModel } from 'src/app/models/day.overview.view.model';
@@ -7,8 +7,9 @@ import { IDetailedDate } from 'src/app/models/detailed.date';
 import { GlobalService } from 'src/app/infra/global.service';
 import { CalendarPieChartViewModel } from 'src/app/models/calendar.pie.chart.view.model';
 import { ISymptom } from 'src/app/models/symptom.model';
-import { SleepChartViewModel } from 'src/app/models/sleep.chart.view.model';
 import { TranslocoService } from '@ngneat/transloco';
+import { BedTimeChartViewModel } from 'src/app/models/bedtime.chart.view.model';
+import { WakeUpChartViewModel } from 'src/app/models/wakeup.chart.view.model';
 
 @Component({
 	selector: 'app-calendar',
@@ -28,7 +29,8 @@ export class CalendarComponent implements OnInit {
 	public monthMap: Map<number, string>;
 	public today: IDetailedDate;
 	public pieCharts: Map<string, CalendarPieChartViewModel>;
-	public sleepChart: SleepChartViewModel;
+	public bedTimeChart: BedTimeChartViewModel;
+	public wakeUpChart: WakeUpChartViewModel;
 
 	constructor(
 		public globalService: GlobalService,
@@ -36,7 +38,8 @@ export class CalendarComponent implements OnInit {
 		public translocoService: TranslocoService
 	) {
 		this.pieCharts = new Map<string, CalendarPieChartViewModel>();
-		this.sleepChart = new SleepChartViewModel('LineChart', 'MONTHLY_SLEEP', this.translocoService);
+		this.bedTimeChart = new BedTimeChartViewModel('LineChart', '', this.translocoService);
+		this.wakeUpChart = new WakeUpChartViewModel('LineChart', '', this.translocoService);
 		this.symptoms = new Array<ISymptom>();
 		this.symptoms$ = new BehaviorSubject<ISymptom[]>(new Array<ISymptom>());
 		this.overviews = new Array<DayOverviewViewModel>();
@@ -79,7 +82,8 @@ export class CalendarComponent implements OnInit {
 				this.pieCharts.get(symptom.key).update(this.overviews);
 			});
 		})
-		this.sleepChart.update(this.overviews);
+		this.bedTimeChart.update(this.overviews);
+		this.wakeUpChart.update(this.overviews);
 	}
 
 	public updateCalendar(month: number, year: number) {
