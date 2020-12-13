@@ -1,9 +1,9 @@
 import { ISymptomOverview, ISymptomLog, ISymptom } from './symptom.model';
 import { Observable } from 'rxjs';
 import { DayViewModel } from './day.view.model';
-import { AChart } from './chart.model';
+import { AChartViewModel } from './chart.view.model';
 
-export class DayChartViewModel extends AChart {
+export class DayChartViewModel extends AChartViewModel {
 	private timeSymptoms: Map<string, ISymptomOverview[]>;
 	private timeSymptomsOrder: string[];
 	private lastSymptomMap: Map<string, ISymptomLog>;

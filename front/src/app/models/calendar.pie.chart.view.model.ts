@@ -1,7 +1,7 @@
 import { DayOverviewViewModel } from 'src/app/models/day.overview.view.model';
-import { AChart } from './chart.model';
+import { AChartViewModel } from './chart.view.model';
 
-export class CalendarPieChartViewModel extends AChart {
+export class CalendarPieChartViewModel extends AChartViewModel {
 
 	private symptomKey: string;
 	private symptomPainMap: Map<number, number>;

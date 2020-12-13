@@ -1,13 +1,16 @@
-import { AChart } from './chart.model';
+import { AChartViewModel } from './chart.view.model';
 import { DayOverviewViewModel } from './day.overview.view.model';
 import { timeToMinutes, formatMinutes, formatMinutesInDuration } from '../util/time.util';
 import { IGChartTick } from './g.chart.tick.model';
 import { TranslocoService } from '@ngneat/transloco';
 
-export class SleepChartViewModel extends AChart {
+export class SleepChartViewModel extends AChartViewModel {
 
 	private readonly MAX_MINUTES = 1440;
 	private readonly PIVOT_TIME = 900;
+	private readonly BASE = 480;
+	private readonly CHART_MAX_DEFAULT = 540;
+	private readonly CHART_MIN_DEFAULT = 360;
 	private translocoService: TranslocoService;
 	constructor(
 		type: string,
@@ -21,7 +24,7 @@ export class SleepChartViewModel extends AChart {
 			vAxis: {
 				title: this.translocoService.translate('TIME'),
 				gridlineColor: '#fff',
-				baseline: 480,
+				baseline: this.BASE,
 				baselineColor: '#368AC6',
 				viewWindow: {}
 			}
@@ -37,20 +40,9 @@ export class SleepChartViewModel extends AChart {
 		return this.translocoService.translate('DAY') + ' ' + day + '\n' + formatMinutesInDuration(time);
 	}
 
-	private removeBaseNeighbors(ticks: Array<IGChartTick>, base: number): Array<IGChartTick> {
-		let newTicks = [...ticks];
-		const socialDistance = 60;
-		for (const tick of ticks) {
-			if (tick.v > base - socialDistance && tick.v < base + socialDistance) {
-				newTicks = newTicks.filter(t => t.v !== tick.v);
-			}
-		}
-		return newTicks;
-	}
-
 	public update(overviews: DayOverviewViewModel[], previousOverviews: DayOverviewViewModel[]): void {
-		let chartMax = 540;
-		let chartMin = 360;
+		let chartMax = this.CHART_MAX_DEFAULT;
+		let chartMin = this.CHART_MIN_DEFAULT;
 		let ticks = Array<IGChartTick>();
 		this.data = new Array<Array<string | number>>();
 		let min = this.MAX_MINUTES;
@@ -103,8 +95,8 @@ export class SleepChartViewModel extends AChart {
 		this.average = formatMinutes(Math.trunc(timeSum / this.nbData));
 		ticks.push({ v: chartMin, f: formatMinutesInDuration(-chartMin) });
 		ticks.push({ v: chartMax, f: formatMinutesInDuration(-chartMax) });
-		ticks = this.removeBaseNeighbors(ticks, 480);
-		ticks.push({ v: 480, f: formatMinutesInDuration(480) });
+		ticks = this.removeBaseNeighbors(ticks, this.BASE);
+		ticks.push({ v: this.BASE, f: formatMinutesInDuration(this.BASE) });
 		this.options.vAxis.viewWindow.min = chartMin;
 		this.options.vAxis.viewWindow.max = chartMax;
 		this.options.vAxis.ticks = ticks;

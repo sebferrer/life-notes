@@ -1,9 +1,9 @@
 import { ISymptomOverview, ISymptomLog, ISymptom } from './symptom.model';
 import { Observable } from 'rxjs';
 import { DayViewModel } from './day.view.model';
-import { AChart } from './chart.model';
+import { AChartViewModel } from './chart.view.model';
 
-export class DayPieChartViewModel extends AChart {
+export class DayPieChartViewModel extends AChartViewModel {
 	private symptomKey: string;
 	private readonly NB_MINUTES_DAY = 1440;
 	private symptomPainMap: Map<number, number>;

@@ -1,13 +1,16 @@
-import { AChart } from './chart.model';
+import { AChartViewModel } from './chart.view.model';
 import { DayOverviewViewModel } from './day.overview.view.model';
 import { timeToMinutes, formatMinutes } from '../util/time.util';
 import { IGChartTick } from './g.chart.tick.model';
 import { TranslocoService } from '@ngneat/transloco';
 
-export class BedTimeChartViewModel extends AChart {
+export class BedTimeChartViewModel extends AChartViewModel {
 
 	private readonly MAX_MINUTES = 1440;
 	private readonly PIVOT_TIME = 900;
+	private readonly BASE = 0;
+	private readonly CHART_MAX_DEFAULT = 120;
+	private readonly CHART_MIN_DEFAULT = 0;
 	private translocoService: TranslocoService;
 
 	constructor(
@@ -39,9 +42,9 @@ export class BedTimeChartViewModel extends AChart {
 	}
 
 	public update(overviews: DayOverviewViewModel[]): void {
-		let chartMin = 0;
-		let chartMax = 120;
-		const ticks = Array<IGChartTick>();
+		let chartMax = this.CHART_MAX_DEFAULT;
+		let chartMin = this.CHART_MIN_DEFAULT;
+		let ticks = Array<IGChartTick>();
 		this.data = new Array<Array<string | number>>();
 		let min = this.MAX_MINUTES;
 		let max = -this.MAX_MINUTES;
@@ -83,7 +86,8 @@ export class BedTimeChartViewModel extends AChart {
 		this.average = formatMinutes(-Math.trunc(timeSum / this.nbData));
 		ticks.push({ v: chartMin, f: formatMinutes(-chartMin) });
 		ticks.push({ v: chartMax, f: formatMinutes(-chartMax) });
-		ticks.push({ v: 0, f: formatMinutes(0) });
+		ticks = this.removeBaseNeighbors(ticks, this.BASE);
+		ticks.push({ v: this.BASE, f: formatMinutes(this.BASE) });
 		this.options.vAxis.viewWindow.min = chartMin;
 		this.options.vAxis.viewWindow.max = chartMax;
 		this.options.vAxis.ticks = ticks;
