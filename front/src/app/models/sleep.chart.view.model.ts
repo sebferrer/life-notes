@@ -10,7 +10,7 @@ export class SleepChartViewModel extends AChartViewModel {
 	private readonly PIVOT_TIME = 900;
 	private readonly BASE = 480;
 	private readonly CHART_MAX_DEFAULT = 540;
-	private readonly CHART_MIN_DEFAULT = 360;
+	private readonly CHART_MIN_DEFAULT = 420;
 	private translocoService: TranslocoService;
 	constructor(
 		type: string,
@@ -93,8 +93,8 @@ export class SleepChartViewModel extends AChartViewModel {
 		this.minimum = formatMinutes(-min);
 		this.maximum = formatMinutes(-max);
 		this.average = formatMinutes(Math.trunc(timeSum / this.nbData));
-		ticks.push({ v: chartMin, f: formatMinutesInDuration(-chartMin) });
-		ticks.push({ v: chartMax, f: formatMinutesInDuration(-chartMax) });
+		ticks.push({ v: chartMin, f: formatMinutesInDuration(chartMin) });
+		ticks.push({ v: chartMax, f: formatMinutesInDuration(chartMax) });
 		ticks = this.removeBaseNeighbors(ticks, this.BASE);
 		ticks.push({ v: this.BASE, f: formatMinutesInDuration(this.BASE) });
 		this.options.vAxis.viewWindow.min = chartMin;
