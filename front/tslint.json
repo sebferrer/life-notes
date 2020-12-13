@@ -93,11 +93,10 @@
 		"no-bitwise": false,
 		"variable-name": {
 			"options": [
-				"ban-keywords",
-				"check-format",
-				"allow-leading-underscore"
+				"ban-keywords"
 			]
-		}
+		},
+		"prefer-for-of": false
 	},
 	"rulesDirectory": [
 		"codelyzer"

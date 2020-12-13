@@ -53,7 +53,9 @@ export class BedTimeChartViewModel extends AChart {
 			if (bedTimeMinutes > this.PIVOT_TIME) {
 				bedTimeMinutes = -(this.MAX_MINUTES - bedTimeMinutes);
 			}
-			bedTimeMinutes = -bedTimeMinutes;
+			if (bedTimeMinutes != null) {
+				bedTimeMinutes = -bedTimeMinutes;
+			}
 			if (Number.isInteger(bedTimeMinutes)) {
 				this.data.push([day, bedTimeMinutes, this.formatTooltip(day, -bedTimeMinutes)]);
 				ticks.push({ v: bedTimeMinutes, f: formatMinutes(-bedTimeMinutes) });

@@ -53,7 +53,9 @@ export class WakeUpChartViewModel extends AChart {
 			if (wakeUpTimeMinutes > this.PIVOT_TIME) {
 				wakeUpTimeMinutes = -(this.MAX_MINUTES - wakeUpTimeMinutes);
 			}
-			wakeUpTimeMinutes = -wakeUpTimeMinutes;
+			if (wakeUpTimeMinutes != null) {
+				wakeUpTimeMinutes = -wakeUpTimeMinutes;
+			}
 			if (Number.isInteger(wakeUpTimeMinutes)) {
 				this.data.push([day, wakeUpTimeMinutes, this.formatTooltip(day, -wakeUpTimeMinutes)]);
 				ticks.push({ v: wakeUpTimeMinutes, f: formatMinutes(-wakeUpTimeMinutes) });

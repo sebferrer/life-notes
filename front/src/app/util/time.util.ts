@@ -1,4 +1,7 @@
 export function timeToMinutes(time: string, separator?: string): number {
+	if (time == null) {
+		return null;
+	}
 	separator = separator || ':';
 	const splittedTime = time.split(separator);
 	return parseInt(splittedTime[0], 10) * 60 + parseInt(splittedTime[1], 10);
@@ -9,7 +12,7 @@ export function timeToSeconds(time: string, separator?: string): number {
 }
 
 export function formatMinutes(minutes: number): string {
-	if (minutes === 1440) {
+	if (minutes == null || minutes === 1440) {
 		return '';
 	}
 	const hours = Math.trunc(minutes / 60);
@@ -23,4 +26,13 @@ export function formatMinutes(minutes: number): string {
 		return formatMinutes(1440 + minutes);
 	}
 	return '';
+}
+
+export function formatMinutesInDuration(minutes: number): string {
+	const formattedSplitted = formatMinutes(minutes).split(':');
+	let hours = formattedSplitted[0];
+	hours = hours.length > 1 && hours[0] === '0' ? hours.substring(1) : hours;
+	let mins = formattedSplitted[1];
+	mins = mins.length > 1 && mins[0] === '0' ? mins.substring(1) : mins;
+	return hours + 'h,' + mins + 'min';
 }

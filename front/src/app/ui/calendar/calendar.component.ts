@@ -10,6 +10,7 @@ import { ISymptom } from 'src/app/models/symptom.model';
 import { TranslocoService } from '@ngneat/transloco';
 import { BedTimeChartViewModel } from 'src/app/models/bedtime.chart.view.model';
 import { WakeUpChartViewModel } from 'src/app/models/wakeup.chart.view.model';
+import { SleepChartViewModel } from 'src/app/models/sleep.chart.view.model';
 
 @Component({
 	selector: 'app-calendar',
@@ -20,6 +21,8 @@ export class CalendarComponent implements OnInit {
 
 	public overviews: DayOverviewViewModel[];
 	public overviews$: Subject<DayOverviewViewModel[]>;
+	public previousOverviews: DayOverviewViewModel[];
+	public previousOverviews$: Subject<DayOverviewViewModel[]>;
 	public symptoms: ISymptom[];
 	public symptoms$: BehaviorSubject<ISymptom[]>;
 	public month: number;
@@ -31,6 +34,7 @@ export class CalendarComponent implements OnInit {
 	public pieCharts: Map<string, CalendarPieChartViewModel>;
 	public bedTimeChart: BedTimeChartViewModel;
 	public wakeUpChart: WakeUpChartViewModel;
+	public sleepChart: SleepChartViewModel;
 
 	constructor(
 		public globalService: GlobalService,
@@ -40,10 +44,13 @@ export class CalendarComponent implements OnInit {
 		this.pieCharts = new Map<string, CalendarPieChartViewModel>();
 		this.bedTimeChart = new BedTimeChartViewModel('LineChart', '', this.translocoService);
 		this.wakeUpChart = new WakeUpChartViewModel('LineChart', '', this.translocoService);
+		this.sleepChart = new SleepChartViewModel('LineChart', '', this.translocoService);
 		this.symptoms = new Array<ISymptom>();
 		this.symptoms$ = new BehaviorSubject<ISymptom[]>(new Array<ISymptom>());
 		this.overviews = new Array<DayOverviewViewModel>();
 		this.overviews$ = new Subject<DayOverviewViewModel[]>();
+		this.previousOverviews = new Array<DayOverviewViewModel>();
+		this.previousOverviews$ = new Subject<DayOverviewViewModel[]>();
 	}
 
 	public ngOnInit(): void {
@@ -84,20 +91,29 @@ export class CalendarComponent implements OnInit {
 		})
 		this.bedTimeChart.update(this.overviews);
 		this.wakeUpChart.update(this.overviews);
+		this.sleepChart.update(this.overviews, this.previousOverviews);
 	}
 
 	public updateCalendar(month: number, year: number) {
 		this.loadSymptoms();
 		this.daysService.getMonthDaysOverviews(month, year).subscribe(
 			days => {
-				this.overviews = new Array<DayOverviewViewModel>();
-				days.forEach(day => {
-					this.overviews.push(new DayOverviewViewModel(day));
-				});
-				this.overviews$.next(this.overviews);
-				this.updateCharts();
-			}
-		);
+				this.daysService.getMonthDaysOverviews(month - 1, year).subscribe(
+					previousDays => {
+						this.overviews = new Array<DayOverviewViewModel>();
+						days.forEach(day => {
+							this.overviews.push(new DayOverviewViewModel(day));
+						});
+						this.previousOverviews = new Array<DayOverviewViewModel>();
+						previousDays.forEach(day => {
+							this.previousOverviews.push(new DayOverviewViewModel(day));
+						});
+
+						this.overviews$.next(this.overviews);
+						this.previousOverviews$.next(this.previousOverviews);
+						this.updateCharts();
+					});
+			});
 	}
 
 	public previous() {
