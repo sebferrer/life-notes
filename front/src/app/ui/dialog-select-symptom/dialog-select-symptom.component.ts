@@ -7,7 +7,7 @@ export interface IDialogData {
 }
 
 @Component({
-	selector: 'app-select-symptom-confirm',
+	selector: 'app-select-symptom',
 	templateUrl: 'dialog-select-symptom.component.html'
 })
 export class DialogSelectSymptomComponent {

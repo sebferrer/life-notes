@@ -101,5 +101,8 @@
     "DAY": "Jour",
     "MIN": "Minimum",
     "MAX": "Maximum",
-    "AVG": "Moyenne"
+    "AVG": "Moyenne",
+    "LOAD_AUTO_SAVE": "Charger la dernière sauvegarde automatique",
+    "LOAD_MANUAL_SAVE": "Charger la dernière sauvegarde manuelle",
+    "LOAD_WEB_SAVE": "Parcourir"
 }

@@ -101,5 +101,8 @@
     "DAY": "Day",
     "MIN": "Min",
     "MAX": "Max",
-    "AVG": "Avg"
+    "AVG": "Avg",
+    "LOAD_AUTO_SAVE": "Load last auto save",
+    "LOAD_MANUAL_SAVE": "Load last manual save",
+    "LOAD_WEB_SAVE": "Browse"
 }

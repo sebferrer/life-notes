@@ -49,6 +49,7 @@ import { DialogNoSymptomWarningComponent } from './ui/dialog-no-symptom-warning'
 import { SleepChartComponent } from './ui/sleep-chart';
 import { BackupService } from './infra/backup.service';
 import { DialogSelectSymptomComponent } from './ui/dialog-select-symptom';
+import { DialogSelectBackupComponent } from './ui/dialog-select-backup';
 
 @NgModule({
 	declarations: [
@@ -69,6 +70,7 @@ import { DialogSelectSymptomComponent } from './ui/dialog-select-symptom';
 		DialogImportConfirmComponent,
 		DialogNoSymptomWarningComponent,
 		DialogSelectSymptomComponent,
+		DialogSelectBackupComponent,
 		BottomSheetAddEventComponent,
 
 		// Helpers

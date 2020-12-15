@@ -72,7 +72,7 @@
             <div class="mat-expansion-panel-content">
                 <div class="import-export-buttons-container">
                     <mat-selection-list multiple="false">
-                        <mat-list-option (click)="fileClickFire()">
+                        <mat-list-option (click)="importData()">
                             <div class="list-icon"><mat-icon>dynamic_feed</mat-icon></div>
                             <div class="list-item-text"><p>{{ "IMPORT" | transloco }}</p></div>
                         </mat-list-option>
@@ -86,7 +86,7 @@
                         </mat-list-option-->
                     </mat-selection-list>
                 </div>
-                <input type="file" id="file-import" (change)="importData($event)">
+                <input type="file" id="file-import" (change)="importDataWeb($event)">
             </div>
 
         </mat-expansion-panel>

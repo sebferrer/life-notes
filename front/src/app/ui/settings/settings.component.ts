@@ -7,7 +7,7 @@ import { ImporterExporterService, SettingsService } from 'src/app/infra';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DialogImportConfirmComponent } from '../dialog-import-confirm';
-import { AppComponent } from 'src/app/app.component';
+import { DialogSelectBackupComponent } from '../dialog-select-backup';
 
 @Component({
 	selector: 'app-settings',
@@ -21,7 +21,6 @@ export class SettingsComponent implements OnInit {
 	public selectedLanguage: string;
 
 	constructor(
-		private app: AppComponent,
 		private globalService: GlobalService,
 		private translocoService: TranslocoService,
 		private importerExporterService: ImporterExporterService,
@@ -52,7 +51,7 @@ export class SettingsComponent implements OnInit {
 		fileInput.click();
 	}
 
-	public importData(event: any) {
+	public importDataWeb(event: any): void {
 		this.dialog.open(DialogImportConfirmComponent, {
 			autoFocus: false,
 			width: '20rem',
@@ -61,11 +60,44 @@ export class SettingsComponent implements OnInit {
 			if (response == null || response.answer !== 'yes') {
 				return;
 			}
-			this.importerExporterService.importData(event).subscribe(() => {
-				this.app.updateSymptoms();
-			});
+			this.importerExporterService.importDataWeb(event).subscribe(() => { });
 			this.snackBar.open(this.translocoService.translate('DATA_IMPORT_SNACKBAR'), 'Close',
 				{ duration: 2000 });
+		});
+	}
+
+	public importDataNative(auto?: boolean): void {
+		auto = auto || false;
+		this.dialog.open(DialogImportConfirmComponent, {
+			autoFocus: false,
+			width: '20rem',
+			panelClass: 'custom-modalbox'
+		}).afterClosed().subscribe(response => {
+			if (response == null || response.answer !== 'yes') {
+				return;
+			}
+			this.importerExporterService.importDataNative(auto).subscribe(() => { });
+			this.snackBar.open(this.translocoService.translate('DATA_IMPORT_SNACKBAR'), 'Close',
+				{ duration: 2000 });
+		});
+	}
+
+	public importData(): void {
+		this.dialog.open(DialogSelectBackupComponent, {
+			autoFocus: false,
+			width: '20rem',
+			panelClass: 'custom-modalbox'
+		}).afterClosed().subscribe(response => {
+			if (response == null) {
+				return;
+			}
+			if (response.answer === 'auto') {
+				this.importDataNative(true);
+			} else if (response.answer === 'manual') {
+				this.importDataNative();
+			} else if (response.answer === 'web') {
+				this.fileClickFire();
+			}
 		});
 	}
 

@@ -26,6 +26,7 @@
     "@angular/platform-browser-dynamic": "~11.0.2",
     "@angular/router": "~11.0.2",
     "@capacitor/core": "2.4.3",
+    "@ionic-native/android-permissions": "^5.30.0",
     "@ionic-native/core": "^5.0.0",
     "@ionic-native/file": "^5.30.0",
     "@ionic-native/splash-screen": "^5.0.0",
@@ -63,6 +64,7 @@
     "@types/pouchdb": "^6.4.0",
     "@types/pouchdb-core": "^7.0.6",
     "codelyzer": "^6.0.0",
+    "cordova-plugin-android-permissions": "^1.1.2",
     "cordova-plugin-device": "^2.0.2",
     "cordova-plugin-file": "^6.0.2",
     "cordova-plugin-ionic-keyboard": "^2.2.0",
@@ -93,7 +95,8 @@
         "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "27.+"
       },
       "cordova-plugin-ionic-keyboard": {},
-      "cordova-plugin-file": {}
+      "cordova-plugin-file": {},
+      "cordova-plugin-android-permissions": {}
     },
     "platforms": [
       "android"

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SettingsService } from './infra';
+import { SettingsService, ImporterExporterService } from './infra';
 import { Subject } from 'rxjs';
 import { ISymptom } from './models/symptom.model';
 import { GlobalService } from './infra/global.service';
@@ -22,17 +22,28 @@ export class AppComponent implements OnInit {
 		public globalService: GlobalService,
 		private translocoService: TranslocoService,
 		private settingsService: SettingsService,
-		private dialog: MatDialog,
+		private importerExporterService: ImporterExporterService,
+		private dialog: MatDialog
 	) {
 		this.symptoms = new Array<ISymptom>();
 		this.symptoms$ = new Subject<ISymptom[]>();
 	}
 
 	public ngOnInit(): void {
+		// this.androidPermissions.requestPermissions([this.androidPermissions.PERMISSION.MANAGE_EXTERNAL_STORAGE]);
+
 		this.updateSymptoms();
 		this.settingsService.initSettings().subscribe(res => { }, error => { });
 		this.initSettings();
+		// this.autoBackup();
 	}
+
+	/*public autoBackup(): void {
+		this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.MANAGE_EXTERNAL_STORAGE).then(
+			result => this.importerExporterService.exportData(true),
+			err => this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.MANAGE_EXTERNAL_STORAGE)
+		);
+	}*/
 
 	public updateSymptoms(): void {
 		this.globalService.symptoms$.subscribe(symptoms => {
