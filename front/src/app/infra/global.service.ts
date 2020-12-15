@@ -27,10 +27,11 @@ export class GlobalService {
 	private _symptomMap: Map<string, string>;
 	public get symptomMap(): Map<string, string> { return this._symptomMap; }
 
-	public loadSymptoms(): void {
+	public loadSymptoms(): Observable<ISymptom[]> {
 		this._symptomMap = new Map();
 		this._symptoms$ = this.symptomsService.getSymptoms();
 		this._symptoms$.subscribe(s => s.map(x => this._symptomMap.set(x.key, x.label)));
+		return this._symptoms$;
 	}
 
 	constructor(

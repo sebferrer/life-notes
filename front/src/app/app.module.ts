@@ -47,6 +47,8 @@ import { File as IonicFile } from '@ionic-native/file/ngx';
 import { GoogleChartsModule } from 'angular-google-charts';
 import { DialogNoSymptomWarningComponent } from './ui/dialog-no-symptom-warning';
 import { SleepChartComponent } from './ui/sleep-chart';
+import { BackupService } from './infra/backup.service';
+import { DialogSelectSymptomComponent } from './ui/dialog-select-symptom';
 
 @NgModule({
 	declarations: [
@@ -66,6 +68,7 @@ import { SleepChartComponent } from './ui/sleep-chart';
 		DialogEditSymptomOverviewComponent,
 		DialogImportConfirmComponent,
 		DialogNoSymptomWarningComponent,
+		DialogSelectSymptomComponent,
 		BottomSheetAddEventComponent,
 
 		// Helpers
@@ -106,6 +109,7 @@ import { SleepChartComponent } from './ui/sleep-chart';
 		AppComponent,
 		GlobalService,
 		SettingsService,
+		BackupService,
 		IonicFile,
 		{
 			provide: APP_INITIALIZER,

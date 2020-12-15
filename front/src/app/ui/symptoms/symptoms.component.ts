@@ -9,7 +9,6 @@ import * as simplifyString from 'simplify-string';
 import { DialogDeleteSymptomComponent } from './dialog-delete-symptom';
 import { ISymptom } from 'src/app/models/symptom.model';
 import { GlobalService } from 'src/app/infra/global.service';
-import { AppComponent } from 'src/app/app.component';
 import { TranslocoService } from '@ngneat/transloco';
 
 @Component({
@@ -23,7 +22,6 @@ export class SymptomsComponent implements OnInit {
 	public symptoms$: Subject<SymptomViewModel[]>;
 
 	constructor(
-		private app: AppComponent,
 		private translocoService: TranslocoService,
 		private globalService: GlobalService,
 		private symptomsService: SymptomsService,
@@ -92,8 +90,6 @@ export class SymptomsComponent implements OnInit {
 				if (this.globalService.targetSymptomKey === key) {
 					this.globalService.targetSymptomKey = null;
 				}
-				this.globalService.loadSymptoms();
-				this.app.updateSymptoms();
 			});
 			this.snackBar.open(this.translocoService.translate('DELETE_SYMPTOM_SNACKBAR', { label }), 'Close',
 				{ duration: 2000 });
@@ -105,8 +101,6 @@ export class SymptomsComponent implements OnInit {
 		this.symptomsService.createNewSymptom(key, label).subscribe(() => {
 			this.symptoms.push(new SymptomViewModel({ type: null, key, label }));
 			this.symptoms$.next(this.symptoms);
-			this.globalService.loadSymptoms();
-			this.app.updateSymptoms();
 		});
 	}
 
@@ -115,8 +109,6 @@ export class SymptomsComponent implements OnInit {
 			this.symptoms = this.symptoms.filter(s => s.key !== key);
 			this.symptoms.push(new SymptomViewModel(symptom));
 			this.symptoms$.next(this.symptoms);
-			this.globalService.loadSymptoms();
-			this.app.updateSymptoms();
 		});
 	}
 

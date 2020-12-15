@@ -25,6 +25,10 @@ export class Collection {
 		return this.db.put(doc);
 	}
 
+	public bulkDocs<T>(docs: T[]): Promise<T[]> {
+		return this.db.bulkDocs(docs);
+	}
+
 	public remove<T>(doc: T): Promise<T> {
 		return this.db.remove(doc);
 	}

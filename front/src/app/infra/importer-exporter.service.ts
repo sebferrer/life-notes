@@ -5,6 +5,10 @@ import { getDateFromString, getDetailedDate, getFormattedDate } from 'src/app/ut
 import { Observable } from 'rxjs';
 import { tap, map } from 'rxjs/operators';
 import { File as IonicFile } from '@ionic-native/file/ngx';
+import { saveAs } from 'file-saver';
+import { BackupService } from './backup.service';
+import { SymptomsService } from './symptoms.service';
+import { SettingsService } from './settings.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -19,6 +23,9 @@ export class ImporterExporterService {
 
 	constructor(
 		private daysService: DaysService,
+		private symptomsService: SymptomsService,
+		private settingsService: SettingsService,
+		private backupService: BackupService,
 		private file: IonicFile
 	) { }
 
@@ -28,12 +35,17 @@ export class ImporterExporterService {
 
 		reader.onload = (readerLoadEvent: any) => {
 			const fileContent = readerLoadEvent.target.result;
-			const jsonArr = JSON.parse(fileContent);
-			for (const jsonObj of jsonArr) {
-				const day: IDay = jsonObj;
-				day.detailedDate = getDetailedDate(getDateFromString(day.date));
-				this.daysService.addDay(day);
-			}
+
+			const backupJsonObj = JSON.parse(fileContent);
+			const daysJsonArr = backupJsonObj.days;
+			const symptomsJsonArr = backupJsonObj.symptoms;
+			const settingsJsonOnj = backupJsonObj.settings;
+
+			daysJsonArr.map(day => day.detailedDate = getDetailedDate(getDateFromString(day.date)));
+			this.daysService.addDays(daysJsonArr);
+			this.symptomsService.addSymptoms(symptomsJsonArr);
+			this.settingsService.setLanguage(settingsJsonOnj.language);
+			this.settingsService.setTargetSymptomKey(settingsJsonOnj.targetSymptomKey);
 		};
 
 		return this.daysService.reset().pipe(
@@ -45,26 +57,21 @@ export class ImporterExporterService {
 	}
 
 	public exportData(): void {
-		this.daysService.getDays().subscribe(days => {
-			const fileContent = JSON.stringify(days);
-			const newDays: IDay[] = JSON.parse(fileContent);
-			newDays.map(day => {
+		this.backupService.getBackup().subscribe(backup => {
+			backup.days.map(day => {
 				delete day['_rev'];
 				delete day['detailedDate'];
 			});
-			const jsonBackup = JSON.stringify(newDays);
-			// const file = new File([JSON.stringify(newDays)], 'calendar.json', { type: 'application/json;charset=utf-8' });
-			// saveAs(file);
+			backup.symptoms.map(symptom => {
+				delete symptom['_rev'];
+			});
+			delete backup.settings['_rev'];
 
-			this.file.checkDir(this.EXTERNAL_ROOT_DIRECTORY, this.APP_DIRECTORY).then(
-				() => {
-					this.saveBackup(jsonBackup)
-				})
-				.catch(() => {
-					this.file.createDir(this.EXTERNAL_ROOT_DIRECTORY, this.APP_DIRECTORY, false)
-						.then(() => this.saveBackup(jsonBackup))
-				})
-		});
+			const jsonBackup = JSON.stringify(backup);
+
+			const file = new File([jsonBackup], 'calendar.json', { type: 'application/json;charset=utf-8' });
+			saveAs(file);
+		})
 	}
 
 	private saveBackup(backup: string): void {

@@ -6,6 +6,7 @@ import { GlobalService } from './infra/global.service';
 import { TranslocoService } from '@ngneat/transloco';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogNoSymptomWarningComponent } from './ui/dialog-no-symptom-warning';
+import { DialogSelectSymptomComponent } from './ui/dialog-select-symptom';
 
 @Component({
 	selector: 'app-root',
@@ -33,19 +34,19 @@ export class AppComponent implements OnInit {
 		this.initSettings();
 	}
 
-	public updateSymptoms() {
+	public updateSymptoms(): void {
 		this.globalService.symptoms$.subscribe(symptoms => {
 			this.symptoms = [...symptoms];
 			this.symptoms$.next(this.symptoms);
 		});
 	}
 
-	public initSettings() {
+	public initSettings(): void {
 		this.initLanguage();
 		this.initTargetSymptom();
 	}
 
-	public initLanguage() {
+	public initLanguage(): void {
 		this.settingsService.getSettings().subscribe(
 			settings => {
 				if (!this.settingsService.AVAILABLE_LANGS.includes(settings.language)) {
@@ -57,7 +58,7 @@ export class AppComponent implements OnInit {
 		);
 	}
 
-	public initTargetSymptom() {
+	public initTargetSymptom(): void {
 		this.settingsService.getSettings().subscribe(
 			settings => {
 				this.globalService.targetSymptomKey = settings.targetSymptomKey;
@@ -65,17 +66,42 @@ export class AppComponent implements OnInit {
 		);
 	}
 
-	public noSymptomWarning() {
-		if (this.symptoms.length === 0) {
-			this.dialog.open(DialogNoSymptomWarningComponent, {
-				autoFocus: false,
-				width: '20rem',
-				panelClass: 'custom-modalbox'
-			}).afterClosed().subscribe(response => {
-				if (response == null || response.answer !== 'yes') {
-					return;
-				}
-			});
-		}
+	public selectSymptom(): void {
+		this.globalService.loadSymptoms().subscribe(symptoms => {
+			this.symptoms = [...symptoms];
+			this.symptoms$.next(this.symptoms);
+
+			if (this.symptoms.length === 0) {
+				this.noSymptomWarning();
+			} else {
+				this.openSelectSymptom(this.symptoms);
+			}
+		});
+	}
+
+	public openSelectSymptom(symptoms: ISymptom[]): void {
+		this.dialog.open(DialogSelectSymptomComponent, {
+			autoFocus: false,
+			width: '20rem',
+			panelClass: 'custom-modalbox',
+			data: { symptoms }
+		}).afterClosed().subscribe(response => {
+			if (response == null) {
+				return;
+			}
+			this.globalService.targetSymptomKey = response.answer;
+		});
+	}
+
+	public noSymptomWarning(): void {
+		this.dialog.open(DialogNoSymptomWarningComponent, {
+			autoFocus: false,
+			width: '20rem',
+			panelClass: 'custom-modalbox'
+		}).afterClosed().subscribe(response => {
+			if (response == null || response.answer !== 'yes') {
+				return;
+			}
+		});
 	}
 }

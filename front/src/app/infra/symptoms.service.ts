@@ -27,6 +27,10 @@ export class SymptomsService {
 		return this.dbContext.asObservable(this.dbContext.symptomsCollection.put(symptom));
 	}
 
+	public addSymptoms(symptoms: ISymptom[]): Observable<ISymptom[]> {
+		return this.dbContext.asObservable(this.dbContext.symptomsCollection.bulkDocs(symptoms));
+	}
+
 	public deleteSymptom(key: string): Observable<null> {
 		const symptom = this.getSymptom(key);
 		return symptom.pipe(

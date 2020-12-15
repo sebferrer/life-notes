@@ -328,6 +328,12 @@ export class DaysService {
 		);
 	}
 
+	public addDays(days: IDay[]): Observable<IDay[]> {
+		return this.dbContext.asObservable(this.dbContext.daysCollection.bulkDocs(days)).pipe(
+			map(() => days)
+		);
+	}
+
 	public removeDayByDate(date: string): Observable<IDay> {
 		return this.getDay(date).pipe(
 			switchMap(day => {

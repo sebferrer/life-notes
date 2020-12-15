@@ -1,0 +1,5 @@
+<mat-selection-list multiple="false">
+    <mat-list-option *ngFor="let symptom of data.symptoms">
+        <p class="list-item-text" (click)="selectSymptom(symptom.key)">{{ symptom.label }}</p>
+    </mat-list-option>
+</mat-selection-list>
