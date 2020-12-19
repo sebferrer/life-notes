@@ -112,5 +112,9 @@
     "SETTINGS_ERROR_LOGS_TITLE": "Error logs",
     "SETTINGS_ERROR_LOGS_SUBTITLE": "Show error logs",
     "SETTINGS_MANUAL_SAVE_TITLE": "Manual save",
-    "SETTINGS_MANUAL_SAVE_SUBTITLE": "Manually generate your save data"
+    "SETTINGS_MANUAL_SAVE_SUBTITLE": "Manually generate your save data",
+    "SETTINGS_MANUAL_SAVE_WARNING": "Warning: to use only if necessary",
+    "SETTINGS_MANUAL_SAVE_BUTTON": "Generate backup data",
+    "COPY": "Copy",
+    "COPIED": "Copied!"
 }

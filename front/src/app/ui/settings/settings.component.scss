@@ -66,3 +66,34 @@
 .field-select {
     width: 50%;
 }
+
+#generate-data-warning {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+
+    #generate-data-warning-logo {
+        float: left;
+        margin-right: 1rem;
+    }
+
+    #generate-data-warning-text {
+        width: 80%;
+        float: left;
+    }
+}
+
+#generateBackupButton {
+    margin-top: 1rem;
+}
+
+#copyButton {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+#copyButton:disabled {
+    color: #5cb85c;
+}
+
+textarea {
+    height: 5rem;
+}

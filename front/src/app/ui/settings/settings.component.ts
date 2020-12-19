@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { GlobalService } from 'src/app/infra/global.service';
 import { Observable } from 'rxjs';
 import { ISymptom } from 'src/app/models/symptom.model';
@@ -8,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DialogImportConfirmComponent } from '../dialog-import-confirm';
 import { DialogSelectBackupComponent } from '../dialog-select-backup';
+import { BackupService } from 'src/app/infra/backup.service';
 
 @Component({
 	selector: 'app-settings',
@@ -21,11 +22,17 @@ export class SettingsComponent implements OnInit {
 	public selectedLanguage: string;
 
 	public debug = 'no error';
+	public backupData = '';
+	public generateData = false;
+	@ViewChild('jsonBackupTextArea')
+	public jsonBackupTextArea: ElementRef<HTMLTextAreaElement>;
+	public showCopySuccessMessage = false;
 
 	constructor(
 		private globalService: GlobalService,
 		private translocoService: TranslocoService,
 		private importerExporterService: ImporterExporterService,
+		private backupService: BackupService,
 		private settingsService: SettingsService,
 		private dialog: MatDialog,
 		private snackBar: MatSnackBar
@@ -110,6 +117,24 @@ export class SettingsComponent implements OnInit {
 		this.debug = this.importerExporterService.debug;
 		this.snackBar.open(this.translocoService.translate('DATA_EXPORT_SNACKBAR_SUCCESS'), 'Close',
 			{ duration: 2000 });
+	}
+
+	public generateBackupData(): void {
+		this.backupService.getBackup().subscribe(backup => {
+			backup = this.importerExporterService.cleanBackupData(backup);
+			this.backupData = JSON.stringify(backup);
+			this.generateData = true;
+		});
+	}
+
+	public copyToClipboard(): void {
+		this.jsonBackupTextArea.nativeElement.hidden = false;
+		this.jsonBackupTextArea.nativeElement.select();
+		document.execCommand('copy');
+		this.showCopySuccessMessage = true;
+		setTimeout(() => {
+			this.showCopySuccessMessage = false;
+		}, 2000);
 	}
 
 	public exportHtml(): void {

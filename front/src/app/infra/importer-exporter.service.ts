@@ -86,18 +86,23 @@ export class ImporterExporterService {
 		);
 	}
 
+	public cleanBackupData(backup: IBackup): IBackup {
+		backup.days.map(day => {
+			delete day['_rev'];
+			delete day['detailedDate'];
+		});
+		backup.symptoms.map(symptom => {
+			delete symptom['_rev'];
+		});
+		delete backup.settings['_rev'];
+
+		return backup;
+	}
+
 	public exportData(isAuto?: boolean): void {
 		isAuto = isAuto || false;
 		this.backupService.getBackup().subscribe(backup => {
-			backup.days.map(day => {
-				delete day['_rev'];
-				delete day['detailedDate'];
-			});
-			backup.symptoms.map(symptom => {
-				delete symptom['_rev'];
-			});
-			delete backup.settings['_rev'];
-
+			backup = this.cleanBackupData(backup);
 			const jsonBackup = JSON.stringify(backup);
 
 			// const file = new File([jsonBackup], 'calendar.json', { type: 'application/json;charset=utf-8' });
