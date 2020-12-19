@@ -91,5 +91,42 @@
 
         </mat-expansion-panel>
 
+        <mat-expansion-panel hideToggle>
+            <mat-expansion-panel-header class="mat-expansion-panel-header">
+                <div class="panel-title" transloco="SETTINGS_ADVANCED_TITLE"></div>
+                <div class="panel-description" transloco="SETTINGS_ADVANCED_SUBTITLE"></div>
+                <div class="panel-icon">
+                    <mat-icon>developer_mode</mat-icon>
+                </div>
+            </mat-expansion-panel-header>
+
+            <div class="mat-expansion-panel-content">
+                
+                <mat-expansion-panel hideToggle>
+                    <mat-expansion-panel-header class="mat-expansion-panel-header">
+                        <div class="panel-title" transloco="SETTINGS_MANUAL_SAVE_TITLE"></div>
+                        <div class="panel-description" transloco="SETTINGS_MANUAL_SAVE_SUBTITLE"></div>
+                    </mat-expansion-panel-header>
+        
+                    <div class="mat-expansion-panel-content">
+                        
+                    </div>
+                </mat-expansion-panel>
+
+                <mat-expansion-panel hideToggle>
+                    <mat-expansion-panel-header class="mat-expansion-panel-header">
+                        <div class="panel-title" transloco="SETTINGS_ERROR_LOGS_TITLE"></div>
+                        <div class="panel-description" transloco="SETTINGS_ERROR_LOGS_SUBTITLE"></div>
+                    </mat-expansion-panel-header>
+        
+                    <div class="mat-expansion-panel-content">
+                        <p>{{ debug }}</p>
+                    </div>
+                </mat-expansion-panel>
+
+            </div>
+
+        </mat-expansion-panel>
+
     </mat-accordion>
 </div>

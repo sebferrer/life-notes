@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { DaysService } from './days.service';
 import { getDateFromString, getDetailedDate, getFormattedDate } from 'src/app/util/date.utils';
-import { Observable, from, empty } from 'rxjs';
-import { tap, map } from 'rxjs/operators';
+import { Observable, from, empty, of } from 'rxjs';
+import { tap, map, catchError } from 'rxjs/operators';
 import { File as IonicFile } from '@ionic-native/file/ngx';
 import { saveAs } from 'file-saver';
 import { BackupService } from './backup.service';
@@ -15,12 +15,11 @@ import { IBackup } from '../models/backup.model';
 })
 export class ImporterExporterService {
 
-	private readonly EXTERNAL_ROOT_DIRECTORY = this.file.externalRootDirectory;
 	private readonly APP_DIRECTORY = 'life-notes/';
-	private readonly APP_DIRECTORY_FULL_PATH = this.EXTERNAL_ROOT_DIRECTORY + this.APP_DIRECTORY;
 	private readonly BACKUP_FILE = 'backup.json';
 	private readonly AUTO_BACKUP_FILE = 'autobackup.json';
-	private readonly CREATE_ERROR_FILE = 'create-file-error.txt';
+
+	public debug = 'no error';
 
 	constructor(
 		private daysService: DaysService,
@@ -29,6 +28,10 @@ export class ImporterExporterService {
 		private backupService: BackupService,
 		private file: IonicFile
 	) { }
+
+	private getDirectoryFullPath(): string {
+		return this.file.externalRootDirectory + this.APP_DIRECTORY;
+	}
 
 	public loadContent(content: string): void {
 		const backupJsonObj = JSON.parse(content);
@@ -56,23 +59,35 @@ export class ImporterExporterService {
 			tap(() => {
 				reader.readAsText(selectedFile);
 			}),
-			map(() => null)
-		);
-	}
-
-	public importDataNative(auto?: boolean): Observable<null> {
-		auto = auto || false;
-		const fileName = auto ? this.AUTO_BACKUP_FILE : this.BACKUP_FILE;
-		return from(this.file.readAsText(this.APP_DIRECTORY_FULL_PATH, fileName)).pipe(
-			tap(fileContent => {
-				this.loadContent(fileContent);
+			catchError(error => {
+				this.debug = error + ' --> ' + error.message;
+				return null;
 			}),
 			map(() => null)
 		);
 	}
 
-	public exportData(auto?: boolean): void {
-		auto = auto || false;
+	public importDataNative(isAuto?: boolean): Observable<null> {
+		isAuto = isAuto || false;
+		const fileName = isAuto ? this.AUTO_BACKUP_FILE : this.BACKUP_FILE;
+
+		return this.daysService.reset().pipe(
+			tap(() => {
+				this.file.readAsText(this.getDirectoryFullPath(), fileName).then(
+					fileContent => {
+						this.debug = 'fileContent --> ' + fileContent;
+						this.loadContent(fileContent);
+					})
+					.catch((error) => {
+						this.debug = error + ' --> ' + error.message;
+					})
+			}),
+			map(() => null)
+		);
+	}
+
+	public exportData(isAuto?: boolean): void {
+		isAuto = isAuto || false;
 		this.backupService.getBackup().subscribe(backup => {
 			backup.days.map(day => {
 				delete day['_rev'];
@@ -92,13 +107,15 @@ export class ImporterExporterService {
 				return;
 			}
 
-			this.file.checkDir(this.EXTERNAL_ROOT_DIRECTORY, this.APP_DIRECTORY).then(
+			this.file.checkDir(this.file.externalRootDirectory, this.APP_DIRECTORY).then(
 				() => {
-					this.saveBackup(jsonBackup, auto)
+					this.saveBackup(jsonBackup, isAuto)
 				})
-				.catch(() => {
-					this.file.createDir(this.EXTERNAL_ROOT_DIRECTORY, this.APP_DIRECTORY, false)
-						.then(() => this.saveBackup(jsonBackup, auto))
+				.catch((checkError) => {
+					this.debug = 'checkDir => ' + this.file.externalRootDirectory + this.APP_DIRECTORY + ' not exists: ' + checkError + ' --> ' + checkError.message;
+					this.file.createDir(this.file.externalRootDirectory, this.APP_DIRECTORY, false)
+						.then(() => this.saveBackup(jsonBackup, isAuto))
+						.catch(createError => { this.debug += '\ncreateDir => ' + createError + ' --> ' + createError.message; })
 				})
 		})
 	}
@@ -107,15 +124,14 @@ export class ImporterExporterService {
 		return backup.days.length === 0 && backup.symptoms.length === 0;
 	}
 
-	private saveBackup(backup: string, auto?: boolean): void {
-		auto = auto || false;
-		const fileName = auto ? this.AUTO_BACKUP_FILE : this.BACKUP_FILE;
-		this.file.createFile(this.APP_DIRECTORY_FULL_PATH, fileName, true)
-			.then(() => this.file.writeExistingFile(this.APP_DIRECTORY_FULL_PATH, fileName, backup))
+	private saveBackup(backup: string, isAuto?: boolean): void {
+		isAuto = isAuto || false;
+		const fileName = isAuto ? this.AUTO_BACKUP_FILE : this.BACKUP_FILE;
+		this.file.createFile(this.getDirectoryFullPath(), fileName, true)
+			.then(() => this.file.writeExistingFile(this.getDirectoryFullPath(), fileName, backup))
 			.catch(
 				error => {
-					this.file.createFile(this.EXTERNAL_ROOT_DIRECTORY, this.CREATE_ERROR_FILE, true)
-						.then(() => this.file.writeExistingFile(this.EXTERNAL_ROOT_DIRECTORY, this.CREATE_ERROR_FILE, error))
+					this.debug = 'createFile => ' + error + ' --> ' + error.message;
 				})
 	}
 

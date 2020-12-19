@@ -30,20 +30,15 @@ export class AppComponent implements OnInit {
 	}
 
 	public ngOnInit(): void {
-		// this.androidPermissions.requestPermissions([this.androidPermissions.PERMISSION.MANAGE_EXTERNAL_STORAGE]);
-
 		this.updateSymptoms();
 		this.settingsService.initSettings().subscribe(res => { }, error => { });
 		this.initSettings();
-		// this.autoBackup();
+		this.autoBackup();
 	}
 
-	/*public autoBackup(): void {
-		this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.MANAGE_EXTERNAL_STORAGE).then(
-			result => this.importerExporterService.exportData(true),
-			err => this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.MANAGE_EXTERNAL_STORAGE)
-		);
-	}*/
+	public autoBackup(): void {
+		this.importerExporterService.exportData(true);
+	}
 
 	public updateSymptoms(): void {
 		this.globalService.symptoms$.subscribe(symptoms => {

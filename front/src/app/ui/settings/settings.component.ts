@@ -20,6 +20,8 @@ export class SettingsComponent implements OnInit {
 	public selectedSymptom: string;
 	public selectedLanguage: string;
 
+	public debug = 'no error';
+
 	constructor(
 		private globalService: GlobalService,
 		private translocoService: TranslocoService,
@@ -61,7 +63,8 @@ export class SettingsComponent implements OnInit {
 				return;
 			}
 			this.importerExporterService.importDataWeb(event).subscribe(() => { });
-			this.snackBar.open(this.translocoService.translate('DATA_IMPORT_SNACKBAR'), 'Close',
+			this.debug = this.importerExporterService.debug;
+			this.snackBar.open(this.translocoService.translate('DATA_IMPORT_SNACKBAR_SUCCESS'), 'Close',
 				{ duration: 2000 });
 		});
 	}
@@ -77,7 +80,8 @@ export class SettingsComponent implements OnInit {
 				return;
 			}
 			this.importerExporterService.importDataNative(auto).subscribe(() => { });
-			this.snackBar.open(this.translocoService.translate('DATA_IMPORT_SNACKBAR'), 'Close',
+			this.debug = this.importerExporterService.debug;
+			this.snackBar.open(this.translocoService.translate('DATA_IMPORT_SNACKBAR_SUCCESS'), 'Close',
 				{ duration: 2000 });
 		});
 	}
@@ -103,7 +107,8 @@ export class SettingsComponent implements OnInit {
 
 	public exportData(): void {
 		this.importerExporterService.exportData();
-		this.snackBar.open(this.translocoService.translate('DATA_EXPORT_SNACKBAR'), 'Close',
+		this.debug = this.importerExporterService.debug;
+		this.snackBar.open(this.translocoService.translate('DATA_EXPORT_SNACKBAR_SUCCESS'), 'Close',
 			{ duration: 2000 });
 	}
 
