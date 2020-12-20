@@ -9,6 +9,8 @@ import { BackupService } from './backup.service';
 import { SymptomsService } from './symptoms.service';
 import { SettingsService } from './settings.service';
 import { IBackup } from '../models/backup.model';
+import { GlobalService } from './global.service';
+import { TranslocoService } from '@ngneat/transloco';
 
 @Injectable({
 	providedIn: 'root'
@@ -22,10 +24,12 @@ export class ImporterExporterService {
 	public debug = 'no error';
 
 	constructor(
+		private globalService: GlobalService,
 		private daysService: DaysService,
 		private symptomsService: SymptomsService,
 		private settingsService: SettingsService,
 		private backupService: BackupService,
+		private translocoService: TranslocoService,
 		private file: IonicFile
 	) { }
 
@@ -40,10 +44,15 @@ export class ImporterExporterService {
 		const settingsJsonOnj = backupJsonObj.settings;
 
 		daysJsonArr.map(day => day.detailedDate = getDetailedDate(getDateFromString(day.date)));
-		this.daysService.addDays(daysJsonArr);
-		this.symptomsService.addSymptoms(symptomsJsonArr);
-		this.settingsService.setLanguage(settingsJsonOnj.language);
-		this.settingsService.setTargetSymptomKey(settingsJsonOnj.targetSymptomKey);
+		this.daysService.addDays(daysJsonArr).subscribe(() => {});
+		this.symptomsService.addSymptoms(symptomsJsonArr).subscribe(() => {
+			this.globalService.loadSymptoms().subscribe(() => { });
+		});
+		this.settingsService.editSettings(settingsJsonOnj).subscribe(() => {
+			this.globalService.language = settingsJsonOnj.language;
+			this.globalService.targetSymptomKey = settingsJsonOnj.targetSymptomKey;
+			this.translocoService.setActiveLang(settingsJsonOnj.language);
+		});
 	}
 
 	public importDataWeb(event: any): Observable<null> {

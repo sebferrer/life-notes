@@ -122,6 +122,7 @@ export class SettingsComponent implements OnInit {
 	public generateBackupData(): void {
 		this.backupService.getBackup().subscribe(backup => {
 			backup = this.importerExporterService.cleanBackupData(backup);
+			console.log(backup);
 			this.backupData = JSON.stringify(backup);
 			this.generateData = true;
 		});

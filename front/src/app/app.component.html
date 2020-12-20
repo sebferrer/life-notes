@@ -1,15 +1,24 @@
-<mat-toolbar *ngIf="symptoms$ | async as symptoms" class="mat-typography">
+<mat-toolbar *ngIf="getSymptoms$() | async as symptoms" class="mat-typography">
 	<button mat-icon-button id="menu-icon-timeline" routerLink="" aria-label="Timeline">
 		<mat-icon>view_day</mat-icon>
 	</button>
 	<button mat-icon-button id="menu-icon-calendar" class="menu-icon" routerLink="/calendar" aria-label="Calendar">
 		<mat-icon>apps</mat-icon>
 	</button>
-	<button mat-icon-button id="menu-icon-target-symptom" class="menu-icon" aria-label="Symptoms"
+	<!--button mat-icon-button id="menu-icon-target-symptom" class="menu-icon" aria-label="Symptoms"
 		(click)="selectSymptom()">
 		<mat-icon>spa</mat-icon>
+	</button-->
+	<button *ngIf="symptoms.length === 0 else noSymptomButton" mat-icon-button id="menu-icon-target-symptom"
+		class="menu-icon" aria-label="Symptoms" (click)="noSymptomWarning()">
+		<mat-icon>spa</mat-icon>
 	</button>
-	<p class="targetSymptomKey">{{ globalService.symptomMap.get(globalService.targetSymptomKey) }}</p>
+	<ng-template #noSymptomButton>
+		<button mat-icon-button id="menu-icon-target-symptom" class="menu-icon" [matMenuTriggerFor]="targetSymptom" aria-label="Symptoms">
+			<mat-icon>spa</mat-icon>
+		</button>
+	</ng-template>
+	<p class="targetSymptomKey">{{ globalService.symptomMap.get(getTargetSymptomKey()) }}</p>
 	<mat-menu #targetSymptom="matMenu">
 		<button mat-menu-item *ngFor="let symptom of symptoms" [value]="symptom.key"
 			(click)="globalService.targetSymptomKey = symptom.key">

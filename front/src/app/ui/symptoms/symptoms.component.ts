@@ -90,6 +90,7 @@ export class SymptomsComponent implements OnInit {
 				if (this.globalService.targetSymptomKey === key) {
 					this.globalService.targetSymptomKey = null;
 				}
+				this.globalService.loadSymptoms().subscribe(() => {});
 			});
 			this.snackBar.open(this.translocoService.translate('DELETE_SYMPTOM_SNACKBAR', { label }), 'Close',
 				{ duration: 2000 });
@@ -101,6 +102,7 @@ export class SymptomsComponent implements OnInit {
 		this.symptomsService.createNewSymptom(key, label).subscribe(() => {
 			this.symptoms.push(new SymptomViewModel({ type: null, key, label }));
 			this.symptoms$.next(this.symptoms);
+			this.globalService.loadSymptoms().subscribe(() => {});
 		});
 	}
 
@@ -109,6 +111,7 @@ export class SymptomsComponent implements OnInit {
 			this.symptoms = this.symptoms.filter(s => s.key !== key);
 			this.symptoms.push(new SymptomViewModel(symptom));
 			this.symptoms$.next(this.symptoms);
+			this.globalService.loadSymptoms().subscribe(() => {});
 		});
 	}
 

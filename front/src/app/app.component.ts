@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { SettingsService, ImporterExporterService } from './infra';
-import { Subject } from 'rxjs';
+import { SettingsService, ImporterExporterService, DaysService } from './infra';
+import { Subject, Observable } from 'rxjs';
 import { ISymptom } from './models/symptom.model';
 import { GlobalService } from './infra/global.service';
 import { TranslocoService } from '@ngneat/transloco';
@@ -23,29 +23,41 @@ export class AppComponent implements OnInit {
 		private translocoService: TranslocoService,
 		private settingsService: SettingsService,
 		private importerExporterService: ImporterExporterService,
-		private dialog: MatDialog
+		private dialog: MatDialog,
+
+		private daysService: DaysService
 	) {
-		this.symptoms = new Array<ISymptom>();
-		this.symptoms$ = new Subject<ISymptom[]>();
+		/*this.symptoms = new Array<ISymptom>();
+		this.symptoms$ = new Subject<ISymptom[]>();*/
 	}
 
 	public ngOnInit(): void {
-		this.updateSymptoms();
+		// this.updateSymptoms();
 		this.settingsService.initSettings().subscribe(res => { }, error => { });
 		this.initSettings();
 		this.autoBackup();
+
+		// this.daysService.reset().subscribe(() => {});
 	}
 
 	public autoBackup(): void {
 		this.importerExporterService.exportData(true);
 	}
 
-	public updateSymptoms(): void {
+	public getSymptoms$(): Observable<ISymptom[]> {
+		return this.globalService.symptoms$;
+	}
+
+	public getTargetSymptomKey(): string {
+		return this.globalService.targetSymptomKey;
+	}
+
+	/*public updateSymptoms(): void {
 		this.globalService.symptoms$.subscribe(symptoms => {
 			this.symptoms = [...symptoms];
 			this.symptoms$.next(this.symptoms);
 		});
-	}
+	}*/
 
 	public initSettings(): void {
 		this.initLanguage();
@@ -72,7 +84,7 @@ export class AppComponent implements OnInit {
 		);
 	}
 
-	public selectSymptom(): void {
+	/*public selectSymptom(): void {
 		this.globalService.loadSymptoms().subscribe(symptoms => {
 			this.symptoms = [...symptoms];
 			this.symptoms$.next(this.symptoms);
@@ -97,7 +109,7 @@ export class AppComponent implements OnInit {
 			}
 			this.globalService.targetSymptomKey = response.answer;
 		});
-	}
+	}*/
 
 	public noSymptomWarning(): void {
 		this.dialog.open(DialogNoSymptomWarningComponent, {
