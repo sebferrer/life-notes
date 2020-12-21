@@ -67,10 +67,12 @@
     }
 }
 
-.grid-list {
+.content {
     position: absolute;
     top: 7rem;
     width: 100%;
+    height: calc(100vh - 7rem);
+    overflow-y: auto;
 }
 
 .grid-tile {

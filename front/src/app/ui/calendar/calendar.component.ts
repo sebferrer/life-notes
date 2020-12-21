@@ -65,7 +65,7 @@ export class CalendarComponent implements OnInit {
 	}
 
 	public organizeSymptoms(symptoms: ISymptom[]): ISymptom[] {
-		if (symptoms.length === 0 || this.globalService.targetSymptomKey == null) {
+		if (symptoms.length === 0 || this.globalService.targetSymptomKey == null || this.globalService.targetSymptomKey === '') {
 			return symptoms;
 		}
 		const targetSymptom = this.symptoms.find(symptom => symptom.key === this.globalService.targetSymptomKey);
@@ -98,7 +98,9 @@ export class CalendarComponent implements OnInit {
 		this.loadSymptoms();
 		this.daysService.getMonthDaysOverviews(month, year).subscribe(
 			days => {
-				this.daysService.getMonthDaysOverviews(month - 1, year).subscribe(
+				const previousMonth = month - 1 === 0 ? 12 : month - 1;
+				const previousYear = previousMonth === 12 ? year - 1 : year;
+				this.daysService.getMonthDaysOverviews(previousMonth, previousYear).subscribe(
 					previousDays => {
 						this.overviews = new Array<DayOverviewViewModel>();
 						days.forEach(day => {

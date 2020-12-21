@@ -18,32 +18,33 @@
 					</button>
 				</div>
 			</div>
-			<div class="grid-list">
-				<div *ngFor="let overview of overviews"
-					class="grid-tile color-{{ symptomPainColorMap.get(overview.getSymptomPain(globalService.targetSymptomKey)) }}"
-					routerLink="/{{ overview.date }}">
-					<div class="header">
-						<div *ngIf="today.day !== overview.detailedDate.day || today.month !== overview.detailedDate.month 
+			<div class="content">
+				<div class="grid-list">
+					<div *ngFor="let overview of overviews"
+						class="grid-tile color-{{ symptomPainColorMap.get(overview.getSymptomPain(globalService.targetSymptomKey)) }}"
+						routerLink="/{{ overview.date }}">
+						<div class="header">
+							<div *ngIf="today.day !== overview.detailedDate.day || today.month !== overview.detailedDate.month 
 				|| today.year !== overview.detailedDate.year; else todayDiv" class="day-label">
-							{{ overview.detailedDate.day }}</div>
-						<ng-template #todayDiv>
-							<div class="day-label day-label-today">{{ overview.detailedDate.day }}</div>
-						</ng-template>
+								{{ overview.detailedDate.day }}</div>
+							<ng-template #todayDiv>
+								<div class="day-label day-label-today">{{ overview.detailedDate.day }}</div>
+							</ng-template>
+						</div>
 					</div>
+				</div>
+				<div class="charts">
+					<google-chart *ngFor="let symptom of organizeSymptoms(symptoms)" class="chart"
+						[title]="symptomMap.get(symptom.key)" [type]="pieCharts.get(symptom.key).type"
+						[data]="pieCharts.get(symptom.key).data" [columns]="pieCharts.get(symptom.key).columns"
+						[options]="pieCharts.get(symptom.key).options">
+					</google-chart>
+					<app-sleep-chart [wakeUpChart]="wakeUpChart" [bedTimeChart]="bedTimeChart"
+						[sleepChart]="sleepChart">
+					</app-sleep-chart>
 				</div>
 			</div>
 		</div>
-
-		<div class="charts">
-			<google-chart *ngFor="let symptom of organizeSymptoms(symptoms)" class="chart"
-				[title]="symptomMap.get(symptom.key)" [type]="pieCharts.get(symptom.key).type"
-				[data]="pieCharts.get(symptom.key).data" [columns]="pieCharts.get(symptom.key).columns"
-				[options]="pieCharts.get(symptom.key).options">
-			</google-chart>
-			<app-sleep-chart [wakeUpChart]="wakeUpChart" [bedTimeChart]="bedTimeChart" [sleepChart]="sleepChart">
-			</app-sleep-chart>
-		</div>
-
 	</div>
 </div>
 
