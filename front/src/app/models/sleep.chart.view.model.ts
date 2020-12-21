@@ -74,10 +74,10 @@ export class SleepChartViewModel extends AChartViewModel {
 				this.nbData++;
 
 				if (sleepTimeMinutes < min) {
-					min = -sleepTimeMinutes;
+					min = sleepTimeMinutes;
 				}
 				if (sleepTimeMinutes > max) {
-					max = -sleepTimeMinutes;
+					max = sleepTimeMinutes;
 				}
 				timeSum += sleepTimeMinutes;
 			}
@@ -90,8 +90,8 @@ export class SleepChartViewModel extends AChartViewModel {
 				chartMax = sleepTimeMinutes;
 			}
 		};
-		this.minimum = formatMinutes(-min);
-		this.maximum = formatMinutes(-max);
+		this.minimum = formatMinutes(min);
+		this.maximum = formatMinutes(max);
 		this.average = formatMinutes(Math.trunc(timeSum / this.nbData));
 		ticks.push({ v: chartMin, f: formatMinutesInDuration(chartMin) });
 		ticks.push({ v: chartMax, f: formatMinutesInDuration(chartMax) });
