@@ -34,10 +34,6 @@
 					</div>
 				</div>
 				<div class="charts">
-					<!--canvas baseChart *ngFor="let symptom of organizeSymptoms(symptoms)"
-						[data]="pieCharts.get(symptom.key).data" [labels]="pieCharts.get(symptom.key).labels"
-						[chartType]="pieCharts.get(symptom.key).type"
-						[colors]="pieCharts.get(symptom.key).colors"></canvas-->
 					<app-pie-chart baseChart *ngFor="let symptom of organizeSymptoms(symptoms)" [title]="symptom.label"
 						[chart]="pieCharts.get(symptom.key)"></app-pie-chart>
 					<!--app-sleep-chart [wakeUpChart]="wakeUpChart" [bedTimeChart]="bedTimeChart"

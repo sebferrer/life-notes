@@ -51,7 +51,7 @@ import { DialogImportConfirmComponent } from './ui/dialog/dialog-import-confirm'
 import { DialogNoSymptomWarningComponent } from './ui/dialog/dialog-no-symptom-warning';
 import { DialogSelectSymptomComponent } from './ui/dialog/dialog-select-symptom';
 import { DialogSelectBackupComponent } from './ui/dialog/dialog-select-backup';
-import { PieChartComponent } from './ui/pie-chart';
+import { PieChartComponent } from './ui/chart/pie-chart';
 
 @NgModule({
 	declarations: [
