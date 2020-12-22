@@ -5,12 +5,12 @@ import { getDetailedDate } from 'src/app/util/date.utils';
 import { DayOverviewViewModel } from 'src/app/models/day.overview.view.model';
 import { IDetailedDate } from 'src/app/models/detailed.date';
 import { GlobalService } from 'src/app/infra/global.service';
-import { CalendarPieChartViewModel } from 'src/app/models/calendar.pie.chart.view.model';
 import { ISymptom } from 'src/app/models/symptom.model';
 import { TranslocoService } from '@ngneat/transloco';
-import { BedTimeChartViewModel } from 'src/app/models/bedtime.chart.view.model';
-import { WakeUpChartViewModel } from 'src/app/models/wakeup.chart.view.model';
-import { SleepChartViewModel } from 'src/app/models/sleep.chart.view.model';
+import { WakeUpChartViewModel } from 'src/app/models/google-charts/wakeup.chart.view.model';
+import { CalendarPieChartViewModel } from 'src/app/models/google-charts/calendar.pie.chart.view.model';
+import { BedTimeChartViewModel } from 'src/app/models/google-charts/bedtime.chart.view.model';
+import { SleepChartViewModel } from 'src/app/models/google-charts/sleep.chart.view.model';
 
 @Component({
 	selector: 'app-calendar',

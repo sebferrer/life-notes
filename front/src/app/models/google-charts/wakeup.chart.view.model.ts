@@ -1,6 +1,6 @@
 import { AChartViewModel } from './chart.view.model';
-import { DayOverviewViewModel } from './day.overview.view.model';
-import { timeToMinutes, formatMinutes } from '../util/time.util';
+import { DayOverviewViewModel } from '../day.overview.view.model';
+import { timeToMinutes, formatMinutes } from '../../util/time.util';
 import { IGChartTick } from './g.chart.tick.model';
 import { TranslocoService } from '@ngneat/transloco';
 

@@ -1,7 +1,7 @@
-import { ISymptomOverview, ISymptomLog, ISymptom } from './symptom.model';
 import { Observable } from 'rxjs';
-import { DayViewModel } from './day.view.model';
 import { AChartViewModel } from './chart.view.model';
+import { ISymptom } from '../symptom.model';
+import { DayViewModel } from '../day.view.model';
 
 export class DayPieChartViewModel extends AChartViewModel {
 	private symptomKey: string;
@@ -31,15 +31,8 @@ export class DayPieChartViewModel extends AChartViewModel {
 				}
 			}*/
 
-			this.columns = ['Browser', 'Percentage'];
-			this.data = [
-				['Firefox', 45.0],
-				['IE', 26.8],
-				['Chrome', 12.8],
-				['Safari', 8.5],
-				['Opera', 6.2],
-				['Others', 0.7]
-			]
+			this.columns = [];
+			this.data = []
 		});
 	}
 }

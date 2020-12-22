@@ -1,8 +1,8 @@
 import { AChartViewModel } from './chart.view.model';
-import { DayOverviewViewModel } from './day.overview.view.model';
-import { timeToMinutes, formatMinutes, formatMinutesInDuration } from '../util/time.util';
 import { IGChartTick } from './g.chart.tick.model';
 import { TranslocoService } from '@ngneat/transloco';
+import { formatMinutesInDuration, timeToMinutes, formatMinutes } from 'src/app/util/time.util';
+import { DayOverviewViewModel } from '../day.overview.view.model';
 
 export class SleepChartViewModel extends AChartViewModel {
 

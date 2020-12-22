@@ -10,8 +10,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { ATimeComponent } from '../time';
 import { IDay } from 'src/app/models';
-import { DayChartViewModel } from 'src/app/models/day.chart.view.model';
-import { DayPieChartViewModel } from 'src/app/models/day.pie.chart.view.model';
+import { DayChartViewModel } from 'src/app/models/google-charts/day.chart.view.model';
+import { DayPieChartViewModel } from 'src/app/models/google-charts/day.pie.chart.view.model';
 
 @Component({
 	selector: 'app-day',

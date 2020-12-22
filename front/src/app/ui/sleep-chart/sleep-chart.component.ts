@@ -1,8 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { BedTimeChartViewModel } from 'src/app/models/bedtime.chart.view.model';
-import { WakeUpChartViewModel } from 'src/app/models/wakeup.chart.view.model';
+import { WakeUpChartViewModel } from 'src/app/models/google-charts/wakeup.chart.view.model';
 import { ISleepTable } from 'src/app/models/sleep.table.model';
-import { SleepChartViewModel } from 'src/app/models/sleep.chart.view.model';
+import { BedTimeChartViewModel } from 'src/app/models/google-charts/bedtime.chart.view.model';
+import { SleepChartViewModel } from 'src/app/models/google-charts/sleep.chart.view.model';
 
 @Component({
 	selector: 'app-sleep-chart',
