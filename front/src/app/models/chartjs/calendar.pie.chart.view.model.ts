@@ -22,11 +22,11 @@ export class CalendarPieChartViewModel extends APieChartViewModel {
 				backgroundColor: this.colorsArray
 			}
 		];
-		/*this.options = {
+		this.options = {
 			legend: {
 				position: 'right'
 			}
-		}*/
+		}
 	}
 
 	public update(dayOverviews: DayOverviewViewModel[]): void {

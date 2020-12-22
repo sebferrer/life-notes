@@ -13,12 +13,19 @@ export class PieChartComponent implements OnInit {
 	@Input()
 	chart: APieChartViewModel;
 
-	constructor(
-	) {
+	public labels: string[];
+	public type: string;
+	public colors: any;
+	public options: any;
 
-	}
+	constructor(
+	) { }
 
 	public ngOnInit(): void {
+		this.labels = this.chart.labels;
+		this.type = this.chart.type;
+		this.colors = this.chart.colors;
+		this.options = this.chart.options;
 	}
 
 }
