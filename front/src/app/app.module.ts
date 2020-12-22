@@ -38,6 +38,7 @@ import { SettingsComponent } from './ui/settings';
 import { InfiniteScrollComponent } from './ui/infinite-scroll';
 import { File as IonicFile } from '@ionic-native/file/ngx';
 import { GoogleChartsModule } from 'angular-google-charts';
+import { ChartsModule } from 'ng2-charts';
 import { SleepChartComponent } from './ui/sleep-chart';
 import { BackupService } from './infra/backup.service';
 import { DialogAddEventComponent } from './ui/dialog/dialog-add-event';
@@ -50,6 +51,7 @@ import { DialogImportConfirmComponent } from './ui/dialog/dialog-import-confirm'
 import { DialogNoSymptomWarningComponent } from './ui/dialog/dialog-no-symptom-warning';
 import { DialogSelectSymptomComponent } from './ui/dialog/dialog-select-symptom';
 import { DialogSelectBackupComponent } from './ui/dialog/dialog-select-backup';
+import { PieChartComponent } from './ui/pie-chart';
 
 @NgModule({
 	declarations: [
@@ -61,6 +63,7 @@ import { DialogSelectBackupComponent } from './ui/dialog/dialog-select-backup';
 		SymptomsComponent,
 		SettingsComponent,
 		SleepChartComponent,
+		PieChartComponent,
 		DialogAddEventComponent,
 		DialogDeleteEventComponent,
 		DialogShowEventComponent,
@@ -102,7 +105,8 @@ import { DialogSelectBackupComponent } from './ui/dialog/dialog-select-backup';
 		MatExpansionModule,
 		NgxMaterialTimepickerModule,
 		TranslocoRootModule,
-		GoogleChartsModule
+		GoogleChartsModule,
+		ChartsModule
 	],
 	providers: [
 		DaysService,

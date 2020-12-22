@@ -34,14 +34,15 @@
 					</div>
 				</div>
 				<div class="charts">
-					<google-chart *ngFor="let symptom of organizeSymptoms(symptoms)" class="chart"
-						[title]="symptomMap.get(symptom.key)" [type]="pieCharts.get(symptom.key).type"
-						[data]="pieCharts.get(symptom.key).data" [columns]="pieCharts.get(symptom.key).columns"
-						[options]="pieCharts.get(symptom.key).options">
-					</google-chart>
-					<app-sleep-chart [wakeUpChart]="wakeUpChart" [bedTimeChart]="bedTimeChart"
+					<!--canvas baseChart *ngFor="let symptom of organizeSymptoms(symptoms)"
+						[data]="pieCharts.get(symptom.key).data" [labels]="pieCharts.get(symptom.key).labels"
+						[chartType]="pieCharts.get(symptom.key).type"
+						[colors]="pieCharts.get(symptom.key).colors"></canvas-->
+					<app-pie-chart baseChart *ngFor="let symptom of organizeSymptoms(symptoms)" [title]="symptom.label"
+						[chart]="pieCharts.get(symptom.key)"></app-pie-chart>
+					<!--app-sleep-chart [wakeUpChart]="wakeUpChart" [bedTimeChart]="bedTimeChart"
 						[sleepChart]="sleepChart">
-					</app-sleep-chart>
+					</app-sleep-chart-->
 				</div>
 			</div>
 		</div>
