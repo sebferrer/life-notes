@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { DaysService } from 'src/app/infra';
-import { DialogAddEventComponent } from './dialog-add-event';
-import { DialogDeleteEventComponent } from './dialog-delete-event';
-import { DialogShowEventComponent } from './dialog-show-event';
-import { DialogEditSymptomOverviewComponent } from './dialog-edit-symptom-overview';
+import { DialogAddEventComponent } from '../dialog/dialog-add-event';
+import { DialogDeleteEventComponent } from '../dialog/dialog-delete-event';
+import { DialogShowEventComponent } from '../dialog/dialog-show-event';
+import { DialogEditSymptomOverviewComponent } from '../dialog/dialog-edit-symptom-overview';
 import { ICustomEvent } from 'src/app/models/customEvent.model';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';

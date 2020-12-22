@@ -5,8 +5,7 @@ import { ISymptom } from './models/symptom.model';
 import { GlobalService } from './infra/global.service';
 import { TranslocoService } from '@ngneat/transloco';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogNoSymptomWarningComponent } from './ui/dialog-no-symptom-warning';
-import { DialogSelectSymptomComponent } from './ui/dialog-select-symptom';
+import { DialogNoSymptomWarningComponent } from './ui/dialog/dialog-no-symptom-warning';
 
 @Component({
 	selector: 'app-root',

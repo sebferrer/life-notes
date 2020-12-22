@@ -28,15 +28,8 @@ import { HomeComponent } from './ui';
 import { CalendarComponent } from './ui/calendar';
 import { DayComponent } from './ui/day';
 import { TimelineComponent } from './ui/timeline';
-import { DialogAddEventComponent } from './ui/time/dialog-add-event';
-import { DialogDeleteEventComponent } from './ui/time/dialog-delete-event';
-import { DialogShowEventComponent } from './ui/time/dialog-show-event';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { SymptomsComponent } from './ui/symptoms';
-import { DialogAddSymptomComponent } from './ui/symptoms/dialog-add-symptom';
-import { DialogDeleteSymptomComponent } from './ui/symptoms/dialog-delete-symptom';
-import { DialogEditSymptomOverviewComponent } from './ui/time/dialog-edit-symptom-overview';
-import { DialogImportConfirmComponent } from './ui/dialog-import-confirm';
 import { BottomSheetAddEventComponent } from './ui/time/bottom-sheet-add-event';
 import { TranslocoRootModule } from './transloco/transloco-root.module';
 import { TranslocoService } from '@ngneat/transloco';
@@ -45,11 +38,18 @@ import { SettingsComponent } from './ui/settings';
 import { InfiniteScrollComponent } from './ui/infinite-scroll';
 import { File as IonicFile } from '@ionic-native/file/ngx';
 import { GoogleChartsModule } from 'angular-google-charts';
-import { DialogNoSymptomWarningComponent } from './ui/dialog-no-symptom-warning';
 import { SleepChartComponent } from './ui/sleep-chart';
 import { BackupService } from './infra/backup.service';
-import { DialogSelectSymptomComponent } from './ui/dialog-select-symptom';
-import { DialogSelectBackupComponent } from './ui/dialog-select-backup';
+import { DialogAddEventComponent } from './ui/dialog/dialog-add-event';
+import { DialogDeleteEventComponent } from './ui/dialog/dialog-delete-event';
+import { DialogShowEventComponent } from './ui/dialog/dialog-show-event';
+import { DialogAddSymptomComponent } from './ui/dialog/dialog-add-symptom';
+import { DialogDeleteSymptomComponent } from './ui/dialog/dialog-delete-symptom';
+import { DialogEditSymptomOverviewComponent } from './ui/dialog/dialog-edit-symptom-overview';
+import { DialogImportConfirmComponent } from './ui/dialog/dialog-import-confirm';
+import { DialogNoSymptomWarningComponent } from './ui/dialog/dialog-no-symptom-warning';
+import { DialogSelectSymptomComponent } from './ui/dialog/dialog-select-symptom';
+import { DialogSelectBackupComponent } from './ui/dialog/dialog-select-backup';
 
 @NgModule({
 	declarations: [
@@ -133,7 +133,9 @@ import { DialogSelectBackupComponent } from './ui/dialog-select-backup';
 		DialogDeleteSymptomComponent,
 		DialogEditSymptomOverviewComponent,
 		DialogImportConfirmComponent,
-		DialogNoSymptomWarningComponent
+		DialogNoSymptomWarningComponent,
+		DialogSelectSymptomComponent,
+		DialogSelectBackupComponent,
 	],
 	bootstrap: [AppComponent]
 })

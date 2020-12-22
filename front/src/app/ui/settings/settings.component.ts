@@ -6,8 +6,8 @@ import { TranslocoService } from '@ngneat/transloco';
 import { ImporterExporterService, SettingsService } from 'src/app/infra';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { DialogImportConfirmComponent } from '../dialog-import-confirm';
-import { DialogSelectBackupComponent } from '../dialog-select-backup';
+import { DialogImportConfirmComponent } from '../dialog/dialog-import-confirm';
+import { DialogSelectBackupComponent } from '../dialog/dialog-select-backup';
 import { BackupService } from 'src/app/infra/backup.service';
 
 @Component({
