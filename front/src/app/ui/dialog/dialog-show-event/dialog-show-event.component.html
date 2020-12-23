@@ -5,19 +5,22 @@
 </ng-template>
 <div mat-dialog-content>
     <div><mat-label>{{ data.customEvent.time }}</mat-label></div>
-    <mat-label>{{ data.customEvent.key }}</mat-label>
     <div [ngSwitch]="data.customEvent.type">
         <div *ngSwitchCase="'symptomLog'">
-            <div><mat-label>{{ data.customEvent.pain }}</mat-label></div>
+            <mat-label>{{ data.customEvent.key }}</mat-label>
+            <div><mat-label>{{ data.customEvent.pain }} / 5</mat-label></div>
             <div><mat-label>{{ data.customEvent.detail }}</mat-label></div>
         </div>
         <div *ngSwitchCase="'log'">
+            <mat-label>{{ data.customEvent.key }}</mat-label>
             <mat-label>{{ data.customEvent.detail }}</mat-label>
         </div>
         <div *ngSwitchCase="'med'">
+            <mat-label>{{ data.customEvent.key }}</mat-label>
             <mat-label>{{ data.customEvent.quantity }}mg</mat-label>
         </div>
         <div *ngSwitchCase="'meal'">
+            <mat-label>{{ data.customEvent.key }}</mat-label>
             <mat-label>{{ data.customEvent.detail }}</mat-label>
         </div>
     </div>

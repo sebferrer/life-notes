@@ -103,9 +103,14 @@
 
 .charts {
     position: absolute;
-    top: 33rem;
+    top: 27rem;
     left: 0;
     width: 100%;
+
+    .pie-charts {
+        height: 65vh;
+        overflow-y: auto;
+    }
 }
 
 .color-default {

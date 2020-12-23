@@ -20,9 +20,7 @@ export class BedTimeChartViewModel extends ALineChartViewModel {
 			},
 			elements: {
 				point: {
-					radius: 0.00001,
-					borderColor: '#000000',
-					backgroundColor: '#000000',
+					radius: 0,
 					hitRadius: 20
 				}/*,
 				line: {
