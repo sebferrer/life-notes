@@ -34,8 +34,9 @@
 					</div>
 				</div>
 				<div class="charts">
-					<app-pie-chart baseChart *ngFor="let symptom of organizeSymptoms(symptoms)" [title]="symptom.label"
+					<app-pie-chart *ngFor="let symptom of organizeSymptoms(symptoms)" [title]="symptom.label"
 						[chart]="pieCharts.get(symptom.key)"></app-pie-chart>
+					<app-line-chart [title]="'MONTHLY_WAKEUPTIME'" [chart]="bedTimeChart"></app-line-chart>
 					<!--app-sleep-chart [wakeUpChart]="wakeUpChart" [bedTimeChart]="bedTimeChart"
 						[sleepChart]="sleepChart">
 					</app-sleep-chart-->

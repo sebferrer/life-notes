@@ -8,9 +8,9 @@ import { GlobalService } from 'src/app/infra/global.service';
 import { ISymptom } from 'src/app/models/symptom.model';
 import { TranslocoService } from '@ngneat/transloco';
 import { WakeUpChartViewModel } from 'src/app/models/google-charts/wakeup.chart.view.model';
-import { BedTimeChartViewModel } from 'src/app/models/google-charts/bedtime.chart.view.model';
 import { SleepChartViewModel } from 'src/app/models/google-charts/sleep.chart.view.model';
 import { CalendarPieChartViewModel } from 'src/app/models/chartjs/calendar.pie.chart.view.model';
+import { BedTimeChartViewModel } from 'src/app/models/chartjs/bedtime.chart.view.model';
 
 @Component({
 	selector: 'app-calendar',
@@ -42,7 +42,7 @@ export class CalendarComponent implements OnInit {
 		public translocoService: TranslocoService
 	) {
 		this.pieCharts = new Map<string, CalendarPieChartViewModel>();
-		this.bedTimeChart = new BedTimeChartViewModel('LineChart', '', this.translocoService);
+		this.bedTimeChart = new BedTimeChartViewModel('line');
 		this.wakeUpChart = new WakeUpChartViewModel('LineChart', '', this.translocoService);
 		this.sleepChart = new SleepChartViewModel('LineChart', '', this.translocoService);
 		this.symptoms = new Array<ISymptom>();

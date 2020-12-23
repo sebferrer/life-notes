@@ -52,6 +52,7 @@ import { DialogNoSymptomWarningComponent } from './ui/dialog/dialog-no-symptom-w
 import { DialogSelectSymptomComponent } from './ui/dialog/dialog-select-symptom';
 import { DialogSelectBackupComponent } from './ui/dialog/dialog-select-backup';
 import { PieChartComponent } from './ui/chart/pie-chart';
+import { LineChartComponent } from './ui/chart/line-chart';
 
 @NgModule({
 	declarations: [
@@ -64,6 +65,7 @@ import { PieChartComponent } from './ui/chart/pie-chart';
 		SettingsComponent,
 		SleepChartComponent,
 		PieChartComponent,
+		LineChartComponent,
 		DialogAddEventComponent,
 		DialogDeleteEventComponent,
 		DialogShowEventComponent,

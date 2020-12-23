@@ -1,0 +1,25 @@
+.chart-title {
+    color: #212121;
+    margin-left: 2.5rem;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+table {
+    width: 100%;
+    th {
+        width: 30%;
+        text-align: center;
+    }
+    td {
+        text-align: center;
+    }
+}
+
+.chart-container {
+    margin-top: 2rem;
+}
+
+canvas {
+    margin-top: 1rem;
+}
