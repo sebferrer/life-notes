@@ -10,8 +10,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { ATimeComponent } from '../time';
 import { IDay } from 'src/app/models';
-import { DayChartViewModel } from 'src/app/models/google-charts/day.chart.view.model';
-import { DayPieChartViewModel } from 'src/app/models/google-charts/day.pie.chart.view.model';
 
 @Component({
 	selector: 'app-day',
@@ -24,8 +22,6 @@ export class DayComponent extends ATimeComponent implements OnInit {
 	public dayContent$: Subject<DayViewModel>;
 	public symptomMap: Map<string, string>;
 	public symptomPainColorMap: Map<number, string>;
-	public steppedAreaChart: DayChartViewModel;
-	public pieCharts: Map<string, DayPieChartViewModel>;
 	public displayCharts = false;
 
 	constructor(
@@ -42,8 +38,6 @@ export class DayComponent extends ATimeComponent implements OnInit {
 			this.dayContent = new DayViewModel(day);
 			this.dayContent$.next(this.dayContent);
 		}
-		this.steppedAreaChart = new DayChartViewModel('SteppedAreaChart', 'Symptoms');
-		this.pieCharts = new Map<string, DayPieChartViewModel>();
 	}
 
 	public ngOnInit(): void {
@@ -55,11 +49,6 @@ export class DayComponent extends ATimeComponent implements OnInit {
 					new DayViewModel(this.daysService.buildDay(new Date(date))) :
 					new DayViewModel(day);
 				this.dayContent$.next(this.dayContent);
-				this.steppedAreaChart.update(this.symptoms$, this.globalService.symptomMap, this.dayContent);
-				/*day.symptoms.forEach(symptom => {
-					this.pieCharts.set(symptom.key, new DayPieChartViewModel('PieChart', symptom.key));
-					this.pieCharts.get(symptom.key).update(this.symptoms$, this.globalService.symptomMap, this.dayContent);
-				});*/
 			}
 		);
 	}

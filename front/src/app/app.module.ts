@@ -37,9 +37,7 @@ import { GlobalService } from './infra/global.service';
 import { SettingsComponent } from './ui/settings';
 import { InfiniteScrollComponent } from './ui/infinite-scroll';
 import { File as IonicFile } from '@ionic-native/file/ngx';
-import { GoogleChartsModule } from 'angular-google-charts';
 import { ChartsModule } from 'ng2-charts';
-import { SleepChartComponent } from './ui/sleep-chart';
 import { BackupService } from './infra/backup.service';
 import { DialogAddEventComponent } from './ui/dialog/dialog-add-event';
 import { DialogDeleteEventComponent } from './ui/dialog/dialog-delete-event';
@@ -63,7 +61,6 @@ import { LineChartComponent } from './ui/chart/line-chart';
 		TimelineComponent,
 		SymptomsComponent,
 		SettingsComponent,
-		SleepChartComponent,
 		PieChartComponent,
 		LineChartComponent,
 		DialogAddEventComponent,
@@ -107,7 +104,6 @@ import { LineChartComponent } from './ui/chart/line-chart';
 		MatExpansionModule,
 		NgxMaterialTimepickerModule,
 		TranslocoRootModule,
-		GoogleChartsModule,
 		ChartsModule
 	],
 	providers: [
