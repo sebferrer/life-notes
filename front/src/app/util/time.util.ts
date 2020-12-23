@@ -34,5 +34,5 @@ export function formatMinutesInDuration(minutes: number): string {
 	hours = hours.length > 1 && hours[0] === '0' ? hours.substring(1) : hours;
 	let mins = formattedSplitted[1];
 	mins = mins.length > 1 && mins[0] === '0' ? mins.substring(1) : mins;
-	return hours + 'h,' + mins + 'min';
+	return hours + 'h';
 }

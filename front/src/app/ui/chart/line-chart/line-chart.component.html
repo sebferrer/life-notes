@@ -1,4 +1,4 @@
-<div class="chart-container">
+<div *ngIf="chart.nbData > 0" class="chart-container">
     <label class="chart-title">{{ title | transloco }}</label>
     <canvas baseChart [data]="chart.data" [chartType]="type" [options]="options" [labels]="labels" [datasets]="datasets"
         [plugins]="plugins"></canvas>

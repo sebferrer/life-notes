@@ -1,15 +1,14 @@
 import { DayOverviewViewModel } from '../day.overview.view.model';
-import { formatMinutes, timeToMinutes } from 'src/app/util/time.util';
-import { ALineChartViewModel } from './line.chart.view.model';
+import { timeToMinutes, formatMinutes } from '../../util/time.util';
+import { ALineChartViewModel } from '../chartjs/line.chart.view.model';
 import { CHART_JS_PLUGINS } from 'src/app/util/chartjs.plugins';
 
-export class BedTimeChartViewModel extends ALineChartViewModel {
+export class WakeUpChartViewModel extends ALineChartViewModel {
 
 	private readonly MAX_MINUTES = 1440;
 	private readonly PIVOT_TIME = 900;
-	private readonly CHART_MAX_DEFAULT = 120;
-	private readonly CHART_MIN_DEFAULT = 0;
-
+	private readonly CHART_MAX_DEFAULT = -420;
+	private readonly CHART_MIN_DEFAULT = -540;
 	constructor(
 		type: string
 	) {
@@ -24,11 +23,7 @@ export class BedTimeChartViewModel extends ALineChartViewModel {
 					borderColor: '#000000',
 					backgroundColor: '#000000',
 					hitRadius: 20
-				}/*,
-				line: {
-					fill: false,
-					borderColor: '#000000'
-				}*/
+				}
 			},
 			scales: {
 				xAxes: [{
@@ -53,11 +48,7 @@ export class BedTimeChartViewModel extends ALineChartViewModel {
 						callback: (label: number) => {
 							return formatMinutes(-label);
 						}
-					}/*,
-					scaleLabel: {
-						display: true,
-						labelString: 'Bed time'
-					}*/
+					}
 				}]
 			},
 			tooltips: {
@@ -68,7 +59,7 @@ export class BedTimeChartViewModel extends ALineChartViewModel {
 				}
 			},
 			horizontalLine: [{
-				y: 0,
+				y: -480,
 				style: '#4487B4'
 			}]
 		};
@@ -95,45 +86,46 @@ export class BedTimeChartViewModel extends ALineChartViewModel {
 	public update(overviews: DayOverviewViewModel[]): void {
 		let chartMax = this.CHART_MAX_DEFAULT;
 		let chartMin = this.CHART_MIN_DEFAULT;
+		this.labels = new Array<string>();
+		this.data = new Array<number>();
 		let min = this.MAX_MINUTES;
 		let max = -this.MAX_MINUTES;
 		let timeSum = 0;
 		this.nbData = 0;
-		this.labels = new Array<string>();
-		this.data = new Array<number>();
 		overviews.forEach(overview => {
 			const day = overview.detailedDate.day.toString();
 			this.labels.push(day);
-			let bedTimeMinutes = timeToMinutes(overview.bedTime);
-			if (bedTimeMinutes > this.PIVOT_TIME) {
-				bedTimeMinutes = -(this.MAX_MINUTES - bedTimeMinutes);
+			let wakeUpTimeMinutes = timeToMinutes(overview.wakeUpTime);
+			if (wakeUpTimeMinutes > this.PIVOT_TIME) {
+				wakeUpTimeMinutes = -(this.MAX_MINUTES - wakeUpTimeMinutes);
 			}
-			if (bedTimeMinutes != null) {
-				bedTimeMinutes = -bedTimeMinutes;
+			if (wakeUpTimeMinutes != null) {
+				wakeUpTimeMinutes = -wakeUpTimeMinutes;
 			}
-			if (Number.isInteger(bedTimeMinutes)) {
-				this.data.push(bedTimeMinutes);
+			if (Number.isInteger(wakeUpTimeMinutes)) {
+				this.data.push(wakeUpTimeMinutes);
 				this.nbData++;
 
-				if (bedTimeMinutes < min) {
-					min = bedTimeMinutes;
+				if (-wakeUpTimeMinutes < min) {
+					min = -wakeUpTimeMinutes;
 				}
-				if (bedTimeMinutes > max) {
-					max = bedTimeMinutes;
+				if (-wakeUpTimeMinutes > max) {
+					max = -wakeUpTimeMinutes;
 				}
-				timeSum += bedTimeMinutes;
+				timeSum += wakeUpTimeMinutes;
 			}
 			else {
 				this.data.push(null);
 			}
-			if (bedTimeMinutes < chartMin) {
-				chartMin = bedTimeMinutes;
-			} else if (bedTimeMinutes > chartMax) {
-				chartMax = bedTimeMinutes;
+			if (wakeUpTimeMinutes < chartMin) {
+				chartMin = wakeUpTimeMinutes;
+			} else if (wakeUpTimeMinutes > chartMax) {
+				chartMax = wakeUpTimeMinutes;
 			}
 		});
-		this.minimum = formatMinutes(-max);
-		this.maximum = formatMinutes(-min);
+		// console.log(this.options.scales.yAxes[0].ticks);
+		this.minimum = formatMinutes(min);
+		this.maximum = formatMinutes(max);
 		this.average = formatMinutes(-Math.trunc(timeSum / this.nbData));
 		this.dataSource = [{ min: this.minimum, max: this.maximum, avg: this.average }];
 		this.labels.sort((a, b) => (a as any) - (b as any));
