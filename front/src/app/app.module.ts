@@ -51,6 +51,7 @@ import { DialogSelectSymptomComponent } from './ui/dialog/dialog-select-symptom'
 import { DialogSelectBackupComponent } from './ui/dialog/dialog-select-backup';
 import { PieChartComponent } from './ui/chart/pie-chart';
 import { LineChartComponent } from './ui/chart/line-chart';
+import { DialogNoTargetSymptomWarningComponent } from './ui/dialog/dialog-no-target-symptom-warning';
 
 @NgModule({
 	declarations: [
@@ -71,6 +72,7 @@ import { LineChartComponent } from './ui/chart/line-chart';
 		DialogEditSymptomOverviewComponent,
 		DialogImportConfirmComponent,
 		DialogNoSymptomWarningComponent,
+		DialogNoTargetSymptomWarningComponent,
 		DialogSelectSymptomComponent,
 		DialogSelectBackupComponent,
 		BottomSheetAddEventComponent,
@@ -136,6 +138,7 @@ import { LineChartComponent } from './ui/chart/line-chart';
 		DialogEditSymptomOverviewComponent,
 		DialogImportConfirmComponent,
 		DialogNoSymptomWarningComponent,
+		DialogNoTargetSymptomWarningComponent,
 		DialogSelectSymptomComponent,
 		DialogSelectBackupComponent,
 	],

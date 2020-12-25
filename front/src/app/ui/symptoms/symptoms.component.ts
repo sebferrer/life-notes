@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SymptomsService } from '../../infra';
+import { SymptomsService, SettingsService } from '../../infra';
 import { Subject } from 'rxjs';
 import { SymptomViewModel } from 'src/app/models/symptom.view.model';
 import { MatDialog } from '@angular/material/dialog';
@@ -24,6 +24,7 @@ export class SymptomsComponent implements OnInit {
 	constructor(
 		private translocoService: TranslocoService,
 		private globalService: GlobalService,
+		private settingsService: SettingsService,
 		private symptomsService: SymptomsService,
 		private dialog: MatDialog,
 		private snackBar: MatSnackBar
@@ -88,9 +89,11 @@ export class SymptomsComponent implements OnInit {
 				this.symptoms = this.symptoms.filter(symptom => symptom.key !== key);
 				this.symptoms$.next(this.symptoms);
 				if (this.globalService.targetSymptomKey === key) {
-					this.globalService.targetSymptomKey = null;
+					this.settingsService.setTargetSymptomKey(null).subscribe(() => {
+						this.globalService.targetSymptomKey = null;
+					});
 				}
-				this.globalService.loadSymptoms().subscribe(() => {});
+				this.globalService.loadSymptoms().subscribe(() => { });
 			});
 			this.snackBar.open(this.translocoService.translate('DELETE_SYMPTOM_SNACKBAR', { label }), 'Close',
 				{ duration: 2000 });
@@ -102,7 +105,7 @@ export class SymptomsComponent implements OnInit {
 		this.symptomsService.createNewSymptom(key, label).subscribe(() => {
 			this.symptoms.push(new SymptomViewModel({ type: null, key, label }));
 			this.symptoms$.next(this.symptoms);
-			this.globalService.loadSymptoms().subscribe(() => {});
+			this.globalService.loadSymptoms().subscribe(() => { });
 		});
 	}
 
@@ -111,7 +114,7 @@ export class SymptomsComponent implements OnInit {
 			this.symptoms = this.symptoms.filter(s => s.key !== key);
 			this.symptoms.push(new SymptomViewModel(symptom));
 			this.symptoms$.next(this.symptoms);
-			this.globalService.loadSymptoms().subscribe(() => {});
+			this.globalService.loadSymptoms().subscribe(() => { });
 		});
 	}
 

@@ -16,6 +16,7 @@ import { getDetailedDate } from 'src/app/util/date.utils';
 import { TranslocoService } from '@ngneat/transloco';
 import { IDay } from 'src/app/models';
 import { DayViewModel } from 'src/app/models/day.view.model';
+import { DialogNoTargetSymptomWarningComponent } from '../dialog/dialog-no-target-symptom-warning';
 
 @Component({
 	selector: 'app-time',
@@ -154,25 +155,35 @@ export abstract class ATimeComponent {
 
 	public openEditSymptomOverviewDialog(date: string): void {
 		if (this.globalService.targetSymptomKey == null || this.globalService.targetSymptomKey === '') {
-			return;
-		}
-		this.daysService.getDay(date).subscribe(
-			d => {
-				const symptomOverview = this.daysService.getSymptomOverview(d, this.globalService.targetSymptomKey)
-					|| { key: this.globalService.targetSymptomKey, pain: 0 };
-				const symptomMap = this.symptomMap;
-				this.dialog.open(DialogEditSymptomOverviewComponent, {
-					autoFocus: false,
-					width: '20rem',
-					panelClass: 'custom-modalbox',
-					data: { date, symptomOverview, symptomMap }
-				}).afterClosed().subscribe(response => {
-					if (response == null || response.answer !== 'yes') {
-						return;
-					}
-					this.daysService.addSymptomOverview(date, response.key, response.pain).subscribe(day => { this.updateCallback(day); });
-				});
+			this.dialog.open(DialogNoTargetSymptomWarningComponent, {
+				autoFocus: false,
+				width: '20rem',
+				panelClass: 'custom-modalbox'
+			}).afterClosed().subscribe(response => {
+				if (response == null || response.answer !== 'yes') {
+					return;
+				}
 			});
+		}
+		else {
+			this.daysService.getDay(date).subscribe(
+				d => {
+					const symptomOverview = this.daysService.getSymptomOverview(d, this.globalService.targetSymptomKey)
+						|| { key: this.globalService.targetSymptomKey, pain: 0 };
+					const symptomMap = this.symptomMap;
+					this.dialog.open(DialogEditSymptomOverviewComponent, {
+						autoFocus: false,
+						width: '20rem',
+						panelClass: 'custom-modalbox',
+						data: { date, symptomOverview, symptomMap }
+					}).afterClosed().subscribe(response => {
+						if (response == null || response.answer !== 'yes') {
+							return;
+						}
+						this.daysService.addSymptomOverview(date, response.key, response.pain).subscribe(day => { this.updateCallback(day); });
+					});
+				});
+		}
 	}
 
 	public deleteEvent(date: string, customEvent: ICustomEvent): void {
