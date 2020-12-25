@@ -28,11 +28,16 @@ export function formatMinutes(minutes: number): string {
 	return '';
 }
 
-export function formatMinutesInDuration(minutes: number): string {
+export function formatMinutesInDurationContracted(minutes: number): string {
 	const formattedSplitted = formatMinutes(minutes).split(':');
 	let hours = formattedSplitted[0];
 	hours = hours.length > 1 && hours[0] === '0' ? hours.substring(1) : hours;
+	return hours + 'h';
+}
+
+export function formatMinutesInDuration(minutes: number): string {
+	const formattedSplitted = formatMinutes(minutes).split(':');
 	let mins = formattedSplitted[1];
 	mins = mins.length > 1 && mins[0] === '0' ? mins.substring(1) : mins;
-	return hours + 'h';
+	return formatMinutesInDurationContracted(minutes) + ',' + mins + 'min';
 }

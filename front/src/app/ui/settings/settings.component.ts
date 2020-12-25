@@ -71,7 +71,8 @@ export class SettingsComponent implements OnInit {
 			}
 			this.importerExporterService.importDataWeb(event).subscribe(() => { });
 			this.debug = this.importerExporterService.debug;
-			this.snackBar.open(this.translocoService.translate('DATA_IMPORT_SNACKBAR_SUCCESS'), 'Close',
+			this.snackBar.open(this.translocoService.translate('DATA_IMPORT_SNACKBAR_SUCCESS'),
+				this.translocoService.translate('CLOSE'),
 				{ duration: 2000 });
 		});
 	}
@@ -88,7 +89,8 @@ export class SettingsComponent implements OnInit {
 			}
 			this.importerExporterService.importDataNative(auto).subscribe(() => { });
 			this.debug = this.importerExporterService.debug;
-			this.snackBar.open(this.translocoService.translate('DATA_IMPORT_SNACKBAR_SUCCESS'), 'Close',
+			this.snackBar.open(this.translocoService.translate('DATA_IMPORT_SNACKBAR_SUCCESS'),
+				this.translocoService.translate('CLOSE'),
 				{ duration: 2000 });
 		});
 	}
@@ -115,7 +117,8 @@ export class SettingsComponent implements OnInit {
 	public exportData(): void {
 		this.importerExporterService.exportData();
 		this.debug = this.importerExporterService.debug;
-		this.snackBar.open(this.translocoService.translate('DATA_EXPORT_SNACKBAR_SUCCESS'), 'Close',
+		this.snackBar.open(this.translocoService.translate('DATA_EXPORT_SNACKBAR_SUCCESS'),
+			this.translocoService.translate('CLOSE'),
 			{ duration: 2000 });
 	}
 

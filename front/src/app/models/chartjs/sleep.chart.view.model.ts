@@ -1,4 +1,4 @@
-import { formatMinutesInDuration, timeToMinutes, formatMinutes } from 'src/app/util/time.util';
+import { formatMinutesInDuration, timeToMinutes, formatMinutes, formatMinutesInDurationContracted } from 'src/app/util/time.util';
 import { DayOverviewViewModel } from '../day.overview.view.model';
 import { ALineChartViewModel } from './line.chart.view.model';
 import { CHART_JS_PLUGINS } from 'src/app/util/chartjs.plugins';
@@ -44,7 +44,7 @@ export class SleepChartViewModel extends ALineChartViewModel {
 						suggestedMin: this.CHART_MIN_DEFAULT,
 						stepSize: 60,
 						callback: (label: number) => {
-							return formatMinutesInDuration(label);
+							return formatMinutesInDurationContracted(label);
 						}
 					}
 				}]

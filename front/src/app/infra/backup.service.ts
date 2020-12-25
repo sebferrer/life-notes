@@ -1,13 +1,10 @@
-import { Observable, of, forkJoin } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { IDay } from '../models';
-import { getFormattedDate } from 'src/app/util/date.utils';
-import { map, switchMap, catchError, tap, mergeMap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { IBackup } from '../models/backup.model';
 import { DaysService } from './days.service';
 import { SymptomsService } from './symptoms.service';
 import { SettingsService } from './settings.service';
-import { ISymptom } from '../models/symptom.model';
 
 @Injectable()
 export class BackupService {

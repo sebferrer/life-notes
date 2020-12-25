@@ -34,7 +34,7 @@
 					</div>
 				</div>
 				<div class="charts">
-					<div class="pie-charts">
+					<div [ngClass]="symptoms.length > 1 ? 'pie-charts' : 'pie-chart'">
 						<app-pie-chart *ngFor="let symptom of organizeSymptoms(symptoms)" [title]="symptom.label"
 							[chart]="pieCharts.get(symptom.key)"></app-pie-chart>
 					</div>

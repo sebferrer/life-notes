@@ -70,7 +70,7 @@ export class SymptomsComponent implements OnInit {
 			}
 			const action = response.edit ? 'UPDATED' : 'ADDED';
 			this.snackBar.open(this.translocoService.translate('ADD_SYMPTOM_SNACKBAR',
-				{ action: this.translocoService.translate(action) }), 'Close',
+				{ action: this.translocoService.translate(action) }), this.translocoService.translate('CLOSE'),
 				{ duration: 2000 });
 		});
 	}
@@ -95,7 +95,8 @@ export class SymptomsComponent implements OnInit {
 				}
 				this.globalService.loadSymptoms().subscribe(() => { });
 			});
-			this.snackBar.open(this.translocoService.translate('DELETE_SYMPTOM_SNACKBAR', { label }), 'Close',
+			this.snackBar.open(this.translocoService.translate('DELETE_SYMPTOM_SNACKBAR', { label }),
+				this.translocoService.translate('CLOSE'),
 				{ duration: 2000 });
 		});
 	}
