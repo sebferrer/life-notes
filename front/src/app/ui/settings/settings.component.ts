@@ -9,6 +9,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { DialogImportConfirmComponent } from '../dialog/dialog-import-confirm';
 import { DialogSelectBackupComponent } from '../dialog/dialog-select-backup';
 import { BackupService } from 'src/app/infra/backup.service';
+import { DialogExportConfirmComponent } from '../dialog/dialog-export-confirm';
 
 @Component({
 	selector: 'app-settings',
@@ -115,17 +116,25 @@ export class SettingsComponent implements OnInit {
 	}
 
 	public exportData(): void {
-		this.importerExporterService.exportData();
-		this.debug = this.importerExporterService.debug;
-		this.snackBar.open(this.translocoService.translate('DATA_EXPORT_SNACKBAR_SUCCESS'),
-			this.translocoService.translate('CLOSE'),
-			{ duration: 2000 });
+		this.dialog.open(DialogExportConfirmComponent, {
+			autoFocus: false,
+			width: '20rem',
+			panelClass: 'custom-modalbox'
+		}).afterClosed().subscribe(response => {
+			if (response == null || response.answer !== 'yes') {
+				return;
+			}
+			this.importerExporterService.exportData();
+			this.debug = this.importerExporterService.debug;
+			this.snackBar.open(this.translocoService.translate('DATA_EXPORT_SNACKBAR_SUCCESS'),
+				this.translocoService.translate('CLOSE'),
+				{ duration: 2000 });
+		});
 	}
 
 	public generateBackupData(): void {
 		this.backupService.getBackup().subscribe(backup => {
 			backup = this.importerExporterService.cleanBackupData(backup);
-			console.log(backup);
 			this.backupData = JSON.stringify(backup);
 			this.generateData = true;
 		});

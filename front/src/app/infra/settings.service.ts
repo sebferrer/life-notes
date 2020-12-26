@@ -38,7 +38,6 @@ export class SettingsService {
 		const settings = this.getSettings();
 		return settings.pipe(
 			switchMap(s => {
-				console.log(s);
 				s.language = newDefaultLanguage;
 				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
 					map(() => s)

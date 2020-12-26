@@ -52,6 +52,7 @@ import { DialogSelectBackupComponent } from './ui/dialog/dialog-select-backup';
 import { PieChartComponent } from './ui/chart/pie-chart';
 import { LineChartComponent } from './ui/chart/line-chart';
 import { DialogNoTargetSymptomWarningComponent } from './ui/dialog/dialog-no-target-symptom-warning';
+import { DialogExportConfirmComponent } from './ui/dialog/dialog-export-confirm';
 
 @NgModule({
 	declarations: [
@@ -71,6 +72,7 @@ import { DialogNoTargetSymptomWarningComponent } from './ui/dialog/dialog-no-tar
 		DialogDeleteSymptomComponent,
 		DialogEditSymptomOverviewComponent,
 		DialogImportConfirmComponent,
+		DialogExportConfirmComponent,
 		DialogNoSymptomWarningComponent,
 		DialogNoTargetSymptomWarningComponent,
 		DialogSelectSymptomComponent,
@@ -137,6 +139,7 @@ import { DialogNoTargetSymptomWarningComponent } from './ui/dialog/dialog-no-tar
 		DialogDeleteSymptomComponent,
 		DialogEditSymptomOverviewComponent,
 		DialogImportConfirmComponent,
+		DialogExportConfirmComponent,
 		DialogNoSymptomWarningComponent,
 		DialogNoTargetSymptomWarningComponent,
 		DialogSelectSymptomComponent,

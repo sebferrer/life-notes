@@ -24,7 +24,7 @@ export class DayPieChartViewModel extends AChartViewModel {
 	public update(symptoms$: Observable<ISymptom[]>, symptomMap: Map<string, string>, dayContent: DayViewModel): void {
 		symptoms$.subscribe(() => {
 			const symptomLogs = dayContent.symptoms.find(s => s.key === this.symptomKey).logs;
-			console.log(symptomLogs);
+			// console.log(symptomLogs);
 			/*for (let i = 0; i < symptomLogs.length; i++) {
 				if (!this.symptomPainMap.has(symptomLogs[i].pain)) {
 					this.symptomPainMap.set(symptomLogs[i].pain, symptomLogs[i].time);
