@@ -222,6 +222,14 @@ export class DaysService {
 
 					}
 				}
+				switch (customEvent.type) {
+					case 'wakeUp':
+					case 'goToBed':
+						this.setStartEnd(d, customEvent.time, customEvent.type);
+						break;
+
+				}
+
 				return this.dbContext.asObservable(this.dbContext.daysCollection.put(d)).pipe(
 					map(() => d)
 				);

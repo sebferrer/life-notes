@@ -12,16 +12,16 @@
             <div><mat-label>{{ data.customEvent.detail }}</mat-label></div>
         </div>
         <div *ngSwitchCase="'log'">
-            <mat-label>{{ data.customEvent.key }}</mat-label>
-            <mat-label>{{ data.customEvent.detail }}</mat-label>
+            <div><mat-label>{{ data.customEvent.key }}</mat-label></div>
+            <div><mat-label>{{ data.customEvent.detail }}</mat-label></div>
         </div>
         <div *ngSwitchCase="'med'">
-            <mat-label>{{ data.customEvent.key }}</mat-label>
-            <mat-label>{{ data.customEvent.quantity }}mg</mat-label>
+            <div><mat-label>{{ data.customEvent.key }}</mat-label></div>
+            <div><mat-label>{{ data.customEvent.quantity }}mg</mat-label></div>
         </div>
         <div *ngSwitchCase="'meal'">
-            <mat-label>{{ data.customEvent.key }}</mat-label>
-            <mat-label>{{ data.customEvent.detail }}</mat-label>
+            <div><mat-label>{{ data.customEvent.key }}</mat-label></div>
+            <div><mat-label>{{ data.customEvent.detail }}</mat-label></div>
         </div>
     </div>
     <div mat-dialog-actions>
