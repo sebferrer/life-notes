@@ -201,24 +201,26 @@ export class DaysService {
 		const day = this.getOrCreateDay(date);
 		return day.pipe(
 			switchMap(d => {
-				switch (customEvent.type) {
-					case 'symptomLog':
-						this.addSymptomLog(d, customEvent.time, customEvent.key, customEvent.pain, customEvent.detail);
-						break;
-					case 'log':
-						this.addLog(d, customEvent.time, customEvent.key, customEvent.detail);
-						break;
-					case 'med':
-						this.addMed(d, customEvent.time, customEvent.key, customEvent.quantity);
-						break;
-					case 'meal':
-						this.addMeal(d, customEvent.time, customEvent.key, customEvent.detail);
-						break;
-					case 'wakeUp':
-					case 'goToBed':
-						this.setStartEnd(d, customEvent.time, customEvent.type);
-						break;
+				if (customEvent.time != null && customEvent.key != null) {
+					switch (customEvent.type) {
+						case 'symptomLog':
+							this.addSymptomLog(d, customEvent.time, customEvent.key, customEvent.pain, customEvent.detail);
+							break;
+						case 'log':
+							this.addLog(d, customEvent.time, customEvent.key, customEvent.detail);
+							break;
+						case 'med':
+							this.addMed(d, customEvent.time, customEvent.key, customEvent.quantity);
+							break;
+						case 'meal':
+							this.addMeal(d, customEvent.time, customEvent.key, customEvent.detail);
+							break;
+						case 'wakeUp':
+						case 'goToBed':
+							this.setStartEnd(d, customEvent.time, customEvent.type);
+							break;
 
+					}
 				}
 				return this.dbContext.asObservable(this.dbContext.daysCollection.put(d)).pipe(
 					map(() => d)

@@ -42,6 +42,7 @@ export class DialogAddEventComponent {
 			data.quantity = data.customEvent.quantity;
 		} else {
 			data.edit = false;
+			data.pain = 0;
 		}
 	}
 
