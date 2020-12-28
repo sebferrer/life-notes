@@ -33,7 +33,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="help-container">
+				<div class="help-container" *ngIf="symptoms.length > 0">
 					<button mat-icon-button (click)="openHelpDialog()">
 						<mat-icon>help</mat-icon>
 					</button>
