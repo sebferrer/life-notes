@@ -11,6 +11,8 @@ import { CalendarPieChartViewModel } from 'src/app/models/chartjs/calendar.pie.c
 import { BedTimeChartViewModel } from 'src/app/models/chartjs/bedtime.chart.view.model';
 import { WakeUpChartViewModel } from 'src/app/models/chartjs/wakeup.chart.view.model';
 import { SleepChartViewModel } from 'src/app/models/chartjs/sleep.chart.view.model';
+import { DialogInfoComponent } from '../dialog/dialog-info';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
 	selector: 'app-calendar',
@@ -39,7 +41,8 @@ export class CalendarComponent implements OnInit {
 	constructor(
 		public globalService: GlobalService,
 		private daysService: DaysService,
-		public translocoService: TranslocoService
+		public translocoService: TranslocoService,
+		private dialog: MatDialog,
 	) {
 		this.pieCharts = new Map<string, CalendarPieChartViewModel>();
 		this.bedTimeChart = new BedTimeChartViewModel('line');
@@ -74,7 +77,7 @@ export class CalendarComponent implements OnInit {
 		return symptoms;
 	}
 
-	public loadSymptoms() {
+	public loadSymptoms(): void {
 		this.globalService.symptoms$.subscribe(symptoms => {
 			this.symptoms = [...symptoms];
 			this.symptoms = this.organizeSymptoms(this.symptoms);
@@ -82,7 +85,7 @@ export class CalendarComponent implements OnInit {
 		});
 	}
 
-	public updateCharts() {
+	public updateCharts(): void {
 		this.symptoms$.subscribe(symptoms => {
 			symptoms.forEach(symptom => {
 				this.pieCharts.set(symptom.key, new CalendarPieChartViewModel('doughnut', symptom.key));
@@ -94,7 +97,7 @@ export class CalendarComponent implements OnInit {
 		this.sleepChart.update(this.overviews, this.previousOverviews);
 	}
 
-	public updateCalendar(month: number, year: number) {
+	public updateCalendar(month: number, year: number): void {
 		this.loadSymptoms();
 		this.daysService.getMonthDaysOverviews(month, year).subscribe(
 			days => {
@@ -118,7 +121,7 @@ export class CalendarComponent implements OnInit {
 			});
 	}
 
-	public previous() {
+	public previous(): void {
 		this.month--;
 		if (this.month === 0) {
 			this.month = 12;
@@ -127,12 +130,28 @@ export class CalendarComponent implements OnInit {
 		this.updateCalendar(this.month, this.year);
 	}
 
-	public next() {
+	public next(): void {
 		this.month++;
 		if (this.month === 13) {
 			this.month = 1;
 			this.year++;
 		}
 		this.updateCalendar(this.month, this.year);
+	}
+
+	public openHelpDialog(): void {
+		this.dialog.open(DialogInfoComponent, {
+			autoFocus: false,
+			width: '20rem',
+			panelClass: 'custom-modalbox',
+			data: {
+				title: 'CALENDAR_HELP_DIALOG_TITLE',
+				content: ['CALENDAR_HELP_DIALOG_CONTENT_1', 'CALENDAR_HELP_DIALOG_CONTENT_2']
+			}
+		}).afterClosed().subscribe(response => {
+			if (response == null || response.answer !== 'close') {
+				return;
+			}
+		});
 	}
 }

@@ -13,6 +13,7 @@
     background-color: #9E9E9E;
     text-align: center;
     color: white;
+    z-index: 3;
 
     .calender-header-label {
         display: table;
@@ -116,6 +117,14 @@
         height: 65vh;
         overflow-y: auto;
     }
+}
+
+.help-container {
+    color: #0070C0;
+    position: absolute;
+    top: 27rem;
+    right: 1rem;
+    z-index: 2;
 }
 
 .color-default {

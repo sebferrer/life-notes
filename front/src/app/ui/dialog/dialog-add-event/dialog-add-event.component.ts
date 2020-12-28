@@ -50,8 +50,11 @@ export class DialogAddEventComponent {
 	}
 
 	public isValid(): boolean {
-		return this.data.time != null && this.data.time !== ''
+		if (['symptomLog', 'log', 'med', 'meal'].includes(this.data.type)) {
+			return this.data.time != null && this.data.time !== ''
 			&& this.data.key != null && this.data.key !== '';
+		}
+		return this.data.time != null && this.data.time !== '';
 	}
 
 	public onNoClick(): void {

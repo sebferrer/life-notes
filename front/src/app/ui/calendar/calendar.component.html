@@ -33,6 +33,11 @@
 						</div>
 					</div>
 				</div>
+				<div class="help-container">
+					<button mat-icon-button (click)="openHelpDialog()">
+						<mat-icon>help</mat-icon>
+					</button>
+				</div>
 				<div class="charts">
 					<div [ngClass]="symptoms.length > 1 ? 'pie-charts' : 'pie-chart'">
 						<app-pie-chart *ngFor="let symptom of organizeSymptoms(symptoms)" [title]="symptom.label"

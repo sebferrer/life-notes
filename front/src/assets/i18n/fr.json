@@ -122,5 +122,8 @@
     "SETTINGS_MANUAL_SAVE_WARNING": "Attention: utiliser seulement si nécessaire",
     "SETTINGS_MANUAL_SAVE_BUTTON": "Générer les données de backup",
     "COPY": "Copier",
-    "COPIED": "Copié !"
+    "COPIED": "Copié !",
+    "CALENDAR_HELP_DIALOG_TITLE": "Graphiques des symptômes",
+    "CALENDAR_HELP_DIALOG_CONTENT_1": "Voici votre vision globale sur vos symptômes. Ces graphiques ne sont pas remplis par les symptômes que vous avez ajouté à vos journées, mais par vos aperçus globaux de symptômes. Ces aperçus de symptômes peuvent être renseignées en tapotant sur le petit rond vert sur la droite de chaque journée dans votre timeline (la vue par défaut).",
+    "CALENDAR_HELP_DIALOG_CONTENT_2": "Par exemple, la valeur par défaut '0:31' qui apparaît lorsque vous tappez sur le graphique signifie que vous avez 31 jours avec une intensité de douleur de 0 pour ce symptôme."
 }

@@ -68,6 +68,10 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
             right: 0;
         }
     }
+
+    .dialog-content {
+        overflow-y: auto;
+    }
 }
 
 .custom-bottom-sheet {

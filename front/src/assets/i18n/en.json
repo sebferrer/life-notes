@@ -122,5 +122,8 @@
     "SETTINGS_MANUAL_SAVE_WARNING": "Warning: to use only if necessary",
     "SETTINGS_MANUAL_SAVE_BUTTON": "Generate backup data",
     "COPY": "Copy",
-    "COPIED": "Copied!"
+    "COPIED": "Copied!",
+    "CALENDAR_HELP_DIALOG_TITLE": "Symptom charts",
+    "CALENDAR_HELP_DIALOG_CONTENT_1": "Here are your symptom overviews. These charts aren't filled by the symptoms you've added to your days, but by your overall symptom overviews. These symptom overviews can be filled in by tapping on the small green circle on the right of each day in your timeline.",
+    "CALENDAR_HELP_DIALOG_CONTENT_2": "For example, the default value '0:31' that appears when you tap on the chart means that you have 31 days with a 0 pain intensity for this symptom."
 }

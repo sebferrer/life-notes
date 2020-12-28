@@ -53,6 +53,7 @@ import { PieChartComponent } from './ui/chart/pie-chart';
 import { LineChartComponent } from './ui/chart/line-chart';
 import { DialogNoTargetSymptomWarningComponent } from './ui/dialog/dialog-no-target-symptom-warning';
 import { DialogExportConfirmComponent } from './ui/dialog/dialog-export-confirm';
+import { DialogInfoComponent } from './ui/dialog/dialog-info';
 
 @NgModule({
 	declarations: [
@@ -77,6 +78,7 @@ import { DialogExportConfirmComponent } from './ui/dialog/dialog-export-confirm'
 		DialogNoTargetSymptomWarningComponent,
 		DialogSelectSymptomComponent,
 		DialogSelectBackupComponent,
+		DialogInfoComponent,
 		BottomSheetAddEventComponent,
 
 		// Helpers
@@ -144,6 +146,7 @@ import { DialogExportConfirmComponent } from './ui/dialog/dialog-export-confirm'
 		DialogNoTargetSymptomWarningComponent,
 		DialogSelectSymptomComponent,
 		DialogSelectBackupComponent,
+		DialogInfoComponent
 	],
 	bootstrap: [AppComponent]
 })
