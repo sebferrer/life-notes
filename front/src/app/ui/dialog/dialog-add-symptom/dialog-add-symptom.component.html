@@ -8,11 +8,11 @@
         <input matInput [(ngModel)]="data.symptom.label">
     </mat-form-field>
     <div mat-dialog-actions>
+        <button mat-button (click)="onNoClick()" transloco="CANCEL"></button>
         <button mat-button cdkFocusInitial
             (click)="onYesClick()" color="primary">
             <span *ngIf="data.edit; else addButton" transloco="EDIT"></span>
             <ng-template #addButton><span transloco="ADD"></span></ng-template>
         </button>
-        <button mat-button (click)="onNoClick()" transloco="CANCEL"></button>
     </div>
 </div>

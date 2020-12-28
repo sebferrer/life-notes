@@ -4,30 +4,47 @@
     </h1>
 </ng-template>
 <div mat-dialog-content>
-    <div><mat-label>{{ data.customEvent.time }}</mat-label></div>
+    <div>
+        <mat-label>{{ data.customEvent.time }}</mat-label>
+    </div>
     <div [ngSwitch]="data.customEvent.type">
         <div *ngSwitchCase="'symptomLog'">
-            <mat-label>{{ data.customEvent.key }}</mat-label>
-            <div><mat-label>{{ data.customEvent.pain }} / 5</mat-label></div>
-            <div><mat-label>{{ data.customEvent.detail }}</mat-label></div>
+            <mat-label>{{ globalService.symptomMap.get(data.customEvent.key) }}</mat-label>
+            <div>
+                <mat-label>{{ data.customEvent.pain }} / 5</mat-label>
+            </div>
+            <div>
+                <mat-label>{{ data.customEvent.detail }}</mat-label>
+            </div>
         </div>
         <div *ngSwitchCase="'log'">
-            <div><mat-label>{{ data.customEvent.key }}</mat-label></div>
-            <div><mat-label>{{ data.customEvent.detail }}</mat-label></div>
+            <div>
+                <mat-label>{{ data.customEvent.key }}</mat-label>
+            </div>
+            <div>
+                <mat-label>{{ data.customEvent.detail }}</mat-label>
+            </div>
         </div>
         <div *ngSwitchCase="'med'">
-            <div><mat-label>{{ data.customEvent.key }}</mat-label></div>
-            <div><mat-label>{{ data.customEvent.quantity }}mg</mat-label></div>
+            <div>
+                <mat-label>{{ data.customEvent.key }}</mat-label>
+            </div>
+            <div>
+                <mat-label>{{ data.customEvent.quantity }}mg</mat-label>
+            </div>
         </div>
         <div *ngSwitchCase="'meal'">
-            <div><mat-label>{{ data.customEvent.key }}</mat-label></div>
-            <div><mat-label>{{ data.customEvent.detail }}</mat-label></div>
+            <div>
+                <mat-label>{{ data.customEvent.key }}</mat-label>
+            </div>
+            <div>
+                <mat-label>{{ data.customEvent.detail }}</mat-label>
+            </div>
         </div>
     </div>
     <div mat-dialog-actions>
-        <button mat-button cdkFocusInitial (click)="onYesClick()"
-            color="primary" transloco="UPDATE"></button>
         <button mat-button (click)="onNoClick()" transloco="CLOSE"></button>
+        <button mat-button cdkFocusInitial (click)="onYesClick()" color="primary" transloco="UPDATE"></button>
     </div>
 </div>
 

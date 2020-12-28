@@ -13,9 +13,9 @@
         </div>
     </mat-form-field>
     <div mat-dialog-actions>
+        <button mat-button (click)="onNoClick()" transloco="CANCEL"></button>
         <button mat-button cdkFocusInitial (click)="onYesClick()" color="primary">
             <span transloco="SET"></span>
         </button>
-        <button mat-button (click)="onNoClick()" transloco="CANCEL"></button>
     </div>
 </div>

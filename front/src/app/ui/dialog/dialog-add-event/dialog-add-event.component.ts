@@ -4,6 +4,7 @@ import { ICustomEvent } from 'src/app/models/customEvent.model';
 import { ISymptom } from 'src/app/models/symptom.model';
 import { IDetailedDate } from 'src/app/models/detailed.date';
 import { getDetailedDate } from 'src/app/util/date.utils';
+import { GlobalService } from 'src/app/infra/global.service';
 
 export interface IDialogData {
 	date: string;
@@ -29,6 +30,7 @@ export interface IDialogData {
 export class DialogAddEventComponent {
 	constructor(
 		public dialogRef: MatDialogRef<DialogAddEventComponent>,
+		public globalService: GlobalService,
 		@Inject(MAT_DIALOG_DATA) public data: IDialogData
 	) {
 		data.detailedDate = getDetailedDate(new Date(data.date));
@@ -43,7 +45,13 @@ export class DialogAddEventComponent {
 		} else {
 			data.edit = false;
 			data.pain = 0;
+			data.key = globalService.targetSymptomKey;
 		}
+	}
+
+	public isValid(): boolean {
+		return this.data.time != null && this.data.time !== ''
+			&& this.data.key != null && this.data.key !== '';
 	}
 
 	public onNoClick(): void {

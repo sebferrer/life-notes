@@ -14,7 +14,7 @@
     <mat-form-field>
         <mat-label transloco="TIME"></mat-label>
         <input matInput placeholder="24hr format" aria-label="24hr format" [ngxTimepicker]="fullTime" [format]="24"
-            [(ngModel)]="data.time" readonly>
+            [(ngModel)]="data.time" required readonly>
         <ngx-material-timepicker #fullTime></ngx-material-timepicker>
     </mat-form-field>
     <div [ngSwitch]="data.type">
@@ -22,12 +22,13 @@
             <div class="dialog-symptom-field">
                 <mat-form-field>
                     <mat-label>{{ data.type | transloco | titlecase }}</mat-label>
-                    <mat-select [(ngModel)]="data.key">
+                    <mat-select [(ngModel)]="data.key" required>
                         <mat-option *ngFor="let symptom of data.symptoms" [value]="symptom.key">{{ symptom.label }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
-                <button mat-mini-fab color="primary" routerLink="/symptoms" (click)="onSymptomsClick()" class="dialog-add-symptom-list-button">
+                <button mat-mini-fab color="primary" routerLink="/symptoms" (click)="onSymptomsClick()"
+                    class="dialog-add-symptom-list-button">
                     <mat-icon>add</mat-icon>
                 </button>
             </div>
@@ -51,7 +52,7 @@
         <div *ngSwitchCase="'log'">
             <mat-form-field>
                 <mat-label>{{ data.type | transloco | titlecase }}</mat-label>
-                <input matInput [(ngModel)]="data.key">
+                <input matInput [(ngModel)]="data.key" required>
             </mat-form-field>
             <mat-form-field>
                 <mat-label transloco="DETAIL"></mat-label>
@@ -61,7 +62,7 @@
         <div *ngSwitchCase="'med'">
             <mat-form-field>
                 <mat-label>{{ data.type | transloco | titlecase }}</mat-label>
-                <input matInput [(ngModel)]="data.key">
+                <input matInput [(ngModel)]="data.key" required>
             </mat-form-field>
             <mat-form-field>
                 <mat-label>{{ 'QUANTITY' | transloco }} (mg)</mat-label>
@@ -71,7 +72,7 @@
         <div *ngSwitchCase="'meal'">
             <mat-form-field>
                 <mat-label>{{ data.type | transloco | titlecase }}</mat-label>
-                <input matInput [(ngModel)]="data.key">
+                <input matInput [(ngModel)]="data.key" required>
             </mat-form-field>
             <mat-form-field>
                 <mat-label transloco="DETAIL"></mat-label>
@@ -80,10 +81,10 @@
         </div>
     </div>
     <div mat-dialog-actions>
-        <button mat-button cdkFocusInitial (click)="onYesClick()" color="primary">
+        <button mat-button (click)="onNoClick()" transloco="CANCEL"></button>
+        <button mat-button cdkFocusInitial (click)="onYesClick()" color="primary" [disabled]="!isValid()">
             <span *ngIf="data.edit; else addButton" transloco="EDIT"></span>
             <ng-template #addButton><span transloco="ADD"></span></ng-template>
         </button>
-        <button mat-button (click)="onNoClick()" transloco="CANCEL"></button>
     </div>
 </div>
