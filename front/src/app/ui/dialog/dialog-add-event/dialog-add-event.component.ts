@@ -45,14 +45,16 @@ export class DialogAddEventComponent {
 		} else {
 			data.edit = false;
 			data.pain = 0;
-			data.key = globalService.targetSymptomKey;
+			if (data.type === 'symptomLog') {
+				data.key = globalService.targetSymptomKey;
+			}
 		}
 	}
 
 	public isValid(): boolean {
 		if (['symptomLog', 'log', 'med', 'meal'].includes(this.data.type)) {
 			return this.data.time != null && this.data.time !== ''
-			&& this.data.key != null && this.data.key !== '';
+				&& this.data.key != null && this.data.key !== '';
 		}
 		return this.data.time != null && this.data.time !== '';
 	}

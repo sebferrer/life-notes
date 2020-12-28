@@ -135,7 +135,7 @@ export class ImporterExporterService {
 	}
 
 	private emptyBackup(backup: IBackup): boolean {
-		return backup.days.length === 0 && backup.symptoms.length === 0;
+		return backup.days.length === 0;
 	}
 
 	private saveBackup(backup: string, isAuto?: boolean): void {
