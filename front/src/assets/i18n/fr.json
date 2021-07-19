@@ -125,5 +125,19 @@
     "COPIED": "Copié !",
     "CALENDAR_HELP_DIALOG_TITLE": "Graphiques des symptômes",
     "CALENDAR_HELP_DIALOG_CONTENT_1": "Voici votre vision globale sur vos symptômes. Ces graphiques ne sont pas remplis par les symptômes que vous avez ajouté à vos journées, mais par vos aperçus globaux de symptômes. Ces aperçus de symptômes peuvent être renseignées en tapotant sur le petit rond vert sur la droite de chaque journée dans votre timeline (la vue par défaut).",
-    "CALENDAR_HELP_DIALOG_CONTENT_2": "Par exemple, la valeur par défaut '0:31' qui apparaît lorsque vous tappez sur le graphique signifie que vous avez 31 jours avec une intensité de douleur de 0 pour ce symptôme."
+    "CALENDAR_HELP_DIALOG_CONTENT_2": "Par exemple, la valeur par défaut '0:31' qui apparaît lorsque vous tappez sur le graphique signifie que vous avez 31 jours avec une intensité de douleur de 0 pour ce symptôme.",
+    "TUTORIAL_SLIDE_1_TTITLE": "Créez votre premier symptôme",
+    "TUTORIAL_SLIDE_1_TEXT": "Ce bouton en haut sert à gérer le symptôme que vous désirez suivre. Si vous n'avez enregistré encore aucun symptôme, ce même bouton vous redirigera vers votre liste de symptômes où vous pourrez en créer.",
+    "TUTORIAL_SLIDE_2_TTITLE": "Ciblez un symptôme",
+    "TUTORIAL_SLIDE_2_TEXT": "Maintenant que vous avez enregistré vos symptômes, vous pouvez en cibler un. Le symptôme ciblé sera celui que vous suivrez via le petit cercle vert à droite de la vue principale et via le calendrier.",
+    "TUTORIAL_SLIDE_3_TTITLE": "Ressenti global d'un symptôme",
+    "TUTORIAL_SLIDE_3_TEXT": "Vous pouvez taper sur le petit cercle vert pour indiquer votre ressenti global de la journée concernant le symtpôme ciblé. Vous pouvez alors indiquer le niveau de douleur général sur la journée.",
+    "TUTORIAL_SLIDE_4_TTITLE": "Le calendrier",
+    "TUTORIAL_SLIDE_4_TEXT": "Vous pouvez ensuite regarder votre calendrier rempli par couleurs en fonction des niveaux de douleur précédemment remplis. Vous pouvez également ici voir les statistiques pour chacun de vos symptômes ainsi que pour votre sommeil.",
+    "TUTORIAL_SLIDE_5_TTITLE": "Ajouter des évènements",
+    "TUTORIAL_SLIDE_5_TEXT": "Vous pouvez ajouter des évènements afin de prendre des notes plus précises le long de vos journées. Vous pourrez ainsi ajouter des symptômes sur des heures précises, ainsi que vos médicaments avec dosages, repas ou encore diverses notes.",
+    "TUTORIAL_SLIDE_6_TTITLE": "Supprimer des évènements",
+    "TUTORIAL_SLIDE_6_TEXT": "Vous pouvez supprimer vos évènements en tapant sur ce bouton. Ensuite, vous pourrez supprimer tous les évènements que vous voulez en tapant sur les petites croix.",
+    "TUTORIAL_SLIDE_7_TTITLE": "Paramètres",
+    "TUTORIAL_SLIDE_7_TEXT": "Ce bouton vous fera accéder aux paramètres. Notamment important pour importer ou exporter les données de l'application qui ne sont stockées nulle part ailleurs que sur votre smartphone."
 }

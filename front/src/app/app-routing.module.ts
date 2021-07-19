@@ -9,6 +9,7 @@ import { CalendarComponent } from './ui/calendar';
 import { TimelineComponent } from './ui/timeline';
 import { SymptomsComponent } from './ui/symptoms';
 import { SettingsComponent } from './ui/settings';
+import { TutorialComponent } from './ui/tutorial';
 
 const routes: Routes = [
 	{
@@ -30,6 +31,10 @@ const routes: Routes = [
 	{
 		path: 'settings',
 		component: SettingsComponent
+	},
+	{
+		path: 'tutorial',
+		component: TutorialComponent
 	},
 	{
 		path: ':date',

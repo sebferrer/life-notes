@@ -54,6 +54,9 @@ import { LineChartComponent } from './ui/chart/line-chart';
 import { DialogNoTargetSymptomWarningComponent } from './ui/dialog/dialog-no-target-symptom-warning';
 import { DialogExportConfirmComponent } from './ui/dialog/dialog-export-confirm';
 import { DialogInfoComponent } from './ui/dialog/dialog-info';
+import { TutorialComponent } from './ui/tutorial';
+import { IonicModule } from '@ionic/angular';
+import { SlideshowModule } from 'ng-simple-slideshow';
 
 @NgModule({
 	declarations: [
@@ -64,6 +67,7 @@ import { DialogInfoComponent } from './ui/dialog/dialog-info';
 		TimelineComponent,
 		SymptomsComponent,
 		SettingsComponent,
+		TutorialComponent,
 		PieChartComponent,
 		LineChartComponent,
 		DialogAddEventComponent,
@@ -86,6 +90,7 @@ import { DialogInfoComponent } from './ui/dialog/dialog-info';
 	],
 	imports: [
 		BrowserModule,
+		IonicModule.forRoot(),
 		HttpClientModule,
 		AppRoutingModule,
 		FormsModule,
@@ -110,7 +115,8 @@ import { DialogInfoComponent } from './ui/dialog/dialog-info';
 		MatExpansionModule,
 		NgxMaterialTimepickerModule,
 		TranslocoRootModule,
-		ChartsModule
+		ChartsModule,
+		SlideshowModule
 	],
 	providers: [
 		DaysService,

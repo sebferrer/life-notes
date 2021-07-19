@@ -1,0 +1,13 @@
+<div class="slideshow">
+    <ion-slides>
+        <ion-slide *ngFor="let slide of slides">
+            <div class="slide">
+                <img src="{{ slide.img }}" />
+                <div class="slide-text">
+                    <h2>{{ slide.title | transloco }}</h2>
+                    <p>{{ slide.text | transloco }}</p>
+                </div>
+            </div>
+        </ion-slide>
+    </ion-slides>
+</div>

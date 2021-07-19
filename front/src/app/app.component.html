@@ -14,7 +14,8 @@
 		<mat-icon>spa</mat-icon>
 	</button>
 	<ng-template #noSymptomButton>
-		<button mat-icon-button id="menu-icon-target-symptom" class="menu-icon" [matMenuTriggerFor]="targetSymptom" aria-label="Symptoms">
+		<button mat-icon-button id="menu-icon-target-symptom" class="menu-icon" [matMenuTriggerFor]="targetSymptom"
+			aria-label="Symptoms">
 			<mat-icon>spa</mat-icon>
 		</button>
 	</ng-template>
@@ -24,6 +25,9 @@
 			(click)="globalService.targetSymptomKey = symptom.key">
 			{{ symptom.label }}</button>
 	</mat-menu>
+	<button mat-icon-button id="menu-icon-tutorial" routerLink="/tutorial">
+		<mat-icon>help</mat-icon>
+	</button>
 	<button mat-icon-button id="menu-icon-settings" class="menu-icon" routerLink="/settings" aria-label="Settings">
 		<mat-icon>settings</mat-icon>
 	</button>

@@ -22,9 +22,7 @@ export class AppComponent implements OnInit {
 		private translocoService: TranslocoService,
 		private settingsService: SettingsService,
 		private importerExporterService: ImporterExporterService,
-		private dialog: MatDialog,
-
-		private daysService: DaysService
+		private dialog: MatDialog
 	) {
 		/*this.symptoms = new Array<ISymptom>();
 		this.symptoms$ = new Subject<ISymptom[]>();*/

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { DbContext } from './database';
 import { map, switchMap } from 'rxjs/operators';
 import { ISettings } from '../models/settings.model';
+import { GlobalService } from './global.service';
 
 const KEY = 'settings';
 
@@ -12,7 +13,8 @@ export class SettingsService {
 	public readonly AVAILABLE_LANGS = ['en', 'fr'];
 
 	constructor(
-		private readonly dbContext: DbContext
+		private readonly dbContext: DbContext,
+		private readonly globalService: GlobalService
 	) { }
 
 	public getSettings(): Observable<ISettings> {
@@ -39,6 +41,7 @@ export class SettingsService {
 		return settings.pipe(
 			switchMap(s => {
 				s.language = newDefaultLanguage;
+				this.globalService.language = newDefaultLanguage;
 				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
 					map(() => s)
 				);

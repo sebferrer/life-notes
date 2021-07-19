@@ -125,5 +125,19 @@
     "COPIED": "Copied!",
     "CALENDAR_HELP_DIALOG_TITLE": "Symptom charts",
     "CALENDAR_HELP_DIALOG_CONTENT_1": "Here are your symptom overviews. These charts aren't filled by the symptoms you've added to your days, but by your overall symptom overviews. These symptom overviews can be filled in by tapping on the small green circle on the right of each day in your timeline.",
-    "CALENDAR_HELP_DIALOG_CONTENT_2": "For example, the default value '0:31' that appears when you tap on the chart means that you have 31 days with a 0 pain intensity for this symptom."
+    "CALENDAR_HELP_DIALOG_CONTENT_2": "For example, the default value '0:31' that appears when you tap on the chart means that you have 31 days with a 0 pain intensity for this symptom.",
+    "TUTORIAL_SLIDE_1_TTITLE": "Create your first symptom",
+    "TUTORIAL_SLIDE_1_TEXT": "This top button is here to select the symptom you want to follow. If you don't have any registered symptom yet, this button will redirect you to your symptom list where you can create your first one.",
+    "TUTORIAL_SLIDE_2_TTITLE": "Select the targeted symptom",
+    "TUTORIAL_SLIDE_2_TEXT": "Now you have registed your symptom, you can select your target symptom. This is the symptom you can follow via the right green circle in the main view or the calendar.",
+    "TUTORIAL_SLIDE_3_TTITLE": "Symptom overview",
+    "TUTORIAL_SLIDE_3_TEXT": "You can tap on the small green circle to mention your global feeling of the day regarding the targeted symptom. You can then set a global pain level for this day. ",
+    "TUTORIAL_SLIDE_4_TTITLE": "The calendar",
+    "TUTORIAL_SLIDE_4_TEXT": "You can then see your calendar filled by colors regarding your pain levels for the targeted symptom. You can also here watch the statistics for each symptoms and your sleep.",
+    "TUTORIAL_SLIDE_5_TTITLE": "Add events",
+    "TUTORIAL_SLIDE_5_TEXT": "You can add some events in order to take more accurate notes throughout the day. You can so add symptoms for exact times, as well as medicines with dosages, meals or any note.",
+    "TUTORIAL_SLIDE_6_TTITLE": "Delete events",
+    "TUTORIAL_SLIDE_6_TEXT": "You can delete events by tapping this button. Then you can delete whatever you want tapping to the little crosses.",
+    "TUTORIAL_SLIDE_7_TTITLE": "Settings",
+    "TUTORIAL_SLIDE_7_TEXT": "This button will bring you to the settings. Particularly important to import or export the app data that isn't stored anywhere but on your smartphone"
 }
