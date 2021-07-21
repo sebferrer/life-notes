@@ -48,4 +48,16 @@ p b {
         margin-left: auto;
         margin-right: auto;
     }
+    .slide-text-bottom {
+        width: 80%;
+        position: absolute;
+        top: 25vh;
+        left: 10%;
+    }
+    app-swiping-finger {
+        position: absolute;
+        width: 80%;
+        top: 70vh;
+        left: 20%;
+    }
 }

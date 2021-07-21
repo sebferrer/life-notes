@@ -57,6 +57,7 @@ import { DialogInfoComponent } from './ui/dialog/dialog-info';
 import { TutorialComponent } from './ui/tutorial';
 import { IonicModule } from '@ionic/angular';
 import { SlideshowModule } from 'ng-simple-slideshow';
+import { SwipingFingerComponent } from './ui/graphic/swiping-finger';
 
 @NgModule({
 	declarations: [
@@ -70,6 +71,7 @@ import { SlideshowModule } from 'ng-simple-slideshow';
 		TutorialComponent,
 		PieChartComponent,
 		LineChartComponent,
+		SwipingFingerComponent,
 		DialogAddEventComponent,
 		DialogDeleteEventComponent,
 		DialogShowEventComponent,

@@ -1,7 +1,14 @@
 <div class="slideshow">
     <ion-slides>
         <ion-slide *ngFor="let slide of slides">
-            <div class="slide">
+            <div *ngIf="slide.index === 1" class="slide">
+                <div class="slide-text-bottom">
+                    <h2>{{ slide.title | transloco }}</h2>
+                    <p>{{ slide.text | transloco }}</p>
+                </div>
+                <app-swiping-finger></app-swiping-finger>
+            </div>
+            <div *ngIf="slide.index > 1" class="slide">
                 <img src="{{ slide.img }}" />
                 <div class="slide-text">
                     <h2>{{ slide.title | transloco }}</h2>

@@ -28,39 +28,52 @@ export class TutorialComponent implements OnInit {
 
 		this.slides = [
 			{
-				img: this.tutorialPath + '1.png',
+				index: 1,
+				img: '',
 				title: 'TUTORIAL_SLIDE_1_TTITLE',
 				text: 'TUTORIAL_SLIDE_1_TEXT'
 			},
 			{
-				img: this.tutorialPath + '2.png',
+				index: 2,
+				img: this.tutorialPath + '1.png',
 				title: 'TUTORIAL_SLIDE_2_TTITLE',
 				text: 'TUTORIAL_SLIDE_2_TEXT'
 			},
 			{
-				img: this.tutorialPath + '3.png',
+				index: 3,
+				img: this.tutorialPath + '2.png',
 				title: 'TUTORIAL_SLIDE_3_TTITLE',
 				text: 'TUTORIAL_SLIDE_3_TEXT'
 			},
 			{
-				img: this.tutorialPath + '4.png',
+				index: 4,
+				img: this.tutorialPath + '3.png',
 				title: 'TUTORIAL_SLIDE_4_TTITLE',
 				text: 'TUTORIAL_SLIDE_4_TEXT'
 			},
 			{
-				img: this.tutorialPath + '5.png',
+				index: 5,
+				img: this.tutorialPath + '4.png',
 				title: 'TUTORIAL_SLIDE_5_TTITLE',
 				text: 'TUTORIAL_SLIDE_5_TEXT'
 			},
 			{
-				img: this.tutorialPath + '6.png',
+				index: 6,
+				img: this.tutorialPath + '5.png',
 				title: 'TUTORIAL_SLIDE_6_TTITLE',
 				text: 'TUTORIAL_SLIDE_6_TEXT'
 			},
 			{
-				img: this.tutorialPath + '7.png',
+				index: 7,
+				img: this.tutorialPath + '6.png',
 				title: 'TUTORIAL_SLIDE_7_TTITLE',
 				text: 'TUTORIAL_SLIDE_7_TEXT'
+			},
+			{
+				index: 8,
+				img: this.tutorialPath + '7.png',
+				title: 'TUTORIAL_SLIDE_8_TTITLE',
+				text: 'TUTORIAL_SLIDE_8_TEXT'
 			}
 		];
 	}

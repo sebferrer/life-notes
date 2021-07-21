@@ -1,0 +1,80 @@
+$width: 100%;
+
+.swipe-hint {
+	margin: 50px;
+	&.swipe-horizontal {
+		position: relative;
+		width: 40vw;
+		mat-icon {
+			position: absolute;
+			display: inline-block;
+			color: #212121;
+			border-radius: 100%;
+			animation: hint-finger ease-in 2s;
+			animation-iteration-count: infinite;
+			z-index: 100;
+			font-size: 2.5rem;
+		}
+		&:before {
+			position: absolute;
+			content: " ";
+			background: linear-gradient(
+				to right,
+				rgba(30, 87, 153, 1) 0%,
+				rgba(44, 102, 165, 0.5) 15%,
+				rgba(124, 184, 231, 0) 99%,
+				rgba(125, 185, 232, 0) 100%
+			);
+			right: 8px;
+			top: 0;
+			width: 0;
+			height: 20px;
+			animation: hint-dot ease-in 2s;
+			animation-iteration-count: infinite;
+		}
+	}
+}
+
+@keyframes hint-finger {
+	0% {
+		right: 0;
+		transform: scale(1);
+	}
+	20% {
+		right: 0;
+		transform: scale(0.7);
+	}
+	50% {
+		right: $width;
+		transform: scale(0.7);
+	}
+	60% {
+		transform: scale(1);
+	}
+	70% {
+		right: $width;
+	}
+	100% {
+		right: 0;
+		transform: scale(1);
+	}
+}
+
+@keyframes hint-dot {
+	20% {
+		opacity: 0;
+		width: 0;
+	}
+	50% {
+		opacity: 0.7;
+		width: $width;
+	}
+	60% {
+		opacity: 0;
+		width: $width;
+	}
+	100% {
+		opacity: 0;
+		width: 0;
+	}
+}
