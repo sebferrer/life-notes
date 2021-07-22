@@ -1,18 +1,38 @@
 <div class="slideshow">
     <ion-slides>
-        <ion-slide *ngFor="let slide of slides">
-            <div *ngIf="slide.index === 1" class="slide">
-                <div class="slide-text-bottom">
+        <ion-slide *ngFor="let slide of slides" [ngSwitch]="slide.label">
+            <div *ngSwitchCase="'header'" class="slide">
+                <div class="slide-text-header">
                     <h2>{{ slide.title | transloco }}</h2>
                     <p>{{ slide.text | transloco }}</p>
+                    <p>{{ 'TUTORIAL_SWIPE' | transloco }}</p>
                 </div>
                 <app-swiping-finger></app-swiping-finger>
             </div>
-            <div *ngIf="slide.index > 1" class="slide">
+            <div *ngSwitchCase="'tutorial'" class="slide">
                 <img src="{{ slide.img }}" />
-                <div class="slide-text">
+                <div class="slide-text-tutorial">
                     <h2>{{ slide.title | transloco }}</h2>
                     <p>{{ slide.text | transloco }}</p>
+                </div>
+            </div>
+            <div *ngSwitchCase="'rateit'" class="slide">
+                <div class="rate-stars">
+                    <mat-icon>star_rate</mat-icon>
+                    <mat-icon>star_rate</mat-icon>
+                    <mat-icon>star_rate</mat-icon>
+                    <mat-icon>star_rate</mat-icon>
+                    <mat-icon>star_rate</mat-icon>
+                </div>
+                <div class="slide-text-rateit">
+                    <h2>{{ slide.title | transloco }}</h2>
+                    <p>{{ 'TUTORIAL_SLIDE_RATEIT_TEXT_1' | transloco }}</p>
+                    <p>{{ 'TUTORIAL_SLIDE_RATEIT_TEXT_2' | transloco }}
+                        <a href="mailto: sebferrer8@gmail.com">sebferrer8@gmail.com</a>
+                    </p>
+                    <p>{{ 'TUTORIAL_SLIDE_RATEIT_TEXT_3' | transloco }}</p>
+                    <p>{{ 'TUTORIAL_SLIDE_RATEIT_TEXT_4' | transloco }}</p>
+                    <p (click)="rateApp()">{{ 'TUTORIAL_SLIDE_RATEIT_TEXT_5' | transloco }}</p>
                 </div>
             </div>
         </ion-slide>

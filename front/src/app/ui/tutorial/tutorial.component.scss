@@ -43,21 +43,33 @@ p b {
     img {
         margin-bottom: 0;
     }
-    .slide-text {
+    app-swiping-finger {
+        position: absolute;
+        width: 100%;
+        top: 70vh;
+        left: 20vw;
+    }
+    .rate-stars {
+        width: 80%;
+        position: absolute;
+        top: 15vh;
+        left: 10%;
+    }
+    .slide-text-tutorial {
         width: 80%;
         margin-left: auto;
         margin-right: auto;
     }
-    .slide-text-bottom {
+    .slide-text-header {
         width: 80%;
         position: absolute;
         top: 25vh;
         left: 10%;
     }
-    app-swiping-finger {
-        position: absolute;
+    .slide-text-rateit {
         width: 80%;
-        top: 70vh;
-        left: 20%;
+        position: absolute;
+        top: 20vh;
+        left: 10%;
     }
 }

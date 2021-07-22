@@ -1,6 +1,7 @@
 export interface ISlide {
 	index: number;
-	img: string;
+	label: string;
 	title: string;
 	text: string;
+	img?: string;
 }

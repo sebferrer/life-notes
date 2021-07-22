@@ -28,57 +28,80 @@ export class TutorialComponent implements OnInit {
 
 		this.slides = [
 			{
+				index: 9,
+				label: 'rateit',
+				title: 'TUTORIAL_SLIDE_RATEIT_TITLE',
+				text: ''
+			},
+			{
 				index: 1,
-				img: '',
-				title: 'TUTORIAL_SLIDE_1_TTITLE',
+				label: 'header',
+				title: 'TUTORIAL_SLIDE_1_TITLE',
 				text: 'TUTORIAL_SLIDE_1_TEXT'
 			},
 			{
 				index: 2,
+				label: 'tutorial',
 				img: this.tutorialPath + '1.png',
-				title: 'TUTORIAL_SLIDE_2_TTITLE',
+				title: 'TUTORIAL_SLIDE_2_TITLE',
 				text: 'TUTORIAL_SLIDE_2_TEXT'
 			},
 			{
 				index: 3,
+				label: 'tutorial',
 				img: this.tutorialPath + '2.png',
-				title: 'TUTORIAL_SLIDE_3_TTITLE',
+				title: 'TUTORIAL_SLIDE_3_TITLE',
 				text: 'TUTORIAL_SLIDE_3_TEXT'
 			},
 			{
 				index: 4,
+				label: 'tutorial',
 				img: this.tutorialPath + '3.png',
-				title: 'TUTORIAL_SLIDE_4_TTITLE',
+				title: 'TUTORIAL_SLIDE_4_TITLE',
 				text: 'TUTORIAL_SLIDE_4_TEXT'
 			},
 			{
 				index: 5,
+				label: 'tutorial',
 				img: this.tutorialPath + '4.png',
-				title: 'TUTORIAL_SLIDE_5_TTITLE',
+				title: 'TUTORIAL_SLIDE_5_TITLE',
 				text: 'TUTORIAL_SLIDE_5_TEXT'
 			},
 			{
 				index: 6,
+				label: 'tutorial',
 				img: this.tutorialPath + '5.png',
-				title: 'TUTORIAL_SLIDE_6_TTITLE',
+				title: 'TUTORIAL_SLIDE_6_TITLE',
 				text: 'TUTORIAL_SLIDE_6_TEXT'
 			},
 			{
 				index: 7,
+				label: 'tutorial',
 				img: this.tutorialPath + '6.png',
-				title: 'TUTORIAL_SLIDE_7_TTITLE',
+				title: 'TUTORIAL_SLIDE_7_TITLE',
 				text: 'TUTORIAL_SLIDE_7_TEXT'
 			},
 			{
 				index: 8,
+				label: 'tutorial',
 				img: this.tutorialPath + '7.png',
-				title: 'TUTORIAL_SLIDE_8_TTITLE',
+				title: 'TUTORIAL_SLIDE_8_TITLE',
 				text: 'TUTORIAL_SLIDE_8_TEXT'
+			},
+			{
+				index: 9,
+				label: 'rateit',
+				title: 'TUTORIAL_SLIDE_RATEIT_TITLE',
+				text: ''
 			}
 		];
 	}
 
 	public ngOnInit(): void {
+
+	}
+
+	public rateApp(): void {
 
 	}
 
