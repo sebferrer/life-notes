@@ -10,6 +10,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { ATimeComponent } from '../time';
 import { IDay } from 'src/app/models';
+import * as moment from 'moment';
 
 @Component({
 	selector: 'app-day',
@@ -46,7 +47,7 @@ export class DayComponent extends ATimeComponent implements OnInit {
 		this.daysService.getDay(date).subscribe(
 			day => {
 				this.dayContent = day == null ?
-					new DayViewModel(this.daysService.buildDay(new Date(date))) :
+					new DayViewModel(this.daysService.buildDay(date)) :
 					new DayViewModel(day);
 				this.dayContent$.next(this.dayContent);
 			}

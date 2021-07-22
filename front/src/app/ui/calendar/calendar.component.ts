@@ -13,6 +13,7 @@ import { WakeUpChartViewModel } from 'src/app/models/chartjs/wakeup.chart.view.m
 import { SleepChartViewModel } from 'src/app/models/chartjs/sleep.chart.view.model';
 import { DialogInfoComponent } from '../dialog/dialog-info';
 import { MatDialog } from '@angular/material/dialog';
+import * as moment from 'moment';
 
 @Component({
 	selector: 'app-calendar',
@@ -57,10 +58,10 @@ export class CalendarComponent implements OnInit {
 	}
 
 	public ngOnInit(): void {
-		const detailedDate = getDetailedDate(new Date());
+		const detailedDate = getDetailedDate(moment().format('YYYY-MM-DD'));
 		this.month = detailedDate.month;
 		this.year = detailedDate.year;
-		this.today = getDetailedDate(new Date());
+		this.today = getDetailedDate(moment().format('YYYY-MM-DD'));
 		this.updateCalendar(this.today.month, this.today.year);
 		this.symptomMap = this.globalService.symptomMap;
 		this.symptomPainColorMap =

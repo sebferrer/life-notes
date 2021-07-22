@@ -5,6 +5,7 @@ import { ISymptom } from 'src/app/models/symptom.model';
 import { IDetailedDate } from 'src/app/models/detailed.date';
 import { getDetailedDate } from 'src/app/util/date.utils';
 import { GlobalService } from 'src/app/infra/global.service';
+import * as moment from 'moment';
 
 export interface IDialogData {
 	date: string;
@@ -33,7 +34,7 @@ export class DialogAddEventComponent {
 		public globalService: GlobalService,
 		@Inject(MAT_DIALOG_DATA) public data: IDialogData
 	) {
-		data.detailedDate = getDetailedDate(new Date(data.date));
+		data.detailedDate = getDetailedDate(moment(data.date).format('YYYY-MM-DD'));
 		if (data.customEvent != null) {
 			data.edit = true;
 			data.type = data.customEvent.type;

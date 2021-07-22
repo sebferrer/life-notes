@@ -2,7 +2,7 @@
 import { Observable, of } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { IDay, IDayOverview } from '../models';
-import { getFormattedDate, getDetailedDate, getDateFromString, getDetailedDates, subFormattedDate } from 'src/app/util/date.utils';
+import { getDetailedDate, getDateFromString, getDetailedDates, subFormattedDate } from 'src/app/util/date.utils';
 import { getSortOrderLevel2, getSortOrder } from 'src/app/util/array.utils';
 import { DbContext } from './database';
 import { ILog } from '../models/log.model';
@@ -12,6 +12,7 @@ import { ISymptom } from '../models/symptom.model';
 import { map, switchMap, catchError, tap } from 'rxjs/operators';
 import { ICustomEvent } from '../models/customEvent.model';
 import { getDaysInMonth, subDays } from 'date-fns';
+import * as moment from 'moment';
 
 // const CALENDAR_API = '/api/calendar';
 // const CALENDAR_FROM_API = '/api/calendar-from';
@@ -46,11 +47,11 @@ export class DaysService {
 			const day = days.find(d => d.detailedDate.year === year && d.detailedDate.month === month
 				&& d.detailedDate.day === i);
 			if (day == null) {
-				const formattedDate = year + '-' + month + '-' + i;
-				const date = getDateFromString(formattedDate);
+				// const formattedDate = year + '-' + month + '-' + i;
+				const formattedDate = moment(year + '-' + month + '-' + i).format('YYYY-MM-DD');
 				const emptyDay = {
 					'date': formattedDate,
-					'detailedDate': getDetailedDate(date),
+					'detailedDate': getDetailedDate(formattedDate),
 					'symptomOverviews': [],
 					'symptoms': [],
 					'logs': [],
@@ -72,10 +73,10 @@ export class DaysService {
 				this.dbContext.daysCollection.allDocs({ include_docs: true, descending: true })
 			);
 		}
-		const firstDay = subDays(new Date(), nbDays);
+		const firstDay = subDays(moment().toDate(), nbDays);
 		const expectedDates = new Array<string>();
 		for (let i = 0; i < limit; i++) {
-			expectedDates.push(getFormattedDate(subDays(firstDay, i)));
+			expectedDates.push(moment(subDays(firstDay, i)).format('YYYY-MM-DD'));
 		}
 		return this.dbContext.asArrayObservable<IDay>(
 			this.dbContext.daysCollection.allDocs({ include_docs: true, descending: true, keys: expectedDates })
@@ -90,7 +91,7 @@ export class DaysService {
 				for (const expectedDate of expectedDates) {
 					let newDay = days.find(day => day.date === expectedDate);
 					if (newDay == null) {
-						newDay = this.buildDay(new Date(expectedDate));
+						newDay = this.buildDay(expectedDate);
 					}
 					newDays.push(newDay);
 				}
@@ -120,7 +121,7 @@ export class DaysService {
 	public getOrCreateDay(date: string): Observable<IDay> {
 		return this.getDay(date).pipe(
 			switchMap(
-				day => day == null ? this.createNewDay(new Date(date)).pipe(
+				day => day == null ? this.createNewDay(date).pipe(
 					switchMap(d => this.getDay(d.date))
 				) : of(day)
 			)
@@ -294,12 +295,12 @@ export class DaysService {
 		return events.filter((event: { time: string; key: string; }) => event.time !== time || event.key !== key);
 	}
 
-	public createNewDay(date: Date): Observable<IDay> {
-		const formattedDate = getFormattedDate(date);
+	public createNewDay(formattedDate: string): Observable<IDay> {
+		const date = moment(formattedDate).toDate();
 		const day = {
 			'_id': formattedDate,
 			'date': formattedDate,
-			'detailedDate': getDetailedDate(date),
+			'detailedDate': getDetailedDate(formattedDate),
 			'symptomOverviews': [],
 			'symptoms': [],
 			'logs': [],
@@ -314,14 +315,14 @@ export class DaysService {
 	}
 
 	public createNewDayToday(): Observable<IDay> {
-		return this.createNewDay(new Date());
+		return this.createNewDay(moment().format('YYYY-MM-DD'));
 	}
 
-	public buildDay(date: Date): IDay {
-		const formattedDate = getFormattedDate(date);
+	public buildDay(formattedDate: string): IDay {
+		const date = moment(formattedDate).toDate();
 		return {
 			'date': formattedDate,
-			'detailedDate': getDetailedDate(date),
+			'detailedDate': getDetailedDate(formattedDate),
 			'symptomOverviews': [],
 			'symptoms': [],
 			'logs': [],

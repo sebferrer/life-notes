@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DaysService } from './days.service';
-import { getDateFromString, getDetailedDate, getFormattedDate } from 'src/app/util/date.utils';
+import { getDateFromString, getDetailedDate } from 'src/app/util/date.utils';
 import { Observable, from, empty, of } from 'rxjs';
 import { tap, map, catchError } from 'rxjs/operators';
 import { File as IonicFile } from '@ionic-native/file/ngx';
@@ -11,6 +11,7 @@ import { SettingsService } from './settings.service';
 import { IBackup } from '../models/backup.model';
 import { GlobalService } from './global.service';
 import { TranslocoService } from '@ngneat/transloco';
+import * as moment from 'moment';
 
 @Injectable({
 	providedIn: 'root'
@@ -43,7 +44,7 @@ export class ImporterExporterService {
 		const symptomsJsonArr = backupJsonObj.symptoms;
 		const settingsJsonOnj = backupJsonObj.settings;
 
-		daysJsonArr.map(day => day.detailedDate = getDetailedDate(getDateFromString(day.date)));
+		daysJsonArr.map(day => day.detailedDate = getDetailedDate(moment(day.date).format('YYYY-MM-DD')));
 		this.daysService.addDays(daysJsonArr).subscribe(() => {});
 		this.symptomsService.addSymptoms(symptomsJsonArr).subscribe(() => {
 			this.globalService.loadSymptoms().subscribe(() => { });

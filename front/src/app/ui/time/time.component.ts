@@ -17,6 +17,7 @@ import { TranslocoService } from '@ngneat/transloco';
 import { IDay } from 'src/app/models';
 import { DayViewModel } from 'src/app/models/day.view.model';
 import { DialogNoTargetSymptomWarningComponent } from '../dialog/dialog-no-target-symptom-warning';
+import * as moment from 'moment';
 
 @Component({
 	selector: 'app-time',
@@ -57,7 +58,7 @@ export abstract class ATimeComponent {
 			autoFocus: false,
 			width: '20rem',
 			panelClass: 'custom-modalbox',
-			data: { date, 'detailedDate': getDetailedDate(new Date(date)), customEvent }
+			data: { date, 'detailedDate': getDetailedDate(date), customEvent }
 		}).afterClosed().subscribe(response => {
 			if (response == null || response.answer !== 'yes') {
 				return;
@@ -141,7 +142,7 @@ export abstract class ATimeComponent {
 			autoFocus: false,
 			width: '20rem',
 			panelClass: 'custom-modalbox',
-			data: { date, 'detailedDate': getDetailedDate(new Date(date)), 'type': customEvent.type, 'key': customEvent.key, 'time': customEvent.time }
+			data: { date, 'detailedDate': getDetailedDate(date), 'type': customEvent.type, 'key': customEvent.key, 'time': customEvent.time }
 		}).afterClosed().subscribe(response => {
 			if (response == null || response.answer !== 'yes') {
 				return;
