@@ -56,8 +56,8 @@ import { DialogExportConfirmComponent } from './ui/dialog/dialog-export-confirm'
 import { DialogInfoComponent } from './ui/dialog/dialog-info';
 import { TutorialComponent } from './ui/tutorial';
 import { IonicModule } from '@ionic/angular';
-import { SlideshowModule } from 'ng-simple-slideshow';
 import { SwipingFingerComponent } from './ui/graphic/swiping-finger';
+import { Market } from '@ionic-native/market/ngx';
 
 @NgModule({
 	declarations: [
@@ -117,8 +117,7 @@ import { SwipingFingerComponent } from './ui/graphic/swiping-finger';
 		MatExpansionModule,
 		NgxMaterialTimepickerModule,
 		TranslocoRootModule,
-		ChartsModule,
-		SlideshowModule
+		ChartsModule
 	],
 	providers: [
 		DaysService,
@@ -129,6 +128,7 @@ import { SwipingFingerComponent } from './ui/graphic/swiping-finger';
 		SettingsService,
 		BackupService,
 		IonicFile,
+		Market,
 		{
 			provide: APP_INITIALIZER,
 			useFactory: (translocoService: TranslocoService) => {
