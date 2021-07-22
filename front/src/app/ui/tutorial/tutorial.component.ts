@@ -86,6 +86,20 @@ export class TutorialComponent implements OnInit {
 			},
 			{
 				index: 9,
+				label: 'tutorial-longtext',
+				img: this.tutorialPath + '8.png',
+				title: 'TUTORIAL_SLIDE_9_TITLE',
+				text: 'TUTORIAL_SLIDE_9_TEXT'
+			},
+			{
+				index: 10,
+				label: 'tutorial',
+				img: this.tutorialPath + '9.png',
+				title: 'TUTORIAL_SLIDE_10_TITLE',
+				text: 'TUTORIAL_SLIDE_10_TEXT'
+			},
+			{
+				index: 11,
 				label: 'rateit',
 				title: 'TUTORIAL_SLIDE_RATEIT_TITLE',
 				text: ''
