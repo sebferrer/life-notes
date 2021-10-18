@@ -49,6 +49,7 @@ export class DialogAddEventComponent {
 			if (data.type === 'symptomLog') {
 				data.key = globalService.targetSymptomKey;
 			}
+			data.time = moment().format('HH:mm');
 		}
 	}
 
