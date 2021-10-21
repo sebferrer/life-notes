@@ -156,5 +156,8 @@
     "TUTORIAL_SLIDE_RATEIT_TEXT_3": "If you like this app and you want to support my work, please take the time to leave me a 5-stars review on the Play Store. It would help a lot for the visibility. Thanks! :)",
     "TUTORIAL_SLIDE_RATEIT_TEXT_4": "To let a review, click below: ",
     "TUTORIAL_SLIDE_RATEIT_TEXT_5": "Rate the app",
-    "MEDS_TITLE": "Your medications"
+    "MEDS_TITLE": "Your medications",
+    "MEDS_REFRESH_DIALOG_TITLE": "Refresh medicines",
+    "MEDS_REFRESH_DIALOG_CONTENT_1": "Your medicines are automatically stored here. However, if you were already using this app before this feature existed or if you reimported your data, it may be useful to refresh it.",
+    "MEDS_REFRESH_DIALOG_CONTENT_2": "Do you want to refresh your medicines list? This may take a while."
 }

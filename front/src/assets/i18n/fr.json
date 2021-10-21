@@ -156,5 +156,8 @@
     "TUTORIAL_SLIDE_RATEIT_TEXT_3": "Si vous aimez cette application et que vous voulez soutenir mon travail, je vous serais reconnaissant de laisser une review à 5 étoiles sur le Play Store. Cela aiderait énormément à la visibilité de l'appli. Merci ! :)",
     "TUTORIAL_SLIDE_RATEIT_TEXT_4": "Pour laisser une review, cliquez ci-dessous : ",
     "TUTORIAL_SLIDE_RATEIT_TEXT_5": "Noter l'application",
-    "MEDS_TITLE": "Vos médicaments saisis"
+    "MEDS_TITLE": "Vos médicaments saisis",
+    "MEDS_REFRESH_DIALOG_TITLE": "Actualiser vos médicaments",
+    "MEDS_REFRESH_DIALOG_CONTENT_1": "Vos médicaments sont automatiquement stockés ici. Toutefois, si vous utilisiez déjà cette application avant que cette fonctionnalité n'existe ou si vous avez réimporté vos données, il peut alors être utile de les actualiser.",
+    "MEDS_REFRESH_DIALOG_CONTENT_2": "Voulez-vous actualiser vos médicaments? Cela peut prendre un petit moment."
 }

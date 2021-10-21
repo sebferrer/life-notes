@@ -1,6 +1,6 @@
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule, APP_INITIALIZER } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -19,6 +19,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
@@ -60,6 +61,7 @@ import { IonicModule } from '@ionic/angular';
 import { SwipingFingerComponent } from './ui/graphic/swiping-finger';
 import { Market } from '@ionic-native/market/ngx';
 import { MedsService } from './infra/meds.service';
+import { DialogConfirmComponent } from './ui/dialog/dialog-confirm';
 
 @NgModule({
 	declarations: [
@@ -88,6 +90,7 @@ import { MedsService } from './infra/meds.service';
 		DialogSelectSymptomComponent,
 		DialogSelectBackupComponent,
 		DialogInfoComponent,
+		DialogConfirmComponent,
 		BottomSheetAddEventComponent,
 
 		// Helpers
@@ -118,9 +121,11 @@ import { MedsService } from './infra/meds.service';
 		MatSliderModule,
 		MatBottomSheetModule,
 		MatExpansionModule,
+		MatAutocompleteModule,
 		NgxMaterialTimepickerModule,
 		TranslocoRootModule,
-		ChartsModule
+		ChartsModule,
+		ReactiveFormsModule
 	],
 	providers: [
 		DaysService,
@@ -158,7 +163,8 @@ import { MedsService } from './infra/meds.service';
 		DialogNoTargetSymptomWarningComponent,
 		DialogSelectSymptomComponent,
 		DialogSelectBackupComponent,
-		DialogInfoComponent
+		DialogInfoComponent,
+		DialogConfirmComponent
 	],
 	bootstrap: [AppComponent]
 })
