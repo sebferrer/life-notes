@@ -1,0 +1,59 @@
+#meds-container {
+    position: absolute;
+    top: 3.5rem;
+    left: 0;
+    width: 100%;
+
+    .title {
+        margin-left: 1rem;
+        margin-top: 0.8rem;
+        font-size: 1.5rem;
+        color: #212121;
+    }
+}
+
+.med-list {
+    margin-bottom: 2rem;
+    width: 96%;
+    margin-left: 2%
+}
+
+.med-label-container {
+    height: 3rem;
+    width: 10rem;
+    padding-top: 1rem;
+    float: left;
+    display: table;
+    position: relative;
+    overflow-x: auto;
+}
+
+.med-label {
+    position: absolute;
+    top: 30%;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.edit-med {
+    display: inline-block;
+    margin-left: 1rem;
+}
+
+.delete-med {
+    display: inline-block;
+    margin-left: 1rem;
+}
+
+.buttons-container {
+    position: absolute;
+    top: 10%;
+    right: 0%;
+    height: 2rem;
+}
+
+.add-button-container {
+    position: absolute;
+    bottom: 1.5rem;
+    right: 1.5rem;
+}

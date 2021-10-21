@@ -71,6 +71,9 @@
     "SETTINGS_TITLE": "Paramètres",
     "SETTINGS_SYMPTOMS_TITLE": "Symptômes",
     "SETTINGS_SYMPTOMS_SUBTITLE": "Gérer vos symptômes",
+    "SETTINGS_MEDS_TITLE": "Médicaments",
+    "SETTINGS_MEDS_SUBTITLE": "Gérer vos médicaments",
+    "MEDS_MANAGE_LINK": "Gérer vos médicaments",
     "SETTINGS_LANGUAGE_TITLE": "Langue",
     "SETTINGS_LANGUAGE_SUBTITLE": "Paramétrer votre langue",
     "DEFAULT_SYMPTOM_LABEL": "Symptôme par défaut",
@@ -152,5 +155,6 @@
     "TUTORIAL_SLIDE_RATEIT_TEXT_2": "Si vous rencontrez le moindre problème, vous pouvez me contacter à mon adresse e-mail : ",
     "TUTORIAL_SLIDE_RATEIT_TEXT_3": "Si vous aimez cette application et que vous voulez soutenir mon travail, je vous serais reconnaissant de laisser une review à 5 étoiles sur le Play Store. Cela aiderait énormément à la visibilité de l'appli. Merci ! :)",
     "TUTORIAL_SLIDE_RATEIT_TEXT_4": "Pour laisser une review, cliquez ci-dessous : ",
-    "TUTORIAL_SLIDE_RATEIT_TEXT_5": "Noter l'application"
+    "TUTORIAL_SLIDE_RATEIT_TEXT_5": "Noter l'application",
+    "MEDS_TITLE": "Vos médicaments saisis"
 }

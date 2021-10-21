@@ -30,6 +30,7 @@ import { DayComponent } from './ui/day';
 import { TimelineComponent } from './ui/timeline';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { SymptomsComponent } from './ui/symptoms';
+import { MedsComponent } from './ui/meds';
 import { BottomSheetAddEventComponent } from './ui/time/bottom-sheet-add-event';
 import { TranslocoRootModule } from './transloco/transloco-root.module';
 import { TranslocoService } from '@ngneat/transloco';
@@ -58,6 +59,7 @@ import { TutorialComponent } from './ui/tutorial';
 import { IonicModule } from '@ionic/angular';
 import { SwipingFingerComponent } from './ui/graphic/swiping-finger';
 import { Market } from '@ionic-native/market/ngx';
+import { MedsService } from './infra/meds.service';
 
 @NgModule({
 	declarations: [
@@ -67,6 +69,7 @@ import { Market } from '@ionic-native/market/ngx';
 		CalendarComponent,
 		TimelineComponent,
 		SymptomsComponent,
+		MedsComponent,
 		SettingsComponent,
 		TutorialComponent,
 		PieChartComponent,
@@ -127,6 +130,7 @@ import { Market } from '@ionic-native/market/ngx';
 		GlobalService,
 		SettingsService,
 		BackupService,
+		MedsService,
 		IonicFile,
 		Market,
 		{

@@ -10,6 +10,7 @@ import { DaysService } from 'src/app/infra';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { MedsService } from 'src/app/infra/meds.service';
 
 @Component({
 	selector: 'app-timeline',
@@ -28,11 +29,12 @@ export class TimelineComponent extends ATimeComponent implements OnInit, AfterVi
 		public globalService: GlobalService,
 		protected translocoService: TranslocoService,
 		protected daysService: DaysService,
+		protected medsService: MedsService,
 		protected dialog: MatDialog,
 		protected snackBar: MatSnackBar,
 		protected bottomSheet: MatBottomSheet
 	) {
-		super(globalService, translocoService, daysService, dialog, snackBar, bottomSheet);
+		super(globalService, translocoService, daysService, medsService, dialog, snackBar, bottomSheet);
 		this.updateCallback = (day: IDay): void => {
 			this.daysContents = this.daysContents.filter(dayContent => dayContent.date !== day.date);
 			this.daysContents.push(new DayViewModel(day));

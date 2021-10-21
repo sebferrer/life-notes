@@ -17,7 +17,7 @@ import { TranslocoService } from '@ngneat/transloco';
 import { IDay } from 'src/app/models';
 import { DayViewModel } from 'src/app/models/day.view.model';
 import { DialogNoTargetSymptomWarningComponent } from '../dialog/dialog-no-target-symptom-warning';
-import * as moment from 'moment';
+import { MedsService } from 'src/app/infra/meds.service';
 
 @Component({
 	selector: 'app-time',
@@ -37,6 +37,7 @@ export abstract class ATimeComponent {
 		public globalService: GlobalService,
 		protected translocoService: TranslocoService,
 		protected daysService: DaysService,
+		protected medsService: MedsService,
 		protected dialog: MatDialog,
 		protected snackBar: MatSnackBar,
 		protected bottomSheet: MatBottomSheet
@@ -135,6 +136,10 @@ export abstract class ATimeComponent {
 				'detail': response.detail,
 				'quantity': response.quantity
 			}).subscribe(day => { this.updateCallback(day); });
+
+		if (response.type === 'med') {
+			this.medsService.addMed(response.key, response.quantity).subscribe(() => { });
+		}
 	}
 
 	public openDeleteDialog(date: string, customEvent: ICustomEvent): void {

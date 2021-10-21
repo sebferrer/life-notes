@@ -71,6 +71,9 @@
     "SETTINGS_TITLE": "Settings",
     "SETTINGS_SYMPTOMS_TITLE": "Symptoms",
     "SETTINGS_SYMPTOMS_SUBTITLE": "Manage your symptoms",
+    "SETTINGS_MEDS_TITLE": "Medicines",
+    "SETTINGS_MEDS_SUBTITLE": "Manage your medicines",
+    "MEDS_MANAGE_LINK": "Manage your medicines",
     "SETTINGS_LANGUAGE_TITLE": "Language",
     "SETTINGS_LANGUAGE_SUBTITLE": "Set your language",
     "DEFAULT_SYMPTOM_LABEL": "Default symptom",
@@ -152,5 +155,6 @@
     "TUTORIAL_SLIDE_RATEIT_TEXT_2": "If you meet any issue, you can contact me at my email address: ",
     "TUTORIAL_SLIDE_RATEIT_TEXT_3": "If you like this app and you want to support my work, please take the time to leave me a 5-stars review on the Play Store. It would help a lot for the visibility. Thanks! :)",
     "TUTORIAL_SLIDE_RATEIT_TEXT_4": "To let a review, click below: ",
-    "TUTORIAL_SLIDE_RATEIT_TEXT_5": "Rate the app"
+    "TUTORIAL_SLIDE_RATEIT_TEXT_5": "Rate the app",
+    "MEDS_TITLE": "Your medications"
 }
