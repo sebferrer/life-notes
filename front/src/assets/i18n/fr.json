@@ -73,7 +73,10 @@
     "SETTINGS_SYMPTOMS_SUBTITLE": "Gérer vos symptômes",
     "SETTINGS_MEDS_TITLE": "Médicaments",
     "SETTINGS_MEDS_SUBTITLE": "Gérer vos médicaments",
+    "SETTINGS_LOGS_TITLE": "Notes",
+    "SETTINGS_LOGS_SUBTITLE": "Gérer vos notes",
     "MEDS_MANAGE_LINK": "Gérer vos médicaments",
+    "LOGS_MANAGE_LINK": "Gérer vos notes",
     "SETTINGS_LANGUAGE_TITLE": "Langue",
     "SETTINGS_LANGUAGE_SUBTITLE": "Paramétrer votre langue",
     "DEFAULT_SYMPTOM_LABEL": "Symptôme par défaut",
@@ -159,5 +162,9 @@
     "MEDS_TITLE": "Vos médicaments saisis",
     "MEDS_REFRESH_DIALOG_TITLE": "Actualiser vos médicaments",
     "MEDS_REFRESH_DIALOG_CONTENT_1": "Vos médicaments sont automatiquement stockés ici. Toutefois, si vous utilisiez déjà cette application avant que cette fonctionnalité n'existe ou si vous avez réimporté vos données, il peut alors être utile de les actualiser.",
-    "MEDS_REFRESH_DIALOG_CONTENT_2": "Voulez-vous actualiser vos médicaments? Cela peut prendre un petit moment."
+    "MEDS_REFRESH_DIALOG_CONTENT_2": "Voulez-vous actualiser vos médicaments? Cela peut prendre un petit moment.",
+    "LOGS_TITLE": "Vos notes saisies",
+    "LOGS_REFRESH_DIALOG_TITLE": "Actualiser vos notes",
+    "LOGS_REFRESH_DIALOG_CONTENT_1": "Vos notes sont automatiquement stockés ici. Toutefois, si vous utilisiez déjà cette application avant que cette fonctionnalité n'existe ou si vous avez réimporté vos données, il peut alors être utile de les actualiser.",
+    "LOGS_REFRESH_DIALOG_CONTENT_2": "Voulez-vous actualiser vos notes? Cela peut prendre un petit moment."
 }

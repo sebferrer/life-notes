@@ -50,6 +50,26 @@
 
         <mat-expansion-panel hideToggle>
             <mat-expansion-panel-header class="mat-expansion-panel-header">
+                <div class="panel-title" transloco="SETTINGS_LOGS_TITLE"></div>
+                <div class="panel-description" transloco="SETTINGS_LOGS_SUBTITLE"></div>
+                <div class="panel-icon">
+                    <mat-icon>event_note</mat-icon>
+                </div>
+            </mat-expansion-panel-header>
+
+            <div class="mat-expansion-panel-content">
+                <div class="manage-meds-container">
+                    <mat-selection-list multiple="false">
+                        <mat-list-option routerLink="/logs">
+                            <p class="list-item-text">{{ 'LOGS_MANAGE_LINK' | transloco }}</p>
+                        </mat-list-option>
+                    </mat-selection-list>
+                </div>
+            </div>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel hideToggle>
+            <mat-expansion-panel-header class="mat-expansion-panel-header">
                 <div class="panel-title" transloco="SETTINGS_LANGUAGE_TITLE"></div>
                 <div class="panel-description" transloco="SETTINGS_LANGUAGE_SUBTITLE"></div>
                 <div class="panel-icon">

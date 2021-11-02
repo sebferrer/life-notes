@@ -1,0 +1,35 @@
+<div id="logs-container">
+    <h3 class="title" transloco="LOGS_TITLE"></h3>
+
+    <table mat-table *ngIf="logs$ | async as logs; else loading" #logs [dataSource]="logs"
+        class="log-list mat-elevation-z8">
+
+        <ng-container matColumnDef="key">
+            <th mat-header-cell *matHeaderCellDef> Note </th>
+            <td mat-cell *matCellDef="let element"> {{ element.key }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="occurrences">
+            <th mat-header-cell *matHeaderCellDef> Occurrences </th>
+            <td mat-cell *matCellDef="let element"> {{ element.occurrences }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="lastEntry">
+            <th mat-header-cell *matHeaderCellDef> Last entry </th>
+            <td mat-cell *matCellDef="let element"> {{ element.lastEntry }} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+</div>
+
+<div class="add-button-container">
+    <button mat-fab color="primary" (click)="openRefreshDialog()">
+        <mat-icon>refresh</mat-icon>
+    </button>
+</div>
+
+<ng-template #loading>
+    <mat-spinner></mat-spinner>
+</ng-template>

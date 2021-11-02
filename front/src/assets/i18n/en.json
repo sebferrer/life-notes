@@ -73,7 +73,10 @@
     "SETTINGS_SYMPTOMS_SUBTITLE": "Manage your symptoms",
     "SETTINGS_MEDS_TITLE": "Medicines",
     "SETTINGS_MEDS_SUBTITLE": "Manage your medicines",
+    "SETTINGS_LOGS_TITLE": "Notes",
+    "SETTINGS_LOGS_SUBTITLE": "Manage your notes",
     "MEDS_MANAGE_LINK": "Manage your medicines",
+    "LOGS_MANAGE_LINK": "Manage your notes",
     "SETTINGS_LANGUAGE_TITLE": "Language",
     "SETTINGS_LANGUAGE_SUBTITLE": "Set your language",
     "DEFAULT_SYMPTOM_LABEL": "Default symptom",
@@ -159,5 +162,9 @@
     "MEDS_TITLE": "Your medications",
     "MEDS_REFRESH_DIALOG_TITLE": "Refresh medicines",
     "MEDS_REFRESH_DIALOG_CONTENT_1": "Your medicines are automatically stored here. However, if you were already using this app before this feature existed or if you reimported your data, it may be useful to refresh it.",
-    "MEDS_REFRESH_DIALOG_CONTENT_2": "Do you want to refresh your medicines list? This may take a while."
+    "MEDS_REFRESH_DIALOG_CONTENT_2": "Do you want to refresh your medicine list? This may take a while.",
+    "LOGS_TITLE": "Your notes",
+    "LOGS_REFRESH_DIALOG_TITLE": "Refresh notes",
+    "LOGS_REFRESH_DIALOG_CONTENT_1": "Your notes are automatically stored here. However, if you were already using this app before this feature existed or if you reimported your data, it may be useful to refresh it.",
+    "LOGS_REFRESH_DIALOG_CONTENT_2": "Do you want to refresh your note list? This may take a while."
 }

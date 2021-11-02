@@ -44,7 +44,7 @@ export class MedsService {
 						} else {
 							currentMed.quantity = parseFloat('' + currentMed.quantity);
 							currentMed.occurrences++;
-							currentMed.lastEntry = day.date;
+							currentMed.lastEntry = moment().format('YYYY-MM-DD');
 						}
 					});
 				});
@@ -53,19 +53,19 @@ export class MedsService {
 						this.createNewMed(medHistory)
 					});
 				});
-				console.log(medHistories);
 				return medHistories;
 			})
 		);
 	}
 
-	public addMed(key: string, quantity: number): Observable<IMedHistory> {
+	public addMed(date: string, key: string, quantity: number): Observable<IMedHistory> {
 		return this.getMed(key + quantity).pipe(
 			switchMap(med => {
 				if (med == null) {
-					return this.createNewMed({ key, quantity, occurrences: 1, lastEntry: moment().format('YYYY-MM-DD') })
+					return this.createNewMed({ key, quantity, occurrences: 1, lastEntry: date })
 				} else {
 					med.occurrences++;
+					med.lastEntry = date;
 					return this.dbContext.asObservable(this.dbContext.medsCollection.put(med)).pipe(
 						map(() => med)
 					);

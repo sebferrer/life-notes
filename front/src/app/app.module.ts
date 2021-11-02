@@ -62,6 +62,8 @@ import { SwipingFingerComponent } from './ui/graphic/swiping-finger';
 import { Market } from '@ionic-native/market/ngx';
 import { MedsService } from './infra/meds.service';
 import { DialogConfirmComponent } from './ui/dialog/dialog-confirm';
+import { LogsService } from './infra/logs.service';
+import { LogsComponent } from './ui/logs/logs.component';
 
 @NgModule({
 	declarations: [
@@ -72,6 +74,7 @@ import { DialogConfirmComponent } from './ui/dialog/dialog-confirm';
 		TimelineComponent,
 		SymptomsComponent,
 		MedsComponent,
+		LogsComponent,
 		SettingsComponent,
 		TutorialComponent,
 		PieChartComponent,
@@ -136,6 +139,7 @@ import { DialogConfirmComponent } from './ui/dialog/dialog-confirm';
 		SettingsService,
 		BackupService,
 		MedsService,
+		LogsService,
 		IonicFile,
 		Market,
 		{

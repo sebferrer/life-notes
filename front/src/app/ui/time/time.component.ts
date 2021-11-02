@@ -18,6 +18,7 @@ import { IDay } from 'src/app/models';
 import { DayViewModel } from 'src/app/models/day.view.model';
 import { DialogNoTargetSymptomWarningComponent } from '../dialog/dialog-no-target-symptom-warning';
 import { MedsService } from 'src/app/infra/meds.service';
+import { LogsService } from 'src/app/infra/logs.service';
 
 @Component({
 	selector: 'app-time',
@@ -38,6 +39,7 @@ export abstract class ATimeComponent {
 		protected translocoService: TranslocoService,
 		protected daysService: DaysService,
 		protected medsService: MedsService,
+		protected logsService: LogsService,
 		protected dialog: MatDialog,
 		protected snackBar: MatSnackBar,
 		protected bottomSheet: MatBottomSheet
@@ -138,7 +140,10 @@ export abstract class ATimeComponent {
 			}).subscribe(day => { this.updateCallback(day); });
 
 		if (response.type === 'med') {
-			this.medsService.addMed(response.key, response.quantity).subscribe(() => { });
+			this.medsService.addMed(date, response.key, response.quantity).subscribe(() => { });
+		}
+		else if (response.type === 'log') {
+			this.logsService.addLog(date, response.key).subscribe(() => { });
 		}
 	}
 
@@ -154,7 +159,10 @@ export abstract class ATimeComponent {
 			}
 			this.daysService.deleteDeepEvent(date, customEvent).subscribe(day => { this.updateCallback(day); });
 			if (customEvent.type === 'med') {
-				this.medsService.removeMedByKey(customEvent.key, customEvent.quantity).subscribe(() => {});
+				this.medsService.removeMedByKey(customEvent.key, customEvent.quantity).subscribe(() => { });
+			}
+			else if (customEvent.type === 'log') {
+				this.logsService.removeLogByKey(customEvent.key).subscribe(() => { });
 			}
 			/*this.snackBar.open(this.translocoService.translate('TIMELINE_DELETE_EVENT_SNACKBAR',
 				{ type: this.translocoService.translate(customEvent.type) }), 'Close',
