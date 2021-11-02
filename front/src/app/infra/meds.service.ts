@@ -38,10 +38,11 @@ export class MedsService {
 					}
 					day.meds.forEach(med => {
 						const currentMed =
-							medHistories.find(medHistory => medHistory.key === med.key && medHistory.quantity === med.quantity);
+							medHistories.find(medHistory => medHistory.key === med.key && medHistory.quantity == med.quantity);
 						if (currentMed == null) {
-							medHistories.push({ key: med.key, quantity: med.quantity, occurrences: 1, lastEntry: day.date });
+							medHistories.push({ key: med.key, quantity: parseFloat('' + med.quantity), occurrences: 1, lastEntry: day.date });
 						} else {
+							currentMed.quantity = parseFloat('' + currentMed.quantity);
 							currentMed.occurrences++;
 							currentMed.lastEntry = day.date;
 						}
@@ -52,6 +53,7 @@ export class MedsService {
 						this.createNewMed(medHistory)
 					});
 				});
+				console.log(medHistories);
 				return medHistories;
 			})
 		);
@@ -104,12 +106,20 @@ export class MedsService {
 		);
 	}
 
-	public removeMedByKey(key: string): Observable<IMedHistory> {
-		return this.getMed(key).pipe(
+	public removeMedByKey(key: string, quantity: number): Observable<IMedHistory> {
+		return this.getMed(key + quantity).pipe(
 			switchMap(med => {
-				return this.dbContext.asObservable(this.dbContext.medsCollection.remove(med)).pipe(
-					map(() => med)
-				);
+				if (med.occurrences > 1) {
+					med.occurrences--;
+					console.log(med.occurrences);
+					return this.dbContext.asObservable(this.dbContext.medsCollection.put(med)).pipe(
+						map(() => med)
+					);
+				} else {
+					return this.dbContext.asObservable(this.dbContext.medsCollection.remove(med)).pipe(
+						map(() => med)
+					);
+				}
 			}));
 	}
 

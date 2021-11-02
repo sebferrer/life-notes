@@ -153,6 +153,9 @@ export abstract class ATimeComponent {
 				return;
 			}
 			this.daysService.deleteDeepEvent(date, customEvent).subscribe(day => { this.updateCallback(day); });
+			if (customEvent.type === 'med') {
+				this.medsService.removeMedByKey(customEvent.key, customEvent.quantity).subscribe(() => {});
+			}
 			/*this.snackBar.open(this.translocoService.translate('TIMELINE_DELETE_EVENT_SNACKBAR',
 				{ type: this.translocoService.translate(customEvent.type) }), 'Close',
 				{ duration: 2000 });*/
