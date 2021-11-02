@@ -32,7 +32,7 @@ export class LogsService {
 		return this.daysService.getDays().pipe(
 			map(days => {
 				const logHistories = new Array<ILogHistory>();
-				days.forEach(day => {
+				days.reverse().forEach(day => {
 					if (day.logs == null) {
 						return;
 					}
@@ -43,7 +43,7 @@ export class LogsService {
 							logHistories.push({ key: log.key, occurrences: 1, lastEntry: day.date });
 						} else {
 							currentLog.occurrences++;
-							currentLog.lastEntry = moment().format('YYYY-MM-DD');
+							currentLog.lastEntry = day.date;
 						}
 					});
 				});

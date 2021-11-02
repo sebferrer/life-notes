@@ -32,7 +32,7 @@ export class MedsService {
 		return this.daysService.getDays().pipe(
 			map(days => {
 				const medHistories = new Array<IMedHistory>();
-				days.forEach(day => {
+				days.reverse().forEach(day => {
 					if (day.meds == null) {
 						return;
 					}
@@ -44,7 +44,7 @@ export class MedsService {
 						} else {
 							currentMed.quantity = parseFloat('' + currentMed.quantity);
 							currentMed.occurrences++;
-							currentMed.lastEntry = moment().format('YYYY-MM-DD');
+							currentMed.lastEntry = day.date;
 						}
 					});
 				});
