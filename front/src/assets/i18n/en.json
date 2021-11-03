@@ -166,5 +166,14 @@
     "LOGS_TITLE": "Your notes",
     "LOGS_REFRESH_DIALOG_TITLE": "Refresh notes",
     "LOGS_REFRESH_DIALOG_CONTENT_1": "Your notes are automatically stored here. However, if you were already using this app before this feature existed or if you reimported your data, it may be useful to refresh it.",
-    "LOGS_REFRESH_DIALOG_CONTENT_2": "Do you want to refresh your note list? This may take a while."
+    "LOGS_REFRESH_DIALOG_CONTENT_2": "Do you want to refresh your note list? This may take a while.",
+    "TABLE_MEDICINE": "Medicine",
+    "TABLE_NOTE": "Note",
+    "TABLE_DOSAGE": "Dosage",
+    "TABLE_OCCURRENCES": "Occurrences",
+    "TABLE_LAST_ENTRY": "Last entry",
+    "EMPTY_MEDS_1": "There's no medication registered here. They'll appear here when you've added some note from your timeline.",
+    "EMPTY_MEDS_2": "If you already have medication entries but not registered here, don't hesitate to refresh the list clicking the refresh button.",
+    "EMPTY_NOTES_1": "There's no note registered here. They'll appear here when you've added some note from your timeline.",
+    "EMPTY_NOTES_2": "If you already have note entries but not registered here, don't hesitate to refresh the list clicking the refresh button."
 }

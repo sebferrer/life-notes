@@ -166,5 +166,14 @@
     "LOGS_TITLE": "Vos notes saisies",
     "LOGS_REFRESH_DIALOG_TITLE": "Actualiser vos notes",
     "LOGS_REFRESH_DIALOG_CONTENT_1": "Vos notes sont automatiquement stockés ici. Toutefois, si vous utilisiez déjà cette application avant que cette fonctionnalité n'existe ou si vous avez réimporté vos données, il peut alors être utile de les actualiser.",
-    "LOGS_REFRESH_DIALOG_CONTENT_2": "Voulez-vous actualiser vos notes? Cela peut prendre un petit moment."
+    "LOGS_REFRESH_DIALOG_CONTENT_2": "Voulez-vous actualiser vos notes? Cela peut prendre un petit moment.",
+    "TABLE_MEDICINE": "Médicament",
+    "TABLE_NOTE": "Note",
+    "TABLE_DOSAGE": "Dose",
+    "TABLE_OCCURRENCES": "Occurrences",
+    "TABLE_LAST_ENTRY": "Dernière entrée",
+    "EMPTY_MEDS_1": "Il n'y a pas de médicament enregistré ici. Ils apparaîtront lorsque vous en aurez saisi dans votre timeline.",
+    "EMPTY_MEDS_2": "Si vous avez déjà des saisies de médicaments mais qui ne sont pas encore enregistrées ici, vous pouvez rafraîchir la liste en cliquant sur le bouton de rafraîchissement.",
+    "EMPTY_NOTES_1": "Il n'y a pas de note enregistrée ici. Elles apparaîtront lorsque vous en aurez saisi dans votre timeline.",
+    "EMPTY_NOTES_2": "Si vous avez déjà des saisies de notes mais qui ne sont pas encore enregistrées ici, vous pouvez rafraîchir la liste en cliquant sur le bouton de rafraîchissement."
 }
