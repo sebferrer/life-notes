@@ -109,7 +109,6 @@ export class LogsService {
 			switchMap(log => {
 				if (log.occurrences > 1) {
 					log.occurrences--;
-					console.log(log.occurrences);
 					return this.dbContext.asObservable(this.dbContext.logsCollection.put(log)).pipe(
 						map(() => log)
 					);

@@ -19,6 +19,7 @@ import { DayViewModel } from 'src/app/models/day.view.model';
 import { DialogNoTargetSymptomWarningComponent } from '../dialog/dialog-no-target-symptom-warning';
 import { MedsService } from 'src/app/infra/meds.service';
 import { LogsService } from 'src/app/infra/logs.service';
+import { formatAMPM } from 'src/app/util/time.util';
 
 @Component({
 	selector: 'app-time',
@@ -224,5 +225,9 @@ export abstract class ATimeComponent {
 
 	public toggleRemovable(dayViewModel: DayViewModel): void {
 		dayViewModel.removable = dayViewModel.removable ? false : true;
+	}
+
+	public displayTime(time: string): string {
+		return this.globalService.timeFormat === 'us' ? formatAMPM(time) : time;
 	}
 }

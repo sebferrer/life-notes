@@ -18,7 +18,7 @@ import { LogsService } from 'src/app/infra/logs.service';
 	templateUrl: './timeline.component.html',
 	styleUrls: ['./timeline.component.scss']
 })
-export class TimelineComponent extends ATimeComponent implements OnInit, AfterViewInit {
+export class TimelineComponent extends ATimeComponent implements OnInit {
 
 	private daysContents: DayViewModel[];
 	public daysContents$: Subject<DayViewModel[]>;
@@ -64,9 +64,10 @@ export class TimelineComponent extends ATimeComponent implements OnInit, AfterVi
 		);
 	}
 
+	/*
 	public ngAfterViewInit(): void {
-		/*this.dayRefs.forEach((div: any) => console.log(div.nativeElement));
+		this.dayRefs.forEach((div: any) => console.log(div.nativeElement));
 		console.log(this.dayRefs.toArray());
-		//this.myDiv.scrollIntoView();*/
-	}
+		//this.myDiv.scrollIntoView();
+	}*/
 }

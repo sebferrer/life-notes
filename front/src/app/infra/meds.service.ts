@@ -111,7 +111,6 @@ export class MedsService {
 			switchMap(med => {
 				if (med.occurrences > 1) {
 					med.occurrences--;
-					console.log(med.occurrences);
 					return this.dbContext.asObservable(this.dbContext.medsCollection.put(med)).pipe(
 						map(() => med)
 					);

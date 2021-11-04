@@ -8,7 +8,8 @@
 						<ng-template transloco let-t>
 							<div class="timeline-tile-header-date">
 								{{ t('TIMELINE_TILE_DATE',
-							{'month': t('MONTH-SHORT-'+dayContent.detailedDate.month), 'day': dayContent.detailedDate.day, 'year': dayContent.detailedDate.year}) }}
+								{'month': t('MONTH-SHORT-' + dayContent.detailedDate.month), 'day':
+								dayContent.detailedDate.day, 'year': dayContent.detailedDate.year}) }}
 							</div>
 						</ng-template>
 						<div class="go-to-day-container">
@@ -17,8 +18,7 @@
 							</button>
 						</div>
 						<div class="add-event-container">
-							<button mat-icon-button (click)="openBottomSheet(dayContent.date)"
-								class="add-event">
+							<button mat-icon-button (click)="openBottomSheet(dayContent.date)" class="add-event">
 								<mat-icon>playlist_add</mat-icon>
 							</button>
 						</div>
@@ -43,23 +43,32 @@
 								<div class="timeline-chips-padding"></div>
 								<mat-chip *ngFor="let content of dayContent.content" [ngSwitch]="content.type"
 									class="mat-chip mat-standard-chip timeline-day-item-{{ content.type }} event-chips">
-									<div class="event-container" (click)="openShowDialog(dayContent.date, content, symptoms)">
+									<div class="event-container"
+										(click)="openShowDialog(dayContent.date, content, symptoms)">
 										<div *ngSwitchCase="'symptomLog'" class="event">
-											<div class="event-time">{{ content.time }}</div>
+											<div class="event-time"
+												[ngClass]="globalService.timeFormat === 'us' ? 'event-time-us' : 'event-time-eu'">
+												{{ displayTime(content.time) }}</div>
 											<div class="event-content">{{ symptomMap.get(content.key) }}
 												[{{ content.pain }}/5]
 											</div>
 										</div>
 										<div *ngSwitchCase="'log'" class="event">
-											<div class="event-time">{{ content.time }}</div>
+											<div class="event-time"
+												[ngClass]="globalService.timeFormat === 'us' ? 'event-time-us' : 'event-time-eu'">
+												{{ displayTime(content.time) }}</div>
 											<div class="event-content">{{ content.key }}</div>
 										</div>
 										<div *ngSwitchCase="'med'" class="event">
-											<div class="event-time">{{ content.time }}</div>
+											<div class="event-time"
+												[ngClass]="globalService.timeFormat === 'us' ? 'event-time-us' : 'event-time-eu'">
+												{{ displayTime(content.time) }}</div>
 											<div class="event-content">{{ content.key }} {{ content.quantity }}mg</div>
 										</div>
 										<div *ngSwitchCase="'meal'" class="event">
-											<div class="event-time">{{ content.time }}</div>
+											<div class="event-time"
+												[ngClass]="globalService.timeFormat === 'us' ? 'event-time-us' : 'event-time-eu'">
+												{{ displayTime(content.time) }}</div>
 											<div class="event-content">{{ content.key }}</div>
 										</div>
 										<div class="remove-event-container">

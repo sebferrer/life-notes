@@ -102,6 +102,34 @@
 
         <mat-expansion-panel hideToggle>
             <mat-expansion-panel-header class="mat-expansion-panel-header">
+                <div class="panel-title" transloco="SETTINGS_TIME_TITLE"></div>
+                <div class="panel-description" transloco="SETTINGS_TIME_SUBTITLE"></div>
+                <div class="panel-icon">
+                    <mat-icon>access_time</mat-icon>
+                </div>
+            </mat-expansion-panel-header>
+
+            <div class="mat-expansion-panel-content">
+                <mat-form-field class="field-select">
+                    <mat-label transloco="TIME_FORMAT"></mat-label>
+                    <mat-select [(value)]="selectedTimeFormat" (selectionChange)="setTimeFormat()">
+                        <mat-option value="eu">
+                            <div class="language-container">
+                                <div class="time-format-label" transloco="24H"></div>
+                            </div>
+                        </mat-option>
+                        <mat-option value="us">
+                            <div class="language-container">
+                                <div class="time-format-label" transloco="12H"></div>
+                            </div>
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel hideToggle>
+            <mat-expansion-panel-header class="mat-expansion-panel-header">
                 <div class="panel-title" transloco="SETTINGS_IMPORT_EXPORT_TITLE"></div>
                 <div class="panel-description" transloco="SETTINGS_IMPORT_EXPORT_SUBTITLE"></div>
                 <div class="panel-icon">

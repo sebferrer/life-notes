@@ -21,6 +21,7 @@ export class SettingsComponent implements OnInit {
 	public symptoms$: Observable<ISymptom[]>;
 	public selectedSymptom: string;
 	public selectedLanguage: string;
+	public selectedTimeFormat: string;
 
 	public debug = 'no error';
 	public backupData = '';
@@ -43,11 +44,16 @@ export class SettingsComponent implements OnInit {
 		this.symptoms$ = this.globalService.symptoms$;
 		this.selectedSymptom = this.globalService.targetSymptomKey;
 		this.selectedLanguage = this.globalService.language;
+		this.selectedTimeFormat = this.globalService.timeFormat;
 	}
 
 	public setActiveLanguage(): void {
 		this.translocoService.setActiveLang(this.selectedLanguage);
 		this.settingsService.setLanguage(this.selectedLanguage).subscribe();
+	}
+
+	public setTimeFormat(): void {
+		this.settingsService.setTimeFormat(this.selectedTimeFormat).subscribe();
 	}
 
 	public setTargetSymptom(): void {

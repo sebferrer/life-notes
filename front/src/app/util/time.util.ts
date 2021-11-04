@@ -41,3 +41,15 @@ export function formatMinutesInDuration(minutes: number): string {
 	mins = mins.length > 1 && mins[0] === '0' ? mins.substring(1) : mins;
 	return formatMinutesInDurationContracted(minutes) + ',' + mins + 'min';
 }
+
+export function formatAMPM(time: string) {
+	let splittedTime = time.split(':');
+	let hours = parseInt(splittedTime[0]);
+	let minutes = parseInt(splittedTime[1]);
+	let ampm = hours >= 12 ? 'PM' : 'AM';
+	hours = hours % 12;
+	hours = hours ? hours : 12;
+	let strMinutes = minutes < 10 ? '0' + minutes : minutes;
+	var strTime = hours + ':' + strMinutes + ' ' + ampm;
+	return strTime;
+}

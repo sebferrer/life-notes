@@ -182,12 +182,22 @@
             .event-time {
                 display: table-cell;
                 vertical-align: middle;
+            }
+            .event-time-eu {
                 width: 12vw;
+            }
+            .event-time-us {
+                width: 18vw;
             }
             .event-content {
                 display: table-cell;
                 vertical-align: middle;
+            }
+            .event-content-eu {
                 width: 48vw;
+            }
+            .event-content-us {
+                width: 42vw;
             }
         }
     }
