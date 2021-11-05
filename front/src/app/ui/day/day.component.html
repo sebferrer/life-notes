@@ -9,8 +9,9 @@
             <ng-template transloco let-t>
                 <div class="day-tile-header-date">
                     {{ t('TIMELINE_TILE_DATE',
-                    {'month': t('MONTH-SHORT-'+dayContent.detailedDate.month), 'day': dayContent.detailedDate.day,
-                    'year': dayContent.detailedDate.year}) }}
+                    {'dayOfWeek': t('DAY-OF-WEEK-SHORT-' + dayContent.detailedDate.dayOfWeek), 'month':
+                    t('MONTH-SHORT-' + dayContent.detailedDate.month), 'day':
+                    dayContent.detailedDate.day, 'year': dayContent.detailedDate.year}) }}
                 </div>
             </ng-template>
             <!--div class="toggle-chart-container" (click)="toggleCharts()">

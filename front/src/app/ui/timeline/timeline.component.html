@@ -8,7 +8,8 @@
 						<ng-template transloco let-t>
 							<div class="timeline-tile-header-date">
 								{{ t('TIMELINE_TILE_DATE',
-								{'month': t('MONTH-SHORT-' + dayContent.detailedDate.month), 'day':
+								{'dayOfWeek': t('DAY-OF-WEEK-SHORT-' + dayContent.detailedDate.dayOfWeek), 'month':
+								t('MONTH-SHORT-' + dayContent.detailedDate.month), 'day':
 								dayContent.detailedDate.day, 'year': dayContent.detailedDate.year}) }}
 							</div>
 						</ng-template>
