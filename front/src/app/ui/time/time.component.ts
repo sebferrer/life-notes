@@ -19,7 +19,7 @@ import { DayViewModel } from 'src/app/models/day.view.model';
 import { DialogNoTargetSymptomWarningComponent } from '../dialog/dialog-no-target-symptom-warning';
 import { MedsService } from 'src/app/infra/meds.service';
 import { LogsService } from 'src/app/infra/logs.service';
-import { formatAMPM } from 'src/app/util/time.util';
+import { format24H, formatAMPM } from 'src/app/util/time.util';
 
 @Component({
 	selector: 'app-time',
@@ -103,6 +103,7 @@ export abstract class ATimeComponent {
 		if (response == null || response.answer !== 'yes') {
 			return;
 		}
+		response.time = this.normalizeTime(response.time);
 		if (response.edit) {
 			this.editEvent(date, response, customEvent);
 		} else {
@@ -229,5 +230,12 @@ export abstract class ATimeComponent {
 
 	public displayTime(time: string): string {
 		return this.globalService.timeFormat === 'us' ? formatAMPM(time) : time;
+	}
+
+	public normalizeTime(time: string): string {
+		if (this.globalService.timeFormat !== 'us') {
+			return time;
+		}
+		return format24H(time);
 	}
 }

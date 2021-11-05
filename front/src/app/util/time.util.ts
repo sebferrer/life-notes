@@ -43,13 +43,34 @@ export function formatMinutesInDuration(minutes: number): string {
 }
 
 export function formatAMPM(time: string) {
-	let splittedTime = time.split(':');
+	const splittedTime = time.split(':');
 	let hours = parseInt(splittedTime[0]);
 	let minutes = parseInt(splittedTime[1]);
 	let ampm = hours >= 12 ? 'PM' : 'AM';
 	hours = hours % 12;
 	hours = hours ? hours : 12;
-	let strMinutes = minutes < 10 ? '0' + minutes : minutes;
-	var strTime = hours + ':' + strMinutes + ' ' + ampm;
+	const strHours = hours < 10 ? '0' + hours : hours;
+	const strMinutes = minutes < 10 ? '0' + minutes : minutes;
+	var strTime = strHours + ':' + strMinutes + ' ' + ampm;
+	return strTime;
+}
+
+export function format24H(time: string) {
+	const splittedAMPMTime = time.split(' ');
+	if (splittedAMPMTime.length < 2 || (splittedAMPMTime[1] != 'AM' && splittedAMPMTime[1] != 'PM')) {
+		return time;
+	}
+	const amPm = splittedAMPMTime[1];
+	const splittedTime = time.split(':');
+	let hours = parseInt(splittedTime[0]);
+	let minutes = parseInt(splittedTime[1]);
+	if (hours === 12) {
+		hours = amPm === 'PM' ? hours : 0;
+	} else {
+		hours = amPm === 'PM' ? hours + 12 : hours;
+	}
+	const strHours = hours < 10 ? '0' + hours : hours;
+	const strMinutes = minutes < 10 ? '0' + minutes : minutes;
+	var strTime = strHours + ':' + strMinutes;
 	return strTime;
 }

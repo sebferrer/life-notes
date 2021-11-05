@@ -122,9 +122,9 @@ export class WakeUpChartViewModel extends ALineChartViewModel {
 			}
 		});
 		// console.log(this.options.scales.yAxes[0].ticks);
-		this.minimum = formatMinutes(min);
-		this.maximum = formatMinutes(max);
-		this.average = formatMinutes(-Math.trunc(timeSum / this.nbData));
+		this.minimum = this.displayTime(formatMinutes(min));
+		this.maximum = this.displayTime(formatMinutes(max));
+		this.average = this.displayTime(formatMinutes(-Math.trunc(timeSum / this.nbData)));
 		this.dataSource = [{ min: this.minimum, max: this.maximum, avg: this.average }];
 		this.labels.sort((a, b) => (a as any) - (b as any));
 	}

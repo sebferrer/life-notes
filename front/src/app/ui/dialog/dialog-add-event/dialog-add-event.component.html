@@ -15,7 +15,7 @@
 <div mat-dialog-content>
     <mat-form-field>
         <mat-label transloco="TIME"></mat-label>
-        <input matInput placeholder="24hr format" aria-label="24hr format" [ngxTimepicker]="fullTime" [format]="24"
+        <input matInput placeholder="24hr format" aria-label="24hr format" [ngxTimepicker]="fullTime" [format]="timeFormat"
             [(ngModel)]="data.time" required readonly>
         <ngx-material-timepicker #fullTime></ngx-material-timepicker>
     </mat-form-field>

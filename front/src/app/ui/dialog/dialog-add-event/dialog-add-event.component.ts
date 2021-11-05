@@ -40,6 +40,7 @@ export class DialogAddEventComponent {
 	public filteredMedsOptions: Observable<string[]>;
 	public logsOptions: string[];
 	public filteredLogsOptions: Observable<string[]>;
+	public timeFormat: number;
 
 	constructor(
 		public dialogRef: MatDialogRef<DialogAddEventComponent>,
@@ -64,6 +65,7 @@ export class DialogAddEventComponent {
 				data.key = globalService.targetSymptomKey;
 			}
 			data.time = moment().format('HH:mm');
+			this.timeFormat = this.globalService.timeFormat == 'us' ? 12 : 24;
 		}
 
 		if (data.type === 'med') {

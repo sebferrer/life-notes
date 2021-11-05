@@ -63,11 +63,4 @@ export class TimelineComponent extends ATimeComponent implements OnInit {
 			}
 		);
 	}
-
-	/*
-	public ngAfterViewInit(): void {
-		this.dayRefs.forEach((div: any) => console.log(div.nativeElement));
-		console.log(this.dayRefs.toArray());
-		//this.myDiv.scrollIntoView();
-	}*/
 }
