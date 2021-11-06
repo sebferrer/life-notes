@@ -50,6 +50,7 @@ export class DialogAddEventComponent {
 		@Inject(MAT_DIALOG_DATA) public data: IDialogData
 	) {
 		data.detailedDate = getDetailedDate(moment(data.date).format('YYYY-MM-DD'));
+		this.timeFormat = this.globalService.timeFormat == 'us' ? 12 : 24;
 		if (data.customEvent != null) {
 			data.edit = true;
 			data.type = data.customEvent.type;
@@ -65,7 +66,6 @@ export class DialogAddEventComponent {
 				data.key = globalService.targetSymptomKey;
 			}
 			data.time = moment().format('HH:mm');
-			this.timeFormat = this.globalService.timeFormat == 'us' ? 12 : 24;
 		}
 
 		if (data.type === 'med') {
