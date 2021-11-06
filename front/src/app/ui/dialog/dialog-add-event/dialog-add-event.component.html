@@ -1,11 +1,13 @@
 <ng-template transloco let-t>
     <div mat-dialog-title>
         <span *ngIf="data.edit; else addSpan">
-            {{ t('EDIT_EVENT_DIALOG_TITLE', { type: t(data.type), monthShort: t('MONTH-SHORT-'+data.detailedDate.month), day: data.detailedDate.day }) }}
+            {{ t('EDIT_EVENT_DIALOG_TITLE', { type: t(data.type), monthShort: t('MONTH-SHORT-'+data.detailedDate.month),
+            day: data.detailedDate.day }) }}
         </span>
         <ng-template #addSpan>
             <span>
-                {{ t('ADD_EVENT_DIALOG_TITLE', { type: t(data.type), monthShort: t('MONTH-SHORT-'+data.detailedDate.month), day: data.detailedDate.day }) }}
+                {{ t('ADD_EVENT_DIALOG_TITLE', { type: t(data.type), monthShort:
+                t('MONTH-SHORT-'+data.detailedDate.month), day: data.detailedDate.day }) }}
             </span>
         </ng-template>
     </div>
@@ -13,7 +15,7 @@
 <div mat-dialog-content>
     <mat-form-field>
         <mat-label transloco="TIME"></mat-label>
-        <input matInput placeholder="24hr format" aria-label="24hr format" [ngxTimepicker]="fullTime" [format]="24"
+        <input matInput placeholder="24hr format" aria-label="24hr format" [ngxTimepicker]="fullTime" [format]="timeFormat"
             [(ngModel)]="data.time" required readonly>
         <ngx-material-timepicker #fullTime></ngx-material-timepicker>
     </mat-form-field>
@@ -52,7 +54,13 @@
         <div *ngSwitchCase="'log'">
             <mat-form-field>
                 <mat-label>{{ data.type | transloco | titlecase }}</mat-label>
-                <input matInput [(ngModel)]="data.key" required>
+                <input type="text" matInput [formControl]="myControl" [(ngModel)]="data.key" [matAutocomplete]="autolog"
+                    required>
+                <mat-autocomplete #autolog="matAutocomplete" (optionSelected)="setLog($event.option.value)">
+                    <mat-option *ngFor="let option of filteredLogsOptions | async" [value]="option">
+                        {{option}}
+                    </mat-option>
+                </mat-autocomplete>
             </mat-form-field>
             <mat-form-field>
                 <mat-label transloco="DETAIL"></mat-label>
@@ -62,7 +70,13 @@
         <div *ngSwitchCase="'med'">
             <mat-form-field>
                 <mat-label>{{ data.type | transloco | titlecase }}</mat-label>
-                <input matInput [(ngModel)]="data.key" required>
+                <input type="text" matInput [formControl]="myControl" [(ngModel)]="data.key" [matAutocomplete]="automed"
+                    required>
+                <mat-autocomplete #automed="matAutocomplete" (optionSelected)="setMed($event.option.value)">
+                    <mat-option *ngFor="let option of filteredMedsOptions | async" [value]="option">
+                        {{option}}
+                    </mat-option>
+                </mat-autocomplete>
             </mat-form-field>
             <mat-form-field>
                 <mat-label>{{ 'QUANTITY' | transloco }} (mg)</mat-label>

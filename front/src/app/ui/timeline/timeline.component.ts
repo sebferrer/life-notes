@@ -10,13 +10,15 @@ import { DaysService } from 'src/app/infra';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { MedsService } from 'src/app/infra/meds.service';
+import { LogsService } from 'src/app/infra/logs.service';
 
 @Component({
 	selector: 'app-timeline',
 	templateUrl: './timeline.component.html',
 	styleUrls: ['./timeline.component.scss']
 })
-export class TimelineComponent extends ATimeComponent implements OnInit, AfterViewInit {
+export class TimelineComponent extends ATimeComponent implements OnInit {
 
 	private daysContents: DayViewModel[];
 	public daysContents$: Subject<DayViewModel[]>;
@@ -28,11 +30,13 @@ export class TimelineComponent extends ATimeComponent implements OnInit, AfterVi
 		public globalService: GlobalService,
 		protected translocoService: TranslocoService,
 		protected daysService: DaysService,
+		protected medsService: MedsService,
+		protected logsService: LogsService,
 		protected dialog: MatDialog,
 		protected snackBar: MatSnackBar,
 		protected bottomSheet: MatBottomSheet
 	) {
-		super(globalService, translocoService, daysService, dialog, snackBar, bottomSheet);
+		super(globalService, translocoService, daysService, medsService, logsService, dialog, snackBar, bottomSheet);
 		this.updateCallback = (day: IDay): void => {
 			this.daysContents = this.daysContents.filter(dayContent => dayContent.date !== day.date);
 			this.daysContents.push(new DayViewModel(day));
@@ -58,11 +62,5 @@ export class TimelineComponent extends ATimeComponent implements OnInit, AfterVi
 				this.daysContents$.next(this.daysContents);
 			}
 		);
-	}
-
-	public ngAfterViewInit(): void {
-		/*this.dayRefs.forEach((div: any) => console.log(div.nativeElement));
-		console.log(this.dayRefs.toArray());
-		//this.myDiv.scrollIntoView();*/
 	}
 }

@@ -13,6 +13,8 @@ export class LineChartComponent implements OnInit {
 	title: string;
 	@Input()
 	chart: ALineChartViewModel;
+	@Input()
+	timeFormat: string;
 
 	public labels: string[];
 	public type: string;
@@ -22,8 +24,7 @@ export class LineChartComponent implements OnInit {
 	public plugins: any;
 	public displayedColumns: string[] = ['min', 'avg', 'max'];
 
-	constructor(
-	) { }
+	constructor() { }
 
 	public getDatasource(): ILineChartDataSource[] {
 		return this.chart.dataSource;
@@ -36,6 +37,7 @@ export class LineChartComponent implements OnInit {
 		this.options = this.chart.options;
 		this.datasets = this.chart.datasets;
 		this.plugins = this.chart.plugins;
+		this.chart.timeFormat = this.timeFormat;
 	}
 
 }

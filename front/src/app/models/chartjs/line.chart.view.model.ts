@@ -1,4 +1,5 @@
 import * as ChartJs from 'chart.js';
+import { formatAMPM } from 'src/app/util/time.util';
 import { ILineChartDataSource } from '../line.chart.datasource';
 
 export interface ExtendedChartOptions extends ChartJs.ChartOptions {
@@ -12,6 +13,7 @@ export interface ExtendedChartOptions extends ChartJs.ChartOptions {
 
 export abstract class ALineChartViewModel {
 	public type: string;
+	public timeFormat: string;
 	public labels: string[];
 	public data: number[];
 	public colors: any;
@@ -30,5 +32,10 @@ export abstract class ALineChartViewModel {
 		this.data = new Array<number>();
 		this.nbData = 0;
 		this.dataSource = [{ min: '', max: '', avg: '' }];
+		this.timeFormat = this.timeFormat == null ? 'eu' : this.timeFormat;
+	}
+
+	public displayTime(time: string): string {
+		return this.timeFormat === 'us' ? formatAMPM(time) : time;
 	}
 }

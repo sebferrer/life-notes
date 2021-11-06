@@ -1,6 +1,6 @@
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule, APP_INITIALIZER } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -19,6 +19,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
@@ -30,6 +31,7 @@ import { DayComponent } from './ui/day';
 import { TimelineComponent } from './ui/timeline';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { SymptomsComponent } from './ui/symptoms';
+import { MedsComponent } from './ui/meds';
 import { BottomSheetAddEventComponent } from './ui/time/bottom-sheet-add-event';
 import { TranslocoRootModule } from './transloco/transloco-root.module';
 import { TranslocoService } from '@ngneat/transloco';
@@ -58,6 +60,10 @@ import { TutorialComponent } from './ui/tutorial';
 import { IonicModule } from '@ionic/angular';
 import { SwipingFingerComponent } from './ui/graphic/swiping-finger';
 import { Market } from '@ionic-native/market/ngx';
+import { MedsService } from './infra/meds.service';
+import { DialogConfirmComponent } from './ui/dialog/dialog-confirm';
+import { LogsService } from './infra/logs.service';
+import { LogsComponent } from './ui/logs/logs.component';
 
 @NgModule({
 	declarations: [
@@ -67,6 +73,8 @@ import { Market } from '@ionic-native/market/ngx';
 		CalendarComponent,
 		TimelineComponent,
 		SymptomsComponent,
+		MedsComponent,
+		LogsComponent,
 		SettingsComponent,
 		TutorialComponent,
 		PieChartComponent,
@@ -85,6 +93,7 @@ import { Market } from '@ionic-native/market/ngx';
 		DialogSelectSymptomComponent,
 		DialogSelectBackupComponent,
 		DialogInfoComponent,
+		DialogConfirmComponent,
 		BottomSheetAddEventComponent,
 
 		// Helpers
@@ -115,9 +124,11 @@ import { Market } from '@ionic-native/market/ngx';
 		MatSliderModule,
 		MatBottomSheetModule,
 		MatExpansionModule,
+		MatAutocompleteModule,
 		NgxMaterialTimepickerModule,
 		TranslocoRootModule,
-		ChartsModule
+		ChartsModule,
+		ReactiveFormsModule
 	],
 	providers: [
 		DaysService,
@@ -127,6 +138,8 @@ import { Market } from '@ionic-native/market/ngx';
 		GlobalService,
 		SettingsService,
 		BackupService,
+		MedsService,
+		LogsService,
 		IonicFile,
 		Market,
 		{
@@ -154,7 +167,8 @@ import { Market } from '@ionic-native/market/ngx';
 		DialogNoTargetSymptomWarningComponent,
 		DialogSelectSymptomComponent,
 		DialogSelectBackupComponent,
-		DialogInfoComponent
+		DialogInfoComponent,
+		DialogConfirmComponent
 	],
 	bootstrap: [AppComponent]
 })

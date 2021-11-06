@@ -17,7 +17,9 @@ import { TranslocoService } from '@ngneat/transloco';
 import { IDay } from 'src/app/models';
 import { DayViewModel } from 'src/app/models/day.view.model';
 import { DialogNoTargetSymptomWarningComponent } from '../dialog/dialog-no-target-symptom-warning';
-import * as moment from 'moment';
+import { MedsService } from 'src/app/infra/meds.service';
+import { LogsService } from 'src/app/infra/logs.service';
+import { format24H, formatAMPM } from 'src/app/util/time.util';
 
 @Component({
 	selector: 'app-time',
@@ -37,6 +39,8 @@ export abstract class ATimeComponent {
 		public globalService: GlobalService,
 		protected translocoService: TranslocoService,
 		protected daysService: DaysService,
+		protected medsService: MedsService,
+		protected logsService: LogsService,
 		protected dialog: MatDialog,
 		protected snackBar: MatSnackBar,
 		protected bottomSheet: MatBottomSheet
@@ -99,6 +103,7 @@ export abstract class ATimeComponent {
 		if (response == null || response.answer !== 'yes') {
 			return;
 		}
+		response.time = this.normalizeTime(response.time);
 		if (response.edit) {
 			this.editEvent(date, response, customEvent);
 		} else {
@@ -135,6 +140,13 @@ export abstract class ATimeComponent {
 				'detail': response.detail,
 				'quantity': response.quantity
 			}).subscribe(day => { this.updateCallback(day); });
+
+		if (response.type === 'med') {
+			this.medsService.addMed(date, response.key, response.quantity).subscribe(() => { });
+		}
+		else if (response.type === 'log') {
+			this.logsService.addLog(date, response.key).subscribe(() => { });
+		}
 	}
 
 	public openDeleteDialog(date: string, customEvent: ICustomEvent): void {
@@ -148,6 +160,12 @@ export abstract class ATimeComponent {
 				return;
 			}
 			this.daysService.deleteDeepEvent(date, customEvent).subscribe(day => { this.updateCallback(day); });
+			if (customEvent.type === 'med') {
+				this.medsService.removeMedByKey(customEvent.key, customEvent.quantity).subscribe(() => { });
+			}
+			else if (customEvent.type === 'log') {
+				this.logsService.removeLogByKey(customEvent.key).subscribe(() => { });
+			}
 			/*this.snackBar.open(this.translocoService.translate('TIMELINE_DELETE_EVENT_SNACKBAR',
 				{ type: this.translocoService.translate(customEvent.type) }), 'Close',
 				{ duration: 2000 });*/
@@ -208,5 +226,16 @@ export abstract class ATimeComponent {
 
 	public toggleRemovable(dayViewModel: DayViewModel): void {
 		dayViewModel.removable = dayViewModel.removable ? false : true;
+	}
+
+	public displayTime(time: string): string {
+		return this.globalService.timeFormat === 'us' ? formatAMPM(time) : time;
+	}
+
+	public normalizeTime(time: string): string {
+		if (this.globalService.timeFormat !== 'us') {
+			return time;
+		}
+		return format24H(time);
 	}
 }

@@ -1,0 +1,48 @@
+<div id="meds-container">
+    <h3 class="title" transloco="MEDS_TITLE"></h3>
+
+    <div *ngIf="meds$ | async as meds; else loading">
+        <table mat-table #meds [dataSource]="meds" class="med-list mat-elevation-z8">
+
+            <ng-container matColumnDef="key">
+                <th mat-header-cell *matHeaderCellDef> {{ 'TABLE_MEDICINE' | transloco }} </th>
+                <td mat-cell *matCellDef="let element"> {{ element.key }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="quantity">
+                <th mat-header-cell *matHeaderCellDef> {{ 'TABLE_DOSAGE' | transloco }} (mg) </th>
+                <td mat-cell *matCellDef="let element"> {{ element.quantity }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="occurrences">
+                <th mat-header-cell *matHeaderCellDef> {{ 'TABLE_OCCURRENCES' | transloco }} </th>
+                <td mat-cell *matCellDef="let element"> {{ element.occurrences }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="lastEntry">
+                <th mat-header-cell *matHeaderCellDef> {{ 'TABLE_LAST_ENTRY' | transloco }} </th>
+                <td mat-cell *matCellDef="let element"> {{ element.lastEntry }} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <div *ngIf="meds.length === 0" class="empty-table">
+            <p>{{ 'EMPTY_MEDS_1' | transloco }}&nbsp;<mat-icon>view_day</mat-icon>
+            </p>
+            <p>{{ 'EMPTY_MEDS_2' | transloco }}&nbsp;<mat-icon>refresh</mat-icon>
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="add-button-container">
+    <button mat-fab color="primary" (click)="openRefreshDialog()">
+        <mat-icon>refresh</mat-icon>
+    </button>
+</div>
+
+<ng-template #loading>
+    <mat-spinner></mat-spinner>
+</ng-template>

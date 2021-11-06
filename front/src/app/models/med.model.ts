@@ -4,3 +4,10 @@ export interface IMed {
 	time: string;
 	quantity: number;
 }
+
+export interface IMedHistory {
+	key: string;
+	quantity: number;
+	occurrences: number;
+	lastEntry: string;
+}

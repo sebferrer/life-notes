@@ -10,6 +10,8 @@ import { TimelineComponent } from './ui/timeline';
 import { SymptomsComponent } from './ui/symptoms';
 import { SettingsComponent } from './ui/settings';
 import { TutorialComponent } from './ui/tutorial';
+import { MedsComponent } from './ui/meds';
+import { LogsComponent } from './ui/logs';
 
 const routes: Routes = [
 	{
@@ -27,6 +29,14 @@ const routes: Routes = [
 	{
 		path: 'symptoms',
 		component: SymptomsComponent
+	},
+	{
+		path: 'meds',
+		component: MedsComponent
+	},
+	{
+		path: 'logs',
+		component: LogsComponent
 	},
 	{
 		path: 'settings',

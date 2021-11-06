@@ -19,6 +19,12 @@ export class GlobalService {
 		this._language = language;
 	}
 
+	private _timeFormat: string;
+	public get timeFormat(): string { return this._timeFormat; }
+	public set timeFormat(timeFormat: string) {
+		this._timeFormat = timeFormat;
+	}
+
 	private _symptoms$: Observable<ISymptom[]>;
 	public get symptoms$(): Observable<ISymptom[]> { return this._symptoms$; }
 	public set symptoms$(symptoms: Observable<ISymptom[]>) {

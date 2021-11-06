@@ -30,6 +30,46 @@
 
         <mat-expansion-panel hideToggle>
             <mat-expansion-panel-header class="mat-expansion-panel-header">
+                <div class="panel-title" transloco="SETTINGS_MEDS_TITLE"></div>
+                <div class="panel-description" transloco="SETTINGS_MEDS_SUBTITLE"></div>
+                <div class="panel-icon">
+                    <img src="/assets/svg/pill-capsule.svg" class="list-icon-svg" />
+                </div>
+            </mat-expansion-panel-header>
+
+            <div class="mat-expansion-panel-content">
+                <div class="manage-meds-container">
+                    <mat-selection-list multiple="false">
+                        <mat-list-option routerLink="/meds">
+                            <p class="list-item-text">{{ 'MEDS_MANAGE_LINK' | transloco }}</p>
+                        </mat-list-option>
+                    </mat-selection-list>
+                </div>
+            </div>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel hideToggle>
+            <mat-expansion-panel-header class="mat-expansion-panel-header">
+                <div class="panel-title" transloco="SETTINGS_LOGS_TITLE"></div>
+                <div class="panel-description" transloco="SETTINGS_LOGS_SUBTITLE"></div>
+                <div class="panel-icon">
+                    <mat-icon>event_note</mat-icon>
+                </div>
+            </mat-expansion-panel-header>
+
+            <div class="mat-expansion-panel-content">
+                <div class="manage-meds-container">
+                    <mat-selection-list multiple="false">
+                        <mat-list-option routerLink="/logs">
+                            <p class="list-item-text">{{ 'LOGS_MANAGE_LINK' | transloco }}</p>
+                        </mat-list-option>
+                    </mat-selection-list>
+                </div>
+            </div>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel hideToggle>
+            <mat-expansion-panel-header class="mat-expansion-panel-header">
                 <div class="panel-title" transloco="SETTINGS_LANGUAGE_TITLE"></div>
                 <div class="panel-description" transloco="SETTINGS_LANGUAGE_SUBTITLE"></div>
                 <div class="panel-icon">
@@ -53,6 +93,34 @@
                                         class="icon-svg" />
                                 </div>
                                 <div class="language-label" transloco="ENGLISH"></div>
+                            </div>
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel hideToggle>
+            <mat-expansion-panel-header class="mat-expansion-panel-header">
+                <div class="panel-title" transloco="SETTINGS_TIME_TITLE"></div>
+                <div class="panel-description" transloco="SETTINGS_TIME_SUBTITLE"></div>
+                <div class="panel-icon">
+                    <mat-icon>access_time</mat-icon>
+                </div>
+            </mat-expansion-panel-header>
+
+            <div class="mat-expansion-panel-content">
+                <mat-form-field class="field-select">
+                    <mat-label transloco="TIME_FORMAT"></mat-label>
+                    <mat-select [(value)]="selectedTimeFormat" (selectionChange)="setTimeFormat()">
+                        <mat-option value="eu">
+                            <div class="language-container">
+                                <div class="time-format-label" transloco="24H"></div>
+                            </div>
+                        </mat-option>
+                        <mat-option value="us">
+                            <div class="language-container">
+                                <div class="time-format-label" transloco="12H"></div>
                             </div>
                         </mat-option>
                     </mat-select>

@@ -130,9 +130,9 @@ export class BedTimeChartViewModel extends ALineChartViewModel {
 				chartMax = bedTimeMinutes;
 			}
 		});
-		this.minimum = formatMinutes(-max);
-		this.maximum = formatMinutes(-min);
-		this.average = formatMinutes(-Math.trunc(timeSum / this.nbData));
+		this.minimum = this.displayTime(formatMinutes(-max));
+		this.maximum = this.displayTime(formatMinutes(-min));
+		this.average = this.displayTime(formatMinutes(-Math.trunc(timeSum / this.nbData)));
 		this.dataSource = [{ min: this.minimum, max: this.maximum, avg: this.average }];
 		this.labels.sort((a, b) => (a as any) - (b as any));
 	}

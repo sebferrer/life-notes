@@ -13,7 +13,7 @@ import { DialogNoSymptomWarningComponent } from './ui/dialog/dialog-no-symptom-w
 	styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-	public title = 'Life Notes & Stats';
+	public title = 'Life Notes - Symptom Tracking';
 	public symptoms: ISymptom[];
 	public symptoms$: Subject<ISymptom[]>;
 
@@ -58,6 +58,7 @@ export class AppComponent implements OnInit {
 
 	public initSettings(): void {
 		this.initLanguage();
+		this.initTimeFormat();
 		this.initTargetSymptom();
 	}
 
@@ -69,6 +70,22 @@ export class AppComponent implements OnInit {
 				}
 				this.translocoService.setActiveLang(settings.language);
 				this.globalService.language = settings.language;
+			}
+		);
+	}
+
+	public initTimeFormat(): void {
+		this.settingsService.getSettings().subscribe(
+			settings => {
+				if (!this.settingsService.AVAILABLE_TIME_FORMATS.includes(settings.timeFormat)) {
+					this.settingsService.setTimeFormat('eu').subscribe(
+						newSettings => {
+							this.globalService.timeFormat = newSettings.timeFormat;
+						}
+					);
+				} else {
+					this.globalService.timeFormat = settings.timeFormat;
+				}
 			}
 		);
 	}

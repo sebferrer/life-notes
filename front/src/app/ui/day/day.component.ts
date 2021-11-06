@@ -11,6 +11,8 @@ import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { ATimeComponent } from '../time';
 import { IDay } from 'src/app/models';
 import * as moment from 'moment';
+import { MedsService } from 'src/app/infra/meds.service';
+import { LogsService } from 'src/app/infra/logs.service';
 
 @Component({
 	selector: 'app-day',
@@ -29,12 +31,14 @@ export class DayComponent extends ATimeComponent implements OnInit {
 		public globalService: GlobalService,
 		protected translocoService: TranslocoService,
 		protected daysService: DaysService,
+		protected medsService: MedsService,
+		protected logsService: LogsService,
 		protected dialog: MatDialog,
 		protected snackBar: MatSnackBar,
 		protected bottomSheet: MatBottomSheet,
 		private route: ActivatedRoute
 	) {
-		super(globalService, translocoService, daysService, dialog, snackBar, bottomSheet);
+		super(globalService, translocoService, daysService, medsService, logsService, dialog, snackBar, bottomSheet);
 		this.updateCallback = (day: IDay): void => {
 			this.dayContent = new DayViewModel(day);
 			this.dayContent$.next(this.dayContent);

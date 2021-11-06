@@ -20,12 +20,12 @@
             .panel-title {
                 width: 35%;
             }
-            
+
             .panel-description {
                 width: 60%;
                 color: #757575;
             }
-            
+
             .panel-icon {
                 color: #757575;
             }
@@ -49,7 +49,7 @@
 }
 
 #file-import {
-	display: none;
+    display: none;
 }
 
 .list-icon {
@@ -96,4 +96,10 @@
 
 textarea {
     height: 5rem;
+}
+
+.list-icon-svg {
+    width: 1.4rem;
+    filter: grayscale(100%) contrast(375%);
+    opacity: 0.5;
 }

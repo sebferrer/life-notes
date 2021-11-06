@@ -1,0 +1,8 @@
+<h1 mat-dialog-title>{{ data.title | transloco }}</h1>
+<div mat-dialog-content>
+    <p *ngFor="let content of data.content">{{ content | transloco }}</p>
+</div>
+<div mat-dialog-actions>
+    <button mat-button cdkFocusInitial (click)="onNoClick()" transloco="NO"></button>
+    <button mat-button mat-dialog-close="" (click)="onYesClick()" color="primary" transloco="YES"></button>
+</div>

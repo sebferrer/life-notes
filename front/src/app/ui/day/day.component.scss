@@ -18,7 +18,7 @@
 
     .day-tile-header-date {
         height: 100%;
-        width: 30%;
+        width: 40%;
         font-size: 1rem;
         padding-left: 0.5rem;
         display: table-cell;
@@ -48,7 +48,7 @@
         display: table-cell;
         vertical-align: middle;
         .add-event {
-            margin-left: 6.5rem;
+            margin-left: 5.5rem;
             z-index: 100;
         }
     }
@@ -121,12 +121,17 @@
             .event-time {
                 display: table-cell;
                 vertical-align: middle;
+            }
+            .event-time-eu {
                 width: 12vw;
             }
+            .event-time-us {
+                width: 18vw;
+            }
+            
             .event-content-container {
                 display: table-cell;
                 vertical-align: middle;
-                width: 48vw;
                 .event-detail {
                     height: 100%;
                     overflow-y: auto;
@@ -136,6 +141,12 @@
                 .event-detail::-webkit-scrollbar { /* Chrome, Safari and Opera */
                     display: none;
                 }
+            }
+            .event-content-eu {
+                width: 48vw;
+            }
+            .event-content-us {
+                width: 42vw;
             }
         }
     }
