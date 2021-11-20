@@ -187,5 +187,14 @@
     "SETTINGS_TIME_SUBTITLE": "Display time settings",
     "TIME_FORMAT": "Time format",
     "24H": "24h",
-    "12H": "12h (AM/PM)" 
+    "12H": "12h (AM/PM)",
+    "START_TITLE": "Before starting",
+    "START_CONTENT_1": "Welcome to the Life Notes app! Life Notes is an app that allows you to record your chronic symptoms and lifestyle habits on a daily basis in order to monitor them, but also to potentially highlight some correlations.",
+    "START_CONTENT_2": "It's a non profit project on which I work alone on my free time outside of my job. I simply created this app to help as many people as possible who suffer from chronic symptoms like me.",
+    "START_CONTENT_3": "This app is free, without ad, and without data collection, forever. It's just for you.",
+    "START_CONTENT_4": "Working alone on this project, updates take time, but the app is constantly evolving. I'm aware of the missing features, and I'm looking forward to developing them. Here are the very next ones to come:",
+    "START_CONTENT_5": "The possibility to export monthly report as a PDF file, The possibility to send backup files by email",
+    "START_CONTENT_6": "Before you start using the app, I recommend that you read the tutorial that will explain how it works (the \"?\" button on the top bar)",
+    "START_CONTENT_7": "Enjoy Life-Notes, and take care!",
+    "START_CONTENT_8": "~Seb"
 }

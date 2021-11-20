@@ -8,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogNoSymptomWarningComponent } from './ui/dialog/dialog-no-symptom-warning';
 import { ISettings } from './models/settings.model';
 import { DialogSelectLanguageComponent } from './ui/dialog/dialog-select-language';
+import { DialogInfoComponent } from './ui/dialog/dialog-info';
 
 @Component({
 	selector: 'app-root',
@@ -86,6 +87,23 @@ export class AppComponent implements OnInit {
 			}
 			console.log(response.answer);
 			this.initLanguage(response.answer);
+			this.startInfoOpenDialog();
+		});
+	}
+
+	public startInfoOpenDialog() {
+		this.dialog.open(DialogInfoComponent, {
+			autoFocus: false,
+			width: '20rem',
+			panelClass: 'custom-modalbox',
+			data: {
+				title: 'START_TITLE',
+				content: ['START_CONTENT_1', 'START_CONTENT_2', 'START_CONTENT_3',
+					'START_CONTENT_4', 'START_CONTENT_5', 'START_CONTENT_6',
+					'START_CONTENT_7', 'START_CONTENT_8']
+			}
+		}).afterClosed().subscribe(_ => {
+			this.settingsService.setFirstStart(false).subscribe(() => { });
 		});
 	}
 

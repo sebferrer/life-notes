@@ -77,6 +77,18 @@ export class SettingsService {
 		);
 	}
 
+	public setFirstStart(firstStart: boolean): Observable<ISettings> {
+		const settings = this.getSettings();
+		return settings.pipe(
+			switchMap(s => {
+				s.firstStart = firstStart;
+				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
+					map(() => s)
+				);
+			})
+		);
+	}
+
 	public initSettings(): Observable<ISettings> {
 		return this.getSettings().pipe(
 			switchMap(s => {
