@@ -1,7 +1,7 @@
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { DbContext } from './database';
-import { map, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { ISettings } from '../models/settings.model';
 import { GlobalService } from './global.service';
 
@@ -21,6 +21,8 @@ export class SettingsService {
 	public getSettings(): Observable<ISettings> {
 		return this.dbContext.asObservable<ISettings>(
 			this.dbContext.settingsCollection.get(KEY)
+		).pipe(
+			catchError(() => of(null))
 		);
 	}
 
@@ -76,14 +78,25 @@ export class SettingsService {
 	}
 
 	public initSettings(): Observable<ISettings> {
-		const settings = {
-			'_id': KEY,
-			'targetSymptomKey': '',
-			'language': '',
-			'timeFormat': ''
-		};
-		return this.dbContext.asObservable(this.dbContext.settingsCollection.put(settings)).pipe(
-			map(() => settings)
+		return this.getSettings().pipe(
+			switchMap(s => {
+				if (s == null) {
+					const settings = {
+						'_id': KEY,
+						'targetSymptomKey': '',
+						'language': '',
+						'timeFormat': '',
+						'firstStart': true
+					};
+					return this.dbContext.asObservable(this.dbContext.settingsCollection.put(settings)).pipe(
+						map(() => settings)
+					);
+				}
+				else {
+					return of(s);
+				}
+			})
 		);
+
 	}
 }

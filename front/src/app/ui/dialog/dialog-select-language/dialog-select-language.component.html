@@ -1,0 +1,24 @@
+<h1 mat-dialog-title>Select your language</h1>
+<div mat-dialog-content>
+    <mat-selection-list class="language-list" #languages
+        [multiple]="false">
+        <mat-list-option class="language-list-item">
+            <div class="symptom-label-container" (click)="onEnClick()">
+                <div class="language-container">
+                    <div class="icon-container"><img src="/assets/svg/united-kingdom.svg" class="icon-svg" /></div>
+                    <div class="language-label">English</div>
+                </div>
+            </div>
+        </mat-list-option>
+        <mat-list-option class="language-list-item">
+            <div class="symptom-label-container" (click)="onFrClick()">
+                <div class="language-container">
+                    <div class="icon-container"><img src="/assets/svg/france.svg" class="icon-svg" /></div>
+                    <div class="language-label">French</div>
+                </div>
+            </div>
+        </mat-list-option>
+    </mat-selection-list>
+
+    <p>You can change it again later through the settings <mat-icon>settings</mat-icon></p>
+</div>
