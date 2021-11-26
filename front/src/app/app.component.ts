@@ -6,6 +6,9 @@ import { GlobalService } from './infra/global.service';
 import { TranslocoService } from '@ngneat/transloco';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogNoSymptomWarningComponent } from './ui/dialog/dialog-no-symptom-warning';
+import { ISettings } from './models/settings.model';
+import { DialogSelectLanguageComponent } from './ui/dialog/dialog-select-language';
+import { DialogInfoComponent } from './ui/dialog/dialog-info';
 
 @Component({
 	selector: 'app-root',
@@ -30,9 +33,12 @@ export class AppComponent implements OnInit {
 
 	public ngOnInit(): void {
 		// this.updateSymptoms();
-		this.settingsService.initSettings().subscribe(res => { }, error => { });
-		this.initSettings();
-		this.autoBackup();
+		this.settingsService.initSettings().subscribe(_ => {
+			this.initSettings();
+			this.autoBackup();
+		}, _ => {
+			this.autoBackup();
+		});
 
 		// this.daysService.reset().subscribe(() => {});
 	}
@@ -57,45 +63,72 @@ export class AppComponent implements OnInit {
 	}*/
 
 	public initSettings(): void {
-		this.initLanguage();
-		this.initTimeFormat();
-		this.initTargetSymptom();
-	}
-
-	public initLanguage(): void {
 		this.settingsService.getSettings().subscribe(
 			settings => {
-				if (!this.settingsService.AVAILABLE_LANGS.includes(settings.language)) {
-					return;
-				}
-				this.translocoService.setActiveLang(settings.language);
-				this.globalService.language = settings.language;
-			}
-		);
-	}
-
-	public initTimeFormat(): void {
-		this.settingsService.getSettings().subscribe(
-			settings => {
-				if (!this.settingsService.AVAILABLE_TIME_FORMATS.includes(settings.timeFormat)) {
-					this.settingsService.setTimeFormat('eu').subscribe(
-						newSettings => {
-							this.globalService.timeFormat = newSettings.timeFormat;
-						}
-					);
+				this.initTimeFormat(settings);
+				this.initTargetSymptom(settings);
+				if (settings.firstStart) {
+					this.selectLanguageOpenDialog();
 				} else {
-					this.globalService.timeFormat = settings.timeFormat;
+					this.initLanguage(settings.language);
 				}
 			}
 		);
 	}
 
-	public initTargetSymptom(): void {
-		this.settingsService.getSettings().subscribe(
-			settings => {
-				this.globalService.targetSymptomKey = settings.targetSymptomKey;
+	public selectLanguageOpenDialog() {
+		this.dialog.open(DialogSelectLanguageComponent, {
+			autoFocus: false,
+			width: '20rem',
+			panelClass: 'custom-modalbox'
+		}).afterClosed().subscribe(response => {
+			if (response == null) {
+				return;
 			}
-		);
+			console.log(response.answer);
+			this.initLanguage(response.answer);
+			this.startInfoOpenDialog();
+		});
+	}
+
+	public startInfoOpenDialog() {
+		this.dialog.open(DialogInfoComponent, {
+			autoFocus: false,
+			width: '20rem',
+			panelClass: 'custom-modalbox',
+			data: {
+				title: 'START_TITLE',
+				content: ['START_CONTENT_1', 'START_CONTENT_2', 'START_CONTENT_3',
+					'START_CONTENT_4', 'START_CONTENT_5', 'START_CONTENT_6',
+					'START_CONTENT_7', 'START_CONTENT_8']
+			}
+		}).afterClosed().subscribe(_ => {
+			this.settingsService.setFirstStart(false).subscribe(() => { });
+		});
+	}
+
+	public initLanguage(language: string): void {
+		if (!this.settingsService.AVAILABLE_LANGS.includes(language)) {
+			return;
+		}
+		this.translocoService.setActiveLang(language);
+		this.globalService.language = language;
+	}
+
+	public initTimeFormat(settings: ISettings): void {
+		if (!this.settingsService.AVAILABLE_TIME_FORMATS.includes(settings.timeFormat)) {
+			this.settingsService.setTimeFormat('eu').subscribe(
+				newSettings => {
+					this.globalService.timeFormat = newSettings.timeFormat;
+				}
+			);
+		} else {
+			this.globalService.timeFormat = settings.timeFormat;
+		}
+	}
+
+	public initTargetSymptom(settings: ISettings): void {
+		this.globalService.targetSymptomKey = settings.targetSymptomKey;
 	}
 
 	/*public selectSymptom(): void {

@@ -72,6 +72,22 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     .dialog-content {
         overflow-y: auto;
     }
+
+    .icon-container {
+        position: absolute;
+        top: 0.2rem;
+        display: inline-block;
+        width: 3rem;
+        .icon-svg {
+            margin-right: 1rem;
+            width: 2rem;
+        }
+    }
+    
+    .language-label {
+        margin-left: 3rem;
+    }
+    
 }
 
 .custom-bottom-sheet {
