@@ -12,6 +12,10 @@ export class PieChartComponent implements OnInit {
 	title: string;
 	@Input()
 	chart: APieChartViewModel;
+	@Input()
+	width: string;
+	@Input()
+	legend: boolean;
 
 	public labels: string[];
 	public type: string;
@@ -22,10 +26,22 @@ export class PieChartComponent implements OnInit {
 	) { }
 
 	public ngOnInit(): void {
+		this.legend = this.legend == null ? true : this.legend;
 		this.labels = this.chart.labels;
 		this.type = this.chart.type;
 		this.colors = this.chart.colors;
-		this.options = this.chart.options;
+		if (this.legend) {
+			this.options = this.chart.options;
+		} else {
+			this.options = {
+				legend: {
+					display: false
+				},
+				tooltips: {
+					enabled: false
+				}
+			}
+		}
 	}
 
 }

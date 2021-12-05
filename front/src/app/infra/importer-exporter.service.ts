@@ -153,7 +153,10 @@ export class ImporterExporterService {
 
 	public htmltoPDF(body: any) {
 		// parentdiv is the html element which has to be converted to PDF
-		html2canvas(body).then(canvas => {
+		html2canvas(body, {
+			height: 300 * 2,
+			windowHeight: 300 * 2
+		}).then(canvas => {
 			console.log(canvas.height + '-' + canvas.width);
 			let pdf = new jspdf('p', 'pt', [canvas.width, canvas.height]);
 

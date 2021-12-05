@@ -38,7 +38,7 @@
 						<mat-icon>help</mat-icon>
 					</button>
 				</div>
-				<button (click)="htmltoPDF()">Export</button>
+				<button routerLink="/monthlyreport/{{ year }}-{{ month }}">Export</button>
 				<div class="charts">
 					<div [ngClass]="symptoms.length > 1 ? 'pie-charts' : 'pie-chart'">
 						<app-pie-chart *ngFor="let symptom of organizeSymptoms(symptoms)" [title]="symptom.label"

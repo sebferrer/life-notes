@@ -65,6 +65,7 @@ import { DialogConfirmComponent } from './ui/dialog/dialog-confirm';
 import { LogsService } from './infra/logs.service';
 import { LogsComponent } from './ui/logs/logs.component';
 import { DialogSelectLanguageComponent } from './ui/dialog/dialog-select-language';
+import { MonthlyReportComponent } from './ui/monthly-report';
 
 @NgModule({
 	declarations: [
@@ -78,6 +79,7 @@ import { DialogSelectLanguageComponent } from './ui/dialog/dialog-select-languag
 		LogsComponent,
 		SettingsComponent,
 		TutorialComponent,
+		MonthlyReportComponent,
 		PieChartComponent,
 		LineChartComponent,
 		SwipingFingerComponent,

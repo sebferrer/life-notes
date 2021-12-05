@@ -12,6 +12,7 @@ import { SettingsComponent } from './ui/settings';
 import { TutorialComponent } from './ui/tutorial';
 import { MedsComponent } from './ui/meds';
 import { LogsComponent } from './ui/logs';
+import { MonthlyReportComponent } from './ui/monthly-report';
 
 const routes: Routes = [
 	{
@@ -21,6 +22,19 @@ const routes: Routes = [
 	{
 		path: 'calendar',
 		component: CalendarComponent
+	},
+	{
+		path: 'monthlyreport',
+		children: [
+			{
+				path: '',
+				component: CalendarComponent
+			},
+			{
+				path: ':monthyear',
+				component: MonthlyReportComponent
+			}
+		]
 	},
 	{
 		path: 'timeline',

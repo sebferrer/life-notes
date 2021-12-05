@@ -1,0 +1,117 @@
+#calendar-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+.calendar-header {
+    position: absolute;
+    top: 3.5rem;
+    width: 100%;
+    height: 3.5rem;
+    background-color: #9E9E9E;
+    text-align: center;
+    color: white;
+    z-index: 3;
+
+    .calender-header-label {
+        display: table;
+        width: 100%;
+        height: 100%;
+        font-size: 1.2rem;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        float: left;
+        p {
+            display: table-cell;
+            vertical-align: middle;
+            height: 100%;
+        }
+    }
+}
+
+.content {
+    position: absolute;
+    top: 7rem;
+    width: 100%;
+    height: calc(100vh - 7rem);
+    overflow-y: auto;
+}
+
+.grid-list {
+    width: 50%;
+    height: 14rem;
+    margin-top: 2rem;
+    float: left;
+    /*clear: both;*/
+}
+
+.sympmtom-container {
+    display: block;
+    height: 16rem;
+}
+
+.grid-tile {
+    display: block;
+    float: left;
+    width: 14.28%;
+    height: 2.5rem;
+}
+
+.day-label {
+    margin-top: 0.3rem;
+    font-size: 0.8rem;
+    width: 3vh;
+    height: 3vh;
+    width: 100%;
+    text-align: center;
+}
+
+.day-label-today {
+    background-color: rgb(0, 174, 255);
+    margin-left: 25%;
+    color: white;
+    font-size: 1rem;
+    width: 3vh;
+    height: 3vh;
+    border-radius: 100%;
+    padding: 0.2rem;
+}
+
+.pie-chart {
+    display: inline;
+    float: left;
+}
+
+.help-container {
+    color: #0070C0;
+    position: absolute;
+    top: 27rem;
+    right: 1rem;
+    z-index: 2;
+}
+
+.color-default {
+    /* color: #31AE1D; */
+    background-color: #93EA84;
+}
+
+.color-pain-1 {
+    background-color: #BFBC00;
+}
+
+.color-pain-2 {
+    background-color: #FDEC05;
+}
+
+.color-pain-3 {
+    background-color: #FFC000;
+}
+
+.color-pain-4 {
+    background-color: #E40026;
+}
+
+.color-pain-5 {
+    background-color: #980019;
+}

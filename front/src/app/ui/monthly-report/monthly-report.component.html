@@ -1,0 +1,45 @@
+<div id="calendar" *ngIf="overviews$ | async as overviews; else loading">
+	<div *ngIf="symptoms$ | async as symptoms; else loading">
+		<div id="calendar-container">
+			<div class="calendar-header">
+				<div class="calender-header-label">
+					<ng-template transloco let-t>
+						<p>{{ t('CALENDAR_HEADER_DATE', { month: t('MONTH-'+month), year: year }) }}</p>
+					</ng-template>
+				</div>
+			</div>
+			<div class="content" #content>
+				<div class="sympmtom-container" *ngFor="let symptom of organizeSymptoms(symptoms)">
+					<label>{{ symptom.label }}</label>
+					<div class="grid-list">
+						<div *ngFor="let overview of overviews"
+							class="grid-tile color-{{ symptomPainColorMap.get(overview.getSymptomPain(symptom.key)) }}">
+							<div class="header">
+								<div class="day-label">
+									{{ overview.detailedDate.day }}</div>
+							</div>
+						</div>
+					</div>
+					<app-pie-chart class="pie-chart" [chart]="pieCharts.get(symptom.key)" [width]="12" [legend]="false"></app-pie-chart>
+				</div>
+
+				<!--div class="charts">
+					<div [ngClass]="symptoms.length > 1 ? 'pie-charts' : 'pie-chart'">
+						<app-pie-chart *ngFor="let symptom of organizeSymptoms(symptoms)" [title]="symptom.label"
+							[chart]="pieCharts.get(symptom.key)"></app-pie-chart>
+					</div>
+					<app-line-chart [title]="'MONTHLY_WAKEUPTIME'" [chart]="wakeUpChart"
+						[timeFormat]="globalService.timeFormat"></app-line-chart>
+					<app-line-chart [title]="'MONTHLY_BEDTIME'" [chart]="bedTimeChart"
+						[timeFormat]="globalService.timeFormat"></app-line-chart>
+					<app-line-chart [title]="'MONTHLY_SLEEP'" [chart]="sleepChart"
+						[timeFormat]="globalService.timeFormat"></app-line-chart>
+				</div-->
+			</div>
+		</div>
+	</div>
+</div>
+
+<ng-template #loading>
+	<mat-spinner></mat-spinner>
+</ng-template>
