@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { DaysService } from './days.service';
-import { getDateFromString, getDetailedDate } from 'src/app/util/date.utils';
-import { Observable, from, empty, of } from 'rxjs';
+import { getDetailedDate } from 'src/app/util/date.utils';
+import { Observable } from 'rxjs';
 import { tap, map, catchError } from 'rxjs/operators';
 import { File as IonicFile } from '@ionic-native/file/ngx';
-import { saveAs } from 'file-saver';
 import { BackupService } from './backup.service';
 import { SymptomsService } from './symptoms.service';
 import { SettingsService } from './settings.service';
@@ -12,6 +11,8 @@ import { IBackup } from '../models/backup.model';
 import { GlobalService } from './global.service';
 import { TranslocoService } from '@ngneat/transloco';
 import * as moment from 'moment';
+import jspdf from 'jspdf';
+import html2canvas from 'html2canvas';
 
 @Injectable({
 	providedIn: 'root'
@@ -45,7 +46,7 @@ export class ImporterExporterService {
 		const settingsJsonOnj = backupJsonObj.settings;
 
 		daysJsonArr.map(day => day.detailedDate = getDetailedDate(moment(day.date).format('YYYY-MM-DD')));
-		this.daysService.addDays(daysJsonArr).subscribe(() => {});
+		this.daysService.addDays(daysJsonArr).subscribe(() => { });
 		this.symptomsService.addSymptoms(symptomsJsonArr).subscribe(() => {
 			this.globalService.loadSymptoms().subscribe(() => { });
 		});
@@ -150,7 +151,38 @@ export class ImporterExporterService {
 				})
 	}
 
-	public exportHtml(): void {
+	public htmltoPDF(body: any) {
+		// parentdiv is the html element which has to be converted to PDF
+		html2canvas(body).then(canvas => {
+			console.log(canvas.height + '-' + canvas.width);
+			let pdf = new jspdf('p', 'pt', [canvas.width, canvas.height]);
+
+			let imgData = canvas.toDataURL("image/png", 1.0);
+			pdf.addImage(imgData, 0, 0, canvas.width, canvas.height);
+			// pdf.save('converteddoc.pdf');
+
+			let pdfOutput = pdf.output();
+
+			let buffer = new ArrayBuffer(pdfOutput.length);
+
+			let array = new Uint8Array(buffer);
+
+			for (var i = 0; i < pdfOutput.length; i++) {
+				array[i] = pdfOutput.charCodeAt(i);
+			}
+
+			// For this, you have to use ionic native file plugin
+			// const directory = this.file.externalApplicationStorageDirectory;
+			const directory = this.file.externalRootDirectory + 'life-notes/';
+
+			const fileName = "Test.pdf";
+
+			this.file.writeFile(directory, fileName, buffer)
+				.then((success) => this.debug = "File created Succesfully" + JSON.stringify(success))
+				.catch((error) => this.debug = "Cannot Create File " + JSON.stringify(error));
+		});
 	}
 
+	public exportHtml(): void {
+	}
 }

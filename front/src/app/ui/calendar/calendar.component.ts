@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Subject, BehaviorSubject } from 'rxjs';
-import { DaysService } from 'src/app/infra';
+import { DaysService, ImporterExporterService } from 'src/app/infra';
 import { getDetailedDate } from 'src/app/util/date.utils';
 import { DayOverviewViewModel } from 'src/app/models/day.overview.view.model';
 import { IDetailedDate } from 'src/app/models/detailed.date';
@@ -39,11 +39,14 @@ export class CalendarComponent implements OnInit {
 	public wakeUpChart: WakeUpChartViewModel;
 	public sleepChart: SleepChartViewModel;
 
+	public debug = 'no error';
+
 	constructor(
 		public globalService: GlobalService,
 		private daysService: DaysService,
 		public translocoService: TranslocoService,
-		private dialog: MatDialog,
+		public importerExporterService: ImporterExporterService,
+		private dialog: MatDialog
 	) {
 		this.pieCharts = new Map<string, CalendarPieChartViewModel>();
 		this.bedTimeChart = new BedTimeChartViewModel('line');
@@ -66,6 +69,11 @@ export class CalendarComponent implements OnInit {
 		this.symptomMap = this.globalService.symptomMap;
 		this.symptomPainColorMap =
 			new Map([[0, 'default'], [1, 'pain-1'], [2, 'pain-2'], [3, 'pain-3'], [4, 'pain-4'], [5, 'pain-5']]);
+	}
+
+	public htmltoPDF() {
+		this.importerExporterService.htmltoPDF(document.body);
+		this.debug = this.importerExporterService.debug;
 	}
 
 	public organizeSymptoms(symptoms: ISymptom[]): ISymptom[] {
