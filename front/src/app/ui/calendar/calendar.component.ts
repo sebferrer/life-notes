@@ -39,6 +39,8 @@ export class CalendarComponent implements OnInit {
 	public wakeUpChart: WakeUpChartViewModel;
 	public sleepChart: SleepChartViewModel;
 
+	public debug: string;
+
 	constructor(
 		public globalService: GlobalService,
 		private daysService: DaysService,
