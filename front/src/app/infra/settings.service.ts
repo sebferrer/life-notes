@@ -127,7 +127,7 @@ export class SettingsService {
 					);
 				}
 				else {
-					if(s.lastInstall == null || s.lastInstall === '') {
+					if (s.lastInstall == null || s.lastInstall === '') {
 						return this.updateLastInstallFromSettings(s);
 					}
 					return of(s);

@@ -19,7 +19,7 @@ import html2canvas from 'html2canvas';
 })
 export class ImporterExporterService {
 
-	private readonly APP_DIRECTORY = 'Documents/life-notes/';
+	private readonly APP_DIRECTORY = 'Download/life-notes/';
 	private readonly BACKUP_FILE = 'backup.json';
 	private readonly AUTO_BACKUP_FILE = 'autobackup.json';
 	private readonly MAX_SAVE_TRIES = 3;

@@ -79,9 +79,12 @@ export class AppComponent implements OnInit {
 			if (response == null) {
 				return;
 			}
-			console.log(response.answer);
-			this.initLanguage(response.answer);
-			this.startInfoOpenDialog();
+			this.settingsService.setLanguage(response.answer).subscribe(
+				settings => {
+					this.initLanguage(settings.language);
+					this.startInfoOpenDialog();
+				}
+			);
 		});
 	}
 
