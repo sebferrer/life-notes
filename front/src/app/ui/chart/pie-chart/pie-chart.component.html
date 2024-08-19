@@ -1,4 +1,4 @@
-<div class="chart-container">
+<div class="chart-container" [ngStyle]="{'width': width + 'rem'}">
     <label class="chart-label">{{ title }}</label>
     <canvas baseChart [data]="chart.data" [labels]="labels" [chartType]="type" [colors]="colors"
         [options]="options"></canvas>

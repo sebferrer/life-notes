@@ -3,4 +3,5 @@ export interface ISettings {
 	language: string;
 	timeFormat: string;
 	firstStart: boolean;
+	lastInstall: string;
 }

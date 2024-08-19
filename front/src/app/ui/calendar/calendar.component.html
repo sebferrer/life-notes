@@ -1,4 +1,4 @@
-<div *ngIf="overviews$ | async as overviews; else loading">
+<div id="calendar" *ngIf="overviews$ | async as overviews; else loading">
 	<div *ngIf="symptoms$ | async as symptoms; else loading">
 		<div id="calendar-container">
 			<div class="calendar-header">
@@ -38,6 +38,7 @@
 						<mat-icon>help</mat-icon>
 					</button>
 				</div>
+				<!--button routerLink="/monthlyreport/{{ year }}-{{ month }}">Export</button-->
 				<div class="charts">
 					<div [ngClass]="symptoms.length > 1 ? 'pie-charts' : 'pie-chart'">
 						<app-pie-chart *ngFor="let symptom of organizeSymptoms(symptoms)" [title]="symptom.label"

@@ -33,10 +33,8 @@ export class AppComponent implements OnInit {
 
 	public ngOnInit(): void {
 		// this.updateSymptoms();
-		this.settingsService.initSettings().subscribe(_ => {
-			this.initSettings();
-			this.autoBackup();
-		}, _ => {
+		this.settingsService.initSettings().subscribe(settings => {
+			this.initSettings(settings);
 			this.autoBackup();
 		});
 
@@ -62,18 +60,14 @@ export class AppComponent implements OnInit {
 		});
 	}*/
 
-	public initSettings(): void {
-		this.settingsService.getSettings().subscribe(
-			settings => {
-				this.initTimeFormat(settings);
-				this.initTargetSymptom(settings);
-				if (settings.firstStart) {
-					this.selectLanguageOpenDialog();
-				} else {
-					this.initLanguage(settings.language);
-				}
-			}
-		);
+	public initSettings(settings: ISettings): void {
+		this.initTimeFormat(settings);
+		this.initTargetSymptom(settings);
+		if (settings != null && settings.firstStart) {
+			this.selectLanguageOpenDialog();
+		} else {
+			this.initLanguage(settings.language);
+		}
 	}
 
 	public selectLanguageOpenDialog() {
@@ -85,9 +79,12 @@ export class AppComponent implements OnInit {
 			if (response == null) {
 				return;
 			}
-			console.log(response.answer);
-			this.initLanguage(response.answer);
-			this.startInfoOpenDialog();
+			this.settingsService.setLanguage(response.answer).subscribe(
+				settings => {
+					this.initLanguage(settings.language);
+					this.startInfoOpenDialog();
+				}
+			);
 		});
 	}
 

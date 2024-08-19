@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit } from '@angular/core';
 import { Subject, BehaviorSubject } from 'rxjs';
 import { DaysService, ImporterExporterService } from 'src/app/infra';
 import { getDetailedDate } from 'src/app/util/date.utils';
@@ -14,13 +14,15 @@ import { SleepChartViewModel } from 'src/app/models/chartjs/sleep.chart.view.mod
 import { DialogInfoComponent } from '../dialog/dialog-info';
 import { MatDialog } from '@angular/material/dialog';
 import * as moment from 'moment';
+import { ActivatedRoute } from '@angular/router';
+import { endOfToday } from 'date-fns';
 
 @Component({
-	selector: 'app-calendar',
-	templateUrl: './calendar.component.html',
-	styleUrls: ['./calendar.component.scss']
+	selector: 'app-monthly-report',
+	templateUrl: './monthly-report.component.html',
+	styleUrls: ['./monthly-report.component.scss']
 })
-export class CalendarComponent implements OnInit {
+export class MonthlyReportComponent implements OnInit {
 
 	public overviews: DayOverviewViewModel[];
 	public overviews$: Subject<DayOverviewViewModel[]>;
@@ -39,14 +41,16 @@ export class CalendarComponent implements OnInit {
 	public wakeUpChart: WakeUpChartViewModel;
 	public sleepChart: SleepChartViewModel;
 
-	public debug: string;
+	public debug = 'no error';
 
 	constructor(
 		public globalService: GlobalService,
 		private daysService: DaysService,
 		public translocoService: TranslocoService,
 		public importerExporterService: ImporterExporterService,
-		private dialog: MatDialog
+		private dialog: MatDialog,
+		private route: ActivatedRoute,
+		private elementRef: ElementRef
 	) {
 		this.pieCharts = new Map<string, CalendarPieChartViewModel>();
 		this.bedTimeChart = new BedTimeChartViewModel('line');
@@ -61,18 +65,25 @@ export class CalendarComponent implements OnInit {
 	}
 
 	public ngOnInit(): void {
-		const detailedDate = getDetailedDate(moment().format('YYYY-MM-DD'));
-		this.month = detailedDate.month;
-		this.year = detailedDate.year;
+		const monthYear = this.route.snapshot.paramMap.get('monthyear').split('-');
+		this.month = parseInt(monthYear[1]);
+		this.year = parseInt(monthYear[0]);
 		this.today = getDetailedDate(moment().format('YYYY-MM-DD'));
-		this.updateCalendar(this.today.month, this.today.year);
+		this.updateCalendar(this.month, this.year);
 		this.symptomMap = this.globalService.symptomMap;
 		this.symptomPainColorMap =
 			new Map([[0, 'default'], [1, 'pain-1'], [2, 'pain-2'], [3, 'pain-3'], [4, 'pain-4'], [5, 'pain-5']]);
+		const self = this;
+		setTimeout(function () {
+			self.htmltoPDF();
+		}, 2000);
 	}
 
 	public htmltoPDF() {
+		// const div = this.elementRef.nativeElement.querySelector('content');
+		
 		this.importerExporterService.htmltoPDF(document.body);
+		this.debug = this.importerExporterService.debug;
 	}
 
 	public organizeSymptoms(symptoms: ISymptom[]): ISymptom[] {
