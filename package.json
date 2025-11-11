@@ -26,7 +26,6 @@
     "@angular/platform-browser-dynamic": "~11.0.2",
     "@angular/router": "~11.0.2",
     "@awesome-cordova-plugins/social-sharing": "^5.39.1",
-    "@capacitor/core": "2.4.3",
     "@ionic-native/android-permissions": "^4.20.0",
     "@ionic-native/core": "^5.0.0",
     "@ionic-native/file": "^5.30.0",
@@ -74,15 +73,14 @@
     "@types/pouchdb": "^6.4.0",
     "@types/pouchdb-core": "^7.0.6",
     "codelyzer": "^6.0.0",
-    "cordova-android": "^9.1.0",
+    "cordova-android": "^14.0.1",
     "cordova-plugin-android-permissions": "^1.1.2",
     "cordova-plugin-device": "^2.0.2",
     "cordova-plugin-file": "^6.0.2",
     "cordova-plugin-ionic-keyboard": "^2.2.0",
-    "cordova-plugin-ionic-webview": "^4.2.1",
+    "cordova-plugin-ionic-webview": "^5.0.0",
     "cordova-plugin-splashscreen": "^5.0.2",
     "cordova-plugin-statusbar": "^2.4.2",
-    "cordova-plugin-whitelist": "^1.3.3",
     "jasmine-core": "~3.5.0",
     "jasmine-spec-reporter": "~5.0.0",
     "karma": "~5.0.0",
@@ -98,17 +96,14 @@
   "description": "Life notes and stats",
   "cordova": {
     "plugins": {
-      "cordova-plugin-whitelist": {},
       "cordova-plugin-statusbar": {},
       "cordova-plugin-device": {},
       "cordova-plugin-splashscreen": {},
-      "cordova-plugin-ionic-webview": {
-        "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "27.+"
-      },
       "cordova-plugin-ionic-keyboard": {},
       "cordova-plugin-file": {},
       "cordova-plugin-android-permissions": {},
-      "cordova-plugin-market": {}
+      "cordova-plugin-market": {},
+      "cordova-plugin-ionic-webview": {}
     },
     "platforms": [
       "android"
