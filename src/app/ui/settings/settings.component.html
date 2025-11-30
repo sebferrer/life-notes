@@ -140,7 +140,7 @@
             <div class="mat-expansion-panel-content">
                 <div class="import-export-buttons-container">
                     <mat-selection-list multiple="false">
-                        <mat-list-option (click)="importData()">
+                        <mat-list-option (click)="fileClickFire()">
                             <div class="list-icon">
                                 <mat-icon>dynamic_feed</mat-icon>
                             </div>
@@ -148,18 +148,44 @@
                                 <p>{{ 'IMPORT' | transloco }}</p>
                             </div>
                         </mat-list-option>
-                        <mat-list-option (click)="exportData()">
-                            <div class="list-icon">
+
+                        <mat-list-option (click)="showManualBackupDiv()">
+                         <div class="list-icon">
                                 <mat-icon>save_alt</mat-icon>
                             </div>
                             <div class="list-item-text">
                                 <p>{{ 'EXPORT' | transloco }}</p>
                             </div>
                         </mat-list-option>
-                        <!--mat-list-option (click)="exportHtml()">
-                            <div class="list-icon"><mat-icon>article</mat-icon></div>
-                            <div class="list-item-text"><p>{{ 'EXPORT_HTML' | transloco }}</p></div>
-                        </mat-list-option-->
+
+                        <div id="manual-backup-div">
+                            <mat-expansion-panel-header class="mat-expansion-panel-header">
+                                <div class="panel-title" transloco="SETTINGS_MANUAL_SAVE_TITLE"></div>
+                                <div class="panel-description" transloco="SETTINGS_MANUAL_SAVE_SUBTITLE"></div>
+                            </mat-expansion-panel-header>
+                            
+                            <div class="mat-expansion-panel-content">
+                                <button id="generateBackupButton" mat-raised-button color="primary"
+                                    transloco="SETTINGS_MANUAL_SAVE_BUTTON" (click)="generateBackupData()"></button>
+                                <div *ngIf="generateData">
+                                    <button id="copyButton" mat-icon-button type="button" [disabled]="showCopySuccessMessage"
+                                        (click)="copyToClipboard()">
+                                        <mat-icon>file_copy</mat-icon>
+                                        <ng-template transloco let-t>
+                                            {{ showCopySuccessMessage ? t('COPIED') : t('COPY') }}
+                                        </ng-template>
+                                    </button>
+                                    <textarea matInput #jsonBackupTextArea cdkAutosizeMinRows="1"
+                                        cdkAutosizeMaxRows="5">{{ backupData }}</textarea>
+                                </div>
+                            </div>
+                            <div class="save-text">
+                                <p>
+                                    {{ 'SAVE_TEXT_1' | transloco }} <a href="https://life-notes.fr{{ 'PREFIX' | transloco }}tools/save/">{{ 'SAVE_TEXT_2' | transloco }}</a>
+                                </p>
+                            </div>
+                        </div>
+
                     </mat-selection-list>
                 </div>
                 <input type="file" id="file-import" (change)="importDataWeb($event)">
@@ -177,34 +203,6 @@
             </mat-expansion-panel-header>
 
             <div class="mat-expansion-panel-content">
-
-                <mat-expansion-panel hideToggle>
-                    <mat-expansion-panel-header class="mat-expansion-panel-header">
-                        <div class="panel-title" transloco="SETTINGS_MANUAL_SAVE_TITLE"></div>
-                        <div class="panel-description" transloco="SETTINGS_MANUAL_SAVE_SUBTITLE"></div>
-                    </mat-expansion-panel-header>
-
-                    <div class="mat-expansion-panel-content">
-                        <button id="generateBackupButton" mat-raised-button color="primary"
-                            transloco="SETTINGS_MANUAL_SAVE_BUTTON" (click)="generateBackupData()"></button>
-                        <div id="generate-data-warning" *ngIf="!generateData">
-                            <mat-icon id="generate-data-warning-logo">warning</mat-icon>
-                            <p id="generate-data-warning-text" transloco="SETTINGS_MANUAL_SAVE_WARNING"></p>
-                        </div>
-                        <div *ngIf="generateData">
-                            <button id="copyButton" mat-icon-button type="button" [disabled]="showCopySuccessMessage"
-                                (click)="copyToClipboard()">
-                                <mat-icon>file_copy</mat-icon>
-                                <ng-template transloco let-t>
-                                    {{ showCopySuccessMessage ? t('COPIED') : t('COPY') }}
-                                </ng-template>
-                            </button>
-                            <textarea matInput #jsonBackupTextArea cdkAutosizeMinRows="1"
-                                cdkAutosizeMaxRows="5">{{ backupData }}</textarea>
-                        </div>
-                    </div>
-                </mat-expansion-panel>
-
                 <mat-expansion-panel hideToggle>
                     <mat-expansion-panel-header class="mat-expansion-panel-header">
                         <div class="panel-title" transloco="SETTINGS_ERROR_LOGS_TITLE"></div>

@@ -103,3 +103,15 @@ textarea {
     filter: grayscale(100%) contrast(375%);
     opacity: 0.5;
 }
+
+#manual-backup-div {
+    display: none;
+}
+
+.save-text {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    font-size: 1.1rem;
+}
