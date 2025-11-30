@@ -215,7 +215,7 @@ export class ImporterExporterService {
 	}
 
 	private retrySaveBackupToDirectory(jsonBackup: string, directoryFullPath: string, fileName: string) {
-		if (this.nbSaveRetries > this.MAX_SAVE_TRIES) {
+		/*if (this.nbSaveRetries > this.MAX_SAVE_TRIES) {
 			return;
 		}
 		this.settingsService.updateLastInstall().subscribe(
@@ -224,7 +224,7 @@ export class ImporterExporterService {
 			}
 		).add(() => {
 			this.nbSaveRetries++;
-		});
+		});*/
 	}
 
 	public htmltoPDF(body: any) {

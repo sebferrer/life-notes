@@ -160,4 +160,8 @@ export class SettingsComponent implements OnInit {
 		this.importerExporterService.exportHtml();
 	}
 
+	public showManualBackupDiv() {
+		const div: HTMLInputElement = document.getElementById('manual-backup-div') as HTMLInputElement;
+		div.style.display = "block"; 
+	}
 }

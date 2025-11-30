@@ -4,7 +4,6 @@ import { DbContext } from './database';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { ISettings } from '../models/settings.model';
 import { GlobalService } from './global.service';
-import * as moment from 'moment';
 
 const KEY = 'settings';
 
@@ -13,6 +12,8 @@ export class SettingsService {
 
 	public readonly AVAILABLE_LANGS = ['en', 'fr'];
 	public readonly AVAILABLE_TIME_FORMATS = ['us', 'eu'];
+
+	public readonly CURRENT_VERSION = "0.0.12";
 
 	constructor(
 		private readonly dbContext: DbContext,
@@ -33,6 +34,7 @@ export class SettingsService {
 			switchMap(s => {
 				s.language = newSettings.language;
 				s.targetSymptomKey = newSettings.targetSymptomKey;
+				s.lastInstall = this.CURRENT_VERSION
 				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
 					map(() => s)
 				);
@@ -66,6 +68,30 @@ export class SettingsService {
 		);
 	}
 
+	public setCurrentVersion(): Observable<ISettings> {
+		const settings = this.getSettings();
+		return settings.pipe(
+			switchMap(s => {
+				s.lastInstall = this.CURRENT_VERSION;
+				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
+					map(() => s)
+				);
+			})
+		);
+	}
+
+	public getSettingsCurrentVersion(): Observable<string> {
+		return this.getSettings().pipe(
+			map(s => s.lastInstall ?? this.CURRENT_VERSION)
+		);
+	}
+
+	public getCurrentVersion(): Observable<string> {
+		return this.getSettings().pipe(
+			map(s => this.CURRENT_VERSION)
+		);
+	}
+
 	public setTargetSymptomKey(newTargetSymptomKey: string): Observable<ISettings> {
 		const settings = this.getSettings();
 		return settings.pipe(
@@ -90,7 +116,7 @@ export class SettingsService {
 		);
 	}
 
-	public updateLastInstall(): Observable<ISettings> {
+	/*public updateLastInstall(): Observable<ISettings> {
 		const settings = this.getSettings();
 		return settings.pipe(
 			switchMap(s => {
@@ -108,7 +134,7 @@ export class SettingsService {
 			map(() => settings)
 		);
 
-	}
+	}*/
 
 	public initSettings(): Observable<ISettings> {
 		return this.getSettings().pipe(
@@ -120,16 +146,16 @@ export class SettingsService {
 						'language': '',
 						'timeFormat': '',
 						'firstStart': true,
-						'lastInstall': ''
+						'lastInstall': this.CURRENT_VERSION
 					};
 					return this.dbContext.asObservable(this.dbContext.settingsCollection.put(settings)).pipe(
 						map(() => settings)
 					);
 				}
 				else {
-					if (s.lastInstall == null || s.lastInstall === '') {
+					/*if (s.lastInstall == null || s.lastInstall === '') {
 						return this.updateLastInstallFromSettings(s);
-					}
+					}*/
 					return of(s);
 				}
 			})
