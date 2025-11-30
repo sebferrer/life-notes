@@ -105,8 +105,6 @@
       "cordova-plugin-market": {},
       "cordova-plugin-ionic-webview": {}
     },
-    "platforms": [
-      "android"
-    ]
+    "platforms": []
   }
 }

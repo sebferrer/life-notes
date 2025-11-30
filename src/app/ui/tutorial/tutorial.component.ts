@@ -112,7 +112,7 @@ export class TutorialComponent implements OnInit {
 	}
 
 	public rateApp(): void {
-		this.market.open('com.sebferrer.life_notes');
+		window.open('https://play.google.com/store/apps/details?id=com.sebferrer.life_notes', '_blank');
 	}
 
 }
