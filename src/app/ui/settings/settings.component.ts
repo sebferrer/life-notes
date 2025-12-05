@@ -164,4 +164,8 @@ export class SettingsComponent implements OnInit {
 		const div: HTMLInputElement = document.getElementById('manual-backup-div') as HTMLInputElement;
 		div.style.display = "block"; 
 	}
+
+	public getWindowLocationOrigin() {
+		return window.location.origin;
+	}
 }

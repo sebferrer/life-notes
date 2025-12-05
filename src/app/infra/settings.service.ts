@@ -13,7 +13,7 @@ export class SettingsService {
 	public readonly AVAILABLE_LANGS = ['en', 'fr'];
 	public readonly AVAILABLE_TIME_FORMATS = ['us', 'eu'];
 
-	public readonly CURRENT_VERSION = "0.0.12";
+	public readonly CURRENT_VERSION = "0.1.0";
 
 	constructor(
 		private readonly dbContext: DbContext,
