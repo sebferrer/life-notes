@@ -214,6 +214,17 @@
                     </div>
                 </mat-expansion-panel>
 
+                <mat-expansion-panel hideToggle>
+                    <mat-expansion-panel-header class="mat-expansion-panel-header">
+                        <div class="panel-title">Show origin</div>
+                        <div class="panel-description" transloco="Window location origin"></div>
+                    </mat-expansion-panel-header>
+
+                    <div class="mat-expansion-panel-content">
+                        <p>{{ getWindowLocationOrigin() }}</p>
+                    </div>
+                </mat-expansion-panel>
+
             </div>
 
         </mat-expansion-panel>

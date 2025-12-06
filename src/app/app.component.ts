@@ -70,15 +70,15 @@ export class AppComponent implements OnInit {
 
 		this.settingsService.getSettingsCurrentVersion().subscribe(settingsVersion => {
 			this.settingsService.getCurrentVersion().subscribe(currentVersion => {
-			if (typeof settingsVersion === 'string' && settingsVersion.startsWith('0.')) {
-				if (settingsVersion < currentVersion) {
+				if (typeof settingsVersion === 'string' && settingsVersion.startsWith('0.')) {
+					if (settingsVersion < currentVersion) {
+						this.updateInfoOpenDialog();
+						this.settingsService.setCurrentVersion().subscribe();
+					}
+				} else {
 					this.updateInfoOpenDialog();
 					this.settingsService.setCurrentVersion().subscribe();
 				}
-			} else {
-				this.updateInfoOpenDialog();
-				this.settingsService.setCurrentVersion().subscribe();
-			}
 			});
 		});
 	}
@@ -113,7 +113,9 @@ export class AppComponent implements OnInit {
 					'START_CONTENT_7', 'START_CONTENT_8']
 			}
 		}).afterClosed().subscribe(_ => {
-			this.settingsService.setFirstStart(false).subscribe(() => { });
+			this.settingsService.setFirstStart(false).subscribe(() => {
+				this.updateInfoOpenDialog();
+			});
 		});
 	}
 
@@ -130,7 +132,7 @@ export class AppComponent implements OnInit {
 					'UPDATE_CONTENT_10', 'UPDATE_CONTENT_11', 'UPDATE_CONTENT_12',
 					'UPDATE_CONTENT_13', 'UPDATE_CONTENT_14', 'UPDATE_CONTENT_15',
 					'UPDATE_CONTENT_16', 'UPDATE_CONTENT_17', 'UPDATE_CONTENT_18']
-						}
+			}
 		}).afterClosed().subscribe(_ => {
 			this.settingsService.setCurrentVersion().subscribe();
 		});
