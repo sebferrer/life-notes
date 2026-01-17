@@ -21,7 +21,7 @@
 			<div class="content">
 				<div class="grid-list">
 					<div *ngFor="let overview of overviews"
-						class="grid-tile color-{{ symptomPainColorMap.get(overview.getSymptomPain(globalService.targetSymptomKey)) }}"
+						class="grid-tile color-{{ getPainColor(overview.getSymptomPain(globalService.targetSymptomKey)) }}"
 						routerLink="/{{ overview.date }}">
 						<div class="header">
 							<div *ngIf="today.day !== overview.detailedDate.day || today.month !== overview.detailedDate.month 

@@ -12,6 +12,7 @@ export class SettingsService {
 
 	public readonly AVAILABLE_LANGS = ['en', 'fr'];
 	public readonly AVAILABLE_TIME_FORMATS = ['us', 'eu'];
+	public readonly AVAILABLE_PAIN_SCALES = [5, 10];
 
 	public readonly CURRENT_VERSION = "0.1.0";
 
@@ -61,6 +62,19 @@ export class SettingsService {
 			switchMap(s => {
 				s.timeFormat = newDefaultTimeFormat;
 				this.globalService.timeFormat = newDefaultTimeFormat;
+				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
+					map(() => s)
+				);
+			})
+		);
+	}
+
+	public setPainScale(newPainScale: number): Observable<ISettings> {
+		const settings = this.getSettings();
+		return settings.pipe(
+			switchMap(s => {
+				s.painScale = newPainScale;
+				this.globalService.painScale = newPainScale;
 				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
 					map(() => s)
 				);
@@ -145,6 +159,7 @@ export class SettingsService {
 						'targetSymptomKey': '',
 						'language': '',
 						'timeFormat': '',
+						'painScale': 5,
 						'firstStart': true,
 						'lastInstall': this.CURRENT_VERSION
 					};
@@ -153,6 +168,10 @@ export class SettingsService {
 					);
 				}
 				else {
+					if (s.painScale == null) {
+						s.painScale = 5;
+						this.dbContext.settingsCollection.put(s);
+					}
 					/*if (s.lastInstall == null || s.lastInstall === '') {
 						return this.updateLastInstallFromSettings(s);
 					}*/

@@ -108,7 +108,7 @@ export class MonthlyReportComponent implements OnInit {
 		this.symptoms$.subscribe(symptoms => {
 			symptoms.forEach(symptom => {
 				this.pieCharts.set(symptom.key, new CalendarPieChartViewModel('doughnut', symptom.key));
-				this.pieCharts.get(symptom.key).update(this.overviews);
+				this.pieCharts.get(symptom.key).update(this.overviews, this.globalService.painScale);
 			});
 		})
 		this.bedTimeChart.update(this.overviews);
@@ -172,5 +172,9 @@ export class MonthlyReportComponent implements OnInit {
 				return;
 			}
 		});
+	}
+
+	public getPainColor(pain: number): string {
+		return this.symptomPainColorMap.get(Math.ceil(pain));
 	}
 }

@@ -22,6 +22,7 @@ export class SettingsComponent implements OnInit {
 	public selectedSymptom: string;
 	public selectedLanguage: string;
 	public selectedTimeFormat: string;
+	public selectedPainScale: number;
 
 	public debug = 'no error';
 	public backupData = '';
@@ -45,6 +46,7 @@ export class SettingsComponent implements OnInit {
 		this.selectedSymptom = this.globalService.targetSymptomKey;
 		this.selectedLanguage = this.globalService.language;
 		this.selectedTimeFormat = this.globalService.timeFormat;
+		this.selectedPainScale = this.globalService.painScale;
 	}
 
 	public setActiveLanguage(): void {
@@ -54,6 +56,10 @@ export class SettingsComponent implements OnInit {
 
 	public setTimeFormat(): void {
 		this.settingsService.setTimeFormat(this.selectedTimeFormat).subscribe();
+	}
+
+	public setPainScale(): void {
+		this.settingsService.setPainScale(this.selectedPainScale).subscribe();
 	}
 
 	public setTargetSymptom(): void {

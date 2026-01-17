@@ -18,6 +18,13 @@
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
+                <mat-form-field class="field-select">
+                    <mat-label transloco="SETTINGS_PAIN_SCALE_LABEL"></mat-label>
+                    <mat-select [(value)]="selectedPainScale" (selectionChange)="setPainScale()">
+                        <mat-option [value]="5">0 - 5</mat-option>
+                        <mat-option [value]="10">0 - 10</mat-option>
+                    </mat-select>
+                </mat-form-field>
                 <div class="manage-symptoms-container">
                     <mat-selection-list multiple="false">
                         <mat-list-option routerLink="/symptoms">

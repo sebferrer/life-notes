@@ -29,7 +29,7 @@ export class CalendarPieChartViewModel extends APieChartViewModel {
 		}
 	}
 
-	public update(dayOverviews: DayOverviewViewModel[]): void {
+	public update(dayOverviews: DayOverviewViewModel[], painScale: number = 5): void {
 		dayOverviews.forEach(overview => {
 			const symptom = overview.symptomOverviews.find(s => s.key === this.symptomKey);
 			const symptomPain = symptom == null ? 0 : symptom.pain;
@@ -44,7 +44,8 @@ export class CalendarPieChartViewModel extends APieChartViewModel {
 		this.labels = new Array<string>();
 		this.data = new Array<number>();
 		for (let i = 0; i < this.NB_PAIN_LEVELS + 1; i++) {
-			this.labels.push(i.toString());
+			const labelValue = painScale === 10 ? i * 2 : i;
+			this.labels.push(labelValue.toString());
 			this.data.push(this.symptomPainMap.get(i) || 0);
 		}
 	}

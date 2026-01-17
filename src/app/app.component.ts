@@ -61,6 +61,7 @@ export class AppComponent implements OnInit {
 
 	public initSettings(settings: ISettings): void {
 		this.initTimeFormat(settings);
+		this.initPainScale(settings);
 		this.initTargetSymptom(settings);
 		if (settings != null && settings.firstStart) {
 			this.selectLanguageOpenDialog();
@@ -155,6 +156,18 @@ export class AppComponent implements OnInit {
 			);
 		} else {
 			this.globalService.timeFormat = settings.timeFormat;
+		}
+	}
+
+	public initPainScale(settings: ISettings): void {
+		if (!this.settingsService.AVAILABLE_PAIN_SCALES.includes(settings.painScale)) {
+			this.settingsService.setPainScale(5).subscribe(
+				newSettings => {
+					this.globalService.painScale = newSettings.painScale;
+				}
+			);
+		} else {
+			this.globalService.painScale = settings.painScale;
 		}
 	}
 

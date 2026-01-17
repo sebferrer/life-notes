@@ -25,6 +25,12 @@ export class GlobalService {
 		this._timeFormat = timeFormat;
 	}
 
+	private _painScale: number = 5;
+	public get painScale(): number { return this._painScale; }
+	public set painScale(painScale: number) {
+		this._painScale = painScale;
+	}
+
 	private _symptoms$: Observable<ISymptom[]>;
 	public get symptoms$(): Observable<ISymptom[]> { return this._symptoms$; }
 	public set symptoms$(symptoms: Observable<ISymptom[]>) {
