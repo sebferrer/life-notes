@@ -120,10 +120,10 @@
 }
 
 .charts {
-    position: absolute;
-    top: 27rem;
-    left: 0;
+    position: relative;
+    clear: both;
     width: 100%;
+    padding-top: 2rem;
 
     .pie-chart {
         height: 33vh;
@@ -139,7 +139,7 @@
 .help-container {
     color: #0070C0;
     position: absolute;
-    top: 27rem;
+    top: 0;
     right: 1rem;
     z-index: 2;
 }
