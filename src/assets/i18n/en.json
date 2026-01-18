@@ -146,6 +146,7 @@
     "SETTINGS_SHOW_DEVELOPER_MODE_LABEL": "Show developer mode",
     "SETTINGS_CALENDAR_START_SUNDAY_LABEL": "Calendar: Start week on Sunday",
     "SETTINGS_CALENDAR_BLOCK_VIEW_LABEL": "Calendar: Block view (compact)",
+    "SETTINGS_PAIN_PALETTE_LABEL": "Color palette",
     "SETTINGS_ADVANCED_TITLE": "Developer mode",
     "SETTINGS_ADVANCED_SUBTITLE": "Developer tools",
     "SETTINGS_ERROR_LOGS_TITLE": "Error logs",

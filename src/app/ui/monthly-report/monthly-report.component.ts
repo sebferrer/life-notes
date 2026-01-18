@@ -107,7 +107,7 @@ export class MonthlyReportComponent implements OnInit {
 	public updateCharts(): void {
 		this.symptoms$.subscribe(symptoms => {
 			symptoms.forEach(symptom => {
-				this.pieCharts.set(symptom.key, new CalendarPieChartViewModel('doughnut', symptom.key));
+				this.pieCharts.set(symptom.key, new CalendarPieChartViewModel('doughnut', symptom.key, this.globalService.getPainColors()));
 				this.pieCharts.get(symptom.key).update(this.overviews, this.globalService.painScale);
 			});
 		})

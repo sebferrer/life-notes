@@ -121,9 +121,18 @@ textarea {
     justify-content: space-between;
     align-items: center;
     padding: 10px 0;
-    
+
     .toggle-label {
         font-size: 1rem;
         color: rgba(0, 0, 0, 0.87);
     }
+}
+
+.radio-group {
+    display: flex;
+    gap: 10px;
+}
+
+.radio-button {
+    margin-left: 5px;
 }

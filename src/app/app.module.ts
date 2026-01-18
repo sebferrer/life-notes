@@ -22,6 +22,7 @@ import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatRadioModule } from '@angular/material/radio';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
@@ -142,6 +143,7 @@ import { DialogTutorialNoticeComponent } from './ui/dialog/dialog-tutorial-notic
 		MatExpansionModule,
 		MatAutocompleteModule,
 		MatSlideToggleModule,
+		MatRadioModule,
 		NgxMaterialTimepickerModule,
 		TranslocoRootModule,
 		ChartsModule,

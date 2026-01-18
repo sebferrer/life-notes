@@ -243,6 +243,13 @@
 					<mat-slide-toggle [(ngModel)]="calendarBlockView" (change)="setCalendarBlockView()" color="primary"></mat-slide-toggle>
 				</div>
 				<div class="toggle-container">
+					<span class="toggle-label" transloco="SETTINGS_PAIN_PALETTE_LABEL"></span>
+					<mat-radio-group [(ngModel)]="painPalette" (change)="setPainPalette()" color="primary" class="radio-group">
+						<mat-radio-button value="1" class="radio-button">1</mat-radio-button>
+						<mat-radio-button value="2" class="radio-button">2</mat-radio-button>
+					</mat-radio-group>
+				</div>
+				<div class="toggle-container">
 					<span class="toggle-label" transloco="SETTINGS_SHOW_DEVELOPER_MODE_LABEL"></span>
 					<mat-slide-toggle [(ngModel)]="showDeveloperMode" (change)="setShowDeveloperMode()" color="primary"></mat-slide-toggle>
 				</div>

@@ -65,9 +65,41 @@ export class GlobalService {
 		this._calendarBlockView = value;
 	}
 
+	private _painPalette: string = '2';
+	public get painPalette(): string { return this._painPalette; }
+	public set painPalette(value: string) {
+		this._painPalette = value;
+		this.updateCssVariables();
+	}
+
+	public readonly PALETTES = {
+		'1': ['#93EA84', '#BFBC00', '#FDEC05', '#FFC000', '#E40026', '#980019'],
+		'2': ['#8AF59C', '#F1F078', '#FFD940', '#FFB347', '#FF5C5C', '#B22222']
+	};
+
+	public getPainColors(): string[] {
+		return this.PALETTES[this.painPalette] || this.PALETTES['2'];
+	}
+
+	public getPainColor(pain: number): string {
+		const colors = this.getPainColors();
+		return colors[Math.ceil(pain)] || colors[0];
+	}
+
+	private updateCssVariables(): void {
+		const colors = this.getPainColors();
+		document.documentElement.style.setProperty('--color-pain-0', colors[0]);
+		document.documentElement.style.setProperty('--color-pain-1', colors[1]);
+		document.documentElement.style.setProperty('--color-pain-2', colors[2]);
+		document.documentElement.style.setProperty('--color-pain-3', colors[3]);
+		document.documentElement.style.setProperty('--color-pain-4', colors[4]);
+		document.documentElement.style.setProperty('--color-pain-5', colors[5]);
+	}
+
 	constructor(
 		private symptomsService: SymptomsService
 	) {
 		this.loadSymptoms();
+		this.updateCssVariables();
 	}
 }

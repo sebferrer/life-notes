@@ -10,4 +10,5 @@ export interface ISettings {
 	showDeveloperMode: boolean;
 	calendarStartOnSunday: boolean;
 	calendarBlockView: boolean;
+	painPalette: string;
 }

@@ -10,13 +10,14 @@ export class CalendarPieChartViewModel extends APieChartViewModel {
 
 	constructor(
 		type: string,
-		symptomKey: string
+		symptomKey: string,
+		colors: string[]
 	) {
 		super(type);
 		this.type = type;
 		this.symptomPainMap = new Map<number, number>();
 		this.symptomKey = symptomKey;
-		this.colorsArray = ['#93EA84', '#BFBC00', '#FDEC05', '#FFC000', '#E40026', '#980019'];
+		this.colorsArray = colors;
 		this.colors = [
 			{
 				backgroundColor: this.colorsArray

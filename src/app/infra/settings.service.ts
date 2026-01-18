@@ -213,6 +213,19 @@ export class SettingsService {
 		);
 	}
 
+	public setPainPalette(palette: string): Observable<ISettings> {
+		const settings = this.getSettings();
+		return settings.pipe(
+			switchMap(s => {
+				s.painPalette = palette;
+				this.globalService.painPalette = palette;
+				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
+					map(() => s)
+				);
+			})
+		);
+	}
+
 	public initSettings(): Observable<ISettings> {
 		return this.getSettings().pipe(
 			switchMap(s => {
@@ -229,7 +242,8 @@ export class SettingsService {
 						'hideDeveloperUpdates': false,
 						'showDeveloperMode': false,
 						'calendarStartOnSunday': true,
-						'calendarBlockView': false
+						'calendarBlockView': false,
+						'painPalette': '2'
 					};
 					return this.dbContext.asObservable(this.dbContext.settingsCollection.put(settings)).pipe(
 						map(() => settings)
@@ -259,6 +273,10 @@ export class SettingsService {
 					}
 					if (s.calendarBlockView == null) {
 						s.calendarBlockView = false;
+						changed = true;
+					}
+					if (s.painPalette == null) {
+						s.painPalette = '2';
 						changed = true;
 					}
 					if (changed) {

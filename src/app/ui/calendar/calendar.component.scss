@@ -146,25 +146,25 @@
 
 .color-default {
     /* color: #31AE1D; */
-    background-color: #93EA84;
+    background-color: var(--color-pain-0);
 }
 
 .color-pain-1 {
-    background-color: #BFBC00;
+    background-color: var(--color-pain-1);
 }
 
 .color-pain-2 {
-    background-color: #FDEC05;
+    background-color: var(--color-pain-2);
 }
 
 .color-pain-3 {
-    background-color: #FFC000;
+    background-color: var(--color-pain-3);
 }
 
 .color-pain-4 {
-    background-color: #E40026;
+    background-color: var(--color-pain-4);
 }
 
 .color-pain-5 {
-    background-color: #980019;
+    background-color: var(--color-pain-5);
 }

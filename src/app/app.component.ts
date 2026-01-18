@@ -98,6 +98,7 @@ export class AppComponent implements OnInit {
 		this.globalService.hideDeveloperUpdates = settings.hideDeveloperUpdates;
 		this.globalService.calendarStartOnSunday = settings.calendarStartOnSunday;
 		this.globalService.calendarBlockView = settings.calendarBlockView;
+		this.globalService.painPalette = settings.painPalette;
 		if (settings != null && settings.firstStart) {
 			this.selectLanguageOpenDialog();
 		} else {
