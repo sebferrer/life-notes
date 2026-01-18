@@ -19,7 +19,7 @@ export function getDetailedDate(formattedDate: string): IDetailedDate {
 	const weekOfMonth = getWeekOfMonth(date);
 	const week = getWeek(date);
 	const dayOfYear = getDayOfYear(date);
-	const dayOfWeek = date.getDay();
+	const dayOfWeek = date.getDay() || 7;
 
 	return { day, month, year, week, dayOfWeek, dayOfYear, weekOfMonth, date, formattedDate };
 }

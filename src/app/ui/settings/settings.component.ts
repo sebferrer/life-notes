@@ -22,6 +22,12 @@ export class SettingsComponent implements OnInit {
 	public selectedSymptom: string;
 	public selectedLanguage: string;
 	public selectedTimeFormat: string;
+	public selectedPainScale: number;
+	public hideDeveloperUpdates: boolean;
+	public showDeveloperMode: boolean;
+	public calendarStartOnSunday: boolean;
+	public calendarBlockView: boolean;
+	public painPalette: string;
 
 	public debug = 'no error';
 	public backupData = '';
@@ -45,6 +51,14 @@ export class SettingsComponent implements OnInit {
 		this.selectedSymptom = this.globalService.targetSymptomKey;
 		this.selectedLanguage = this.globalService.language;
 		this.selectedTimeFormat = this.globalService.timeFormat;
+		this.selectedPainScale = this.globalService.painScale;
+		this.settingsService.getSettings().subscribe(settings => {
+			this.hideDeveloperUpdates = settings.hideDeveloperUpdates;
+			this.showDeveloperMode = settings.showDeveloperMode;
+			this.calendarStartOnSunday = settings.calendarStartOnSunday;
+			this.calendarBlockView = settings.calendarBlockView;
+			this.painPalette = settings.painPalette;
+		});
 	}
 
 	public setActiveLanguage(): void {
@@ -54,6 +68,30 @@ export class SettingsComponent implements OnInit {
 
 	public setTimeFormat(): void {
 		this.settingsService.setTimeFormat(this.selectedTimeFormat).subscribe();
+	}
+
+	public setPainScale(): void {
+		this.settingsService.setPainScale(this.selectedPainScale).subscribe();
+	}
+
+	public setHideDeveloperUpdates(): void {
+		this.settingsService.setHideDeveloperUpdates(this.hideDeveloperUpdates).subscribe();
+	}
+
+	public setShowDeveloperMode(): void {
+		this.settingsService.setShowDeveloperMode(this.showDeveloperMode).subscribe();
+	}
+
+	public setCalendarStartOnSunday(): void {
+		this.settingsService.setCalendarStartOnSunday(this.calendarStartOnSunday).subscribe();
+	}
+
+	public setCalendarBlockView(): void {
+		this.settingsService.setCalendarBlockView(this.calendarBlockView).subscribe();
+	}
+
+	public setPainPalette(): void {
+		this.settingsService.setPainPalette(this.painPalette).subscribe();
 	}
 
 	public setTargetSymptom(): void {
