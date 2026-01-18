@@ -77,6 +77,54 @@ export class MedsService {
 		return this.dbContext.asObservable(this.dbContext.medsCollection.bulkDocs(meds));
 	}
 
+	public deleteMedication(key: string, quantity: number): Observable<IMedHistory[]> {
+		return this.daysService.getDays().pipe(
+			switchMap(days => {
+				const changedDays = [];
+				days.forEach(day => {
+					const initialLength = day.meds.length;
+					// Use loose equality for quantity to handle string/number differences
+					day.meds = day.meds.filter(m => !(m.key === key && m.quantity == quantity));
+					if (day.meds.length !== initialLength) {
+						changedDays.push(day);
+					}
+				});
+				if (changedDays.length === 0) {
+					return of(null);
+				}
+				return this.daysService.addDays(changedDays);
+			}),
+			switchMap(() => this.refreshMeds())
+		);
+	}
+
+	public editMedication(oldKey: string, oldQuantity: number, newKey: string, newQuantity: number): Observable<IMedHistory[]> {
+		return this.daysService.getDays().pipe(
+			switchMap(days => {
+				const changedDays = [];
+				days.forEach(day => {
+					let changed = false;
+					day.meds.forEach(med => {
+						// Use loose equality for quantity to handle string/number differences
+						if (med.key === oldKey && med.quantity == oldQuantity) {
+							med.key = newKey;
+							med.quantity = newQuantity;
+							changed = true;
+						}
+					});
+					if (changed) {
+						changedDays.push(day);
+					}
+				});
+				if (changedDays.length === 0) {
+					return of(null);
+				}
+				return this.daysService.addDays(changedDays);
+			}),
+			switchMap(() => this.refreshMeds())
+		);
+	}
+
 	public deleteMed(key: string): Observable<null> {
 		const med = this.getMed(key);
 		return med.pipe(

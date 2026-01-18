@@ -62,6 +62,8 @@ import { SwipingFingerComponent } from './ui/graphic/swiping-finger';
 import { Market } from '@ionic-native/market/ngx';
 import { MedsService } from './infra/meds.service';
 import { DialogConfirmComponent } from './ui/dialog/dialog-confirm';
+import { DialogEditMedComponent } from './ui/dialog/dialog-edit-med/dialog-edit-med.component';
+import { DialogEditLogComponent } from './ui/dialog/dialog-edit-log/dialog-edit-log.component';
 import { LogsService } from './infra/logs.service';
 import { LogsComponent } from './ui/logs/logs.component';
 import { DialogSelectLanguageComponent } from './ui/dialog/dialog-select-language';
@@ -99,6 +101,8 @@ import { MonthlyReportComponent } from './ui/monthly-report';
 		DialogConfirmComponent,
 		DialogSelectLanguageComponent,
 		BottomSheetAddEventComponent,
+		DialogEditMedComponent,
+		DialogEditLogComponent,
 
 		// Helpers
 		InfiniteScrollComponent
@@ -172,7 +176,8 @@ import { MonthlyReportComponent } from './ui/monthly-report';
 		DialogSelectSymptomComponent,
 		DialogSelectBackupComponent,
 		DialogInfoComponent,
-		DialogConfirmComponent
+		DialogConfirmComponent,
+		DialogEditMedComponent
 	],
 	bootstrap: [AppComponent]
 })

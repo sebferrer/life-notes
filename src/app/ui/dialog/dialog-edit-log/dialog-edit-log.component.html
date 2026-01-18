@@ -1,0 +1,17 @@
+<h1 mat-dialog-title transloco="EDIT_LOG_TITLE"></h1>
+<div mat-dialog-content>
+    <div class="field-container">
+        <mat-form-field>
+            <mat-label transloco="TABLE_NOTE"></mat-label>
+            <input matInput [(ngModel)]="data.key" required>
+        </mat-form-field>
+    </div>
+    <div class="warning-text">
+        <p transloco="EDIT_LOG_WARNING"></p>
+    </div>
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()" transloco="CANCEL"></button>
+    <button mat-button cdkFocusInitial (click)="onYesClick()" color="primary" [disabled]="!isValid()" transloco="EDIT">
+    </button>
+</div>

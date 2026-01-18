@@ -219,5 +219,15 @@
     "UPDATE_CONTENT_15": "Je vous recommande très fortement de sauvegarder dès maintenant vos données manuellement afin de ne pas risquer de les perdre en cas de mise à jour Android ou de changement de smartphone.",
     "UPDATE_CONTENT_16": "Je vous recommande également d'effectuer ces sauvegardes régulièrement.",
     "UPDATE_CONTENT_17": "Merci à vous de soutenir Life-Notes !",
-    "UPDATE_CONTENT_18": "~ Seb, développeur bénévole."
+    "UPDATE_CONTENT_18": "~ Seb, développeur bénévole.",
+    "EDIT_MED_TITLE": "Éditer un médicament",
+    "EDIT_MED_WARNING": "Attention : si vous modifiez le nom et le dosage pour correspondre à un médicament déjà existant, les entrées seront fusionnées avec cet existant.",
+    "DELETE_MED_DIALOG_TITLE": "Supprimer un médicament",
+    "DELETE_MED_DIALOG_CONTENT_1": "Êtes-vous sûr de vouloir supprimer ce médicament ?",
+    "DELETE_MED_DIALOG_CONTENT_2": "Cette action est irréversible et supprimera toutes les entrées de ce médicament dans votre historique.",
+    "EDIT_LOG_TITLE": "Éditer une note",
+    "EDIT_LOG_WARNING": "Attention : si vous modifiez la note pour correspondre à une note déjà existante, les entrées seront fusionnées avec cette existante.",
+    "DELETE_LOG_DIALOG_TITLE": "Supprimer une note",
+    "DELETE_LOG_DIALOG_CONTENT_1": "Êtes-vous sûr de vouloir supprimer cette note ?",
+    "DELETE_LOG_DIALOG_CONTENT_2": "Cette action est irréversible et supprimera toutes les entrées de cette note dans votre historique."
 }

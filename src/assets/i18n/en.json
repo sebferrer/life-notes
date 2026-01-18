@@ -219,5 +219,15 @@
     "UPDATE_CONTENT_15": "I strongly recommend that you manually back up your data right now to avoid losing it in case of an Android update or if you change your smartphone.",
     "UPDATE_CONTENT_16": "I also recommend performing these backups regularly.",
     "UPDATE_CONTENT_17": "Thank you for supporting Life-Notes!",
-    "UPDATE_CONTENT_18": "~ Seb, volunteer developer."
+    "UPDATE_CONTENT_18": "~ Seb, volunteer developer.",
+    "EDIT_MED_TITLE": "Edit medication",
+    "EDIT_MED_WARNING": "Warning: if you change the name and dosage to match an existing medication, the entries will be merged with the existing one.",
+    "DELETE_MED_DIALOG_TITLE": "Delete medication",
+    "DELETE_MED_DIALOG_CONTENT_1": "Are you sure you want to delete this medication?",
+    "DELETE_MED_DIALOG_CONTENT_2": "This action is irreversible and will delete all entries of this medication in your history.",
+    "EDIT_LOG_TITLE": "Edit note",
+    "EDIT_LOG_WARNING": "Warning: if you change the note to match an existing one, the entries will be merged with the existing one.",
+    "DELETE_LOG_DIALOG_TITLE": "Delete note",
+    "DELETE_LOG_DIALOG_CONTENT_1": "Are you sure you want to delete this note?",
+    "DELETE_LOG_DIALOG_CONTENT_2": "This action is irreversible and will delete all entries of this note in your history."
 }

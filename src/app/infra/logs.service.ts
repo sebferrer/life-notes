@@ -76,6 +76,51 @@ export class LogsService {
 		return this.dbContext.asObservable(this.dbContext.logsCollection.bulkDocs(logs));
 	}
 
+	public deleteLogEntry(key: string): Observable<ILogHistory[]> {
+		return this.daysService.getDays().pipe(
+			switchMap(days => {
+				const changedDays = [];
+				days.forEach(day => {
+					const initialLength = day.logs.length;
+					day.logs = day.logs.filter(l => l.key !== key);
+					if (day.logs.length !== initialLength) {
+						changedDays.push(day);
+					}
+				});
+				if (changedDays.length === 0) {
+					return of(null);
+				}
+				return this.daysService.addDays(changedDays);
+			}),
+			switchMap(() => this.refreshLogs())
+		);
+	}
+
+	public editLogEntry(oldKey: string, newKey: string): Observable<ILogHistory[]> {
+		return this.daysService.getDays().pipe(
+			switchMap(days => {
+				const changedDays = [];
+				days.forEach(day => {
+					let changed = false;
+					day.logs.forEach(log => {
+						if (log.key === oldKey) {
+							log.key = newKey;
+							changed = true;
+						}
+					});
+					if (changed) {
+						changedDays.push(day);
+					}
+				});
+				if (changedDays.length === 0) {
+					return of(null);
+				}
+				return this.daysService.addDays(changedDays);
+			}),
+			switchMap(() => this.refreshLogs())
+		);
+	}
+
 	public deleteLog(key: string): Observable<null> {
 		const log = this.getLog(key);
 		return log.pipe(
