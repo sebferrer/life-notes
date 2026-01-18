@@ -6,4 +6,6 @@ export interface ISettings {
 	firstStart: boolean;
 	lastInstall: string;
 	lastUpdate: number;
+	hideDeveloperUpdates: boolean;
+	showDeveloperMode: boolean;
 }

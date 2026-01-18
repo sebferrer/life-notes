@@ -115,3 +115,15 @@ textarea {
     padding-bottom: 0.5rem;
     font-size: 1.1rem;
 }
+
+.toggle-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    
+    .toggle-label {
+        font-size: 1rem;
+        color: rgba(0, 0, 0, 0.87);
+    }
+}

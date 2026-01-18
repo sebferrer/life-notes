@@ -162,6 +162,31 @@ export class SettingsService {
 		);
 	}
 
+	public setHideDeveloperUpdates(hide: boolean): Observable<ISettings> {
+		const settings = this.getSettings();
+		return settings.pipe(
+			switchMap(s => {
+				s.hideDeveloperUpdates = hide;
+				this.globalService.hideDeveloperUpdates = hide;
+				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
+					map(() => s)
+				);
+			})
+		);
+	}
+
+	public setShowDeveloperMode(show: boolean): Observable<ISettings> {
+		const settings = this.getSettings();
+		return settings.pipe(
+			switchMap(s => {
+				s.showDeveloperMode = show;
+				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
+					map(() => s)
+				);
+			})
+		);
+	}
+
 	public initSettings(): Observable<ISettings> {
 		return this.getSettings().pipe(
 			switchMap(s => {
@@ -174,7 +199,9 @@ export class SettingsService {
 						'painScale': 5,
 						'firstStart': true,
 						'lastInstall': this.CURRENT_VERSION,
-						'lastUpdate': 0
+						'lastUpdate': 0,
+						'hideDeveloperUpdates': false,
+						'showDeveloperMode': false
 					};
 					return this.dbContext.asObservable(this.dbContext.settingsCollection.put(settings)).pipe(
 						map(() => settings)
@@ -188,6 +215,14 @@ export class SettingsService {
 					}
 					if (s.lastUpdate == null) {
 						s.lastUpdate = 0;
+						changed = true;
+					}
+					if (s.hideDeveloperUpdates == null) {
+						s.hideDeveloperUpdates = false;
+						changed = true;
+					}
+					if (s.showDeveloperMode == null) {
+						s.showDeveloperMode = false;
 						changed = true;
 					}
 					if (changed) {

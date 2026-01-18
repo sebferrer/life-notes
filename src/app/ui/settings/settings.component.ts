@@ -23,6 +23,8 @@ export class SettingsComponent implements OnInit {
 	public selectedLanguage: string;
 	public selectedTimeFormat: string;
 	public selectedPainScale: number;
+	public hideDeveloperUpdates: boolean;
+	public showDeveloperMode: boolean;
 
 	public debug = 'no error';
 	public backupData = '';
@@ -47,6 +49,10 @@ export class SettingsComponent implements OnInit {
 		this.selectedLanguage = this.globalService.language;
 		this.selectedTimeFormat = this.globalService.timeFormat;
 		this.selectedPainScale = this.globalService.painScale;
+		this.settingsService.getSettings().subscribe(settings => {
+			this.hideDeveloperUpdates = settings.hideDeveloperUpdates;
+			this.showDeveloperMode = settings.showDeveloperMode;
+		});
 	}
 
 	public setActiveLanguage(): void {
@@ -60,6 +66,14 @@ export class SettingsComponent implements OnInit {
 
 	public setPainScale(): void {
 		this.settingsService.setPainScale(this.selectedPainScale).subscribe();
+	}
+
+	public setHideDeveloperUpdates(): void {
+		this.settingsService.setHideDeveloperUpdates(this.hideDeveloperUpdates).subscribe();
+	}
+
+	public setShowDeveloperMode(): void {
+		this.settingsService.setShowDeveloperMode(this.showDeveloperMode).subscribe();
 	}
 
 	public setTargetSymptom(): void {

@@ -95,6 +95,7 @@ export class AppComponent implements OnInit {
 		this.initTimeFormat(settings);
 		this.initPainScale(settings);
 		this.initTargetSymptom(settings);
+		this.globalService.hideDeveloperUpdates = settings.hideDeveloperUpdates;
 		if (settings != null && settings.firstStart) {
 			this.selectLanguageOpenDialog();
 		} else {
