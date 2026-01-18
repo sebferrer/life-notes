@@ -5,4 +5,5 @@ export interface ISettings {
 	painScale: number;
 	firstStart: boolean;
 	lastInstall: string;
+	lastUpdate: number;
 }

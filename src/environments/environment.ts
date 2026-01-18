@@ -4,7 +4,8 @@
 
 export const environment = {
 	production: false,
-	backendUrl: 'http://localhost:3010'
+	backendUrl: 'http://localhost:3010',
+	updatesUrl: '/updates.json'
 };
 
 /*

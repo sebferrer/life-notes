@@ -9,6 +9,8 @@ import { DialogNoSymptomWarningComponent } from './ui/dialog/dialog-no-symptom-w
 import { ISettings } from './models/settings.model';
 import { DialogSelectLanguageComponent } from './ui/dialog/dialog-select-language';
 import { DialogInfoComponent } from './ui/dialog/dialog-info';
+import { UpdatesService } from './infra/updates.service';
+import { DialogUpdatesComponent } from './ui/dialog/dialog-updates';
 
 @Component({
 	selector: 'app-root',
@@ -19,13 +21,16 @@ export class AppComponent implements OnInit {
 	public title = 'Life Notes - Symptom Tracking';
 	public symptoms: ISymptom[];
 	public symptoms$: Subject<ISymptom[]>;
+	public updatesCount: number = 0;
+	private lastUpdate: number = 0;
 
 	constructor(
 		public globalService: GlobalService,
 		private translocoService: TranslocoService,
 		private settingsService: SettingsService,
 		private importerExporterService: ImporterExporterService,
-		private dialog: MatDialog
+		private dialog: MatDialog,
+		private updatesService: UpdatesService
 	) {
 		/*this.symptoms = new Array<ISymptom>();
 		this.symptoms$ = new Subject<ISymptom[]>();*/
@@ -35,9 +40,35 @@ export class AppComponent implements OnInit {
 		// this.updateSymptoms();
 		this.settingsService.initSettings().subscribe(settings => {
 			this.initSettings(settings);
+			this.lastUpdate = settings.lastUpdate;
+			this.checkUpdates();
 			//this.autoBackup();
 		});
 		// this.daysService.reset().subscribe(() => {});
+	}
+
+	public checkUpdates(): void {
+		this.updatesService.getUpdates().subscribe(updates => {
+			if (updates && updates.length > 0) {
+				const newUpdates = updates.filter(u => u.id > this.lastUpdate);
+				this.updatesCount = newUpdates.length;
+			}
+		});
+	}
+
+	public openUpdates(): void {
+		this.dialog.open(DialogUpdatesComponent, {
+			autoFocus: false,
+			width: '90%',
+			height: '90%',
+			maxWidth: '100vw',
+			maxHeight: '100vh',
+			panelClass: 'custom-modalbox',
+			data: { lastUpdate: this.lastUpdate }
+		}).afterClosed().subscribe(() => {
+			this.updatesCount = 0;
+			this.settingsService.getSettings().subscribe(s => this.lastUpdate = s.lastUpdate);
+		});
 	}
 
 	public autoBackup(): void {

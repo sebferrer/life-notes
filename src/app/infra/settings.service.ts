@@ -150,6 +150,18 @@ export class SettingsService {
 
 	}*/
 
+	public setLastUpdate(lastUpdate: number): Observable<ISettings> {
+		const settings = this.getSettings();
+		return settings.pipe(
+			switchMap(s => {
+				s.lastUpdate = lastUpdate;
+				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
+					map(() => s)
+				);
+			})
+		);
+	}
+
 	public initSettings(): Observable<ISettings> {
 		return this.getSettings().pipe(
 			switchMap(s => {
@@ -161,24 +173,31 @@ export class SettingsService {
 						'timeFormat': '',
 						'painScale': 5,
 						'firstStart': true,
-						'lastInstall': this.CURRENT_VERSION
+						'lastInstall': this.CURRENT_VERSION,
+						'lastUpdate': 0
 					};
 					return this.dbContext.asObservable(this.dbContext.settingsCollection.put(settings)).pipe(
 						map(() => settings)
 					);
 				}
 				else {
+					let changed = false;
 					if (s.painScale == null) {
 						s.painScale = 5;
+						changed = true;
+					}
+					if (s.lastUpdate == null) {
+						s.lastUpdate = 0;
+						changed = true;
+					}
+					if (changed) {
 						this.dbContext.settingsCollection.put(s);
 					}
-					/*if (s.lastInstall == null || s.lastInstall === '') {
-						return this.updateLastInstallFromSettings(s);
-					}*/
 					return of(s);
 				}
 			})
 		);
 
 	}
+
 }

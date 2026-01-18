@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatBadgeModule } from '@angular/material/badge';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
@@ -68,6 +69,7 @@ import { LogsService } from './infra/logs.service';
 import { LogsComponent } from './ui/logs/logs.component';
 import { DialogSelectLanguageComponent } from './ui/dialog/dialog-select-language';
 import { MonthlyReportComponent } from './ui/monthly-report';
+import { DialogUpdatesComponent } from './ui/dialog/dialog-updates';
 
 @NgModule({
 	declarations: [
@@ -103,6 +105,7 @@ import { MonthlyReportComponent } from './ui/monthly-report';
 		BottomSheetAddEventComponent,
 		DialogEditMedComponent,
 		DialogEditLogComponent,
+		DialogUpdatesComponent,
 
 		// Helpers
 		InfiniteScrollComponent
@@ -116,6 +119,7 @@ import { MonthlyReportComponent } from './ui/monthly-report';
 		MatMenuModule,
 		MatButtonModule,
 		MatIconModule,
+		MatBadgeModule,
 		MatToolbarModule,
 		MatProgressSpinnerModule,
 		MatCardModule,
@@ -177,7 +181,8 @@ import { MonthlyReportComponent } from './ui/monthly-report';
 		DialogSelectBackupComponent,
 		DialogInfoComponent,
 		DialogConfirmComponent,
-		DialogEditMedComponent
+		DialogEditMedComponent,
+		DialogUpdatesComponent
 	],
 	bootstrap: [AppComponent]
 })
