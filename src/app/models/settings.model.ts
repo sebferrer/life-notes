@@ -8,4 +8,6 @@ export interface ISettings {
 	lastUpdate: number;
 	hideDeveloperUpdates: boolean;
 	showDeveloperMode: boolean;
+	calendarStartOnSunday: boolean;
+	calendarBlockView: boolean;
 }

@@ -53,6 +53,18 @@ export class GlobalService {
 		return this._symptoms$;
 	}
 
+	private _calendarStartOnSunday: boolean = true;
+	public get calendarStartOnSunday(): boolean { return this._calendarStartOnSunday; }
+	public set calendarStartOnSunday(value: boolean) {
+		this._calendarStartOnSunday = value;
+	}
+
+	private _calendarBlockView: boolean = false;
+	public get calendarBlockView(): boolean { return this._calendarBlockView; }
+	public set calendarBlockView(value: boolean) {
+		this._calendarBlockView = value;
+	}
+
 	constructor(
 		private symptomsService: SymptomsService
 	) {

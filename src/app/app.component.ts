@@ -96,6 +96,8 @@ export class AppComponent implements OnInit {
 		this.initPainScale(settings);
 		this.initTargetSymptom(settings);
 		this.globalService.hideDeveloperUpdates = settings.hideDeveloperUpdates;
+		this.globalService.calendarStartOnSunday = settings.calendarStartOnSunday;
+		this.globalService.calendarBlockView = settings.calendarBlockView;
 		if (settings != null && settings.firstStart) {
 			this.selectLanguageOpenDialog();
 		} else {

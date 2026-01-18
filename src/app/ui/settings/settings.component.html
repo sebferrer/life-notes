@@ -234,12 +234,20 @@
                     <span class="toggle-label" transloco="SETTINGS_HIDE_DEVELOPER_UPDATES_LABEL"></span>
                     <mat-slide-toggle [(ngModel)]="hideDeveloperUpdates" (change)="setHideDeveloperUpdates()" color="primary"></mat-slide-toggle>
                 </div>
-                <div class="toggle-container">
-                    <span class="toggle-label" transloco="SETTINGS_SHOW_DEVELOPER_MODE_LABEL"></span>
-                    <mat-slide-toggle [(ngModel)]="showDeveloperMode" (change)="setShowDeveloperMode()" color="primary"></mat-slide-toggle>
-                </div>
-            </div>
-        </mat-expansion-panel>
+				<div class="toggle-container">
+					<span class="toggle-label" transloco="SETTINGS_CALENDAR_START_SUNDAY_LABEL"></span>
+					<mat-slide-toggle [(ngModel)]="calendarStartOnSunday" (change)="setCalendarStartOnSunday()" color="primary"></mat-slide-toggle>
+				</div>
+				<div class="toggle-container">
+					<span class="toggle-label" transloco="SETTINGS_CALENDAR_BLOCK_VIEW_LABEL"></span>
+					<mat-slide-toggle [(ngModel)]="calendarBlockView" (change)="setCalendarBlockView()" color="primary"></mat-slide-toggle>
+				</div>
+				<div class="toggle-container">
+					<span class="toggle-label" transloco="SETTINGS_SHOW_DEVELOPER_MODE_LABEL"></span>
+					<mat-slide-toggle [(ngModel)]="showDeveloperMode" (change)="setShowDeveloperMode()" color="primary"></mat-slide-toggle>
+				</div>
+			</div>
+		</mat-expansion-panel>
 
         <mat-expansion-panel hideToggle *ngIf="showDeveloperMode">
             <mat-expansion-panel-header class="mat-expansion-panel-header">

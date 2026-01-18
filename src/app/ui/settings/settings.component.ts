@@ -25,6 +25,8 @@ export class SettingsComponent implements OnInit {
 	public selectedPainScale: number;
 	public hideDeveloperUpdates: boolean;
 	public showDeveloperMode: boolean;
+	public calendarStartOnSunday: boolean;
+	public calendarBlockView: boolean;
 
 	public debug = 'no error';
 	public backupData = '';
@@ -52,6 +54,8 @@ export class SettingsComponent implements OnInit {
 		this.settingsService.getSettings().subscribe(settings => {
 			this.hideDeveloperUpdates = settings.hideDeveloperUpdates;
 			this.showDeveloperMode = settings.showDeveloperMode;
+			this.calendarStartOnSunday = settings.calendarStartOnSunday;
+			this.calendarBlockView = settings.calendarBlockView;
 		});
 	}
 
@@ -74,6 +78,14 @@ export class SettingsComponent implements OnInit {
 
 	public setShowDeveloperMode(): void {
 		this.settingsService.setShowDeveloperMode(this.showDeveloperMode).subscribe();
+	}
+
+	public setCalendarStartOnSunday(): void {
+		this.settingsService.setCalendarStartOnSunday(this.calendarStartOnSunday).subscribe();
+	}
+
+	public setCalendarBlockView(): void {
+		this.settingsService.setCalendarBlockView(this.calendarBlockView).subscribe();
 	}
 
 	public setTargetSymptom(): void {

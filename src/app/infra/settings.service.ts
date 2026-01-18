@@ -187,6 +187,32 @@ export class SettingsService {
 		);
 	}
 
+	public setCalendarStartOnSunday(startOnSunday: boolean): Observable<ISettings> {
+		const settings = this.getSettings();
+		return settings.pipe(
+			switchMap(s => {
+				s.calendarStartOnSunday = startOnSunday;
+				this.globalService.calendarStartOnSunday = startOnSunday;
+				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
+					map(() => s)
+				);
+			})
+		);
+	}
+
+	public setCalendarBlockView(blockView: boolean): Observable<ISettings> {
+		const settings = this.getSettings();
+		return settings.pipe(
+			switchMap(s => {
+				s.calendarBlockView = blockView;
+				this.globalService.calendarBlockView = blockView;
+				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
+					map(() => s)
+				);
+			})
+		);
+	}
+
 	public initSettings(): Observable<ISettings> {
 		return this.getSettings().pipe(
 			switchMap(s => {
@@ -201,7 +227,9 @@ export class SettingsService {
 						'lastInstall': this.CURRENT_VERSION,
 						'lastUpdate': 0,
 						'hideDeveloperUpdates': false,
-						'showDeveloperMode': false
+						'showDeveloperMode': false,
+						'calendarStartOnSunday': true,
+						'calendarBlockView': false
 					};
 					return this.dbContext.asObservable(this.dbContext.settingsCollection.put(settings)).pipe(
 						map(() => settings)
@@ -223,6 +251,14 @@ export class SettingsService {
 					}
 					if (s.showDeveloperMode == null) {
 						s.showDeveloperMode = false;
+						changed = true;
+					}
+					if (s.calendarStartOnSunday == null) {
+						s.calendarStartOnSunday = true;
+						changed = true;
+					}
+					if (s.calendarBlockView == null) {
+						s.calendarBlockView = false;
 						changed = true;
 					}
 					if (changed) {

@@ -11,6 +11,7 @@
     width: 100%;
     height: 3.5rem;
     background-color: #9E9E9E;
+    border-bottom: 1px solid white;
     text-align: center;
     color: white;
     z-index: 3;
@@ -81,6 +82,22 @@
     float: left;
     width: 14.28%;
     height: 5rem;
+}
+
+.grid-tile-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    float: left;
+    width: 14.28%;
+    height: 2rem;
+    font-weight: bold;
+    background-color: #9E9E9E;
+    color: white;
+}
+
+.empty-tile {
+    background-color: transparent;
 }
 
 .day-label {
