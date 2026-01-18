@@ -71,6 +71,8 @@ import { DialogSelectLanguageComponent } from './ui/dialog/dialog-select-languag
 import { MonthlyReportComponent } from './ui/monthly-report';
 import { DialogUpdatesComponent } from './ui/dialog/dialog-updates';
 
+import { DialogTutorialNoticeComponent } from './ui/dialog/dialog-tutorial-notice';
+
 @NgModule({
 	declarations: [
 		AppComponent,
@@ -106,6 +108,7 @@ import { DialogUpdatesComponent } from './ui/dialog/dialog-updates';
 		DialogEditMedComponent,
 		DialogEditLogComponent,
 		DialogUpdatesComponent,
+		DialogTutorialNoticeComponent,
 
 		// Helpers
 		InfiniteScrollComponent
@@ -182,7 +185,8 @@ import { DialogUpdatesComponent } from './ui/dialog/dialog-updates';
 		DialogInfoComponent,
 		DialogConfirmComponent,
 		DialogEditMedComponent,
-		DialogUpdatesComponent
+		DialogUpdatesComponent,
+		DialogTutorialNoticeComponent
 	],
 	bootstrap: [AppComponent]
 })

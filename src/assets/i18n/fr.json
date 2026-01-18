@@ -108,6 +108,7 @@
     "TIMELINE_NO_SYMPTOMS_WARNING_1": "Vous n'avez encore enregistré aucun symptôme.",
     "TIMELINE_NO_SYMPTOMS_WARNING_2": "Appuyez sur le bouton \"+\" pour accéder à votre liste de symptômes et en ajouter un.",
     "NO_SYMPTOM_WARNING_DIALOG_TITLE": "Aucun symptôme",
+    "NO_SYMPTOM_WARNING_DIALOG_TUTORIAL_HINT": "Si vous ne savez pas par où commencer, consultez le tutoriel !",
     "CREATE_SYMPTOM_BUTTON": "Créer votre premier symptôme",
     "NO_SYMPTOM_WARNING_DIALOG_CONTENT_1": "Life Notes fonctionne en analysant et suivant vos symptômes.",
     "NO_SYMPTOM_WARNING_DIALOG_CONTENT_2": "En utilisant cette application, vous ajouterez quotidiennement l'évolution de vos symptômes, mais vous devez dans un premier temps les créer. Vous n'avez actuellement aucun symptôme enregistré, donc pour utiliser correctement cette application, la première chose à faire est d'ajouter les symptômes que vous souhaitez surveiller (par exemple : maux de tête, maux d'estomac, etc...)",
@@ -128,6 +129,9 @@
     "LOAD_AUTO_SAVE": "Charger la dernière sauvegarde automatique",
     "LOAD_MANUAL_SAVE": "Charger la dernière sauvegarde manuelle",
     "LOAD_WEB_SAVE": "Parcourir",
+    "SETTINGS_TUTORIAL_TITLE": "Tutoriel",
+    "SETTINGS_TUTORIAL_SUBTITLE": "Apprendre à utiliser l'application",
+    "SETTINGS_TUTORIAL_LINK": "Lire le tutoriel",
     "SETTINGS_ADVANCED_TITLE": "Avancé",
     "SETTINGS_ADVANCED_SUBTITLE": "Paramètres avancés",
     "SETTINGS_ERROR_LOGS_TITLE": "Logs d'erreur",
@@ -229,5 +233,8 @@
     "EDIT_LOG_WARNING": "Attention : si vous modifiez la note pour correspondre à une note déjà existante, les entrées seront fusionnées avec cette existante.",
     "DELETE_LOG_DIALOG_TITLE": "Supprimer une note",
     "DELETE_LOG_DIALOG_CONTENT_1": "Êtes-vous sûr de vouloir supprimer cette note ?",
-    "DELETE_LOG_DIALOG_CONTENT_2": "Cette action est irréversible et supprimera toutes les entrées de cette note dans votre historique."
+    "DELETE_LOG_DIALOG_CONTENT_2": "Cette action est irréversible et supprimera toutes les entrées de cette note dans votre historique.",
+    "GO_TO_TUTORIAL": "Aller au tutoriel",
+    "TUTORIAL_NOTICE_TITLE": "Tutoriel",
+    "TUTORIAL_NOTICE_CONTENT": "Avant de commencer à utiliser l'application, je vous recommande vivement de lire le tutoriel pour comprendre son fonctionnement."
 }

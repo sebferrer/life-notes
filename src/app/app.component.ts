@@ -11,6 +11,7 @@ import { DialogSelectLanguageComponent } from './ui/dialog/dialog-select-languag
 import { DialogInfoComponent } from './ui/dialog/dialog-info';
 import { UpdatesService } from './infra/updates.service';
 import { DialogUpdatesComponent } from './ui/dialog/dialog-updates';
+import { DialogTutorialNoticeComponent } from './ui/dialog/dialog-tutorial-notice';
 
 @Component({
 	selector: 'app-root',
@@ -146,12 +147,20 @@ export class AppComponent implements OnInit {
 			}
 		}).afterClosed().subscribe(_ => {
 			this.settingsService.setFirstStart(false).subscribe(() => {
-				this.updateInfoOpenDialog();
+				this.updateInfoOpenDialog(() => this.tutorialNoticeOpenDialog());
 			});
 		});
 	}
 
-	public updateInfoOpenDialog() {
+	public tutorialNoticeOpenDialog() {
+		this.dialog.open(DialogTutorialNoticeComponent, {
+			autoFocus: false,
+			width: '20rem',
+			panelClass: 'custom-modalbox'
+		});
+	}
+
+	public updateInfoOpenDialog(next?: () => void) {
 		this.dialog.open(DialogInfoComponent, {
 			autoFocus: false,
 			width: '20rem',
@@ -167,6 +176,9 @@ export class AppComponent implements OnInit {
 			}
 		}).afterClosed().subscribe(_ => {
 			this.settingsService.setCurrentVersion().subscribe();
+			if (next) {
+				next();
+			}
 		});
 	}
 
