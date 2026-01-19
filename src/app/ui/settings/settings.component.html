@@ -191,6 +191,10 @@
                                     {{ 'SAVE_TEXT_1' | transloco }} <a href="https://life-notes.fr{{ 'PREFIX' | transloco }}tools/save/">{{ 'SAVE_TEXT_2' | transloco }}</a>
                                 </p>
                             </div>
+                            <div class="help-container" (click)="openBackupHelpDialog()">
+                                <mat-icon class="help-icon">help</mat-icon>
+                                <span class="help-text">{{ 'HOW_TO_USE_BACKUPS' | transloco }}</span>
+                            </div>
                         </div>
 
                     </mat-selection-list>

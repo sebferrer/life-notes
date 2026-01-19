@@ -180,9 +180,9 @@
     "TUTORIAL_SLIDE_8_TITLE": "Settings",
     "TUTORIAL_SLIDE_8_TEXT": "This button will bring you to the settings. Particularly important to import or export the app data that isn't stored anywhere but on your smartphone",
     "TUTORIAL_SLIDE_9_TITLE": "Save your data",
-    "TUTORIAL_SLIDE_9_TEXT": "Your data is not automatically backed up on your phone. It is therefore strongly recommended that you perform your own backups as often as possible. The procedure is explained in the settings.",
+    "TUTORIAL_SLIDE_9_TEXT": "Your data is not automatically backed up. You need to manually generate your data in Settings > Import / Export > Save, then use the provided link to download your backup file. For more details, you can click on the <span class='material-icons' style='vertical-align: bottom; color: #3f51b5;'>help</span> icon in the Save section.",
     "TUTORIAL_SLIDE_10_TITLE": "Import your data",
-    "TUTORIAL_SLIDE_10_TEXT": "You can then load the backup file you generated earlier. Ideal when changing smartphones.",
+    "TUTORIAL_SLIDE_10_TEXT": "You can then import the backup file you created via the 'Import' button in Settings. This is required to transfer data to another device.",
     "TUTORIAL_SLIDE_RATEIT_TITLE": "Do you enjoy this app?",
     "TUTORIAL_SLIDE_RATEIT_TEXT_1": "Life-Notes is free, without ad and will always be. I work on it in my free time to keep it that way.",
     "TUTORIAL_SLIDE_RATEIT_TEXT_2": "If you meet any issue, you can contact me at my email address: ",
@@ -251,5 +251,14 @@
     "DELETE_LOG_DIALOG_CONTENT_2": "This action is irreversible and will delete all entries of this note in your history.",
     "GO_TO_TUTORIAL": "Go to tutorial",
     "TUTORIAL_NOTICE_TITLE": "Tutorial",
-    "TUTORIAL_NOTICE_CONTENT": "Before you start using the app, I strongly recommend that you read the tutorial to understand how it works."
+    "TUTORIAL_NOTICE_CONTENT": "Before you start using the app, I strongly recommend that you read the tutorial to understand how it works.",
+    "BACKUP_HELP_DIALOG_TITLE": "Backup Help",
+    "BACKUP_HELP_DIALOG_CONTENT_1": "1. Click 'Generate backup data' to generate your data.",
+    "BACKUP_HELP_DIALOG_CONTENT_2": "2. Copy the data using the dedicated button.",
+    "BACKUP_HELP_DIALOG_CONTENT_3": "3. Click on the 'Click here' link which redirects to my online tool.",
+    "BACKUP_HELP_DIALOG_CONTENT_4": "4. Clear the text field, paste your data, then click 'Download' to get your .json backup file.",
+    "BACKUP_HELP_DIALOG_CONTENT_5": "This .json file can be re-imported later via the 'Import' button in the app.",
+    "BACKUP_HELP_DIALOG_CONTENT_6": "I know this isn't user-friendly, but it's the only stable solution I can currently offer. Thank you for your understanding.",
+    "BACKUP_HELP_DIALOG_CONTENT_7": "It is strongly recommended to perform backups regularly.",
+    "HOW_TO_USE_BACKUPS": "How to use manual backups"
 }

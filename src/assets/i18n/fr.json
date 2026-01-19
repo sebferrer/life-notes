@@ -180,9 +180,9 @@
     "TUTORIAL_SLIDE_8_TITLE": "Paramètres",
     "TUTORIAL_SLIDE_8_TEXT": "Ce bouton vous fera accéder aux paramètres. Notamment important pour importer ou exporter les données de l'application qui ne sont stockées nulle part ailleurs que sur votre smartphone.",
     "TUTORIAL_SLIDE_9_TITLE": "Sauvegardez vos données",
-    "TUTORIAL_SLIDE_9_TEXT": "Vos données ne sont pas sauvegardées automatiquement sur votre téléphone. Il est donc fortement recommandé de faire vos propres sauvegardes le plus souvent possible. La démarche est expliquée dans les paramètres.",
+    "TUTORIAL_SLIDE_9_TEXT": "Vos données ne sont pas sauvegardées automatiquement. Vous devez générer manuellement vos données dans Paramètres > Importer / Exporter > Sauvegarder, puis utiliser le lien fourni pour télécharger votre fichier de sauvegarde. Pour plus de détails, vous pouvez cliquer sur l'icône <span class='material-icons' style='vertical-align: bottom; color: #3f51b5;'>help</span> dans la section Sauvegarder.",
     "TUTORIAL_SLIDE_10_TITLE": "Importez vos données",
-    "TUTORIAL_SLIDE_10_TEXT": "Vous pouvez ensuite charger le fichier de sauvegardes que vous avez généré au préalable. Idéal en cas de changement de smartphone.",
+    "TUTORIAL_SLIDE_10_TEXT": "Vous pouvez ensuite importer le fichier de sauvegarde créé via le bouton 'Importer' dans les Paramètres. C'est nécessaire pour transférer vos données vers un autre appareil.",
     "TUTORIAL_SLIDE_RATEIT_TITLE": "Aimez-vous cette application ?",
     "TUTORIAL_SLIDE_RATEIT_TEXT_1": "Life-Notes est gratuit, sans pub, et le sera toujours. Je travaille dessus sur mon temps libre pour que ça reste le cas.",
     "TUTORIAL_SLIDE_RATEIT_TEXT_2": "Si vous rencontrez le moindre problème, vous pouvez me contacter à mon adresse e-mail : ",
@@ -251,5 +251,14 @@
     "DELETE_LOG_DIALOG_CONTENT_2": "Cette action est irréversible et supprimera toutes les entrées de cette note dans votre historique.",
     "GO_TO_TUTORIAL": "Aller au tutoriel",
     "TUTORIAL_NOTICE_TITLE": "Tutoriel",
-    "TUTORIAL_NOTICE_CONTENT": "Avant de commencer à utiliser l'application, je vous recommande vivement de lire le tutoriel pour comprendre son fonctionnement."
+    "TUTORIAL_NOTICE_CONTENT": "Avant de commencer à utiliser l'application, je vous recommande vivement de lire le tutoriel pour comprendre son fonctionnement.",
+    "BACKUP_HELP_DIALOG_TITLE": "Aide à la sauvegarde",
+    "BACKUP_HELP_DIALOG_CONTENT_1": "1. Cliquez sur 'Générer les données de backup' pour générer vos données.",
+    "BACKUP_HELP_DIALOG_CONTENT_2": "2. Copiez les données via le bouton dédié.",
+    "BACKUP_HELP_DIALOG_CONTENT_3": "3. Cliquez sur le lien 'Cliquez ici' qui redirige vers mon outil en ligne.",
+    "BACKUP_HELP_DIALOG_CONTENT_4": "4. Videz le champ texte, collez vos données, puis cliquez sur 'Download' pour obtenir votre fichier de sauvegarde .json.",
+    "BACKUP_HELP_DIALOG_CONTENT_5": "Ce fichier .json pourra être réimporté ensuite via le bouton 'Importer' de l'application.",
+    "BACKUP_HELP_DIALOG_CONTENT_6": "Je sais que ce n'est pas user-friendly, mais c'est la seule solution stable que je peux actuellement offrir. Merci de votre compréhension.",
+    "BACKUP_HELP_DIALOG_CONTENT_7": "Il est fortement recommandé d'effectuer les sauvegardes régulièrement.",
+    "HOW_TO_USE_BACKUPS": "Comment utiliser les sauvegardes manuelles"
 }

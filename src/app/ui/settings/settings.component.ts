@@ -8,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DialogImportConfirmComponent } from '../dialog/dialog-import-confirm';
 import { DialogSelectBackupComponent } from '../dialog/dialog-select-backup';
+import { DialogInfoComponent } from '../dialog/dialog-info';
 import { BackupService } from 'src/app/infra/backup.service';
 import { DialogExportConfirmComponent } from '../dialog/dialog-export-confirm';
 
@@ -205,5 +206,29 @@ export class SettingsComponent implements OnInit {
 
 	public getWindowLocationOrigin() {
 		return window.location.origin;
+	}
+
+	public openBackupHelpDialog(): void {
+		this.dialog.open(DialogInfoComponent, {
+			autoFocus: false,
+			width: '20rem',
+			panelClass: 'custom-modalbox',
+			data: {
+				title: 'BACKUP_HELP_DIALOG_TITLE',
+				content: [
+					'BACKUP_HELP_DIALOG_CONTENT_1',
+					'BACKUP_HELP_DIALOG_CONTENT_2',
+					'BACKUP_HELP_DIALOG_CONTENT_3',
+					'BACKUP_HELP_DIALOG_CONTENT_4',
+					'BACKUP_HELP_DIALOG_CONTENT_5',
+					'BACKUP_HELP_DIALOG_CONTENT_6',
+					'BACKUP_HELP_DIALOG_CONTENT_7'
+				]
+			}
+		}).afterClosed().subscribe(response => {
+			if (response == null || response.answer !== 'close') {
+				return;
+			}
+		});
 	}
 }
