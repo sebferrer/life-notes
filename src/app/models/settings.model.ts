@@ -7,6 +7,8 @@ export interface ISettings {
 	lastInstall: string;
 	lastUpdate: number;
 	hideDeveloperUpdates: boolean;
+	weeklyReminder: boolean;
+	lastWeeklyReminder: number;
 	showDeveloperMode: boolean;
 	calendarStartOnSunday: boolean;
 	calendarBlockView: boolean;

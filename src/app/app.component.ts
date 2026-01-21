@@ -43,6 +43,7 @@ export class AppComponent implements OnInit {
 			this.initSettings(settings);
 			this.lastUpdate = settings.lastUpdate;
 			this.checkUpdates();
+			this.checkWeeklyReminder(settings);
 			//this.autoBackup();
 		});
 		// this.daysService.reset().subscribe(() => {});
@@ -53,6 +54,35 @@ export class AppComponent implements OnInit {
 			if (updates && updates.length > 0) {
 				const newUpdates = updates.filter(u => u.id > this.lastUpdate);
 				this.updatesCount = newUpdates.length;
+			}
+		});
+	}
+
+	public checkWeeklyReminder(settings: ISettings): void {
+		if (settings.weeklyReminder) {
+			const now = Date.now();
+			const oneWeek = 7 * 24 * 60 * 60 * 1000;
+			if (now - settings.lastWeeklyReminder > oneWeek) {
+				this.openWeeklyReminderDialog();
+				this.settingsService.setLastWeeklyReminder(now).subscribe();
+			}
+		}
+	}
+
+	public openWeeklyReminderDialog() {
+		this.dialog.open(DialogInfoComponent, {
+			autoFocus: false,
+			width: '20rem',
+			panelClass: 'custom-modalbox',
+			data: {
+				title: 'WEEKLY_REMINDER_TITLE',
+				content: [
+					'WEEKLY_REMINDER_CONTENT_1',
+					'WEEKLY_REMINDER_CONTENT_2',
+					'WEEKLY_REMINDER_CONTENT_3',
+					'WEEKLY_REMINDER_CONTENT_4',
+					'WEEKLY_REMINDER_CONTENT_5'
+				]
 			}
 		});
 	}

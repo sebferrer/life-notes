@@ -162,6 +162,30 @@ export class SettingsService {
 		);
 	}
 
+	public setWeeklyReminder(weeklyReminder: boolean): Observable<ISettings> {
+		const settings = this.getSettings();
+		return settings.pipe(
+			switchMap(s => {
+				s.weeklyReminder = weeklyReminder;
+				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
+					map(() => s)
+				);
+			})
+		);
+	}
+
+	public setLastWeeklyReminder(lastWeeklyReminder: number): Observable<ISettings> {
+		const settings = this.getSettings();
+		return settings.pipe(
+			switchMap(s => {
+				s.lastWeeklyReminder = lastWeeklyReminder;
+				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
+					map(() => s)
+				);
+			})
+		);
+	}
+
 	public setHideDeveloperUpdates(hide: boolean): Observable<ISettings> {
 		const settings = this.getSettings();
 		return settings.pipe(
@@ -243,7 +267,9 @@ export class SettingsService {
 						'showDeveloperMode': false,
 						'calendarStartOnSunday': true,
 						'calendarBlockView': false,
-						'painPalette': '2'
+						'painPalette': '2',
+						'weeklyReminder': true,
+						'lastWeeklyReminder': 0
 					};
 					return this.dbContext.asObservable(this.dbContext.settingsCollection.put(settings)).pipe(
 						map(() => settings)
@@ -251,6 +277,14 @@ export class SettingsService {
 				}
 				else {
 					let changed = false;
+					if (s.weeklyReminder == null) {
+						s.weeklyReminder = true;
+						changed = true;
+					}
+					if (s.lastWeeklyReminder == null) {
+						s.lastWeeklyReminder = 0;
+						changed = true;
+					}
 					if (s.painScale == null) {
 						s.painScale = 5;
 						changed = true;

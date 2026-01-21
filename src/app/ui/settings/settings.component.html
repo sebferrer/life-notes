@@ -254,6 +254,10 @@
 					</mat-radio-group>
 				</div>
 				<div class="toggle-container">
+					<span class="toggle-label" transloco="SETTINGS_WEEKLY_REMINDER_LABEL"></span>
+					<mat-slide-toggle [(ngModel)]="weeklyReminder" (change)="setWeeklyReminder()" color="primary"></mat-slide-toggle>
+				</div>
+				<div class="toggle-container">
 					<span class="toggle-label" transloco="SETTINGS_SHOW_DEVELOPER_MODE_LABEL"></span>
 					<mat-slide-toggle [(ngModel)]="showDeveloperMode" (change)="setShowDeveloperMode()" color="primary"></mat-slide-toggle>
 				</div>
