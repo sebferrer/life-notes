@@ -43,15 +43,6 @@ export class SymptomsComponent implements OnInit {
 			});
 	}
 
-	public toggleEditable(symptoms: SymptomViewModel[], symptom: SymptomViewModel): void {
-		for (const s of symptoms) {
-			if (s.key !== symptom.key) {
-				s.editable = false;
-			}
-		}
-		symptom.editable = symptom.editable ? false : true;
-	}
-
 	public openAddDialog(symptom?: ISymptom): void {
 		symptom = symptom == null ? { 'type': null, 'key': null } : symptom;
 		this.dialog.open(DialogAddSymptomComponent, {
