@@ -8,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DialogImportConfirmComponent } from '../dialog/dialog-import-confirm';
 import { DialogSelectBackupComponent } from '../dialog/dialog-select-backup';
+import { DialogInfoComponent } from '../dialog/dialog-info';
 import { BackupService } from 'src/app/infra/backup.service';
 import { DialogExportConfirmComponent } from '../dialog/dialog-export-confirm';
 
@@ -22,6 +23,13 @@ export class SettingsComponent implements OnInit {
 	public selectedSymptom: string;
 	public selectedLanguage: string;
 	public selectedTimeFormat: string;
+	public selectedPainScale: number;
+	public hideDeveloperUpdates: boolean;
+	public showDeveloperMode: boolean;
+	public calendarStartOnSunday: boolean;
+	public calendarBlockView: boolean;
+	public weeklyReminder: boolean;
+	public painPalette: string;
 
 	public debug = 'no error';
 	public backupData = '';
@@ -45,6 +53,15 @@ export class SettingsComponent implements OnInit {
 		this.selectedSymptom = this.globalService.targetSymptomKey;
 		this.selectedLanguage = this.globalService.language;
 		this.selectedTimeFormat = this.globalService.timeFormat;
+		this.selectedPainScale = this.globalService.painScale;
+		this.settingsService.getSettings().subscribe(settings => {
+			this.hideDeveloperUpdates = settings.hideDeveloperUpdates;
+			this.showDeveloperMode = settings.showDeveloperMode;
+			this.calendarStartOnSunday = settings.calendarStartOnSunday;
+			this.calendarBlockView = settings.calendarBlockView;
+			this.weeklyReminder = settings.weeklyReminder;
+			this.painPalette = settings.painPalette;
+		});
 	}
 
 	public setActiveLanguage(): void {
@@ -54,6 +71,34 @@ export class SettingsComponent implements OnInit {
 
 	public setTimeFormat(): void {
 		this.settingsService.setTimeFormat(this.selectedTimeFormat).subscribe();
+	}
+
+	public setPainScale(): void {
+		this.settingsService.setPainScale(this.selectedPainScale).subscribe();
+	}
+
+	public setHideDeveloperUpdates(): void {
+		this.settingsService.setHideDeveloperUpdates(this.hideDeveloperUpdates).subscribe();
+	}
+
+	public setShowDeveloperMode(): void {
+		this.settingsService.setShowDeveloperMode(this.showDeveloperMode).subscribe();
+	}
+
+	public setCalendarStartOnSunday(): void {
+		this.settingsService.setCalendarStartOnSunday(this.calendarStartOnSunday).subscribe();
+	}
+
+	public setCalendarBlockView(): void {
+		this.settingsService.setCalendarBlockView(this.calendarBlockView).subscribe();
+	}
+
+	public setWeeklyReminder(): void {
+		this.settingsService.setWeeklyReminder(this.weeklyReminder).subscribe();
+	}
+
+	public setPainPalette(): void {
+		this.settingsService.setPainPalette(this.painPalette).subscribe();
 	}
 
 	public setTargetSymptom(): void {
@@ -167,5 +212,29 @@ export class SettingsComponent implements OnInit {
 
 	public getWindowLocationOrigin() {
 		return window.location.origin;
+	}
+
+	public openBackupHelpDialog(): void {
+		this.dialog.open(DialogInfoComponent, {
+			autoFocus: false,
+			width: '20rem',
+			panelClass: 'custom-modalbox',
+			data: {
+				title: 'BACKUP_HELP_DIALOG_TITLE',
+				content: [
+					'BACKUP_HELP_DIALOG_CONTENT_1',
+					'BACKUP_HELP_DIALOG_CONTENT_2',
+					'BACKUP_HELP_DIALOG_CONTENT_3',
+					'BACKUP_HELP_DIALOG_CONTENT_4',
+					'BACKUP_HELP_DIALOG_CONTENT_5',
+					'BACKUP_HELP_DIALOG_CONTENT_6',
+					'BACKUP_HELP_DIALOG_CONTENT_7'
+				]
+			}
+		}).afterClosed().subscribe(response => {
+			if (response == null || response.answer !== 'close') {
+				return;
+			}
+		});
 	}
 }

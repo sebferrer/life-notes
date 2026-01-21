@@ -3,7 +3,18 @@ import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
 	selector: 'app-dialog-no-symptom-warning',
-	templateUrl: 'dialog-no-symptom-warning.component.html'
+	templateUrl: 'dialog-no-symptom-warning.component.html',
+	styles: [`
+		.tutorial-hint {
+			margin-top: 20px;
+			font-weight: 500;
+		}
+		.tutorial-button-container {
+			display: flex;
+			justify-content: center;
+			margin-top: 10px;
+		}
+	`]
 })
 export class DialogNoSymptomWarningComponent {
 	constructor(

@@ -51,7 +51,7 @@
 												[ngClass]="globalService.timeFormat === 'us' ? 'event-time-us' : 'event-time-eu'">
 												{{ displayTime(content.time) }}</div>
 											<div class="event-content">{{ symptomMap.get(content.key) }}
-												[{{ content.pain }}/5]
+												[{{ getPainValue(content.pain) }}/{{ painScale }}]
 											</div>
 										</div>
 										<div *ngSwitchCase="'log'" class="event">
@@ -86,7 +86,7 @@
 						<div class="symptom-overview-container"
 							(click)="openEditSymptomOverviewDialog(dayContent.date)">
 							<mat-icon
-								class="symptom-overview-icon color-{{ symptomPainColorMap.get(dayContent.getSymptomPain(globalService.targetSymptomKey)) }}">
+								class="symptom-overview-icon color-{{ getPainColor(dayContent.getSymptomPain(globalService.targetSymptomKey)) }}">
 								fiber_manual_record</mat-icon>
 						</div>
 					</div>

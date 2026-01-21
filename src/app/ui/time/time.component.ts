@@ -238,4 +238,16 @@ export abstract class ATimeComponent {
 		}
 		return format24H(time);
 	}
+
+	public get painScale(): number {
+		return this.globalService.painScale;
+	}
+
+	public getPainValue(pain: number): number {
+		return this.painScale === 10 ? pain * 2 : Math.ceil(pain);
+	}
+
+	public getPainColor(pain: number): string {
+		return this.symptomPainColorMap.get(Math.ceil(pain));
+	}
 }

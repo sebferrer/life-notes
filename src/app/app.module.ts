@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatBadgeModule } from '@angular/material/badge';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
@@ -20,6 +21,8 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatRadioModule } from '@angular/material/radio';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
@@ -62,10 +65,15 @@ import { SwipingFingerComponent } from './ui/graphic/swiping-finger';
 import { Market } from '@ionic-native/market/ngx';
 import { MedsService } from './infra/meds.service';
 import { DialogConfirmComponent } from './ui/dialog/dialog-confirm';
+import { DialogEditMedComponent } from './ui/dialog/dialog-edit-med/dialog-edit-med.component';
+import { DialogEditLogComponent } from './ui/dialog/dialog-edit-log/dialog-edit-log.component';
 import { LogsService } from './infra/logs.service';
 import { LogsComponent } from './ui/logs/logs.component';
 import { DialogSelectLanguageComponent } from './ui/dialog/dialog-select-language';
 import { MonthlyReportComponent } from './ui/monthly-report';
+import { DialogUpdatesComponent } from './ui/dialog/dialog-updates';
+
+import { DialogTutorialNoticeComponent } from './ui/dialog/dialog-tutorial-notice';
 
 @NgModule({
 	declarations: [
@@ -99,6 +107,10 @@ import { MonthlyReportComponent } from './ui/monthly-report';
 		DialogConfirmComponent,
 		DialogSelectLanguageComponent,
 		BottomSheetAddEventComponent,
+		DialogEditMedComponent,
+		DialogEditLogComponent,
+		DialogUpdatesComponent,
+		DialogTutorialNoticeComponent,
 
 		// Helpers
 		InfiniteScrollComponent
@@ -112,6 +124,7 @@ import { MonthlyReportComponent } from './ui/monthly-report';
 		MatMenuModule,
 		MatButtonModule,
 		MatIconModule,
+		MatBadgeModule,
 		MatToolbarModule,
 		MatProgressSpinnerModule,
 		MatCardModule,
@@ -129,6 +142,8 @@ import { MonthlyReportComponent } from './ui/monthly-report';
 		MatBottomSheetModule,
 		MatExpansionModule,
 		MatAutocompleteModule,
+		MatSlideToggleModule,
+		MatRadioModule,
 		NgxMaterialTimepickerModule,
 		TranslocoRootModule,
 		ChartsModule,
@@ -172,7 +187,10 @@ import { MonthlyReportComponent } from './ui/monthly-report';
 		DialogSelectSymptomComponent,
 		DialogSelectBackupComponent,
 		DialogInfoComponent,
-		DialogConfirmComponent
+		DialogConfirmComponent,
+		DialogEditMedComponent,
+		DialogUpdatesComponent,
+		DialogTutorialNoticeComponent
 	],
 	bootstrap: [AppComponent]
 })

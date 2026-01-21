@@ -7,9 +7,9 @@
     <mat-form-field>
         <mat-label transloco="PAIN"></mat-label>
         <div id="pain-container">
-            <mat-slider [max]="5" [min]="0" [step]="1" [thumbLabel]="true" [(ngModel)]="data.symptomOverview.pain">
+            <mat-slider [max]="painScale" [min]="0" [step]="1" [thumbLabel]="true" [(ngModel)]="painValue">
             </mat-slider>
-            <input matInput [(ngModel)]="data.symptomOverview.pain" readonly>
+            <input matInput [(ngModel)]="painValue" readonly>
         </div>
     </mat-form-field>
     <div mat-dialog-actions>
