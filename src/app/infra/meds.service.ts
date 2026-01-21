@@ -1,4 +1,4 @@
-import { Observable, of } from 'rxjs';
+import { Observable, of, forkJoin } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { DbContext } from './database';
 import { map, tap, switchMap, catchError } from 'rxjs/operators';
@@ -37,23 +37,29 @@ export class MedsService {
 						return;
 					}
 					day.meds.forEach(med => {
+						const quantity = parseFloat('' + med.quantity);
 						const currentMed =
-							medHistories.find(medHistory => medHistory.key === med.key && medHistory.quantity == med.quantity);
+							medHistories.find(medHistory => medHistory.key === med.key && (medHistory.quantity === quantity || (isNaN(medHistory.quantity) && isNaN(quantity))));
 						if (currentMed == null) {
-							medHistories.push({ key: med.key, quantity: parseFloat('' + med.quantity), occurrences: 1, lastEntry: day.date });
+							medHistories.push({ key: med.key, quantity: quantity, occurrences: 1, lastEntry: day.date });
 						} else {
-							currentMed.quantity = parseFloat('' + currentMed.quantity);
 							currentMed.occurrences++;
 							currentMed.lastEntry = day.date;
 						}
 					});
 				});
-				this.reset().subscribe(() => {
-					medHistories.forEach(medHistory => {
-						this.createNewMed(medHistory)
-					});
-				});
 				return medHistories;
+			}),
+			switchMap(medHistories => {
+				return this.reset().pipe(
+					switchMap(() => {
+						if (medHistories.length === 0) {
+							return of(medHistories);
+						}
+						const tasks = medHistories.map(medHistory => this.createNewMed(medHistory));
+						return forkJoin(tasks).pipe(map(() => medHistories));
+					})
+				);
 			})
 		);
 	}
@@ -84,7 +90,10 @@ export class MedsService {
 				days.forEach(day => {
 					const initialLength = day.meds.length;
 					// Use loose equality for quantity to handle string/number differences
-					day.meds = day.meds.filter(m => !(m.key === key && m.quantity == quantity));
+					day.meds = day.meds.filter(m => {
+						const mQuantity = parseFloat('' + m.quantity);
+						return !(m.key === key && (mQuantity === quantity || (isNaN(mQuantity) && isNaN(quantity))));
+					});
 					if (day.meds.length !== initialLength) {
 						changedDays.push(day);
 					}
@@ -105,8 +114,9 @@ export class MedsService {
 				days.forEach(day => {
 					let changed = false;
 					day.meds.forEach(med => {
+						const medQuantity = parseFloat('' + med.quantity);
 						// Use loose equality for quantity to handle string/number differences
-						if (med.key === oldKey && med.quantity == oldQuantity) {
+						if (med.key === oldKey && (medQuantity === oldQuantity || (isNaN(medQuantity) && isNaN(oldQuantity)))) {
 							med.key = newKey;
 							med.quantity = newQuantity;
 							changed = true;
