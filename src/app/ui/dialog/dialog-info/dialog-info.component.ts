@@ -4,6 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 export interface IDialogData {
 	title: string;
 	content: string[];
+	contactEmail?: string;
 }
 
 @Component({
@@ -18,5 +19,9 @@ export class DialogInfoComponent {
 
 	public onCloseClick(): void {
 		this.dialogRef.close({ 'answer': 'close' });
+	}
+
+	public onEmailClick(): void {
+		window.location.href = `mailto:${this.data.contactEmail}`;
 	}
 }

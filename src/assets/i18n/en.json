@@ -218,5 +218,18 @@
     "UPDATE_CONTENT_15": "I strongly recommend that you manually back up your data right now to avoid losing it in case of an Android update or if you change your smartphone.",
     "UPDATE_CONTENT_16": "I also recommend performing these backups regularly.",
     "UPDATE_CONTENT_17": "Thank you for supporting Life-Notes!",
-    "UPDATE_CONTENT_18": "~ Seb, volunteer developer."
+    "UPDATE_CONTENT_18": "~ Seb, volunteer developer.",
+    "BETA_INVITATION_TITLE": "Call for Volunteers (Beta Test)",
+    "BETA_INVITATION_CONTENT_1": "Hello everyone! A major new version of Life Notes is in the works.",
+    "BETA_INVITATION_CONTENT_2": "It includes many new features and long-awaited fixes.",
+    "BETA_INVITATION_CONTENT_3": "I am looking for volunteer beta testers to help me finalize this version.",
+    "BETA_INVITATION_CONTENT_4": "No obligation, this is only for those who wish to help the volunteer developer.",
+    "BETA_INVITATION_CONTENT_5": "Please note: spots are limited to the first 100 volunteers.",
+    "BETA_INVITATION_CONTENT_6": "You can unsubscribe at any time.",
+    "BETA_INVITATION_CONTENT_7": "I will send you emails to notify you of updates and ask for your feedback.",
+    "BETA_INVITATION_CONTENT_8": "If you are interested, please send an email to: kimida.life.notes@gmail.com",
+    "BETA_INVITATION_CONTENT_9": "Thank you in advance for your precious help!",
+    "BETA_INVITATION_CONTENT_10": "~Seb",
+    "SEND_EMAIL": "Send an email"
+
 }

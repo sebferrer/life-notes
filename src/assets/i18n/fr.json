@@ -218,5 +218,18 @@
     "UPDATE_CONTENT_15": "Je vous recommande très fortement de sauvegarder dès maintenant vos données manuellement afin de ne pas risquer de les perdre en cas de mise à jour Android ou de changement de smartphone.",
     "UPDATE_CONTENT_16": "Je vous recommande également d'effectuer ces sauvegardes régulièrement.",
     "UPDATE_CONTENT_17": "Merci à vous de soutenir Life-Notes !",
-    "UPDATE_CONTENT_18": "~ Seb, développeur bénévole."
+    "UPDATE_CONTENT_18": "~ Seb, développeur bénévole.",
+    "BETA_INVITATION_TITLE": "Appel à volontaires (Beta-test)",
+    "BETA_INVITATION_CONTENT_1": "Bonjour à tous ! Une nouvelle version majeure de Life Notes est en préparation.",
+    "BETA_INVITATION_CONTENT_2": "Elle embarque de nombreuses nouvelles fonctionnalités et correctifs attendus.",
+    "BETA_INVITATION_CONTENT_3": "Je suis à la recherche de beta-testers volontaires pour m'aider à finaliser cette version.",
+    "BETA_INVITATION_CONTENT_4": "Aucune obligation, c'est uniquement pour ceux qui souhaitent aider le développeur bénévole.",
+    "BETA_INVITATION_CONTENT_5": "Attention : les places sont limitées aux 100 premiers volontaires.",
+    "BETA_INVITATION_CONTENT_6": "Vous pourrez vous désinscrire à tout moment.",
+    "BETA_INVITATION_CONTENT_7": "Je vous enverrai des mails pour vous prévenir des mises à jour et recueillir vos retours.",
+    "BETA_INVITATION_CONTENT_8": "Si vous êtes intéressé(e), envoyez un mail à : kimida.life.notes@gmail.com",
+    "BETA_INVITATION_CONTENT_9": "Merci d'avance pour votre aide précieuse !",
+    "BETA_INVITATION_CONTENT_10": "~Seb",
+    "SEND_EMAIL": "Envoyer un email"
+
 }

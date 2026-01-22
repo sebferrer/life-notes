@@ -70,16 +70,49 @@ export class AppComponent implements OnInit {
 
 		this.settingsService.getSettingsCurrentVersion().subscribe(settingsVersion => {
 			this.settingsService.getCurrentVersion().subscribe(currentVersion => {
+				let updateShown = false;
 				if (typeof settingsVersion === 'string' && settingsVersion.startsWith('0.')) {
 					if (settingsVersion < currentVersion) {
 						this.updateInfoOpenDialog();
 						this.settingsService.setCurrentVersion().subscribe();
+						updateShown = true;
 					}
 				} else {
 					this.updateInfoOpenDialog();
 					this.settingsService.setCurrentVersion().subscribe();
+					updateShown = true;
+				}
+
+				if (!updateShown && !settings.firstStart) {
+					this.checkAndShowBetaInvitation();
 				}
 			});
+		});
+	}
+
+	public checkAndShowBetaInvitation() {
+		this.settingsService.getSettings().subscribe(settings => {
+			if (settings != null && !settings.beta1_0_0_invitation) {
+				this.openBetaInvitation();
+			}
+		});
+	}
+
+	public openBetaInvitation() {
+		this.dialog.open(DialogInfoComponent, {
+			autoFocus: false,
+			width: '20rem',
+			panelClass: 'custom-modalbox',
+			data: {
+				title: 'BETA_INVITATION_TITLE',
+				content: ['BETA_INVITATION_CONTENT_1', 'BETA_INVITATION_CONTENT_2', 'BETA_INVITATION_CONTENT_3',
+					'BETA_INVITATION_CONTENT_4', 'BETA_INVITATION_CONTENT_5', 'BETA_INVITATION_CONTENT_6',
+					'BETA_INVITATION_CONTENT_7', 'BETA_INVITATION_CONTENT_8', 'BETA_INVITATION_CONTENT_9',
+					'BETA_INVITATION_CONTENT_10'],
+				contactEmail: 'kimida.life.notes@gmail.com'
+			}
+		}).afterClosed().subscribe(_ => {
+			this.settingsService.setBetaInvitationSeen(true).subscribe();
 		});
 	}
 
@@ -135,6 +168,7 @@ export class AppComponent implements OnInit {
 			}
 		}).afterClosed().subscribe(_ => {
 			this.settingsService.setCurrentVersion().subscribe();
+			this.checkAndShowBetaInvitation();
 		});
 	}
 
