@@ -116,6 +116,18 @@ export class SettingsService {
 		);
 	}
 
+	public setBetaInvitationSeen(seen: boolean): Observable<ISettings> {
+		const settings = this.getSettings();
+		return settings.pipe(
+			switchMap(s => {
+				s.beta1_0_0_invitation = seen;
+				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
+					map(() => s)
+				);
+			})
+		);
+	}
+
 	/*public updateLastInstall(): Observable<ISettings> {
 		const settings = this.getSettings();
 		return settings.pipe(

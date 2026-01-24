@@ -4,4 +4,5 @@ export interface ISettings {
 	timeFormat: string;
 	firstStart: boolean;
 	lastInstall: string;
+	beta1_0_0_invitation?: boolean;
 }

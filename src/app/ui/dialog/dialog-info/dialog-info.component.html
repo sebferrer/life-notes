@@ -3,5 +3,6 @@
     <p *ngFor="let content of data.content">{{ content | transloco }}</p>
 </div>
 <div mat-dialog-actions>
+    <button *ngIf="data.contactEmail" mat-button (click)="onEmailClick()" color="primary" transloco="SEND_EMAIL"></button>
     <button mat-button mat-dialog-close="" (click)="onCloseClick()" color="primary" transloco="CLOSE"></button>
 </div>
