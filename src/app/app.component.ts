@@ -22,8 +22,9 @@ export class AppComponent implements OnInit {
 	public title = 'Life Notes - Symptom Tracking';
 	public symptoms: ISymptom[];
 	public symptoms$: Subject<ISymptom[]>;
-	public updatesCount: number = 0;
-	private lastUpdate: number = 0;
+	// DEVELOPER UPDATES NOTIFICATION FEATURE DISABLED
+	// public updatesCount: number = 0;
+	// private lastUpdate: number = 0;
 
 	constructor(
 		public globalService: GlobalService,
@@ -41,22 +42,24 @@ export class AppComponent implements OnInit {
 		// this.updateSymptoms();
 		this.settingsService.initSettings().subscribe(settings => {
 			this.initSettings(settings);
-			this.lastUpdate = settings.lastUpdate;
-			this.checkUpdates();
+			// DEVELOPER UPDATES NOTIFICATION FEATURE DISABLED
+			// this.lastUpdate = settings.lastUpdate;
+			// this.checkUpdates();
 			this.checkWeeklyReminder(settings);
 			//this.autoBackup();
 		});
 		// this.daysService.reset().subscribe(() => {});
 	}
 
-	public checkUpdates(): void {
-		this.updatesService.getUpdates().subscribe(updates => {
-			if (updates && updates.length > 0) {
-				const newUpdates = updates.filter(u => u.id > this.lastUpdate);
-				this.updatesCount = newUpdates.length;
-			}
-		});
-	}
+	// DEVELOPER UPDATES NOTIFICATION FEATURE DISABLED
+	// public checkUpdates(): void {
+	// 	this.updatesService.getUpdates().subscribe(updates => {
+	// 		if (updates && updates.length > 0) {
+	// 			const newUpdates = updates.filter(u => u.id > this.lastUpdate);
+	// 			this.updatesCount = newUpdates.length;
+	// 		}
+	// 	});
+	// }
 
 	public checkWeeklyReminder(settings: ISettings): void {
 		if (settings.weeklyReminder) {
@@ -87,20 +90,21 @@ export class AppComponent implements OnInit {
 		});
 	}
 
-	public openUpdates(): void {
-		this.dialog.open(DialogUpdatesComponent, {
-			autoFocus: false,
-			width: '90%',
-			height: '90%',
-			maxWidth: '100vw',
-			maxHeight: '100vh',
-			panelClass: 'custom-modalbox',
-			data: { lastUpdate: this.lastUpdate }
-		}).afterClosed().subscribe(() => {
-			this.updatesCount = 0;
-			this.settingsService.getSettings().subscribe(s => this.lastUpdate = s.lastUpdate);
-		});
-	}
+	// DEVELOPER UPDATES NOTIFICATION FEATURE DISABLED
+	// public openUpdates(): void {
+	// 	this.dialog.open(DialogUpdatesComponent, {
+	// 		autoFocus: false,
+	// 		width: '90%',
+	// 		height: '90%',
+	// 		maxWidth: '100vw',
+	// 		maxHeight: '100vh',
+	// 		panelClass: 'custom-modalbox',
+	// 		data: { lastUpdate: this.lastUpdate }
+	// 	}).afterClosed().subscribe(() => {
+	// 		this.updatesCount = 0;
+	// 		this.settingsService.getSettings().subscribe(s => this.lastUpdate = s.lastUpdate);
+	// 	});
+	// }
 
 	public autoBackup(): void {
 		this.importerExporterService.exportData(true);
@@ -125,7 +129,8 @@ export class AppComponent implements OnInit {
 		this.initTimeFormat(settings);
 		this.initPainScale(settings);
 		this.initTargetSymptom(settings);
-		this.globalService.hideDeveloperUpdates = settings.hideDeveloperUpdates;
+		// DEVELOPER UPDATES NOTIFICATION FEATURE DISABLED
+		// this.globalService.hideDeveloperUpdates = settings.hideDeveloperUpdates;
 		this.globalService.calendarStartOnSunday = settings.calendarStartOnSunday;
 		this.globalService.calendarBlockView = settings.calendarBlockView;
 		this.globalService.painPalette = settings.painPalette;

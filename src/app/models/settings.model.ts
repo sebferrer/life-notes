@@ -6,7 +6,8 @@ export interface ISettings {
 	firstStart: boolean;
 	lastInstall: string;
 	lastUpdate: number;
-	hideDeveloperUpdates: boolean;
+	// DEVELOPER UPDATES NOTIFICATION FEATURE DISABLED
+	// hideDeveloperUpdates: boolean;
 	weeklyReminder: boolean;
 	lastWeeklyReminder: number;
 	showDeveloperMode: boolean;

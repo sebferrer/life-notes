@@ -186,18 +186,19 @@ export class SettingsService {
 		);
 	}
 
-	public setHideDeveloperUpdates(hide: boolean): Observable<ISettings> {
-		const settings = this.getSettings();
-		return settings.pipe(
-			switchMap(s => {
-				s.hideDeveloperUpdates = hide;
-				this.globalService.hideDeveloperUpdates = hide;
-				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
-					map(() => s)
-				);
-			})
-		);
-	}
+	// DEVELOPER UPDATES NOTIFICATION FEATURE DISABLED
+	// public setHideDeveloperUpdates(hide: boolean): Observable<ISettings> {
+	// 	const settings = this.getSettings();
+	// 	return settings.pipe(
+	// 		switchMap(s => {
+	// 			s.hideDeveloperUpdates = hide;
+	// 			this.globalService.hideDeveloperUpdates = hide;
+	// 			return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
+	// 				map(() => s)
+	// 			);
+	// 		})
+	// 	);
+	// }
 
 	public setShowDeveloperMode(show: boolean): Observable<ISettings> {
 		const settings = this.getSettings();
@@ -263,7 +264,8 @@ export class SettingsService {
 						'firstStart': true,
 						'lastInstall': this.CURRENT_VERSION,
 						'lastUpdate': 0,
-						'hideDeveloperUpdates': false,
+						// DEVELOPER UPDATES NOTIFICATION FEATURE DISABLED
+						// 'hideDeveloperUpdates': false,
 						'showDeveloperMode': false,
 						'calendarStartOnSunday': true,
 						'calendarBlockView': false,
@@ -293,10 +295,11 @@ export class SettingsService {
 						s.lastUpdate = 0;
 						changed = true;
 					}
-					if (s.hideDeveloperUpdates == null) {
-						s.hideDeveloperUpdates = false;
-						changed = true;
-					}
+					// DEVELOPER UPDATES NOTIFICATION FEATURE DISABLED
+					// if (s.hideDeveloperUpdates == null) {
+					// 	s.hideDeveloperUpdates = false;
+					// 	changed = true;
+					// }
 					if (s.showDeveloperMode == null) {
 						s.showDeveloperMode = false;
 						changed = true;

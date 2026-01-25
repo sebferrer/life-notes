@@ -31,11 +31,12 @@ export class GlobalService {
 		this._painScale = painScale;
 	}
 
-	private _hideDeveloperUpdates: boolean = false;
-	public get hideDeveloperUpdates(): boolean { return this._hideDeveloperUpdates; }
-	public set hideDeveloperUpdates(hide: boolean) {
-		this._hideDeveloperUpdates = hide;
-	}
+	// DEVELOPER UPDATES NOTIFICATION FEATURE DISABLED
+	// private _hideDeveloperUpdates: boolean = false;
+	// public get hideDeveloperUpdates(): boolean { return this._hideDeveloperUpdates; }
+	// public set hideDeveloperUpdates(hide: boolean) {
+	// 	this._hideDeveloperUpdates = hide;
+	// }
 
 	private _symptoms$: Observable<ISymptom[]>;
 	public get symptoms$(): Observable<ISymptom[]> { return this._symptoms$; }

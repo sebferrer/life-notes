@@ -157,7 +157,7 @@
                         </mat-list-option>
 
                         <mat-list-option (click)="showManualBackupDiv()">
-                         <div class="list-icon">
+                            <div class="list-icon">
                                 <mat-icon>save_alt</mat-icon>
                             </div>
                             <div class="list-item-text">
@@ -170,13 +170,13 @@
                                 <div class="panel-title" transloco="SETTINGS_MANUAL_SAVE_TITLE"></div>
                                 <div class="panel-description" transloco="SETTINGS_MANUAL_SAVE_SUBTITLE"></div>
                             </mat-expansion-panel-header>
-                            
+
                             <div class="mat-expansion-panel-content">
                                 <button id="generateBackupButton" mat-raised-button color="primary"
                                     transloco="SETTINGS_MANUAL_SAVE_BUTTON" (click)="generateBackupData()"></button>
                                 <div *ngIf="generateData">
-                                    <button id="copyButton" mat-icon-button type="button" [disabled]="showCopySuccessMessage"
-                                        (click)="copyToClipboard()">
+                                    <button id="copyButton" mat-icon-button type="button"
+                                        [disabled]="showCopySuccessMessage" (click)="copyToClipboard()">
                                         <mat-icon>file_copy</mat-icon>
                                         <ng-template transloco let-t>
                                             {{ showCopySuccessMessage ? t('COPIED') : t('COPY') }}
@@ -188,7 +188,9 @@
                             </div>
                             <div class="save-text">
                                 <p>
-                                    {{ 'SAVE_TEXT_1' | transloco }} <a href="https://life-notes.fr{{ 'PREFIX' | transloco }}tools/save/">{{ 'SAVE_TEXT_2' | transloco }}</a>
+                                    {{ 'SAVE_TEXT_1' | transloco }} <a
+                                        href="https://life-notes.fr{{ 'PREFIX' | transloco }}tools/save/">{{
+                                        'SAVE_TEXT_2' | transloco }}</a>
                                 </p>
                             </div>
                             <div class="help-container" (click)="openBackupHelpDialog()">
@@ -234,35 +236,42 @@
             </mat-expansion-panel-header>
 
             <div class="mat-expansion-panel-content">
-                <div class="toggle-container">
+                <!-- DEVELOPER UPDATES NOTIFICATION FEATURE DISABLED -->
+                <!-- <div class="toggle-container">
                     <span class="toggle-label" transloco="SETTINGS_HIDE_DEVELOPER_UPDATES_LABEL"></span>
-                    <mat-slide-toggle [(ngModel)]="hideDeveloperUpdates" (change)="setHideDeveloperUpdates()" color="primary"></mat-slide-toggle>
+                    <mat-slide-toggle [(ngModel)]="hideDeveloperUpdates" (change)="setHideDeveloperUpdates()"
+                        color="primary"></mat-slide-toggle>
+                </div> -->
+                <div class="toggle-container">
+                    <span class="toggle-label" transloco="SETTINGS_CALENDAR_START_SUNDAY_LABEL"></span>
+                    <mat-slide-toggle [(ngModel)]="calendarStartOnSunday" (change)="setCalendarStartOnSunday()"
+                        color="primary"></mat-slide-toggle>
                 </div>
-				<div class="toggle-container">
-					<span class="toggle-label" transloco="SETTINGS_CALENDAR_START_SUNDAY_LABEL"></span>
-					<mat-slide-toggle [(ngModel)]="calendarStartOnSunday" (change)="setCalendarStartOnSunday()" color="primary"></mat-slide-toggle>
-				</div>
-				<div class="toggle-container">
-					<span class="toggle-label" transloco="SETTINGS_CALENDAR_BLOCK_VIEW_LABEL"></span>
-					<mat-slide-toggle [(ngModel)]="calendarBlockView" (change)="setCalendarBlockView()" color="primary"></mat-slide-toggle>
-				</div>
-				<div class="toggle-container">
-					<span class="toggle-label" transloco="SETTINGS_PAIN_PALETTE_LABEL"></span>
-					<mat-radio-group [(ngModel)]="painPalette" (change)="setPainPalette()" color="primary" class="radio-group">
-						<mat-radio-button value="1" class="radio-button">1</mat-radio-button>
-						<mat-radio-button value="2" class="radio-button">2</mat-radio-button>
-					</mat-radio-group>
-				</div>
-				<div class="toggle-container">
-					<span class="toggle-label" transloco="SETTINGS_WEEKLY_REMINDER_LABEL"></span>
-					<mat-slide-toggle [(ngModel)]="weeklyReminder" (change)="setWeeklyReminder()" color="primary"></mat-slide-toggle>
-				</div>
-				<div class="toggle-container">
-					<span class="toggle-label" transloco="SETTINGS_SHOW_DEVELOPER_MODE_LABEL"></span>
-					<mat-slide-toggle [(ngModel)]="showDeveloperMode" (change)="setShowDeveloperMode()" color="primary"></mat-slide-toggle>
-				</div>
-			</div>
-		</mat-expansion-panel>
+                <div class="toggle-container">
+                    <span class="toggle-label" transloco="SETTINGS_CALENDAR_BLOCK_VIEW_LABEL"></span>
+                    <mat-slide-toggle [(ngModel)]="calendarBlockView" (change)="setCalendarBlockView()"
+                        color="primary"></mat-slide-toggle>
+                </div>
+                <div class="toggle-container">
+                    <span class="toggle-label" transloco="SETTINGS_PAIN_PALETTE_LABEL"></span>
+                    <mat-radio-group [(ngModel)]="painPalette" (change)="setPainPalette()" color="primary"
+                        class="radio-group">
+                        <mat-radio-button value="1" class="radio-button">1</mat-radio-button>
+                        <mat-radio-button value="2" class="radio-button">2</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+                <div class="toggle-container">
+                    <span class="toggle-label" transloco="SETTINGS_WEEKLY_REMINDER_LABEL"></span>
+                    <mat-slide-toggle [(ngModel)]="weeklyReminder" (change)="setWeeklyReminder()"
+                        color="primary"></mat-slide-toggle>
+                </div>
+                <div class="toggle-container">
+                    <span class="toggle-label" transloco="SETTINGS_SHOW_DEVELOPER_MODE_LABEL"></span>
+                    <mat-slide-toggle [(ngModel)]="showDeveloperMode" (change)="setShowDeveloperMode()"
+                        color="primary"></mat-slide-toggle>
+                </div>
+            </div>
+        </mat-expansion-panel>
 
         <mat-expansion-panel hideToggle *ngIf="showDeveloperMode">
             <mat-expansion-panel-header class="mat-expansion-panel-header">

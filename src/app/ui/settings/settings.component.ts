@@ -24,7 +24,8 @@ export class SettingsComponent implements OnInit {
 	public selectedLanguage: string;
 	public selectedTimeFormat: string;
 	public selectedPainScale: number;
-	public hideDeveloperUpdates: boolean;
+	// DEVELOPER UPDATES NOTIFICATION FEATURE DISABLED
+	// public hideDeveloperUpdates: boolean;
 	public showDeveloperMode: boolean;
 	public calendarStartOnSunday: boolean;
 	public calendarBlockView: boolean;
@@ -55,7 +56,8 @@ export class SettingsComponent implements OnInit {
 		this.selectedTimeFormat = this.globalService.timeFormat;
 		this.selectedPainScale = this.globalService.painScale;
 		this.settingsService.getSettings().subscribe(settings => {
-			this.hideDeveloperUpdates = settings.hideDeveloperUpdates;
+			// DEVELOPER UPDATES NOTIFICATION FEATURE DISABLED
+			// this.hideDeveloperUpdates = settings.hideDeveloperUpdates;
 			this.showDeveloperMode = settings.showDeveloperMode;
 			this.calendarStartOnSunday = settings.calendarStartOnSunday;
 			this.calendarBlockView = settings.calendarBlockView;
@@ -77,9 +79,10 @@ export class SettingsComponent implements OnInit {
 		this.settingsService.setPainScale(this.selectedPainScale).subscribe();
 	}
 
-	public setHideDeveloperUpdates(): void {
-		this.settingsService.setHideDeveloperUpdates(this.hideDeveloperUpdates).subscribe();
-	}
+	// DEVELOPER UPDATES NOTIFICATION FEATURE DISABLED
+	// public setHideDeveloperUpdates(): void {
+	// 	this.settingsService.setHideDeveloperUpdates(this.hideDeveloperUpdates).subscribe();
+	// }
 
 	public setShowDeveloperMode(): void {
 		this.settingsService.setShowDeveloperMode(this.showDeveloperMode).subscribe();
@@ -207,7 +210,7 @@ export class SettingsComponent implements OnInit {
 
 	public showManualBackupDiv() {
 		const div: HTMLInputElement = document.getElementById('manual-backup-div') as HTMLInputElement;
-		div.style.display = "block"; 
+		div.style.display = "block";
 	}
 
 	public getWindowLocationOrigin() {

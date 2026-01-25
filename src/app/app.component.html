@@ -25,9 +25,10 @@
 			(click)="globalService.targetSymptomKey = symptom.key">
 			{{ symptom.label }}</button>
 	</mat-menu>
-	<button *ngIf="!globalService.hideDeveloperUpdates" mat-icon-button id="menu-icon-updates" class="menu-icon" (click)="openUpdates()" aria-label="Updates">
+	<!-- DEVELOPER UPDATES NOTIFICATION FEATURE DISABLED -->
+	<!-- <button *ngIf="!globalService.hideDeveloperUpdates" mat-icon-button id="menu-icon-updates" class="menu-icon" (click)="openUpdates()" aria-label="Updates">
 		<mat-icon [matBadge]="updatesCount > 0 ? updatesCount : null" matBadgeColor="warn">notifications</mat-icon>
-	</button>
+	</button> -->
 	<button mat-icon-button id="menu-icon-settings" class="menu-icon" routerLink="/settings" aria-label="Settings">
 		<mat-icon>settings</mat-icon>
 	</button>
