@@ -109,7 +109,7 @@ export class AppComponent implements OnInit {
 					'BETA_INVITATION_CONTENT_4', 'BETA_INVITATION_CONTENT_5', 'BETA_INVITATION_CONTENT_6',
 					'BETA_INVITATION_CONTENT_7', 'BETA_INVITATION_CONTENT_8', 'BETA_INVITATION_CONTENT_9',
 					'BETA_INVITATION_CONTENT_10'],
-				contactEmail: 'kimida.life.notes@gmail.com'
+				contactEmail: 'kimida.life.notes+beta-test@gmail.com'
 			}
 		}).afterClosed().subscribe(_ => {
 			this.settingsService.setBetaInvitationSeen(true).subscribe();
