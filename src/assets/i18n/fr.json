@@ -267,5 +267,15 @@
     "BACKUP_HELP_DIALOG_CONTENT_5": "Ce fichier .json pourra être réimporté ensuite via le bouton 'Importer' de l'application.",
     "BACKUP_HELP_DIALOG_CONTENT_6": "Je sais que ce n'est pas user-friendly, mais c'est la seule solution stable que je peux actuellement offrir. Merci de votre compréhension.",
     "BACKUP_HELP_DIALOG_CONTENT_7": "Il est fortement recommandé d'effectuer les sauvegardes régulièrement.",
-    "HOW_TO_USE_BACKUPS": "Comment utiliser les sauvegardes manuelles"
+    "HOW_TO_USE_BACKUPS": "Comment utiliser les sauvegardes manuelles",
+    "SETTINGS_ABOUT_TITLE": "À propos",
+    "SETTINGS_ABOUT_SUBTITLE": "Informations sur l'application",
+    "SETTINGS_ABOUT_LINK": "En savoir plus",
+    "ABOUT_TITLE": "À propos de Life Notes",
+    "ABOUT_DEVELOPER_TITLE": "Développeur bénévole",
+    "ABOUT_DEVELOPER_CONTENT": "Je m'appelle Seb, je suis un développeur bénévole. J'ai créé cette application pour que les gens puissent avoir accès gratuitement, sans publicité et sans collecte de données à un outil qui pourrait les aider à suivre leur santé.",
+    "ABOUT_BACKUP_REMINDER_TITLE": "Rappel important",
+    "ABOUT_BACKUP_REMINDER_CONTENT": "N'oubliez pas de faire des sauvegardes manuelles régulières de vos données. Les sauvegardes ne sont pas automatisées.",
+    "ABOUT_SUPPORT": "Soutenir le projet",
+    "ABOUT_KOFI_BUTTON": "M'offrir un café"
 }

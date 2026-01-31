@@ -72,6 +72,7 @@ import { LogsComponent } from './ui/logs/logs.component';
 import { DialogSelectLanguageComponent } from './ui/dialog/dialog-select-language';
 import { MonthlyReportComponent } from './ui/monthly-report';
 import { DialogUpdatesComponent } from './ui/dialog/dialog-updates';
+import { AboutComponent } from './ui/about';
 
 import { DialogTutorialNoticeComponent } from './ui/dialog/dialog-tutorial-notice';
 
@@ -87,6 +88,7 @@ import { DialogTutorialNoticeComponent } from './ui/dialog/dialog-tutorial-notic
 		LogsComponent,
 		SettingsComponent,
 		TutorialComponent,
+		AboutComponent,
 		MonthlyReportComponent,
 		PieChartComponent,
 		LineChartComponent,

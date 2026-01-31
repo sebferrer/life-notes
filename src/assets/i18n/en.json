@@ -267,5 +267,15 @@
     "BACKUP_HELP_DIALOG_CONTENT_5": "This .json file can be re-imported later via the 'Import' button in the app.",
     "BACKUP_HELP_DIALOG_CONTENT_6": "I know this isn't user-friendly, but it's the only stable solution I can currently offer. Thank you for your understanding.",
     "BACKUP_HELP_DIALOG_CONTENT_7": "It is strongly recommended to perform backups regularly.",
-    "HOW_TO_USE_BACKUPS": "How to use manual backups"
+    "HOW_TO_USE_BACKUPS": "How to use manual backups",
+    "SETTINGS_ABOUT_TITLE": "About",
+    "SETTINGS_ABOUT_SUBTITLE": "App information",
+    "SETTINGS_ABOUT_LINK": "Learn more",
+    "ABOUT_TITLE": "About Life Notes",
+    "ABOUT_DEVELOPER_TITLE": "Volunteer Developer",
+    "ABOUT_DEVELOPER_CONTENT": "My name is Seb, I'm a volunteer developer. I created this app so people can have free access, without ads and without data collection, to a tool that could help them track their health.",
+    "ABOUT_BACKUP_REMINDER_TITLE": "Important Reminder",
+    "ABOUT_BACKUP_REMINDER_CONTENT": "Don't forget to make regular manual backups of your data. Backups are not automated.",
+    "ABOUT_SUPPORT": "Support the project",
+    "ABOUT_KOFI_BUTTON": "Buy me a coffee"
 }
