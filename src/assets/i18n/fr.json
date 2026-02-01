@@ -281,5 +281,10 @@
     "UPDATE_NOTIFICATION_TITLE": "Life-Notes mis à jour",
     "UPDATE_NOTIFICATION_CONTENT": "Life-Notes a été mis à jour. Vous pouvez consulter les notes de mise à jour ici : https://life-notes.fr/updates",
     "ABOUT_UPDATE_NOTES_TITLE": "Notes de mise à jour",
-    "ABOUT_UPDATE_NOTES_CONTENT": "Vous pouvez consulter les dernières notes de mise à jour ici :"
+    "ABOUT_UPDATE_NOTES_CONTENT": "Vous pouvez consulter les dernières notes de mise à jour ici :",
+    "EXPORT_PDF": "Exporter en PDF",
+    "EXPORT_PDF_DIALOG_TITLE": "Exporter en PDF",
+    "EXPORT_PDF_DIALOG_CONTENT_1": "Cette fonctionnalité fonctionne grâce à votre fichier de sauvegarde.",
+    "EXPORT_PDF_DIALOG_CONTENT_2": "Veuillez d'abord sauvegarder vos données via le bouton 'Sauvegarder' ci-dessus, si vous ne l'avez pas déjà fait",
+    "GO_TO_PDF_TOOL": "Accéder à l'outil"
 }

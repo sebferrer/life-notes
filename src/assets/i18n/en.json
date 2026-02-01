@@ -281,5 +281,10 @@
     "UPDATE_NOTIFICATION_TITLE": "Life-Notes Updated",
     "UPDATE_NOTIFICATION_CONTENT": "Life-Notes has been updated. You can check the update notes here: https://life-notes.fr/updates",
     "ABOUT_UPDATE_NOTES_TITLE": "Update Notes",
-    "ABOUT_UPDATE_NOTES_CONTENT": "You can check the latest update notes here:"
+    "ABOUT_UPDATE_NOTES_CONTENT": "You can check the latest update notes here:",
+    "EXPORT_PDF": "Export as PDF",
+    "EXPORT_PDF_DIALOG_TITLE": "Export as PDF",
+    "EXPORT_PDF_DIALOG_CONTENT_1": "This feature works using your backup file.",
+    "EXPORT_PDF_DIALOG_CONTENT_2": "Please first save your data using the 'Save' button above, if you haven't already.",
+    "GO_TO_PDF_TOOL": "Go to tool"
 }

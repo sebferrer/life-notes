@@ -76,6 +76,8 @@ import { AboutComponent } from './ui/about';
 
 import { DialogTutorialNoticeComponent } from './ui/dialog/dialog-tutorial-notice';
 
+import { DialogExportPdfComponent } from './ui/dialog/dialog-export-pdf/dialog-export-pdf.component';
+
 @NgModule({
 	declarations: [
 		AppComponent,
@@ -101,6 +103,7 @@ import { DialogTutorialNoticeComponent } from './ui/dialog/dialog-tutorial-notic
 		DialogEditSymptomOverviewComponent,
 		DialogImportConfirmComponent,
 		DialogExportConfirmComponent,
+		DialogExportPdfComponent,
 		DialogNoSymptomWarningComponent,
 		DialogNoTargetSymptomWarningComponent,
 		DialogSelectSymptomComponent,
@@ -184,6 +187,7 @@ import { DialogTutorialNoticeComponent } from './ui/dialog/dialog-tutorial-notic
 		DialogEditSymptomOverviewComponent,
 		DialogImportConfirmComponent,
 		DialogExportConfirmComponent,
+		DialogExportPdfComponent,
 		DialogNoSymptomWarningComponent,
 		DialogNoTargetSymptomWarningComponent,
 		DialogSelectSymptomComponent,

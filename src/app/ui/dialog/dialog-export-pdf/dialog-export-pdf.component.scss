@@ -1,0 +1,17 @@
+.dialog-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.save-icon-container {
+    margin: 1rem 0;
+    
+    .save-icon {
+        font-size: 3rem;
+        width: 3rem;
+        height: 3rem;
+        color: #757575;
+    }
+}

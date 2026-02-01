@@ -165,6 +165,15 @@
                             </div>
                         </mat-list-option>
 
+                        <mat-list-option (click)="openExportPdfDialog()">
+                            <div class="list-icon">
+                                <mat-icon>picture_as_pdf</mat-icon>
+                            </div>
+                            <div class="list-item-text">
+                                <p>{{ 'EXPORT_PDF' | transloco }}</p>
+                            </div>
+                        </mat-list-option>
+
                         <div id="manual-backup-div">
                             <mat-expansion-panel-header class="mat-expansion-panel-header">
                                 <div class="panel-title" transloco="SETTINGS_MANUAL_SAVE_TITLE"></div>

@@ -11,6 +11,7 @@ import { DialogSelectBackupComponent } from '../dialog/dialog-select-backup';
 import { DialogInfoComponent } from '../dialog/dialog-info';
 import { BackupService } from 'src/app/infra/backup.service';
 import { DialogExportConfirmComponent } from '../dialog/dialog-export-confirm';
+import { DialogExportPdfComponent } from '../dialog/dialog-export-pdf/dialog-export-pdf.component';
 
 @Component({
 	selector: 'app-settings',
@@ -238,6 +239,14 @@ export class SettingsComponent implements OnInit {
 			if (response == null || response.answer !== 'close') {
 				return;
 			}
+		});
+	}
+
+	public openExportPdfDialog(): void {
+		this.dialog.open(DialogExportPdfComponent, {
+			autoFocus: false,
+			width: '20rem',
+			panelClass: 'custom-modalbox'
 		});
 	}
 }
