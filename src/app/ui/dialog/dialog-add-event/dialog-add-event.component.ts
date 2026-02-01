@@ -110,6 +110,18 @@ export class DialogAddEventComponent {
 		this.data.key = log;
 	}
 
+	public get painScale(): number {
+		return this.globalService.painScale;
+	}
+
+	public get painValue(): number {
+		return this.painScale === 10 ? (this.data.pain * 2) : this.data.pain;
+	}
+
+	public set painValue(val: number) {
+		this.data.pain = this.painScale === 10 ? (val / 2) : val;
+	}
+
 	private _filter(options: any[], value: string): string[] {
 		const filterValue = value.toLowerCase();
 

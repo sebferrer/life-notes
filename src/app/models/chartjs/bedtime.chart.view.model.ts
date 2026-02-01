@@ -49,7 +49,7 @@ export class BedTimeChartViewModel extends ALineChartViewModel {
 						suggestedMin: this.CHART_MIN_DEFAULT,
 						stepSize: 60,
 						callback: (label: number) => {
-							return formatMinutes(-label);
+							return this.displayTime(formatMinutes(-label));
 						}
 					}/*,
 					scaleLabel: {
@@ -61,7 +61,7 @@ export class BedTimeChartViewModel extends ALineChartViewModel {
 			tooltips: {
 				callbacks: {
 					label: (tooltipItem, data) => {
-						return this.formatTooltip(-parseInt(tooltipItem.value, 10));
+						return this.displayTime(this.formatTooltip(-parseInt(tooltipItem.value, 10)));
 					}
 				}
 			},

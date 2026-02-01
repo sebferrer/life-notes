@@ -9,6 +9,7 @@ import { GlobalService } from 'src/app/infra/global.service';
 import { TranslocoService } from '@ngneat/transloco';
 import { MedsService } from 'src/app/infra/meds.service';
 import { DialogConfirmComponent } from '../dialog/dialog-confirm';
+import { DialogEditMedComponent } from '../dialog/dialog-edit-med/dialog-edit-med.component';
 import { getSortOrder } from 'src/app/util/array.utils';
 
 @Component({
@@ -21,7 +22,7 @@ export class MedsComponent implements OnInit {
 	public meds: MedHistoryViewModel[];
 	public meds$: BehaviorSubject<MedHistoryViewModel[]>;
 
-	public displayedColumns: string[] = ['key', 'quantity', 'occurrences', 'lastEntry'];
+	public displayedColumns: string[] = ['key', 'quantity', 'occurrences', 'actions'];
 	public dataSource: IMedHistory[];
 
 	constructor(
@@ -53,6 +54,46 @@ export class MedsComponent implements OnInit {
 			}
 		}
 		med.editable = med.editable ? false : true;
+	}
+
+	public openEditDialog(med: MedHistoryViewModel): void {
+		this.dialog.open(DialogEditMedComponent, {
+			autoFocus: false,
+			width: '20rem',
+			panelClass: 'custom-modalbox',
+			data: {
+				key: med.key,
+				quantity: med.quantity
+			}
+		}).afterClosed().subscribe(response => {
+			if (response == null || response.answer !== 'yes') {
+				return;
+			}
+			this.medsService.editMedication(med.key, med.quantity, response.key, response.quantity).subscribe(meds => {
+				this.meds = meds.map(m => new MedHistoryViewModel(m)).sort(getSortOrder("lastEntry", true));
+				this.meds$.next(this.meds);
+			});
+		});
+	}
+
+	public openDeleteDialog(med: MedHistoryViewModel): void {
+		this.dialog.open(DialogConfirmComponent, {
+			autoFocus: false,
+			width: '20rem',
+			panelClass: 'custom-modalbox',
+			data: {
+				title: 'DELETE_MED_DIALOG_TITLE',
+				content: ['DELETE_MED_DIALOG_CONTENT_1', 'DELETE_MED_DIALOG_CONTENT_2']
+			}
+		}).afterClosed().subscribe(response => {
+			if (response == null || response.answer !== 'yes') {
+				return;
+			}
+			this.medsService.deleteMedication(med.key, med.quantity).subscribe(meds => {
+				this.meds = meds.map(m => new MedHistoryViewModel(m)).sort(getSortOrder("lastEntry", true));
+				this.meds$.next(this.meds);
+			});
+		});
 	}
 
 	public openRefreshDialog(): void {

@@ -3,14 +3,14 @@
     <mat-selection-list class="symptom-list" *ngIf="symptoms$ | async as symptoms; else loading" #symptoms
         [multiple]="false">
         <mat-list-option class="symptom-list-item" *ngFor="let symptom of symptoms" [value]="symptom">
-            <div class="symptom-label-container" (click)="toggleEditable(symptoms, symptom)">
+            <div class="symptom-label-container">
                 <div class="symptom-label">{{ symptom.label }}</div>
             </div>
             <div class="buttons-container">
-                <button mat-icon-button class="edit-symptom" *ngIf="symptom.editable" (click)="openAddDialog(symptom)">
+                <button mat-icon-button class="edit-symptom" (click)="openAddDialog(symptom)">
                     <mat-icon>edit</mat-icon>
                 </button>
-                <button mat-icon-button class="delete-symptom" *ngIf="symptom.editable"
+                <button mat-icon-button class="delete-symptom"
                     (click)="openDeleteDialog(symptom.key, symptom.label)">
                     <mat-icon>delete</mat-icon>
                 </button>

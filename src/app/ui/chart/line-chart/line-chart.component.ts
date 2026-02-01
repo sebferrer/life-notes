@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ALineChartViewModel } from 'src/app/models/chartjs/line.chart.view.model';
 import { ILineChartDataSource } from 'src/app/models/line.chart.datasource';
 
@@ -7,7 +7,7 @@ import { ILineChartDataSource } from 'src/app/models/line.chart.datasource';
 	templateUrl: './line-chart.component.html',
 	styleUrls: ['./line-chart.component.scss']
 })
-export class LineChartComponent implements OnInit {
+export class LineChartComponent implements OnInit, OnChanges {
 
 	@Input()
 	title: string;
@@ -38,6 +38,12 @@ export class LineChartComponent implements OnInit {
 		this.datasets = this.chart.datasets;
 		this.plugins = this.chart.plugins;
 		this.chart.timeFormat = this.timeFormat;
+	}
+
+	public ngOnChanges(changes: SimpleChanges): void {
+		if (changes.timeFormat) {
+			this.chart.timeFormat = this.timeFormat;
+		}
 	}
 
 }

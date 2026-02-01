@@ -1,0 +1,8 @@
+{
+    "/updates.json": {
+        "target": "https://life-notes.fr",
+        "secure": true,
+        "changeOrigin": true,
+        "logLevel": "debug"
+    }
+}

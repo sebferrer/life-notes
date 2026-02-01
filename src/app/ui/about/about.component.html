@@ -1,0 +1,33 @@
+<div class="about-container">
+    <h3 class="title" transloco="ABOUT_TITLE"></h3>
+
+    <div class="content-section">
+        <div class="section">
+            <h4 class="section-title" transloco="ABOUT_DEVELOPER_TITLE"></h4>
+            <p class="section-content" transloco="ABOUT_DEVELOPER_CONTENT"></p>
+        </div>
+
+        <div class="section">
+            <h4 class="section-title" transloco="ABOUT_BACKUP_REMINDER_TITLE"></h4>
+            <p class="section-content" transloco="ABOUT_BACKUP_REMINDER_CONTENT"></p>
+        </div>
+
+        <div class="section">
+            <h4 class="section-title" transloco="ABOUT_UPDATE_NOTES_TITLE"></h4>
+            <p class="section-content">
+                <span transloco="ABOUT_UPDATE_NOTES_CONTENT"></span>
+                <a href="https://life-notes.fr/updates" target="_blank" class="update-link">
+                    <br />https://life-notes.fr/updates
+                </a>
+            </p>
+        </div>
+
+        <div class="section support-section">
+            <h4 class="section-title" transloco="ABOUT_SUPPORT"></h4>
+            <button mat-raised-button color="primary" class="kofi-button" (click)="openKofi()">
+                <mat-icon class="coffee-icon">local_cafe</mat-icon>
+                <span transloco="ABOUT_KOFI_BUTTON"></span>
+            </button>
+        </div>
+    </div>
+</div>

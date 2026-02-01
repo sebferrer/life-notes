@@ -1,7 +1,7 @@
 <div id="calendar" *ngIf="overviews$ | async as overviews; else loading">
 	<div *ngIf="symptoms$ | async as symptoms; else loading">
 		<div id="calendar-container">
-			<div class="calendar-header">
+			<div class="calendar-header" [style.border-bottom]="globalService.calendarBlockView ? 'none' : ''">
 				<div class="previous-button">
 					<button mat-icon-button color="primary" aria-label="Previous" (click)="previous()">
 						<mat-icon>chevron_left</mat-icon>
@@ -20,8 +20,16 @@
 			</div>
 			<div class="content">
 				<div class="grid-list">
+					<ng-container *ngIf="!globalService.calendarBlockView">
+						<div class="grid-tile-header" *ngFor="let day of weekDays">
+							<ng-template transloco let-t>
+								{{ t('DAY-OF-WEEK-VERY-SHORT-' + day) }}
+							</ng-template>
+						</div>
+					</ng-container>
+					<div *ngFor="let slot of emptySlots" class="grid-tile empty-tile"></div>
 					<div *ngFor="let overview of overviews"
-						class="grid-tile color-{{ symptomPainColorMap.get(overview.getSymptomPain(globalService.targetSymptomKey)) }}"
+						class="grid-tile color-{{ getPainColor(overview.getSymptomPain(globalService.targetSymptomKey)) }}"
 						routerLink="/{{ overview.date }}">
 						<div class="header">
 							<div *ngIf="today.day !== overview.detailedDate.day || today.month !== overview.detailedDate.month 
@@ -33,13 +41,13 @@
 						</div>
 					</div>
 				</div>
-				<div class="help-container" *ngIf="symptoms.length > 0">
-					<button mat-icon-button (click)="openHelpDialog()">
-						<mat-icon>help</mat-icon>
-					</button>
-				</div>
 				<!--button routerLink="/monthlyreport/{{ year }}-{{ month }}">Export</button-->
 				<div class="charts">
+					<div class="help-container" *ngIf="symptoms.length > 0">
+						<button mat-icon-button (click)="openHelpDialog()">
+							<mat-icon>help</mat-icon>
+						</button>
+					</div>
 					<div [ngClass]="symptoms.length > 1 ? 'pie-charts' : 'pie-chart'">
 						<app-pie-chart *ngFor="let symptom of organizeSymptoms(symptoms)" [title]="symptom.label"
 							[chart]="pieCharts.get(symptom.key)"></app-pie-chart>

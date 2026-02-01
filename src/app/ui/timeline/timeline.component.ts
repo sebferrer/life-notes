@@ -62,5 +62,12 @@ export class TimelineComponent extends ATimeComponent implements OnInit {
 				this.daysContents$.next(this.daysContents);
 			}
 		);
+		this.globalService.timeFormat$.subscribe(() => {
+			this.daysContents$.next(this.daysContents);
+		});
+	}
+	public displayTimeHtml(time: string): string {
+		const formattedTime = this.displayTime(time);
+		return formattedTime.replace(/ (AM|PM)/, '<span class="ampm-suffix"> $1</span>');
 	}
 }
