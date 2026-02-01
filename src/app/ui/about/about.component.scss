@@ -1,7 +1,10 @@
 .about-container {
+    position: absolute;
+    top: 3.5rem;
+    left: 0;
+    width: 100%;
     padding: 20px;
-    max-width: 800px;
-    margin: 0 auto;
+    box-sizing: border-box;
 }
 
 .title {
@@ -52,6 +55,16 @@
     font-size: 24px;
     width: 24px;
     height: 24px;
+}
+
+.update-link {
+    color: #3f51b5;
+    text-decoration: none;
+    word-break: break-all;
+    
+    &:hover {
+        text-decoration: underline;
+    }
 }
 
 @media (max-width: 600px) {

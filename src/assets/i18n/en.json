@@ -272,10 +272,14 @@
     "SETTINGS_ABOUT_SUBTITLE": "App information",
     "SETTINGS_ABOUT_LINK": "Learn more",
     "ABOUT_TITLE": "About Life Notes",
-    "ABOUT_DEVELOPER_TITLE": "Volunteer Developer",
+    "ABOUT_DEVELOPER_TITLE": "About me",
     "ABOUT_DEVELOPER_CONTENT": "My name is Seb, I'm a volunteer developer. I created this app so people can have free access, without ads and without data collection, to a tool that could help them track their health.",
     "ABOUT_BACKUP_REMINDER_TITLE": "Important Reminder",
-    "ABOUT_BACKUP_REMINDER_CONTENT": "Don't forget to make regular manual backups of your data. Backups are not automated.",
+    "ABOUT_BACKUP_REMINDER_CONTENT": "Don't forget to make regular manual backups of your data via the settings. Backups are not automated.",
     "ABOUT_SUPPORT": "Support the project",
-    "ABOUT_KOFI_BUTTON": "Buy me a coffee"
+    "ABOUT_KOFI_BUTTON": "Buy me a coffee",
+    "UPDATE_NOTIFICATION_TITLE": "Life-Notes Updated",
+    "UPDATE_NOTIFICATION_CONTENT": "Life-Notes has been updated. You can check the update notes here: https://life-notes.fr/updates",
+    "ABOUT_UPDATE_NOTES_TITLE": "Update Notes",
+    "ABOUT_UPDATE_NOTES_CONTENT": "You can check the latest update notes here:"
 }

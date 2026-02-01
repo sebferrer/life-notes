@@ -205,13 +205,8 @@ export class AppComponent implements OnInit {
 			width: '20rem',
 			panelClass: 'custom-modalbox',
 			data: {
-				title: 'UPDATE_TITLE',
-				content: ['UPDATE_CONTENT_1', 'UPDATE_CONTENT_2', 'UPDATE_CONTENT_3',
-					'UPDATE_CONTENT_4', 'UPDATE_CONTENT_5', 'UPDATE_CONTENT_6',
-					'UPDATE_CONTENT_7', 'UPDATE_CONTENT_8', 'UPDATE_CONTENT_9',
-					'UPDATE_CONTENT_10', 'UPDATE_CONTENT_11', 'UPDATE_CONTENT_12',
-					'UPDATE_CONTENT_13', 'UPDATE_CONTENT_14', 'UPDATE_CONTENT_15',
-					'UPDATE_CONTENT_16', 'UPDATE_CONTENT_17', 'UPDATE_CONTENT_18']
+				title: 'UPDATE_NOTIFICATION_TITLE',
+				content: ['UPDATE_NOTIFICATION_CONTENT']
 			}
 		}).afterClosed().subscribe(_ => {
 			this.settingsService.setCurrentVersion().subscribe();

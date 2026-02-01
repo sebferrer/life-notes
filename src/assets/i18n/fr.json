@@ -272,10 +272,14 @@
     "SETTINGS_ABOUT_SUBTITLE": "Informations sur l'application",
     "SETTINGS_ABOUT_LINK": "En savoir plus",
     "ABOUT_TITLE": "À propos de Life Notes",
-    "ABOUT_DEVELOPER_TITLE": "Développeur bénévole",
+    "ABOUT_DEVELOPER_TITLE": "À propos de moi",
     "ABOUT_DEVELOPER_CONTENT": "Je m'appelle Seb, je suis un développeur bénévole. J'ai créé cette application pour que les gens puissent avoir accès gratuitement, sans publicité et sans collecte de données à un outil qui pourrait les aider à suivre leur santé.",
     "ABOUT_BACKUP_REMINDER_TITLE": "Rappel important",
-    "ABOUT_BACKUP_REMINDER_CONTENT": "N'oubliez pas de faire des sauvegardes manuelles régulières de vos données. Les sauvegardes ne sont pas automatisées.",
+    "ABOUT_BACKUP_REMINDER_CONTENT": "N'oubliez pas de faire des sauvegardes manuelles régulières de vos données via les paramètres. Les sauvegardes ne sont pas automatisées.",
     "ABOUT_SUPPORT": "Soutenir le projet",
-    "ABOUT_KOFI_BUTTON": "M'offrir un café"
+    "ABOUT_KOFI_BUTTON": "M'offrir un café",
+    "UPDATE_NOTIFICATION_TITLE": "Life-Notes mis à jour",
+    "UPDATE_NOTIFICATION_CONTENT": "Life-Notes a été mis à jour. Vous pouvez consulter les notes de mise à jour ici : https://life-notes.fr/updates",
+    "ABOUT_UPDATE_NOTES_TITLE": "Notes de mise à jour",
+    "ABOUT_UPDATE_NOTES_CONTENT": "Vous pouvez consulter les dernières notes de mise à jour ici :"
 }
