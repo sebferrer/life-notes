@@ -1,4 +1,8 @@
-.timeline-grid {
+ ::ng-deep .ampm-suffix {
+     font-size: 0.7em;
+ }
+ 
+ .timeline-grid {
     position: absolute;
     left: 0;
     top: 3.5rem;
@@ -82,7 +86,7 @@
              .wakeup-time {
                 position: relative;
                 margin-top: 5%;
-                margin-left: 20%;
+                margin-left: 15%;
                 font-size: 120%;
                 color: white;
             }
@@ -97,7 +101,7 @@
         
         .gotobed-container {
             position: absolute;
-            bottom: 0;
+            bottom: 1px;
             right: 0;
             width: 20%;
             height: 20%;
@@ -109,7 +113,7 @@
              .gotobed-time {
                 position: relative;
                 margin-top: 65%;
-                margin-left: 20%;
+                margin-left: 15%;
                 font-size: 120%;
                 color: white;
             }

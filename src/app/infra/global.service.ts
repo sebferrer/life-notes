@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { ISymptom } from '../models/symptom.model';
 import { SymptomsService } from './symptoms.service';
 import { SettingsService } from './settings.service';
@@ -23,7 +23,11 @@ export class GlobalService {
 	public get timeFormat(): string { return this._timeFormat; }
 	public set timeFormat(timeFormat: string) {
 		this._timeFormat = timeFormat;
+		if (this.timeFormat$) {
+			this.timeFormat$.next(timeFormat);
+		}
 	}
+	public timeFormat$ = new BehaviorSubject<string>('eu');
 
 	private _painScale: number = 5;
 	public get painScale(): number { return this._painScale; }

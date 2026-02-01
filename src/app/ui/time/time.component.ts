@@ -229,6 +229,9 @@ export abstract class ATimeComponent {
 	}
 
 	public displayTime(time: string): string {
+		if (!time) {
+			return '';
+		}
 		return this.globalService.timeFormat === 'us' ? formatAMPM(time) : time;
 	}
 
