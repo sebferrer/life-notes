@@ -35,7 +35,7 @@ export abstract class ALineChartViewModel {
 		this.timeFormat = this.timeFormat == null ? 'eu' : this.timeFormat;
 	}
 
-	public displayTime(time: string): string {
-		return this.timeFormat === 'us' ? formatAMPM(time) : time;
+	public displayTime(time: string, showSuffix: boolean = true): string {
+		return this.timeFormat === 'us' ? formatAMPM(time, showSuffix) : time;
 	}
 }

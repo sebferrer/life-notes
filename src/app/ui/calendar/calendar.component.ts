@@ -101,8 +101,10 @@ export class CalendarComponent implements OnInit {
 				this.pieCharts.set(symptom.key, new CalendarPieChartViewModel('doughnut', symptom.key, this.globalService.getPainColors()));
 				this.pieCharts.get(symptom.key).update(this.overviews, this.globalService.painScale);
 			});
-		})
+		});
+		this.bedTimeChart.timeFormat = this.globalService.timeFormat;
 		this.bedTimeChart.update(this.overviews);
+		this.wakeUpChart.timeFormat = this.globalService.timeFormat;
 		this.wakeUpChart.update(this.overviews);
 		this.sleepChart.update(this.overviews, this.previousOverviews);
 	}
@@ -140,7 +142,7 @@ export class CalendarComponent implements OnInit {
 		}
 		const firstDayOfMonth = moment([this.year, this.month - 1]);
 		const dayOfWeek = firstDayOfMonth.day(); // 0=Sun, 1=Mon...
-		
+
 		let slots = 0;
 		if (this.globalService.calendarStartOnSunday) {
 			// Start Sunday (0).
