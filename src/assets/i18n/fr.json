@@ -262,7 +262,7 @@
     "BACKUP_HELP_DIALOG_CONTENT_1": "1. Cliquez sur 'Générer les données de backup' pour générer vos données.",
     "BACKUP_HELP_DIALOG_CONTENT_2": "2. Copiez les données via le bouton dédié.",
     "BACKUP_HELP_DIALOG_CONTENT_3": "3. Cliquez sur le lien 'Cliquez ici' qui redirige vers mon outil en ligne.",
-    "BACKUP_HELP_DIALOG_CONTENT_4": "4. Videz le champ texte, collez vos données, puis cliquez sur 'Download' pour obtenir votre fichier de sauvegarde .json.",
+    "BACKUP_HELP_DIALOG_CONTENT_4": "4. Videz le champ texte, collez vos données, puis cliquez sur 'Télécharger' pour obtenir votre fichier de sauvegarde .json.",
     "BACKUP_HELP_DIALOG_CONTENT_5": "Ce fichier .json pourra être réimporté ensuite via le bouton 'Importer' de l'application.",
     "BACKUP_HELP_DIALOG_CONTENT_6": "Je sais que ce n'est pas user-friendly, mais c'est la seule solution stable que je peux actuellement offrir. Merci de votre compréhension.",
     "BACKUP_HELP_DIALOG_CONTENT_7": "Il est fortement recommandé d'effectuer les sauvegardes régulièrement.",
