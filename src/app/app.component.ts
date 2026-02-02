@@ -182,7 +182,7 @@ export class AppComponent implements OnInit {
 				title: 'START_TITLE',
 				content: ['START_CONTENT_1', 'START_CONTENT_2', 'START_CONTENT_3',
 					'START_CONTENT_4', 'START_CONTENT_5', 'START_CONTENT_6',
-					'START_CONTENT_7', 'START_CONTENT_8']
+					'START_CONTENT_7']
 			}
 		}).afterClosed().subscribe(_ => {
 			this.settingsService.setFirstStart(false).subscribe(() => {
