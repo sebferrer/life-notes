@@ -285,5 +285,6 @@
     "EXPORT_PDF_DIALOG_TITLE": "Exporter en PDF (beta)",
     "EXPORT_PDF_DIALOG_CONTENT_1": "Cette fonctionnalité fonctionne grâce à votre fichier de sauvegarde.",
     "EXPORT_PDF_DIALOG_CONTENT_2": "Veuillez d'abord sauvegarder vos données via le bouton 'Sauvegarder' ci-dessus, si vous ne l'avez pas déjà fait",
-    "GO_TO_PDF_TOOL": "Accéder à l'outil"
+    "GO_TO_PDF_TOOL": "Accéder à l'outil",
+    "CHECK_UPDATE_NOTES": "Voir les notes de mise à jour"
 }

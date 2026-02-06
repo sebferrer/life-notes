@@ -285,5 +285,6 @@
     "EXPORT_PDF_DIALOG_TITLE": "Export as PDF (beta)",
     "EXPORT_PDF_DIALOG_CONTENT_1": "This feature works using your backup file.",
     "EXPORT_PDF_DIALOG_CONTENT_2": "Please first save your data using the 'Save' button above, if you haven't already.",
-    "GO_TO_PDF_TOOL": "Go to tool"
+    "GO_TO_PDF_TOOL": "Go to tool",
+    "CHECK_UPDATE_NOTES": "Check update notes"
 }
