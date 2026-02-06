@@ -1,8 +1,9 @@
 #settings-container {
-    position: absolute;
-    top: 3.5rem;
+    position: relative;
+    top: auto;
     left: 0;
     width: 100%;
+
 
     .title {
         margin-left: 1rem;
@@ -12,9 +13,10 @@
     }
 
     .accordion {
-        position: absolute;
-        top: 4rem;
+        position: relative;
+        top: auto;
         width: 100%;
+
 
         .mat-expansion-panel-header {
             .panel-title {
