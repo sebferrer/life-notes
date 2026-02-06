@@ -60,4 +60,12 @@ export class DayComponent extends ATimeComponent implements OnInit {
 	public toggleCharts(): void {
 		this.displayCharts = !this.displayCharts;
 	}
+
+	public get painScale(): number {
+		return this.globalService.painScale;
+	}
+
+	public getPainValue(pain: number): number {
+		return this.painScale === 10 ? pain * 2 : pain;
+	}
 }

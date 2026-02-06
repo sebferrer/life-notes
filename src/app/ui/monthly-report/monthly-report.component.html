@@ -13,7 +13,7 @@
 					<label>{{ symptom.label }}</label>
 					<div class="grid-list">
 						<div *ngFor="let overview of overviews"
-							class="grid-tile color-{{ symptomPainColorMap.get(overview.getSymptomPain(symptom.key)) }}">
+							class="grid-tile color-{{ getPainColor(overview.getSymptomPain(symptom.key)) }}">
 							<div class="header">
 								<div class="day-label">
 									{{ overview.detailedDate.day }}</div>

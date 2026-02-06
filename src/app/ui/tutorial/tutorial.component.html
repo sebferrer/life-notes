@@ -4,7 +4,7 @@
             <div *ngSwitchCase="'header'" class="slide">
                 <div class="slide-text-header">
                     <h2>{{ slide.title | transloco }}</h2>
-                    <p>{{ slide.text | transloco }}</p>
+                    <p [innerHTML]="slide.text | transloco"></p>
                     <p>{{ 'TUTORIAL_SWIPE' | transloco }}</p>
                 </div>
                 <app-swiping-finger></app-swiping-finger>
@@ -13,14 +13,14 @@
                 <img src="{{ slide.img }}" />
                 <div class="slide-text-tutorial">
                     <h2>{{ slide.title | transloco }}</h2>
-                    <p>{{ slide.text | transloco }}</p>
+                    <p [innerHTML]="slide.text | transloco"></p>
                 </div>
             </div>
             <div *ngSwitchCase="'tutorial-longtext'" class="slide">
                 <img src="{{ slide.img }}" />
                 <div class="slide-text-tutorial-longtext">
                     <h2>{{ slide.title | transloco }}</h2>
-                    <p>{{ slide.text | transloco }}</p>
+                    <p [innerHTML]="slide.text | transloco"></p>
                 </div>
             </div>
             <div *ngSwitchCase="'rateit'" class="slide">
@@ -35,11 +35,12 @@
                     <h2>{{ slide.title | transloco }}</h2>
                     <p>{{ 'TUTORIAL_SLIDE_RATEIT_TEXT_1' | transloco }}</p>
                     <p>{{ 'TUTORIAL_SLIDE_RATEIT_TEXT_2' | transloco }}
-                        <a href="mailto: sebferrer8@gmail.com">sebferrer8@gmail.com</a>
+                        <a href="mailto: kimida.life.notes@gmail.com">kimida.life.notes@gmail.com</a>
                     </p>
                     <p>{{ 'TUTORIAL_SLIDE_RATEIT_TEXT_3' | transloco }}</p>
                     <p>{{ 'TUTORIAL_SLIDE_RATEIT_TEXT_4' | transloco }}</p>
-                    <button mat-flat-button color="primary" (click)="rateApp()">{{ 'TUTORIAL_SLIDE_RATEIT_TEXT_5' | transloco }}</button>
+                    <button mat-flat-button color="primary" (click)="rateApp()">{{ 'TUTORIAL_SLIDE_RATEIT_TEXT_5' |
+                        transloco }}</button>
                 </div>
             </div>
         </ion-slide>

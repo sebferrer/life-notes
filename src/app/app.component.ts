@@ -9,6 +9,9 @@ import { DialogNoSymptomWarningComponent } from './ui/dialog/dialog-no-symptom-w
 import { ISettings } from './models/settings.model';
 import { DialogSelectLanguageComponent } from './ui/dialog/dialog-select-language';
 import { DialogInfoComponent } from './ui/dialog/dialog-info';
+import { UpdatesService } from './infra/updates.service';
+import { DialogUpdatesComponent } from './ui/dialog/dialog-updates';
+import { DialogTutorialNoticeComponent } from './ui/dialog/dialog-tutorial-notice';
 
 @Component({
 	selector: 'app-root',
@@ -19,13 +22,17 @@ export class AppComponent implements OnInit {
 	public title = 'Life Notes - Symptom Tracking';
 	public symptoms: ISymptom[];
 	public symptoms$: Subject<ISymptom[]>;
+	// DEVELOPER UPDATES NOTIFICATION FEATURE DISABLED
+	// public updatesCount: number = 0;
+	// private lastUpdate: number = 0;
 
 	constructor(
 		public globalService: GlobalService,
 		private translocoService: TranslocoService,
 		private settingsService: SettingsService,
 		private importerExporterService: ImporterExporterService,
-		private dialog: MatDialog
+		private dialog: MatDialog,
+		private updatesService: UpdatesService
 	) {
 		/*this.symptoms = new Array<ISymptom>();
 		this.symptoms$ = new Subject<ISymptom[]>();*/
@@ -35,10 +42,69 @@ export class AppComponent implements OnInit {
 		// this.updateSymptoms();
 		this.settingsService.initSettings().subscribe(settings => {
 			this.initSettings(settings);
+			// DEVELOPER UPDATES NOTIFICATION FEATURE DISABLED
+			// this.lastUpdate = settings.lastUpdate;
+			// this.checkUpdates();
+			this.checkWeeklyReminder(settings);
 			//this.autoBackup();
 		});
 		// this.daysService.reset().subscribe(() => {});
 	}
+
+	// DEVELOPER UPDATES NOTIFICATION FEATURE DISABLED
+	// public checkUpdates(): void {
+	// 	this.updatesService.getUpdates().subscribe(updates => {
+	// 		if (updates && updates.length > 0) {
+	// 			const newUpdates = updates.filter(u => u.id > this.lastUpdate);
+	// 			this.updatesCount = newUpdates.length;
+	// 		}
+	// 	});
+	// }
+
+	public checkWeeklyReminder(settings: ISettings): void {
+		if (settings.weeklyReminder) {
+			const now = Date.now();
+			const oneWeek = 7 * 24 * 60 * 60 * 1000;
+			if (now - settings.lastWeeklyReminder > oneWeek) {
+				this.openWeeklyReminderDialog();
+				this.settingsService.setLastWeeklyReminder(now).subscribe();
+			}
+		}
+	}
+
+	public openWeeklyReminderDialog() {
+		this.dialog.open(DialogInfoComponent, {
+			autoFocus: false,
+			width: '20rem',
+			panelClass: 'custom-modalbox',
+			data: {
+				title: 'WEEKLY_REMINDER_TITLE',
+				content: [
+					'WEEKLY_REMINDER_CONTENT_1',
+					'WEEKLY_REMINDER_CONTENT_2',
+					'WEEKLY_REMINDER_CONTENT_3',
+					'WEEKLY_REMINDER_CONTENT_4',
+					'WEEKLY_REMINDER_CONTENT_5'
+				]
+			}
+		});
+	}
+
+	// DEVELOPER UPDATES NOTIFICATION FEATURE DISABLED
+	// public openUpdates(): void {
+	// 	this.dialog.open(DialogUpdatesComponent, {
+	// 		autoFocus: false,
+	// 		width: '90%',
+	// 		height: '90%',
+	// 		maxWidth: '100vw',
+	// 		maxHeight: '100vh',
+	// 		panelClass: 'custom-modalbox',
+	// 		data: { lastUpdate: this.lastUpdate }
+	// 	}).afterClosed().subscribe(() => {
+	// 		this.updatesCount = 0;
+	// 		this.settingsService.getSettings().subscribe(s => this.lastUpdate = s.lastUpdate);
+	// 	});
+	// }
 
 	public autoBackup(): void {
 		this.importerExporterService.exportData(true);
@@ -61,7 +127,13 @@ export class AppComponent implements OnInit {
 
 	public initSettings(settings: ISettings): void {
 		this.initTimeFormat(settings);
+		this.initPainScale(settings);
 		this.initTargetSymptom(settings);
+		// DEVELOPER UPDATES NOTIFICATION FEATURE DISABLED
+		// this.globalService.hideDeveloperUpdates = settings.hideDeveloperUpdates;
+		this.globalService.calendarStartOnSunday = settings.calendarStartOnSunday;
+		this.globalService.calendarBlockView = settings.calendarBlockView;
+		this.globalService.painPalette = settings.painPalette;
 		if (settings != null && settings.firstStart) {
 			this.selectLanguageOpenDialog();
 		} else {
@@ -110,31 +182,41 @@ export class AppComponent implements OnInit {
 				title: 'START_TITLE',
 				content: ['START_CONTENT_1', 'START_CONTENT_2', 'START_CONTENT_3',
 					'START_CONTENT_4', 'START_CONTENT_5', 'START_CONTENT_6',
-					'START_CONTENT_7', 'START_CONTENT_8']
+					'START_CONTENT_7']
 			}
 		}).afterClosed().subscribe(_ => {
 			this.settingsService.setFirstStart(false).subscribe(() => {
-				this.updateInfoOpenDialog();
+				this.updateInfoOpenDialog(() => this.tutorialNoticeOpenDialog());
 			});
 		});
 	}
 
-	public updateInfoOpenDialog() {
+	public tutorialNoticeOpenDialog() {
+		this.dialog.open(DialogTutorialNoticeComponent, {
+			autoFocus: false,
+			width: '20rem',
+			panelClass: 'custom-modalbox'
+		});
+	}
+
+	public updateInfoOpenDialog(next?: () => void) {
 		this.dialog.open(DialogInfoComponent, {
 			autoFocus: false,
 			width: '20rem',
 			panelClass: 'custom-modalbox',
 			data: {
-				title: 'UPDATE_TITLE',
-				content: ['UPDATE_CONTENT_1', 'UPDATE_CONTENT_2', 'UPDATE_CONTENT_3',
-					'UPDATE_CONTENT_4', 'UPDATE_CONTENT_5', 'UPDATE_CONTENT_6',
-					'UPDATE_CONTENT_7', 'UPDATE_CONTENT_8', 'UPDATE_CONTENT_9',
-					'UPDATE_CONTENT_10', 'UPDATE_CONTENT_11', 'UPDATE_CONTENT_12',
-					'UPDATE_CONTENT_13', 'UPDATE_CONTENT_14', 'UPDATE_CONTENT_15',
-					'UPDATE_CONTENT_16', 'UPDATE_CONTENT_17', 'UPDATE_CONTENT_18']
+				title: 'UPDATE_NOTIFICATION_TITLE',
+				content: ['UPDATE_NOTIFICATION_CONTENT'],
+				actionButton: {
+					label: 'CHECK_UPDATE_NOTES',
+					url: 'https://life-notes.fr/updates'
+				}
 			}
 		}).afterClosed().subscribe(_ => {
 			this.settingsService.setCurrentVersion().subscribe();
+			if (next) {
+				next();
+			}
 		});
 	}
 
@@ -155,6 +237,18 @@ export class AppComponent implements OnInit {
 			);
 		} else {
 			this.globalService.timeFormat = settings.timeFormat;
+		}
+	}
+
+	public initPainScale(settings: ISettings): void {
+		if (!this.settingsService.AVAILABLE_PAIN_SCALES.includes(settings.painScale)) {
+			this.settingsService.setPainScale(5).subscribe(
+				newSettings => {
+					this.globalService.painScale = newSettings.painScale;
+				}
+			);
+		} else {
+			this.globalService.painScale = settings.painScale;
 		}
 	}
 

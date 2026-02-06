@@ -14,9 +14,18 @@
                 <td mat-cell *matCellDef="let element"> {{ element.occurrences }} </td>
             </ng-container>
 
-            <ng-container matColumnDef="lastEntry">
-                <th mat-header-cell *matHeaderCellDef> {{ 'TABLE_LAST_ENTRY' | transloco }} </th>
-                <td mat-cell *matCellDef="let element"> {{ element.lastEntry }} </td>
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element">
+                    <div style="display: flex; flex-direction: row; white-space: nowrap;">
+                        <button mat-icon-button (click)="openEditDialog(element)">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        <button mat-icon-button (click)="openDeleteDialog(element)">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </div>
+                </td>
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

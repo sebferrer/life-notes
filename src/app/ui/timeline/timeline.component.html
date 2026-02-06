@@ -33,11 +33,11 @@
 						<div class="corner-decoration"></div>
 						<div class="wakeup-container" (click)="openAddDialog('wakeUp', dayContent.date)">
 							<mat-icon class="wakeup-icon">alarm</mat-icon>
-							<div class="wakeup-time">{{ dayContent.wakeUp }}</div>
+							<div class="wakeup-time" [innerHTML]="displayTimeHtml(dayContent.wakeUp)"></div>
 						</div>
 						<div class="gotobed-container" (click)="openAddDialog('goToBed', dayContent.date)">
 							<mat-icon class="gotobed-icon">bedtime</mat-icon>
-							<div class="gotobed-time">{{ dayContent.goToBed }}</div>
+							<div class="gotobed-time" [innerHTML]="displayTimeHtml(dayContent.goToBed)"></div>
 						</div>
 						<div class="timeline-content">
 							<mat-chip-list class="mat-chip-list-stacked">
@@ -48,28 +48,28 @@
 										(click)="openShowDialog(dayContent.date, content, symptoms)">
 										<div *ngSwitchCase="'symptomLog'" class="event">
 											<div class="event-time"
-												[ngClass]="globalService.timeFormat === 'us' ? 'event-time-us' : 'event-time-eu'">
-												{{ displayTime(content.time) }}</div>
+												[ngClass]="globalService.timeFormat === 'us' ? 'event-time-us' : 'event-time-eu'"
+												[innerHTML]="displayTimeHtml(content.time)"></div>
 											<div class="event-content">{{ symptomMap.get(content.key) }}
-												[{{ content.pain }}/5]
+												[{{ getPainValue(content.pain) }}/{{ painScale }}]
 											</div>
 										</div>
 										<div *ngSwitchCase="'log'" class="event">
 											<div class="event-time"
-												[ngClass]="globalService.timeFormat === 'us' ? 'event-time-us' : 'event-time-eu'">
-												{{ displayTime(content.time) }}</div>
+												[ngClass]="globalService.timeFormat === 'us' ? 'event-time-us' : 'event-time-eu'"
+												[innerHTML]="displayTimeHtml(content.time)"></div>
 											<div class="event-content">{{ content.key }}</div>
 										</div>
 										<div *ngSwitchCase="'med'" class="event">
 											<div class="event-time"
-												[ngClass]="globalService.timeFormat === 'us' ? 'event-time-us' : 'event-time-eu'">
-												{{ displayTime(content.time) }}</div>
+												[ngClass]="globalService.timeFormat === 'us' ? 'event-time-us' : 'event-time-eu'"
+												[innerHTML]="displayTimeHtml(content.time)"></div>
 											<div class="event-content">{{ content.key }} {{ content.quantity }}mg</div>
 										</div>
 										<div *ngSwitchCase="'meal'" class="event">
 											<div class="event-time"
-												[ngClass]="globalService.timeFormat === 'us' ? 'event-time-us' : 'event-time-eu'">
-												{{ displayTime(content.time) }}</div>
+												[ngClass]="globalService.timeFormat === 'us' ? 'event-time-us' : 'event-time-eu'"
+												[innerHTML]="displayTimeHtml(content.time)"></div>
 											<div class="event-content">{{ content.key }}</div>
 										</div>
 										<div class="remove-event-container">
@@ -86,7 +86,7 @@
 						<div class="symptom-overview-container"
 							(click)="openEditSymptomOverviewDialog(dayContent.date)">
 							<mat-icon
-								class="symptom-overview-icon color-{{ symptomPainColorMap.get(dayContent.getSymptomPain(globalService.targetSymptomKey)) }}">
+								class="symptom-overview-icon color-{{ getPainColor(dayContent.getSymptomPain(globalService.targetSymptomKey)) }}">
 								fiber_manual_record</mat-icon>
 						</div>
 					</div>

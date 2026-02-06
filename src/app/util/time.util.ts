@@ -42,16 +42,21 @@ export function formatMinutesInDuration(minutes: number): string {
 	return formatMinutesInDurationContracted(minutes) + ',' + mins + 'min';
 }
 
-export function formatAMPM(time: string) {
+export function formatAMPM(time: string, showSuffix: boolean = true) {
 	const splittedTime = time.split(':');
 	let hours = parseInt(splittedTime[0]);
 	let minutes = parseInt(splittedTime[1]);
 	let ampm = hours >= 12 ? 'PM' : 'AM';
 	hours = hours % 12;
 	hours = hours ? hours : 12;
-	const strHours = hours < 10 ? '0' + hours : hours;
+	const strHours = hours < 10 ? '0' + hours : hours.toString();
 	const strMinutes = minutes < 10 ? '0' + minutes : minutes;
-	var strTime = strHours + ':' + strMinutes + ' ' + ampm;
+
+	let strTime = strHours;
+	if (minutes !== 0) {
+		strTime += ':' + strMinutes;
+	}
+	strTime += (showSuffix ? ' ' + ampm : '');
 	return strTime;
 }
 

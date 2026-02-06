@@ -10,6 +10,7 @@ import { TimelineComponent } from './ui/timeline';
 import { SymptomsComponent } from './ui/symptoms';
 import { SettingsComponent } from './ui/settings';
 import { TutorialComponent } from './ui/tutorial';
+import { AboutComponent } from './ui/about';
 import { MedsComponent } from './ui/meds';
 import { LogsComponent } from './ui/logs';
 import { MonthlyReportComponent } from './ui/monthly-report';
@@ -59,6 +60,10 @@ const routes: Routes = [
 	{
 		path: 'tutorial',
 		component: TutorialComponent
+	},
+	{
+		path: 'about',
+		component: AboutComponent
 	},
 	{
 		path: ':date',

@@ -8,6 +8,7 @@ import { GlobalService } from 'src/app/infra/global.service';
 import { TranslocoService } from '@ngneat/transloco';
 import { LogsService } from 'src/app/infra/logs.service';
 import { DialogConfirmComponent } from '../dialog/dialog-confirm';
+import { DialogEditLogComponent } from '../dialog/dialog-edit-log/dialog-edit-log.component';
 import { getSortOrder } from 'src/app/util/array.utils';
 import { LogHistoryViewModel } from 'src/app/models/log-history.view.model';
 
@@ -21,7 +22,7 @@ export class LogsComponent implements OnInit {
 	public logs: LogHistoryViewModel[];
 	public logs$: BehaviorSubject<LogHistoryViewModel[]>;
 
-	public displayedColumns: string[] = ['key', 'occurrences', 'lastEntry'];
+	public displayedColumns: string[] = ['key', 'occurrences', 'actions'];
 	public dataSource: IMedHistory[];
 
 	constructor(
@@ -53,6 +54,45 @@ export class LogsComponent implements OnInit {
 			}
 		}
 		med.editable = med.editable ? false : true;
+	}
+
+	public openEditDialog(log: LogHistoryViewModel): void {
+		this.dialog.open(DialogEditLogComponent, {
+			autoFocus: false,
+			width: '20rem',
+			panelClass: 'custom-modalbox',
+			data: {
+				key: log.key
+			}
+		}).afterClosed().subscribe(response => {
+			if (response == null || response.answer !== 'yes') {
+				return;
+			}
+			this.logsService.editLogEntry(log.key, response.key).subscribe(logs => {
+				this.logs = logs.map(l => new LogHistoryViewModel(l)).sort(getSortOrder("lastEntry", true));
+				this.logs$.next(this.logs);
+			});
+		});
+	}
+
+	public openDeleteDialog(log: LogHistoryViewModel): void {
+		this.dialog.open(DialogConfirmComponent, {
+			autoFocus: false,
+			width: '20rem',
+			panelClass: 'custom-modalbox',
+			data: {
+				title: 'DELETE_LOG_DIALOG_TITLE',
+				content: ['DELETE_LOG_DIALOG_CONTENT_1', 'DELETE_LOG_DIALOG_CONTENT_2']
+			}
+		}).afterClosed().subscribe(response => {
+			if (response == null || response.answer !== 'yes') {
+				return;
+			}
+			this.logsService.deleteLogEntry(log.key).subscribe(logs => {
+				this.logs = logs.map(l => new LogHistoryViewModel(l)).sort(getSortOrder("lastEntry", true));
+				this.logs$.next(this.logs);
+			});
+		});
 	}
 
 	public openRefreshDialog(): void {

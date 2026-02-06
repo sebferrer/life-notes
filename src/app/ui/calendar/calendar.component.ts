@@ -38,6 +38,8 @@ export class CalendarComponent implements OnInit {
 	public bedTimeChart: BedTimeChartViewModel;
 	public wakeUpChart: WakeUpChartViewModel;
 	public sleepChart: SleepChartViewModel;
+	public emptySlots: any[] = [];
+	public weekDays: number[];
 
 	public debug: string;
 
@@ -96,16 +98,19 @@ export class CalendarComponent implements OnInit {
 	public updateCharts(): void {
 		this.symptoms$.subscribe(symptoms => {
 			symptoms.forEach(symptom => {
-				this.pieCharts.set(symptom.key, new CalendarPieChartViewModel('doughnut', symptom.key));
-				this.pieCharts.get(symptom.key).update(this.overviews);
+				this.pieCharts.set(symptom.key, new CalendarPieChartViewModel('doughnut', symptom.key, this.globalService.getPainColors()));
+				this.pieCharts.get(symptom.key).update(this.overviews, this.globalService.painScale);
 			});
-		})
+		});
+		this.bedTimeChart.timeFormat = this.globalService.timeFormat;
 		this.bedTimeChart.update(this.overviews);
+		this.wakeUpChart.timeFormat = this.globalService.timeFormat;
 		this.wakeUpChart.update(this.overviews);
 		this.sleepChart.update(this.overviews, this.previousOverviews);
 	}
 
 	public updateCalendar(month: number, year: number): void {
+		this.weekDays = this.globalService.calendarStartOnSunday ? [7, 1, 2, 3, 4, 5, 6] : [1, 2, 3, 4, 5, 6, 7];
 		this.loadSymptoms();
 		this.daysService.getMonthDaysOverviews(month, year).subscribe(
 			days => {
@@ -124,9 +129,31 @@ export class CalendarComponent implements OnInit {
 
 						this.overviews$.next(this.overviews);
 						this.previousOverviews$.next(this.previousOverviews);
+						this.calculateEmptySlots();
 						this.updateCharts();
 					});
 			});
+	}
+
+	public calculateEmptySlots(): void {
+		if (this.globalService.calendarBlockView) {
+			this.emptySlots = [];
+			return;
+		}
+		const firstDayOfMonth = moment([this.year, this.month - 1]);
+		const dayOfWeek = firstDayOfMonth.day(); // 0=Sun, 1=Mon...
+
+		let slots = 0;
+		if (this.globalService.calendarStartOnSunday) {
+			// Start Sunday (0).
+			// If Sun(0) -> 0 slots. Mon(1) -> 1 slot.
+			slots = dayOfWeek;
+		} else {
+			// Start Monday (1).
+			// If Mon(1) -> 0 slots. Tue(2) -> 1 slot. ... Sun(0) -> 6 slots.
+			slots = (dayOfWeek + 6) % 7;
+		}
+		this.emptySlots = new Array(slots);
 	}
 
 	public previous(): void {
@@ -161,5 +188,9 @@ export class CalendarComponent implements OnInit {
 				return;
 			}
 		});
+	}
+
+	public getPainColor(pain: number): string {
+		return this.symptomPainColorMap.get(Math.ceil(pain));
 	}
 }

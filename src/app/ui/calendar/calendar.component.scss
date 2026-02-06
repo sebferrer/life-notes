@@ -11,6 +11,7 @@
     width: 100%;
     height: 3.5rem;
     background-color: #9E9E9E;
+    border-bottom: 1px solid white;
     text-align: center;
     color: white;
     z-index: 3;
@@ -83,6 +84,22 @@
     height: 5rem;
 }
 
+.grid-tile-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    float: left;
+    width: 14.28%;
+    height: 2rem;
+    font-weight: bold;
+    background-color: #9E9E9E;
+    color: white;
+}
+
+.empty-tile {
+    background-color: transparent;
+}
+
 .day-label {
     margin-top: 0.3rem;
     width: 3vh;
@@ -103,10 +120,10 @@
 }
 
 .charts {
-    position: absolute;
-    top: 27rem;
-    left: 0;
+    position: relative;
+    clear: both;
     width: 100%;
+    padding-top: 2rem;
 
     .pie-chart {
         height: 33vh;
@@ -122,32 +139,32 @@
 .help-container {
     color: #0070C0;
     position: absolute;
-    top: 27rem;
+    top: 0;
     right: 1rem;
     z-index: 2;
 }
 
 .color-default {
     /* color: #31AE1D; */
-    background-color: #93EA84;
+    background-color: var(--color-pain-0);
 }
 
 .color-pain-1 {
-    background-color: #BFBC00;
+    background-color: var(--color-pain-1);
 }
 
 .color-pain-2 {
-    background-color: #FDEC05;
+    background-color: var(--color-pain-2);
 }
 
 .color-pain-3 {
-    background-color: #FFC000;
+    background-color: var(--color-pain-3);
 }
 
 .color-pain-4 {
-    background-color: #E40026;
+    background-color: var(--color-pain-4);
 }
 
 .color-pain-5 {
-    background-color: #980019;
+    background-color: var(--color-pain-5);
 }

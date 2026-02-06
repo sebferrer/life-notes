@@ -1,0 +1,21 @@
+<h1 mat-dialog-title transloco="EDIT_MED_TITLE"></h1>
+<div mat-dialog-content>
+    <div class="field-container">
+        <mat-form-field>
+            <mat-label transloco="TABLE_MEDICINE"></mat-label>
+            <input matInput [(ngModel)]="data.key" required>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>{{ 'TABLE_DOSAGE' | transloco }} (mg)</mat-label>
+            <input matInput type="number" [(ngModel)]="data.quantity" required>
+        </mat-form-field>
+    </div>
+    <div class="warning-text">
+        <p transloco="EDIT_MED_WARNING"></p>
+    </div>
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()" transloco="CANCEL"></button>
+    <button mat-button cdkFocusInitial (click)="onYesClick()" color="primary" [disabled]="!isValid()" transloco="EDIT">
+    </button>
+</div>
