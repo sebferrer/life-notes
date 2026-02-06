@@ -41,7 +41,6 @@ import { TranslocoService } from '@ngneat/transloco';
 import { GlobalService } from './infra/global.service';
 import { SettingsComponent } from './ui/settings';
 import { InfiniteScrollComponent } from './ui/infinite-scroll';
-import { File as IonicFile } from '@ionic-native/file/ngx';
 import { ChartsModule } from 'ng2-charts';
 import { BackupService } from './infra/backup.service';
 import { DialogAddEventComponent } from './ui/dialog/dialog-add-event';
@@ -62,7 +61,6 @@ import { DialogInfoComponent } from './ui/dialog/dialog-info';
 import { TutorialComponent } from './ui/tutorial';
 import { IonicModule } from '@ionic/angular';
 import { SwipingFingerComponent } from './ui/graphic/swiping-finger';
-import { Market } from '@ionic-native/market/ngx';
 import { MedsService } from './infra/meds.service';
 import { DialogConfirmComponent } from './ui/dialog/dialog-confirm';
 import { DialogEditMedComponent } from './ui/dialog/dialog-edit-med/dialog-edit-med.component';
@@ -164,8 +162,10 @@ import { DialogExportPdfComponent } from './ui/dialog/dialog-export-pdf/dialog-e
 		BackupService,
 		MedsService,
 		LogsService,
-		IonicFile,
-		Market,
+		SettingsService,
+		BackupService,
+		MedsService,
+		LogsService,
 		{
 			provide: APP_INITIALIZER,
 			useFactory: (translocoService: TranslocoService) => {

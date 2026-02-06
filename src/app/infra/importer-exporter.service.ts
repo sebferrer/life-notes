@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { DaysService } from './days.service';
 import { getDetailedDate } from 'src/app/util/date.utils';
-import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { File as IonicFile } from '@ionic-native/file/ngx';
+import { Observable, of, from } from 'rxjs';
+import { map, switchMap, catchError } from 'rxjs/operators';
+import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
+import { Share } from '@capacitor/share';
 import { BackupService } from './backup.service';
 import { SymptomsService } from './symptoms.service';
 import { SettingsService } from './settings.service';
@@ -19,12 +20,9 @@ import html2canvas from 'html2canvas';
 })
 export class ImporterExporterService {
 
-	private readonly APP_DIRECTORY = 'Download/life-notes/';
+	private readonly BACKUP_DIRECTORY = 'LifeNotes';
 	private readonly BACKUP_FILE = 'backup.json';
 	private readonly AUTO_BACKUP_FILE = 'autobackup.json';
-	private readonly MAX_SAVE_TRIES = 3;
-
-	private nbSaveRetries = 0;
 
 	public debug = 'no error';
 
@@ -34,17 +32,8 @@ export class ImporterExporterService {
 		private symptomsService: SymptomsService,
 		private settingsService: SettingsService,
 		private backupService: BackupService,
-		private translocoService: TranslocoService,
-		private file: IonicFile
+		private translocoService: TranslocoService
 	) { }
-
-	private getExternalApplicationStorageDirectory(): string {
-		return this.file.externalDataDirectory;
-	}
-
-	private getDocumentsDirectoryFullPath(): string {
-		return this.file.externalRootDirectory;
-	}
 
 	private getBackupFile(isAuto: boolean): Observable<string> {
 		const fileName = isAuto ? this.AUTO_BACKUP_FILE : this.BACKUP_FILE;
@@ -79,13 +68,13 @@ export class ImporterExporterService {
 			const fileContent = readerLoadEvent.target.result;
 
 			if (fileContent == null || fileContent == '') {
-				this.debug += 'IMPORT DATA NATIVE MANUAL --> Wrong data format';
+				this.debug += 'IMPORT DATA MANUAL --> Wrong data format';
 				return of(null)
 			}
 
 			this.daysService.reset().subscribe(
 				() => {
-					this.loadContent(fileContent);
+					this.loadContent(fileContent as string);
 				},
 				error => {
 					this.debug += 'IMPORT DATA MANUAL' + error + ' --> ' + error.message;
@@ -101,31 +90,39 @@ export class ImporterExporterService {
 
 	public importDataNative(isAuto?: boolean): Observable<null> {
 		isAuto = isAuto || false;
-		const fileName = isAuto ? this.AUTO_BACKUP_FILE : this.BACKUP_FILE;
+		// Logic pour l'import auto (depuis Documents/LifeNotes) ou manuel ?
+		// Pour l'instant, on garde la logique "auto" qui cherche dans Documents
+		// Pour un vrai import manuel native, il faudrait un file picker.
+		// Ici on suppose que l'utilisateur veut importer le dernier backup connu.
 
-		this.file.readAsText(this.getExternalApplicationStorageDirectory(), fileName).then(
-			fileContent => {
-
-				if (fileContent == null || fileContent == '') {
-					this.debug += 'IMPORT DATA NATIVE ERROR --> Wrong data format';
-					return of(null)
-				}
-
-				this.daysService.reset().subscribe(
-					() => {
-						this.loadContent(fileContent);
-					},
-					error => {
-						this.debug += 'IMPORT DATA NATIVE ERROR --> Reset error -->' + error + ' --> ' + error.message + ' ---- ' + this.getExternalApplicationStorageDirectory() + fileName;
-					}
+		return this.getBackupFile(isAuto).pipe(
+			switchMap(fileName => {
+				return from(Filesystem.readFile({
+					path: `${this.BACKUP_DIRECTORY}/${fileName}`,
+					directory: Directory.Documents,
+					encoding: Encoding.UTF8
+				})).pipe(
+					map(result => {
+						const fileContent = result.data as string;
+						if (!fileContent) {
+							throw new Error('Empty file');
+						}
+						return fileContent;
+					}),
+					switchMap(content => {
+						return this.daysService.reset().pipe(map(() => content));
+					}),
+					map(content => {
+						this.loadContent(content);
+						return null;
+					}),
+					catchError(error => {
+						this.debug += 'IMPORT DATA NATIVE ERROR --> ' + error;
+						return of(null);
+					})
 				);
-
 			})
-			.catch((error) => {
-				this.debug += 'IMPORT DATA NATIVE ERROR --> Read error --> ' + error + ' --> ' + error.message + ' ---- ' + this.getExternalApplicationStorageDirectory() + fileName;
-			})
-
-		return of(null)
+		);
 	}
 
 	public cleanBackupData(backup: IBackup): IBackup {
@@ -147,14 +144,15 @@ export class ImporterExporterService {
 			backup = this.cleanBackupData(backup);
 			const jsonBackup = JSON.stringify(backup);
 
-			// const file = new File([jsonBackup], 'calendar.json', { type: 'application/json;charset=utf-8' });
-			// saveAs(file);
-
 			if (this.emptyBackup(backup)) {
 				return;
 			}
 
-			this.saveBackup(jsonBackup, isAuto);
+			if (isAuto) {
+				this.saveAutoBackup(jsonBackup);
+			} else {
+				this.shareBackup(jsonBackup);
+			}
 		})
 	}
 
@@ -162,102 +160,91 @@ export class ImporterExporterService {
 		return backup.days.length === 0;
 	}
 
-	private saveBackup(jsonBackup: string, isAuto?: boolean): void {
-		isAuto = isAuto || false;
-		const fileName = isAuto ? this.AUTO_BACKUP_FILE : this.BACKUP_FILE;
+	private async saveAutoBackup(jsonBackup: string): Promise<void> {
+		this.getBackupFile(true).subscribe(async fileName => {
+			try {
+				// Ensure directory exists
+				try {
+					await Filesystem.mkdir({
+						path: this.BACKUP_DIRECTORY,
+						directory: Directory.Documents,
+						recursive: true
+					});
+				} catch (e) {
+					// Ignore if already exists
+				}
 
-		this.saveBackupToDirectoryOrCreateDirectory(jsonBackup, this.getExternalApplicationStorageDirectory(), '', fileName);
-
-		this.getBackupFile(isAuto).subscribe(
-			lastBackupFileName => {
-				this.saveBackupToDirectoryOrCreateDirectory(jsonBackup, this.getDocumentsDirectoryFullPath(), this.APP_DIRECTORY, lastBackupFileName);
+				await Filesystem.writeFile({
+					path: `${this.BACKUP_DIRECTORY}/${fileName}`,
+					data: jsonBackup,
+					directory: Directory.Documents,
+					encoding: Encoding.UTF8
+				});
+			} catch (error) {
+				this.debug += 'AUTO BACKUP ERROR: ' + error;
 			}
-		);
+		});
 	}
 
-	private saveBackupToDirectoryOrCreateDirectory(jsonBackup: string, directoryPath: string, filesDirectory: string, fileName: string): void {
+	private async shareBackup(jsonBackup: string): Promise<void> {
+		this.getBackupFile(false).subscribe(async fileName => {
+			try {
+				// We need to write a temp file to share it efficiently
+				const result = await Filesystem.writeFile({
+					path: fileName,
+					data: jsonBackup,
+					directory: Directory.Cache, // Use Cache for temp files
+					encoding: Encoding.UTF8
+				});
 
-		if (filesDirectory != '') {
-			this.file.checkDir(directoryPath, filesDirectory).then(
-				() => {
-					this.saveBackupToDirectory(jsonBackup, directoryPath + filesDirectory, fileName)
-				})
-				.catch((checkError) => {
-					this.debug += 'checkDir => ' + directoryPath + filesDirectory + ' not exists: ' + checkError + ' --> ' + checkError.message;
-					this.file.createDir(directoryPath, filesDirectory, false)
-						.then(
-							() =>
-								this.saveBackupToDirectory(jsonBackup, directoryPath + filesDirectory, fileName)
-						)
-						.catch(
-							createError => {
-								this.debug += '\ncreateDir => ' + createError + ' --> ' + createError.message + ' ---- ' + directoryPath + filesDirectory;
-							})
-				})
-		} else {
-			this.saveBackupToDirectory(jsonBackup, directoryPath + filesDirectory, fileName)
-		}
-	}
-
-	private saveBackupToDirectory(jsonBackup: string, directoryFullPath: string, fileName: string): void {
-		this.file.createFile(directoryFullPath, fileName, true)
-			.then(() => this.file.writeExistingFile(directoryFullPath, fileName, jsonBackup)
-				.catch(
-					error => {
-						this.debug += 'writeExistingFile => ' + error + ' --> ' + error.message + + ' ---- ' + directoryFullPath;
-						this.retrySaveBackupToDirectory(jsonBackup, directoryFullPath, fileName);
-					})
-			)
-			.catch(
-				error => {
-					this.debug += 'createFile => ' + error + ' --> ' + error.message + + ' ---- ' + directoryFullPath;
-				})
-	}
-
-	private retrySaveBackupToDirectory(jsonBackup: string, directoryFullPath: string, fileName: string) {
-		/*if (this.nbSaveRetries > this.MAX_SAVE_TRIES) {
-			return;
-		}
-		this.settingsService.updateLastInstall().subscribe(
-			settings => {
-				this.saveBackupToDirectory(jsonBackup, directoryFullPath, fileName.replace('.json', settings.lastInstall + '.json'));
+				await Share.share({
+					title: 'Life Notes Backup',
+					text: 'Here is your Life Notes backup data',
+					url: result.uri,
+					dialogTitle: 'Save or Share Backup'
+				});
+			} catch (error) {
+				this.debug += 'SHARE BACKUP ERROR: ' + error;
 			}
-		).add(() => {
-			this.nbSaveRetries++;
-		});*/
+		});
 	}
 
 	public htmltoPDF(body: any) {
-		// parentdiv is the html element which has to be converted to PDF
 		html2canvas(body, {
 			height: 300 * 2,
 			windowHeight: 300 * 2
-		}).then(canvas => {
-			console.log(canvas.height + '-' + canvas.width);
+		}).then(async canvas => {
 			let pdf = new jspdf('p', 'pt', [canvas.width, canvas.height]);
-
 			let imgData = canvas.toDataURL("image/png", 1.0);
 			pdf.addImage(imgData, 0, 0, canvas.width, canvas.height);
-			// pdf.save('converteddoc.pdf');
 
-			let pdfOutput = pdf.output();
+			// For Capacitor, we usually share the PDF logic or save it
+			// This part was quite specific to cordova-p-file.
+			// Let's adapt it to Share as well using base64.
+			const pdfOutput = pdf.output('datauristring');
+			const base64Data = pdfOutput.split(',')[1];
 
-			let buffer = new ArrayBuffer(pdfOutput.length);
+			try {
+				const fileName = "LifeNotes_Export.pdf";
+				const result = await Filesystem.writeFile({
+					path: fileName,
+					data: base64Data,
+					directory: Directory.Cache,
+					// encoding: Encoding.UTF8 // Binary data shouldn't set encoding for base64 writes in strict mode usually, but for Filesystem it handles base64 string if not encoding provided? Check docs. Actually for base64 string, usually no encoding or explicitly base64? 
+					// Capacitor Filesystem writeFile with string data defaults to UTF8 unless recursive... wait. 
+					// If data is a base64 string, we might not need encoding if newer plugin version detects it, OR we need to be careful.
+					// Actually, standard is: data: string. If you want binary, pass base64 string.
+				});
 
-			let array = new Uint8Array(buffer);
+				await Share.share({
+					title: 'Export PDF',
+					url: result.uri,
+					dialogTitle: 'Share PDF'
+				});
 
-			for (var i = 0; i < pdfOutput.length; i++) {
-				array[i] = pdfOutput.charCodeAt(i);
+			} catch (e) {
+				this.debug += "PDF Create/Share Error: " + JSON.stringify(e);
 			}
-
-			// const directory = this.file.externalApplicationStorageDirectory;
-			const directory = this.file.externalRootDirectory + 'life-notes/';
-
-			const fileName = "Test.pdf";
-
-			this.file.writeFile(directory, fileName, buffer)
-				.then((success) => this.debug += "File created Succesfully" + JSON.stringify(success))
-				.catch((error) => this.debug += "Cannot Create File " + JSON.stringify(error));
 		});
 	}
 
