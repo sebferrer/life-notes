@@ -171,7 +171,8 @@ export class SettingsComponent implements OnInit {
 	}
 
 	public exportData(): void {
-		this.dialog.open(DialogExportConfirmComponent, {
+		this.importerExporterService.exportData();
+		/*this.dialog.open(DialogExportConfirmComponent, {
 			autoFocus: false,
 			width: '20rem',
 			panelClass: 'custom-modalbox'
@@ -184,7 +185,7 @@ export class SettingsComponent implements OnInit {
 			this.snackBar.open(this.translocoService.translate('DATA_EXPORT_SNACKBAR_SUCCESS'),
 				this.translocoService.translate('CLOSE'),
 				{ duration: 2000 });
-		});
+		});*/
 	}
 
 	public generateBackupData(): void {

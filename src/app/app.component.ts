@@ -46,7 +46,6 @@ export class AppComponent implements OnInit {
 			// this.lastUpdate = settings.lastUpdate;
 			// this.checkUpdates();
 			this.checkWeeklyReminder(settings);
-			//this.autoBackup();
 		});
 		// this.daysService.reset().subscribe(() => {});
 	}
@@ -106,9 +105,7 @@ export class AppComponent implements OnInit {
 	// 	});
 	// }
 
-	public autoBackup(): void {
-		this.importerExporterService.exportData(true);
-	}
+
 
 	public getSymptoms$(): Observable<ISymptom[]> {
 		return this.globalService.symptoms$;

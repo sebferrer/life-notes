@@ -138,9 +138,8 @@ export class ImporterExporterService {
 		return backup;
 	}
 
-	public exportData(isAuto?: boolean): void {
-		isAuto = isAuto || false;
-		this.backupService.getBackup().subscribe(backup => {
+	public exportData(): void {
+		this.backupService.getBackup().subscribe(async backup => {
 			backup = this.cleanBackupData(backup);
 			const jsonBackup = JSON.stringify(backup);
 
@@ -148,52 +147,20 @@ export class ImporterExporterService {
 				return;
 			}
 
-			if (isAuto) {
-				this.saveAutoBackup(jsonBackup);
-			} else {
-				this.shareBackup(jsonBackup);
-			}
-		})
-	}
+			const now = new Date();
+			const yyyy = now.getFullYear();
+			const mm = String(now.getMonth() + 1).padStart(2, "0");
+			const dd = String(now.getDate()).padStart(2, "0");
+			const hh = String(now.getHours()).padStart(2, "0");
+			const min = String(now.getMinutes()).padStart(2, "0");
 
-	private emptyBackup(backup: IBackup): boolean {
-		return backup.days.length === 0;
-	}
+			const fileName = `life-notes-save-${yyyy}${mm}${dd}${hh}${min}.json`;
 
-	private async saveAutoBackup(jsonBackup: string): Promise<void> {
-		this.getBackupFile(true).subscribe(async fileName => {
 			try {
-				// Ensure directory exists
-				try {
-					await Filesystem.mkdir({
-						path: this.BACKUP_DIRECTORY,
-						directory: Directory.Documents,
-						recursive: true
-					});
-				} catch (e) {
-					// Ignore if already exists
-				}
-
-				await Filesystem.writeFile({
-					path: `${this.BACKUP_DIRECTORY}/${fileName}`,
-					data: jsonBackup,
-					directory: Directory.Documents,
-					encoding: Encoding.UTF8
-				});
-			} catch (error) {
-				this.debug += 'AUTO BACKUP ERROR: ' + error;
-			}
-		});
-	}
-
-	private async shareBackup(jsonBackup: string): Promise<void> {
-		this.getBackupFile(false).subscribe(async fileName => {
-			try {
-				// We need to write a temp file to share it efficiently
 				const result = await Filesystem.writeFile({
 					path: fileName,
 					data: jsonBackup,
-					directory: Directory.Cache, // Use Cache for temp files
+					directory: Directory.Cache,
 					encoding: Encoding.UTF8
 				});
 
@@ -204,9 +171,13 @@ export class ImporterExporterService {
 					dialogTitle: 'Save or Share Backup'
 				});
 			} catch (error) {
-				this.debug += 'SHARE BACKUP ERROR: ' + error;
+				this.debug += 'EXPORT ERROR: ' + error;
 			}
 		});
+	}
+
+	private emptyBackup(backup: IBackup): boolean {
+		return backup.days.length === 0;
 	}
 
 	public htmltoPDF(body: any) {
