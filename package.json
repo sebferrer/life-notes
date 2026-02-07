@@ -64,6 +64,7 @@
     "@angular/compiler": "~11.0.2",
     "@angular/compiler-cli": "~11.0.2",
     "@angular/language-service": "~11.0.2",
+    "@capacitor/assets": "^3.0.5",
     "@ionic/angular-toolkit": "^3.0.0",
     "@types/chart.js": "^2.9.29",
     "@types/file-saver": "^2.0.1",
