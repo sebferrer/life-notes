@@ -15,7 +15,7 @@ import { GlobalService } from './global.service';
 import { TranslocoService } from '@ngneat/transloco';
 import * as moment from 'moment';
 import { saveAs } from 'file-saver';
-import jspdf from 'jspdf';
+import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 
 @Injectable({
@@ -93,10 +93,6 @@ export class ImporterExporterService {
 
 	public importDataNative(isAuto?: boolean): Observable<null> {
 		isAuto = isAuto || false;
-		// Logic pour l'import auto (depuis Documents/LifeNotes) ou manuel ?
-		// Pour l'instant, on garde la logique "auto" qui cherche dans Documents
-		// Pour un vrai import manuel native, il faudrait un file picker.
-		// Ici on suppose que l'utilisateur veut importer le dernier backup connu.
 
 		return this.getBackupFile(isAuto).pipe(
 			switchMap(fileName => {
@@ -221,43 +217,164 @@ export class ImporterExporterService {
 		return backup.days.length === 0;
 	}
 
-	public htmltoPDF(body: any) {
-		html2canvas(body, {
-			height: 300 * 2,
-			windowHeight: 300 * 2
-		}).then(async canvas => {
-			let pdf = new jspdf('p', 'pt', [canvas.width, canvas.height]);
-			let imgData = canvas.toDataURL("image/png", 1.0);
-			pdf.addImage(imgData, 0, 0, canvas.width, canvas.height);
+	public async htmltoPDF(element: HTMLElement, fileName: string = 'LifeNotes_Report.pdf', action: 'save' | 'share' = 'save'): Promise<void> {
+		let clone: HTMLElement | null = null;
+		try {
+			// Manual Cloning Strategy
+			clone = element.cloneNode(true) as HTMLElement;
 
-			// For Capacitor, we usually share the PDF logic or save it
-			// This part was quite specific to cordova-p-file.
-			// Let's adapt it to Share as well using base64.
-			const pdfOutput = pdf.output('datauristring');
-			const base64Data = pdfOutput.split(',')[1];
+			// Setup Container for Clone
+			clone.style.width = '800px'; // Fixed width
+			clone.style.position = 'absolute';
+			clone.style.top = '0';
+			clone.style.left = '0';
+			clone.style.zIndex = '-9999'; // Hide behind
+			clone.style.background = 'white';
+			clone.style.height = 'auto';
+			clone.style.overflow = 'visible';
 
-			try {
-				const fileName = "LifeNotes_Export.pdf";
-				const result = await Filesystem.writeFile({
-					path: fileName,
-					data: base64Data,
-					directory: Directory.Cache,
-					// encoding: Encoding.UTF8 // Binary data shouldn't set encoding for base64 writes in strict mode usually, but for Filesystem it handles base64 string if not encoding provided? Check docs. Actually for base64 string, usually no encoding or explicitly base64? 
-					// Capacitor Filesystem writeFile with string data defaults to UTF8 unless recursive... wait. 
-					// If data is a base64 string, we might not need encoding if newer plugin version detects it, OR we need to be careful.
-					// Actually, standard is: data: string. If you want binary, pass base64 string.
-				});
-
-				await Share.share({
-					title: 'Export PDF',
-					url: result.uri,
-					dialogTitle: 'Share PDF'
-				});
-
-			} catch (e) {
-				this.debug += "PDF Create/Share Error: " + JSON.stringify(e);
+			// Fix specific child elements in the clone
+			const contentElement = clone.querySelector('.content') as HTMLElement;
+			if (contentElement) {
+				contentElement.style.height = 'auto';
+				contentElement.style.overflow = 'visible';
+				contentElement.style.position = 'static';
+				contentElement.style.marginTop = '2rem';   // Space between header and first symptom
 			}
-		});
+
+			const calendarHeader = clone.querySelector('.calendar-header') as HTMLElement;
+			if (calendarHeader) {
+				calendarHeader.style.position = 'static';
+				calendarHeader.style.height = '3.5rem';
+				calendarHeader.style.width = '100%';
+			}
+
+			const calendarContainer = clone.id === 'calendar-container' ? clone : clone.querySelector('#calendar-container') as HTMLElement;
+			if (calendarContainer) {
+				calendarContainer.style.height = 'auto';
+				calendarContainer.style.overflow = 'visible';
+				calendarContainer.style.position = 'relative';
+			}
+
+			// Spacing for every 4th symptom to avoid cut on page break
+			const symptomContainers = clone.querySelectorAll('.sympmtom-container');
+			if (symptomContainers) {
+				symptomContainers.forEach((container, index) => {
+					if ((index + 1) % 4 === 0) {
+						(container as HTMLElement).style.marginBottom = '6rem';
+					}
+				});
+			}
+
+			// Copy Canvas Content (Pie Charts)
+			const originalCanvases = element.querySelectorAll('canvas');
+			const clonedCanvases = clone.querySelectorAll('canvas');
+			originalCanvases.forEach((orig, index) => {
+				if (clonedCanvases[index]) {
+					const ctx = clonedCanvases[index].getContext('2d');
+					if (ctx) {
+						ctx.drawImage(orig, 0, 0);
+					}
+				}
+			});
+
+			document.body.appendChild(clone);
+
+			// Wait a tick for rendering
+			await new Promise(resolve => setTimeout(resolve, 200));
+
+			const canvas = await html2canvas(clone, {
+				scale: 2,
+				useCORS: true,
+				logging: false, // Turn off logging if fixed
+				allowTaint: true,
+				scrollY: 0,
+				windowWidth: 800
+			});
+
+			const imgData = canvas.toDataURL('image/jpeg', 0.95);
+			const pdf = new jsPDF('p', 'mm', 'a4');
+			const pdfWidth = pdf.internal.pageSize.getWidth();
+			const pdfHeight = pdf.internal.pageSize.getHeight();
+
+			if (canvas.width === 0 || canvas.height === 0) {
+				throw new Error(`Canvas has 0 dimensions: ${canvas.width}x${canvas.height}`);
+			}
+
+			const imgHeight = (canvas.height * pdfWidth) / canvas.width;
+
+			let heightLeft = imgHeight;
+			let position = 0;
+
+			pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, imgHeight);
+			heightLeft -= pdfHeight;
+
+			while (heightLeft > 0) {
+				position = position - pdfHeight;
+				pdf.addPage();
+				pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, imgHeight);
+				heightLeft -= pdfHeight;
+			}
+
+			// Web: Download
+			if (!Capacitor.isNativePlatform()) {
+				pdf.save(fileName);
+			} else {
+				// Native: Save or Share
+				console.log('PDF Export Action:', action);
+				console.log('Is Native:', Capacitor.isNativePlatform());
+
+				const pdfOutput = pdf.output('datauristring');
+				const base64Data = pdfOutput.split(',')[1];
+
+				try {
+					// 1. Write to temp file in cache (needed for both operations)
+					const tempFileName = `temp_${fileName}`;
+					const writeResult = await Filesystem.writeFile({
+						path: tempFileName,
+						data: base64Data,
+						directory: Directory.Cache
+					});
+
+					if (action === 'save') {
+						// 2a. Pass path to FileSaver
+						await FileSaver.saveFile({
+							path: writeResult.uri,
+							filename: fileName,
+							contentType: 'application/pdf'
+						});
+
+						// 3. Clean up temp file
+						await Filesystem.deleteFile({
+							path: tempFileName,
+							directory: Directory.Cache
+						});
+					} else {
+						// 2b. Share the temp file
+						await Share.share({
+							title: 'Life Notes Report',
+							url: writeResult.uri,
+							dialogTitle: 'Share PDF'
+						});
+						// Do NOT delete immediately as share intent might need it
+					}
+
+					// Optional: Toast or feedback?
+				} catch (error) {
+					console.error("Export Error", error);
+					throw error;
+				}
+			}
+
+		} catch (error) {
+			this.debug += ' PDF Export Error: ' + JSON.stringify(error);
+			console.error('PDF Export Error', error);
+			throw error;
+		} finally {
+			if (clone && document.body.contains(clone)) {
+				document.body.removeChild(clone);
+			}
+		}
 	}
 
 	public exportHtml(): void {

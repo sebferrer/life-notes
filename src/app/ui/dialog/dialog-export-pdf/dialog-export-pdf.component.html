@@ -1,12 +1,28 @@
 <h1 mat-dialog-title>{{ 'EXPORT_PDF_DIALOG_TITLE' | transloco }}</h1>
 <div mat-dialog-content class="dialog-content">
-    <p>{{ 'EXPORT_PDF_DIALOG_CONTENT_1' | transloco }}</p>
-    <div class="save-icon-container">
-        <mat-icon class="save-icon">save_alt</mat-icon>
+    <p>{{ 'EXPORT_PDF_DIALOG_CONTENT_SELECT' | transloco }}</p>
+
+    <div class="form-container" style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem;">
+        <mat-form-field appearance="fill">
+            <mat-label>{{ 'MONTH_LABEL' | transloco }}</mat-label>
+            <mat-select [(ngModel)]="selectedMonth">
+                <mat-option *ngFor="let m of months" [value]="m.value">
+                    {{ 'MONTH-' + m.value | transloco }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>{{ 'YEAR_LABEL' | transloco }}</mat-label>
+            <mat-select [(ngModel)]="selectedYear">
+                <mat-option *ngFor="let y of years" [value]="y">
+                    {{ y }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
     </div>
-    <p>{{ 'EXPORT_PDF_DIALOG_CONTENT_2' | transloco }}</p>
 </div>
-<div mat-dialog-actions>
-    <button mat-button (click)="onCloseClick()" transloco="CANCEL"></button>
-    <button mat-raised-button color="primary" (click)="onGoToToolClick()" transloco="GO_TO_PDF_TOOL"></button>
+<div mat-dialog-actions align="end">
+    <button mat-button (click)="onCloseClick()">{{ 'CANCEL' | transloco }}</button>
+    <button mat-raised-button color="primary" (click)="onConfirmClick()">{{ 'SET' | transloco }}</button>
 </div>

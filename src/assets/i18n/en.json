@@ -78,7 +78,9 @@
     "IMPORT_DIALOG_TITLE": "Import data",
     "IMPORT_DIALOG_CONTENT_1": "Are you sure you want to import this data?",
     "IMPORT_DIALOG_CONTENT_2": "The current data will definitely be replaced by the new one.",
-    "EXPORT_DIALOG_TITLE": "Export data",
+    "EXPORT_PDF_TITLE": "Export PDF",
+    "EXPORT_IN_PROGRESS": "Exporting in progress...",
+    "EXPORT_MSG_LONG": "Depending on the number of symptoms, this may take a while.",
     "EXPORT_DIALOG_CONTENT_1": "Are you sure you want to save this data?",
     "EXPORT_DIALOG_CONTENT_2": "The current save file will definitely be replaced by the new one.",
     "IMPORT_DIALOG_CONTENT_3": "Please make sure that you have exported your data beforehand.",
@@ -174,7 +176,10 @@
     "SAVE_TEXT_2": "Click here",
     "CALENDAR_HELP_DIALOG_TITLE": "Symptom charts",
     "CALENDAR_HELP_DIALOG_CONTENT_1": "Here are your symptom overviews. These charts aren't filled by the symptoms you've added to your days, but by your overall symptom overviews. These symptom overviews can be filled in by tapping on the small green circle on the right of each day in your timeline.",
-    "CALENDAR_HELP_DIALOG_CONTENT_2": "For example, the default value '0:31' that appears when you tap on the chart means that you have 31 days with a 0 pain intensity for this symptom.",
+    "CALENDAR_HELP_DIALOG_CONTENT_2": "The color intensity represents the pain level.",
+    "TOP_MEDS": "Top Medications",
+    "TOP_LOGS": "Top Notes",
+    "OCCURRENCES": "Occurrences",
     "TUTORIAL_SWIPE": "Swipe left to scroll.",
     "TUTORIAL_SLIDE_1_TITLE": "Help / Tutorial",
     "TUTORIAL_SLIDE_1_TEXT": "This section will allow you to learn more about how the application works so that you can easily become familiar with.",
@@ -292,5 +297,8 @@
     "EXPORT_PDF_DIALOG_CONTENT_1": "This feature works using your backup file.",
     "EXPORT_PDF_DIALOG_CONTENT_2": "Please first save your data using the 'Save' button above, if you haven't already.",
     "GO_TO_PDF_TOOL": "Go to tool",
-    "CHECK_UPDATE_NOTES": "Check update notes"
+    "CHECK_UPDATE_NOTES": "Check update notes",
+    "EXPORT_PDF_DIALOG_CONTENT_SELECT": "Please select the month and year for the report.",
+    "MONTH_LABEL": "Month",
+    "YEAR_LABEL": "Year"
 }

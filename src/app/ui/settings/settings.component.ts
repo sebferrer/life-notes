@@ -12,6 +12,7 @@ import { DialogInfoComponent } from '../dialog/dialog-info';
 import { BackupService } from 'src/app/infra/backup.service';
 import { DialogExportConfirmComponent } from '../dialog/dialog-export-confirm';
 import { DialogExportPdfComponent } from '../dialog/dialog-export-pdf/dialog-export-pdf.component';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'app-settings',
@@ -48,7 +49,8 @@ export class SettingsComponent implements OnInit {
 		private backupService: BackupService,
 		private settingsService: SettingsService,
 		private dialog: MatDialog,
-		private snackBar: MatSnackBar
+		private snackBar: MatSnackBar,
+		private router: Router
 	) { }
 
 	public ngOnInit(): void {
@@ -250,6 +252,10 @@ export class SettingsComponent implements OnInit {
 			autoFocus: false,
 			width: '20rem',
 			panelClass: 'custom-modalbox'
+		}).afterClosed().subscribe(result => {
+			if (result) {
+				this.router.navigate(['/monthlyreport', result.year + '-' + result.month]);
+			}
 		});
 	}
 }

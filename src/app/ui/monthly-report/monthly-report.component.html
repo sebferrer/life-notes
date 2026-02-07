@@ -1,6 +1,6 @@
 <div id="calendar" *ngIf="overviews$ | async as overviews; else loading">
 	<div *ngIf="symptoms$ | async as symptoms; else loading">
-		<div id="calendar-container">
+		<div id="calendar-container" #exportContainer>
 			<div class="calendar-header">
 				<div class="calender-header-label">
 					<ng-template transloco let-t>
@@ -9,7 +9,8 @@
 				</div>
 			</div>
 			<div class="content" #content>
-				<div class="sympmtom-container" *ngFor="let symptom of organizeSymptoms(symptoms)">
+				<div class="sympmtom-container" *ngFor="let symptom of symptoms"
+					[style.visibility]="symptom.key === 'dummy' ? 'hidden' : 'visible'" style="padding: 0 1rem;">
 					<label>{{ symptom.label }}</label>
 					<div class="grid-list">
 						<div *ngFor="let overview of overviews"
@@ -20,24 +21,87 @@
 							</div>
 						</div>
 					</div>
-					<app-pie-chart class="pie-chart" [chart]="pieCharts.get(symptom.key)" [width]="12" [legend]="false"></app-pie-chart>
+					<app-pie-chart *ngIf="symptom.key !== 'dummy'" class="pie-chart"
+						[chart]="pieCharts.get(symptom.key)" [width]="12" [legend]="false"></app-pie-chart>
+					<div *ngIf="symptom.key === 'dummy'" style="width: 12rem; height: 12rem;"></div>
 				</div>
 
-				<!--div class="charts">
-					<div [ngClass]="symptoms.length > 1 ? 'pie-charts' : 'pie-chart'">
-						<app-pie-chart *ngFor="let symptom of organizeSymptoms(symptoms)" [title]="symptom.label"
-							[chart]="pieCharts.get(symptom.key)"></app-pie-chart>
+				<!-- Stats & Charts Section -->
+				<div class="stats-container" style="margin-top: 3rem; display: block; padding: 0 2rem;">
+
+					<!-- Top Meds -->
+					<div *ngIf="topMeds.length > 0" style="margin-bottom: 3rem;">
+						<h3 *transloco="let t"
+							style="margin-bottom: 1rem; color: #555; text-transform: uppercase; font-size: 0.9rem; font-weight: bold;">
+							{{ t('TOP_MEDS') }}
+						</h3>
+						<div style="background: #f9f9f9; border-radius: 8px; padding: 1rem;">
+							<div *ngFor="let item of topMeds"
+								style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #eee;">
+								<span style="font-weight: 500;">{{ item.name }}</span>
+								<span style="color: #777;">{{ item.count }}</span>
+							</div>
+						</div>
 					</div>
-					<app-line-chart [title]="'MONTHLY_WAKEUPTIME'" [chart]="wakeUpChart"
-						[timeFormat]="globalService.timeFormat"></app-line-chart>
-					<app-line-chart [title]="'MONTHLY_BEDTIME'" [chart]="bedTimeChart"
-						[timeFormat]="globalService.timeFormat"></app-line-chart>
-					<app-line-chart [title]="'MONTHLY_SLEEP'" [chart]="sleepChart"
-						[timeFormat]="globalService.timeFormat"></app-line-chart>
-				</div-->
+
+					<!-- Top Logs -->
+					<div *ngIf="topLogs.length > 0" style="margin-bottom: 3rem;">
+						<h3 *transloco="let t"
+							style="margin-bottom: 1rem; color: #555; text-transform: uppercase; font-size: 0.9rem; font-weight: bold;">
+							{{ t('TOP_LOGS') }}
+						</h3>
+						<div style="background: #f9f9f9; border-radius: 8px; padding: 1rem;">
+							<div *ngFor="let item of topLogs"
+								style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #eee;">
+								<span style="font-weight: 500;">{{ item.name }}</span>
+								<span style="color: #777;">{{ item.count }}</span>
+							</div>
+						</div>
+					</div>
+
+					<!-- Spacer -->
+					<div style="height: 32rem;"></div>
+
+					<!-- Sleep Charts -->
+					<div class="charts-section">
+						<app-line-chart [title]="'MONTHLY_WAKEUPTIME'" [chart]="wakeUpChart"
+							[timeFormat]="globalService.timeFormat"
+							style="display: block; margin-bottom: 2rem; width: 100%;"></app-line-chart>
+						<app-line-chart [title]="'MONTHLY_BEDTIME'" [chart]="bedTimeChart"
+							[timeFormat]="globalService.timeFormat"
+							style="display: block; margin-bottom: 2rem; width: 100%;"></app-line-chart>
+						<app-line-chart [title]="'MONTHLY_SLEEP'" [chart]="sleepChart"
+							[timeFormat]="globalService.timeFormat"
+							style="display: block; margin-bottom: 2rem; width: 100%;"></app-line-chart>
+					</div>
+
+				</div>
 			</div>
 		</div>
 	</div>
+</div>
+<div class="fab-container"
+	style="position: fixed; bottom: 2rem; right: 2rem; z-index: 1000; display: flex; flex-direction: column; gap: 1rem;">
+	<button mat-fab color="primary" (click)="exportPdf('share')" [disabled]="isExporting">
+		<mat-icon>share</mat-icon>
+	</button>
+	<button mat-fab color="primary" (click)="exportPdf('save')" [disabled]="isExporting">
+		<mat-icon>save_alt</mat-icon>
+	</button>
+</div>
+
+
+<div class="loading-overlay" *ngIf="isExporting"
+	style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 9999; display: flex; justify-content: center; align-items: center;">
+	<mat-card>
+		<mat-card-content style="display: flex; flex-direction: column; align-items: center; gap: 1rem; padding: 1rem;">
+			<mat-spinner diameter="50"></mat-spinner>
+			<ng-template transloco let-t>
+				<p style="font-weight: bold;">{{ t('EXPORT_IN_PROGRESS') }}</p>
+				<p style="font-size: 0.9rem; color: #666;">{{ t('EXPORT_MSG_LONG') }}</p>
+			</ng-template>
+		</mat-card-content>
+	</mat-card>
 </div>
 
 <ng-template #loading>
