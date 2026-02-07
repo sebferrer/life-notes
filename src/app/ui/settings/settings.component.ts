@@ -28,6 +28,7 @@ export class SettingsComponent implements OnInit {
 	// DEVELOPER UPDATES NOTIFICATION FEATURE DISABLED
 	// public hideDeveloperUpdates: boolean;
 	public showDeveloperMode: boolean;
+	public showAdvancedSettings: boolean;
 	public calendarStartOnSunday: boolean;
 	public calendarBlockView: boolean;
 	public weeklyReminder: boolean;
@@ -60,6 +61,7 @@ export class SettingsComponent implements OnInit {
 			// DEVELOPER UPDATES NOTIFICATION FEATURE DISABLED
 			// this.hideDeveloperUpdates = settings.hideDeveloperUpdates;
 			this.showDeveloperMode = settings.showDeveloperMode;
+			this.showAdvancedSettings = settings.showAdvancedSettings;
 			this.calendarStartOnSunday = settings.calendarStartOnSunday;
 			this.calendarBlockView = settings.calendarBlockView;
 			this.weeklyReminder = settings.weeklyReminder;
@@ -87,6 +89,10 @@ export class SettingsComponent implements OnInit {
 
 	public setShowDeveloperMode(): void {
 		this.settingsService.setShowDeveloperMode(this.showDeveloperMode).subscribe();
+	}
+
+	public setShowAdvancedSettings(): void {
+		this.settingsService.setShowAdvancedSettings(this.showAdvancedSettings).subscribe();
 	}
 
 	public setCalendarStartOnSunday(): void {
@@ -210,10 +216,7 @@ export class SettingsComponent implements OnInit {
 		this.importerExporterService.exportHtml();
 	}
 
-	public showManualBackupDiv() {
-		const div: HTMLInputElement = document.getElementById('manual-backup-div') as HTMLInputElement;
-		div.style.display = "block";
-	}
+
 
 	public getWindowLocationOrigin() {
 		return window.location.origin;

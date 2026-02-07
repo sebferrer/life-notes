@@ -200,6 +200,18 @@ export class SettingsService {
 	// 	);
 	// }
 
+	public setShowAdvancedSettings(show: boolean): Observable<ISettings> {
+		const settings = this.getSettings();
+		return settings.pipe(
+			switchMap(s => {
+				s.showAdvancedSettings = show;
+				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
+					map(() => s)
+				);
+			})
+		);
+	}
+
 	public setShowDeveloperMode(show: boolean): Observable<ISettings> {
 		const settings = this.getSettings();
 		return settings.pipe(
@@ -267,6 +279,7 @@ export class SettingsService {
 						// DEVELOPER UPDATES NOTIFICATION FEATURE DISABLED
 						// 'hideDeveloperUpdates': false,
 						'showDeveloperMode': false,
+						'showAdvancedSettings': false,
 						'calendarStartOnSunday': true,
 						'calendarBlockView': false,
 						'painPalette': '2',
@@ -300,6 +313,10 @@ export class SettingsService {
 					// 	s.hideDeveloperUpdates = false;
 					// 	changed = true;
 					// }
+					if (s.showAdvancedSettings == null) {
+						s.showAdvancedSettings = false;
+						changed = true;
+					}
 					if (s.showDeveloperMode == null) {
 						s.showDeveloperMode = false;
 						changed = true;
