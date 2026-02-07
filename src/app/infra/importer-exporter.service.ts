@@ -4,7 +4,9 @@ import { getDetailedDate } from 'src/app/util/date.utils';
 import { Observable, of, from } from 'rxjs';
 import { map, switchMap, catchError } from 'rxjs/operators';
 import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
+import { Capacitor } from '@capacitor/core';
 import { Share } from '@capacitor/share';
+import FileSaver from './file-saver-plugin';
 import { BackupService } from './backup.service';
 import { SymptomsService } from './symptoms.service';
 import { SettingsService } from './settings.service';
@@ -12,6 +14,7 @@ import { IBackup } from '../models/backup.model';
 import { GlobalService } from './global.service';
 import { TranslocoService } from '@ngneat/transloco';
 import * as moment from 'moment';
+import { saveAs } from 'file-saver';
 import jspdf from 'jspdf';
 import html2canvas from 'html2canvas';
 
@@ -138,7 +141,7 @@ export class ImporterExporterService {
 		return backup;
 	}
 
-	public exportData(): void {
+	public shareBackup(): void {
 		this.backupService.getBackup().subscribe(async backup => {
 			backup = this.cleanBackupData(backup);
 			const jsonBackup = JSON.stringify(backup);
@@ -147,14 +150,7 @@ export class ImporterExporterService {
 				return;
 			}
 
-			const now = new Date();
-			const yyyy = now.getFullYear();
-			const mm = String(now.getMonth() + 1).padStart(2, "0");
-			const dd = String(now.getDate()).padStart(2, "0");
-			const hh = String(now.getHours()).padStart(2, "0");
-			const min = String(now.getMinutes()).padStart(2, "0");
-
-			const fileName = `life-notes-save-${yyyy}${mm}${dd}${hh}${min}.json`;
+			const fileName = this.generateBackupFileName();
 
 			try {
 				const result = await Filesystem.writeFile({
@@ -168,12 +164,57 @@ export class ImporterExporterService {
 					title: 'Life Notes Backup',
 					text: 'Here is your Life Notes backup data',
 					url: result.uri,
-					dialogTitle: 'Save or Share Backup'
+					dialogTitle: 'Share Backup'
 				});
 			} catch (error) {
-				this.debug += 'EXPORT ERROR: ' + error;
+				this.debug += 'SHARE ERROR: ' + error;
 			}
 		});
+	}
+
+	public saveBackup(): Promise<string> {
+		return new Promise((resolve, reject) => {
+			this.backupService.getBackup().subscribe(async backup => {
+				backup = this.cleanBackupData(backup);
+				const jsonBackup = JSON.stringify(backup);
+
+				if (this.emptyBackup(backup)) {
+					reject('Empty backup');
+					return;
+				}
+
+				const fileName = this.generateBackupFileName();
+
+				if (Capacitor.isNativePlatform()) {
+					try {
+						const base64 = btoa(unescape(encodeURIComponent(jsonBackup)));
+						const result = await FileSaver.saveFile({
+							base64Data: base64,
+							filename: fileName,
+							contentType: 'application/json'
+						});
+						resolve(result.uri);
+					} catch (error) {
+						reject(error);
+					}
+				} else {
+					const blob = new Blob([jsonBackup], { type: 'application/json' });
+					saveAs(blob, fileName);
+					resolve('download');
+				}
+			});
+		});
+	}
+
+	private generateBackupFileName(): string {
+		const now = new Date();
+		const yyyy = now.getFullYear();
+		const mm = String(now.getMonth() + 1).padStart(2, "0");
+		const dd = String(now.getDate()).padStart(2, "0");
+		const hh = String(now.getHours()).padStart(2, "0");
+		const min = String(now.getMinutes()).padStart(2, "0");
+
+		return `life-notes-save-${yyyy}${mm}${dd}${hh}${min}.json`;
 	}
 
 	private emptyBackup(backup: IBackup): boolean {

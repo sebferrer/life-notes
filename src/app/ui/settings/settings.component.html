@@ -156,9 +156,18 @@
                             </div>
                         </mat-list-option>
 
-                        <mat-list-option (click)="exportData()">
+                        <mat-list-option (click)="saveBackup()">
                             <div class="list-icon">
                                 <mat-icon>save_alt</mat-icon>
+                            </div>
+                            <div class="list-item-text">
+                                <p>{{ 'EXPORT_SAVE' | transloco }}</p>
+                            </div>
+                        </mat-list-option>
+
+                        <mat-list-option (click)="shareBackup()">
+                            <div class="list-icon">
+                                <mat-icon>share</mat-icon>
                             </div>
                             <div class="list-item-text">
                                 <p>{{ 'EXPORT_FILE' | transloco }}</p>

@@ -176,22 +176,21 @@ export class SettingsComponent implements OnInit {
 		});
 	}
 
-	public exportData(): void {
-		this.importerExporterService.exportData();
-		/*this.dialog.open(DialogExportConfirmComponent, {
-			autoFocus: false,
-			width: '20rem',
-			panelClass: 'custom-modalbox'
-		}).afterClosed().subscribe(response => {
-			if (response == null || response.answer !== 'yes') {
-				return;
-			}
-			this.importerExporterService.exportData();
-			this.debug = this.importerExporterService.debug;
-			this.snackBar.open(this.translocoService.translate('DATA_EXPORT_SNACKBAR_SUCCESS'),
-				this.translocoService.translate('CLOSE'),
-				{ duration: 2000 });
-		});*/
+	public shareBackup(): void {
+		this.importerExporterService.shareBackup();
+	}
+
+	public saveBackup(): void {
+		this.importerExporterService.saveBackup()
+			.then(() => {
+				// Success handled via browser download
+			})
+			.catch((err) => {
+				this.debug = 'Save Error: ' + JSON.stringify(err);
+				this.snackBar.open('Error: ' + (err.message || JSON.stringify(err)),
+					this.translocoService.translate('CLOSE'),
+					{ duration: 5000 });
+			});
 	}
 
 	public generateBackupData(): void {
