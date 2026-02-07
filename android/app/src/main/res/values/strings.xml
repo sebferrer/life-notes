@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Life Notes</string>
+    <string name="title_activity_main">Life Notes</string>
+    <string name="package_name">com.sebferrer.life_notes</string>
+    <string name="custom_url_scheme">com.sebferrer.life_notes</string>
+</resources>

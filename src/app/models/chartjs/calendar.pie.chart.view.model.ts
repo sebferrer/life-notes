@@ -34,7 +34,15 @@ export class CalendarPieChartViewModel extends APieChartViewModel {
 		dayOverviews.forEach(overview => {
 			const symptom = overview.symptomOverviews.find(s => s.key === this.symptomKey);
 			const symptomPain = symptom == null ? 0 : symptom.pain;
-			const key = Math.ceil(symptomPain);
+			let key = Math.ceil(symptomPain);
+
+			if (painScale === 10 && key > 0) {
+				key = Math.ceil(key / 2.0);
+			}
+			// Safety clamp to ensure it falls within color/label range
+			if (key > this.NB_PAIN_LEVELS) {
+				key = this.NB_PAIN_LEVELS;
+			}
 
 			if (!this.symptomPainMap.has(key)) {
 				this.symptomPainMap.set(key, 1);

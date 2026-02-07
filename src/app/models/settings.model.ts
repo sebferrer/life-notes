@@ -11,6 +11,7 @@ export interface ISettings {
 	weeklyReminder: boolean;
 	lastWeeklyReminder: number;
 	showDeveloperMode: boolean;
+	showAdvancedSettings: boolean;
 	calendarStartOnSunday: boolean;
 	calendarBlockView: boolean;
 	painPalette: string;

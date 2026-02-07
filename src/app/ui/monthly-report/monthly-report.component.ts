@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Subject, BehaviorSubject } from 'rxjs';
 import { DaysService, ImporterExporterService } from 'src/app/infra';
 import { getDetailedDate } from 'src/app/util/date.utils';
@@ -24,6 +24,9 @@ import { endOfToday } from 'date-fns';
 })
 export class MonthlyReportComponent implements OnInit {
 
+	@ViewChild('exportContainer') exportContainer: ElementRef;
+	public isExporting = false;
+
 	public overviews: DayOverviewViewModel[];
 	public overviews$: Subject<DayOverviewViewModel[]>;
 	public previousOverviews: DayOverviewViewModel[];
@@ -42,6 +45,9 @@ export class MonthlyReportComponent implements OnInit {
 	public sleepChart: SleepChartViewModel;
 
 	public debug = 'no error';
+
+	public topMeds: { name: string, count: number }[];
+	public topLogs: { name: string, count: number }[];
 
 	constructor(
 		public globalService: GlobalService,
@@ -62,6 +68,8 @@ export class MonthlyReportComponent implements OnInit {
 		this.overviews$ = new Subject<DayOverviewViewModel[]>();
 		this.previousOverviews = new Array<DayOverviewViewModel>();
 		this.previousOverviews$ = new Subject<DayOverviewViewModel[]>();
+		this.topMeds = [];
+		this.topLogs = [];
 	}
 
 	public ngOnInit(): void {
@@ -73,27 +81,99 @@ export class MonthlyReportComponent implements OnInit {
 		this.symptomMap = this.globalService.symptomMap;
 		this.symptomPainColorMap =
 			new Map([[0, 'default'], [1, 'pain-1'], [2, 'pain-2'], [3, 'pain-3'], [4, 'pain-4'], [5, 'pain-5']]);
-		const self = this;
-		setTimeout(function () {
-			self.htmltoPDF();
-		}, 2000);
 	}
 
-	public htmltoPDF() {
-		// const div = this.elementRef.nativeElement.querySelector('content');
-		
-		this.importerExporterService.htmltoPDF(document.body);
-		this.debug = this.importerExporterService.debug;
+	public async exportPdf(action: 'save' | 'share' = 'save'): Promise<void> {
+		this.isExporting = true;
+		setTimeout(async () => {
+			try {
+				if (this.exportContainer) {
+					await this.importerExporterService.htmltoPDF(this.exportContainer.nativeElement, `LifeNotes_Report_${this.year}-${this.month}.pdf`, action);
+				} else {
+					console.error("Export Container not found");
+				}
+			} catch (error) {
+				console.error("Export Error", error);
+			} finally {
+				this.isExporting = false;
+			}
+		}, 100);
 	}
 
 	public organizeSymptoms(symptoms: ISymptom[]): ISymptom[] {
-		if (symptoms.length === 0 || this.globalService.targetSymptomKey == null || this.globalService.targetSymptomKey === '') {
-			return symptoms;
+		// Filter out existing dummies to avoid re-sorting them
+		const cleanSymptoms = symptoms.filter(s => s.key !== 'dummy');
+		let result: ISymptom[] = [];
+
+		if (this.globalService.targetSymptomKey && this.globalService.targetSymptomKey !== '') {
+			const target = this.symptoms.find(symptom => symptom.key === this.globalService.targetSymptomKey);
+			const others = cleanSymptoms.filter(symptom => symptom.key !== this.globalService.targetSymptomKey);
+			others.sort((a, b) => {
+				if (a.label < b.label) { return -1; }
+				if (a.label > b.label) { return 1; }
+				return 0;
+			});
+			if (target) {
+				result = [target, ...others];
+			} else {
+				result = others;
+			}
+		} else {
+			result = [...cleanSymptoms].sort((a, b) => {
+				if (a.label < b.label) { return -1; }
+				if (a.label > b.label) { return 1; }
+				return 0;
+			});
 		}
-		const targetSymptom = this.symptoms.find(symptom => symptom.key === this.globalService.targetSymptomKey);
-		symptoms = symptoms.filter(symptom => symptom.key !== this.globalService.targetSymptomKey);
-		symptoms.unshift(targetSymptom);
-		return symptoms;
+
+		return this.padSymptoms(result);
+	}
+
+	private padSymptoms(symptoms: ISymptom[]): ISymptom[] {
+		const list = [...symptoms];
+		const count = list.length;
+		const remainder = count % 4;
+		if (remainder !== 0) {
+			const padCount = 4 - remainder;
+			for (let i = 0; i < padCount; i++) {
+				list.push({
+					key: 'dummy',
+					label: '', // Empty label for dummy
+					type: 'symptom',
+					logs: []
+				} as ISymptom);
+			}
+		}
+		return list;
+	}
+
+	public calculateStats(): void {
+		// Top Meds
+		const medMap = new Map<string, number>();
+		this.overviews.forEach(day => {
+			day.meds.forEach(med => {
+				const count = medMap.get(med.key) || 0;
+				medMap.set(med.key, count + 1);
+			});
+		});
+		this.topMeds = Array.from(medMap.entries())
+			.map(([name, count]) => ({ name, count }))
+			.sort((a, b) => b.count - a.count)
+			.slice(0, 10);
+
+		// Top Logs
+		const logMap = new Map<string, number>();
+		this.overviews.forEach(day => {
+			day.logs.forEach(log => {
+				// key is usually the category or title
+				const count = logMap.get(log.key) || 0;
+				logMap.set(log.key, count + 1);
+			});
+		});
+		this.topLogs = Array.from(logMap.entries())
+			.map(([name, count]) => ({ name, count }))
+			.sort((a, b) => b.count - a.count)
+			.slice(0, 10);
 	}
 
 	public loadSymptoms(): void {
@@ -136,6 +216,7 @@ export class MonthlyReportComponent implements OnInit {
 						this.overviews$.next(this.overviews);
 						this.previousOverviews$.next(this.previousOverviews);
 						this.updateCharts();
+						this.calculateStats();
 					});
 			});
 	}

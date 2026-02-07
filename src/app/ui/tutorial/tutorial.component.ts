@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ISlide } from 'src/app/models/slide.model';
 import { GlobalService } from 'src/app/infra/global.service';
-import { Market } from '@ionic-native/market/ngx';
 
 @Component({
 	selector: 'app-tutorial',
@@ -16,8 +15,7 @@ export class TutorialComponent implements OnInit {
 	public slides: ISlide[];
 
 	constructor(
-		private globalService: GlobalService,
-		private market: Market
+		private globalService: GlobalService
 	) {
 		switch (this.globalService.language) {
 			case 'fr':
@@ -112,7 +110,7 @@ export class TutorialComponent implements OnInit {
 	}
 
 	public rateApp(): void {
-		window.open('https://play.google.com/store/apps/details?id=com.sebferrer.life_notes', '_blank');
+		window.open('https://play.google.com/store/apps/details?id=com.sebferrer.life_notes', '_system');
 	}
 
 }
