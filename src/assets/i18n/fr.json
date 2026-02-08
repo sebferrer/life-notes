@@ -275,6 +275,7 @@
     "EXPORT_PDF_TITLE": "Exporter en PDF",
     "EXPORT_IN_PROGRESS": "Export en cours...",
     "EXPORT_MSG_LONG": "Selon le nombre de symptômes, cela peut prendre un certain temps.",
+    "EXPORT_PDF": "Exporter en PDF (beta)",
     "EXPORT_PDF_DIALOG_TITLE": "Exporter en PDF (beta)",
     "EXPORT_PDF_DIALOG_CONTENT_1": "Cette fonctionnalité fonctionne grâce à votre fichier de sauvegarde.",
     "EXPORT_PDF_DIALOG_CONTENT_2": "Veuillez d'abord sauvegarder vos données via le bouton 'Sauvegarder' ci-dessus, si vous ne l'avez pas déjà fait",
