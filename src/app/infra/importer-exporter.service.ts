@@ -183,12 +183,28 @@ export class ImporterExporterService {
 
 				if (Capacitor.isNativePlatform()) {
 					try {
-						const base64 = btoa(unescape(encodeURIComponent(jsonBackup)));
+						// 1. Write jsonBackup to temp file in Cache
+						const tempFileName = `temp_${fileName}`;
+						const writeResult = await Filesystem.writeFile({
+							path: tempFileName,
+							data: jsonBackup,
+							directory: Directory.Cache,
+							encoding: Encoding.UTF8
+						});
+
+						// 2. Pass path to FileSaver
 						const result = await FileSaver.saveFile({
-							base64Data: base64,
+							path: writeResult.uri,
 							filename: fileName,
 							contentType: 'application/json'
 						});
+
+						// 3. Clean up temp file
+						await Filesystem.deleteFile({
+							path: tempFileName,
+							directory: Directory.Cache
+						});
+
 						resolve(result.uri);
 					} catch (error) {
 						reject(error);
