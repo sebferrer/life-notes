@@ -1,6 +1,7 @@
 <ng-template transloco let-t>
     <h1 mat-dialog-title>
-        {{ t('SHOW_EVENT_DIALOG_TITLE', {'month': t('MONTH-'+data.detailedDate.month), 'day': data.detailedDate.day, 'year': data.detailedDate.year}) }}
+        {{ t('SHOW_EVENT_DIALOG_TITLE', {'month': t('MONTH-'+data.detailedDate.month), 'day': data.detailedDate.day,
+        'year': data.detailedDate.year}) }}
     </h1>
 </ng-template>
 <div mat-dialog-content>
@@ -11,7 +12,7 @@
         <div *ngSwitchCase="'symptomLog'">
             <mat-label>{{ globalService.symptomMap.get(data.customEvent.key) }}</mat-label>
             <div>
-                <mat-label>{{ data.customEvent.pain }} / 5</mat-label>
+                <mat-label>{{ getPainValue(data.customEvent.pain) }} / {{ globalService.painScale }}</mat-label>
             </div>
             <div>
                 <mat-label>{{ data.customEvent.detail }}</mat-label>
