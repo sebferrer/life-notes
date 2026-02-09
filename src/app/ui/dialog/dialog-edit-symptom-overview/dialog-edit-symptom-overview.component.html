@@ -1,17 +1,18 @@
 <ng-template transloco let-t>
     <h1 mat-dialog-title>
-        <span>{{ t('EDIT_SYMPTOM_OVERVIEW_DIALOG_TITLE', { 'symptom': data.symptomMap.get(data.symptomOverview.key) }) }}</span>
+        <span>{{ t('EDIT_SYMPTOM_OVERVIEW_DIALOG_TITLE', { 'symptom': data.symptomMap.get(data.symptomOverview.key) })
+            }}</span>
     </h1>
 </ng-template>
 <div mat-dialog-content>
-    <mat-form-field>
-        <mat-label transloco="PAIN"></mat-label>
+    <div class="custom-form-field">
+        <mat-label transloco="PAIN" class="custom-label"></mat-label>
         <div id="pain-container">
-            <mat-slider [max]="painScale" [min]="0" [step]="1" [thumbLabel]="true" [(ngModel)]="painValue">
-            </mat-slider>
-            <input matInput [(ngModel)]="painValue" readonly>
+            <ion-range [max]="painScale" [min]="0" [step]="1" [pin]="true" [(ngModel)]="painValue">
+            </ion-range>
+            <span class="pain-badge">{{ painValue }}</span>
         </div>
-    </mat-form-field>
+    </div>
     <div mat-dialog-actions>
         <button mat-button (click)="onNoClick()" transloco="CANCEL"></button>
         <button mat-button cdkFocusInitial (click)="onYesClick()" color="primary">
