@@ -282,5 +282,10 @@
     "CHECK_UPDATE_NOTES": "Check update notes",
     "EXPORT_PDF_DIALOG_CONTENT_SELECT": "Please select the month and year for the report.",
     "MONTH_LABEL": "Month",
-    "YEAR_LABEL": "Year"
+    "YEAR_LABEL": "Year",
+    "SETTINGS_AUTO_CALCULATE_OVERVIEW": "Auto-calculate pain overview",
+    "POPUP_AUTO_CALCULATE_TITLE": "Auto-Calculate Feature",
+    "POPUP_AUTO_CALCULATE_CONTENT_1": "New! The pain overview value can now be auto-calculated from your daily symptoms.",
+    "POPUP_AUTO_CALCULATE_CONTENT_2": "This feature is enabled by default for new users, but disabled for existing ones.",
+    "POPUP_AUTO_CALCULATE_CONTENT_3": "You can enable/disable it at any time in Settings > Symptoms."
 }

@@ -19,6 +19,8 @@ import { DayViewModel } from 'src/app/models/day.view.model';
 import { DialogNoTargetSymptomWarningComponent } from '../dialog/dialog-no-target-symptom-warning';
 import { MedsService } from 'src/app/infra/meds.service';
 import { LogsService } from 'src/app/infra/logs.service';
+import { SettingsService } from 'src/app/infra/settings.service';
+import { DialogInfoComponent } from '../dialog/dialog-info';
 import { format24H, formatAMPM } from 'src/app/util/time.util';
 
 @Component({
@@ -41,6 +43,7 @@ export abstract class ATimeComponent {
 		protected daysService: DaysService,
 		protected medsService: MedsService,
 		protected logsService: LogsService,
+		protected settingsService: SettingsService,
 		protected dialog: MatDialog,
 		protected snackBar: MatSnackBar,
 		protected bottomSheet: MatBottomSheet
@@ -113,6 +116,25 @@ export abstract class ATimeComponent {
 		/*this.snackBar.open(this.translocoService.translate('TIMELINE_ADD_EVENT_SNACKBAR',
 			{ type: this.translocoService.translate(type), action: this.translocoService.translate(action) }), 'Close',
 				{ duration: 2000 });*/
+
+		// Onboarding Popup for Auto-Calculate Feature
+		if (!this.globalService.autoOverviewPopupSeen && type === 'symptomLog') {
+			this.settingsService.setAutoOverviewPopupSeen(true).subscribe();
+
+			this.dialog.open(DialogInfoComponent, {
+				autoFocus: false,
+				width: '20rem',
+				panelClass: 'custom-modalbox',
+				data: {
+					title: this.translocoService.translate('POPUP_AUTO_CALCULATE_TITLE'),
+					content: [
+						this.translocoService.translate('POPUP_AUTO_CALCULATE_CONTENT_1'),
+						this.translocoService.translate('POPUP_AUTO_CALCULATE_CONTENT_2'),
+						this.translocoService.translate('POPUP_AUTO_CALCULATE_CONTENT_3')
+					]
+				}
+			});
+		}
 	}
 
 	public editEvent(date: string, response: any, customEvent: ICustomEvent): void {

@@ -25,6 +25,12 @@
                         <mat-option [value]="10">0 - 10</mat-option>
                     </mat-select>
                 </mat-form-field>
+                <div class="toggle-container">
+                    <span class="toggle-label" transloco="SETTINGS_AUTO_CALCULATE_OVERVIEW"></span>
+                    <mat-slide-toggle [(ngModel)]="autoCalculateOverview" (change)="setAutoCalculateOverview()"
+                        color="primary">
+                    </mat-slide-toggle>
+                </div>
                 <div class="manage-symptoms-container">
                     <mat-selection-list multiple="false">
                         <mat-list-option routerLink="/symptoms">

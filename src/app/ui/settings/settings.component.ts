@@ -34,6 +34,7 @@ export class SettingsComponent implements OnInit {
 	public calendarBlockView: boolean;
 	public weeklyReminder: boolean;
 	public painPalette: string;
+	public autoCalculateOverview: boolean;
 
 	public debug = 'no error';
 	public backupData = '';
@@ -68,6 +69,7 @@ export class SettingsComponent implements OnInit {
 			this.calendarBlockView = settings.calendarBlockView;
 			this.weeklyReminder = settings.weeklyReminder;
 			this.painPalette = settings.painPalette;
+			this.autoCalculateOverview = settings.autoCalculateOverview;
 		});
 	}
 
@@ -111,6 +113,10 @@ export class SettingsComponent implements OnInit {
 
 	public setPainPalette(): void {
 		this.settingsService.setPainPalette(this.painPalette).subscribe();
+	}
+
+	public setAutoCalculateOverview(): void {
+		this.settingsService.setAutoCalculateOverview(this.autoCalculateOverview).subscribe();
 	}
 
 	public setTargetSymptom(): void {

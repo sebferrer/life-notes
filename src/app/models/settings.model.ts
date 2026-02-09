@@ -15,4 +15,6 @@ export interface ISettings {
 	calendarStartOnSunday: boolean;
 	calendarBlockView: boolean;
 	painPalette: string;
+	autoCalculateOverview: boolean;
+	autoOverviewPopupSeen: boolean;
 }

@@ -95,7 +95,7 @@ export class DialogAddEventComponent {
 	}
 
 	public setMed(med: string) {
-		if(this.data.type !== 'med') {
+		if (this.data.type !== 'med') {
 			return;
 		}
 		const splittedMed = med.split(" ");
@@ -104,7 +104,7 @@ export class DialogAddEventComponent {
 	}
 
 	public setLog(log: string) {
-		if(this.data.type !== 'log') {
+		if (this.data.type !== 'log') {
 			return;
 		}
 		this.data.key = log;
@@ -119,7 +119,7 @@ export class DialogAddEventComponent {
 	}
 
 	public set painValue(val: number) {
-		this.data.pain = this.painScale === 10 ? (val / 2) : val;
+		this.data.pain = this.painScale === 10 ? (+val / 2) : +val;
 	}
 
 	private _filter(options: any[], value: string): string[] {

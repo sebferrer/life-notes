@@ -91,6 +91,18 @@ export class GlobalService {
 		return colors[Math.ceil(pain)] || colors[0];
 	}
 
+	private _autoCalculateOverview: boolean = false;
+	public get autoCalculateOverview(): boolean { return this._autoCalculateOverview; }
+	public set autoCalculateOverview(value: boolean) {
+		this._autoCalculateOverview = value;
+	}
+
+	private _autoOverviewPopupSeen: boolean = false;
+	public get autoOverviewPopupSeen(): boolean { return this._autoOverviewPopupSeen; }
+	public set autoOverviewPopupSeen(value: boolean) {
+		this._autoOverviewPopupSeen = value;
+	}
+
 	private updateCssVariables(): void {
 		const colors = this.getPainColors();
 		document.documentElement.style.setProperty('--color-pain-0', colors[0]);
