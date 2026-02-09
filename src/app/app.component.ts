@@ -46,7 +46,6 @@ export class AppComponent implements OnInit {
 			// this.lastUpdate = settings.lastUpdate;
 			// this.checkUpdates();
 			this.checkWeeklyReminder(settings);
-			//this.autoBackup();
 		});
 		// this.daysService.reset().subscribe(() => {});
 	}
@@ -106,9 +105,7 @@ export class AppComponent implements OnInit {
 	// 	});
 	// }
 
-	public autoBackup(): void {
-		this.importerExporterService.exportData(true);
-	}
+
 
 	public getSymptoms$(): Observable<ISymptom[]> {
 		return this.globalService.symptoms$;
@@ -206,7 +203,7 @@ export class AppComponent implements OnInit {
 			panelClass: 'custom-modalbox',
 			data: {
 				title: 'UPDATE_NOTIFICATION_TITLE',
-				content: ['UPDATE_NOTIFICATION_CONTENT'],
+				content: ['UPDATE_NOTIFICATION_CONTENT_1', 'UPDATE_NOTIFICATION_CONTENT_2'],
 				actionButton: {
 					label: 'CHECK_UPDATE_NOTES',
 					url: 'https://life-notes.fr/updates'

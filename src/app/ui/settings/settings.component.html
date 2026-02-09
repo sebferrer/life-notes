@@ -156,12 +156,21 @@
                             </div>
                         </mat-list-option>
 
-                        <mat-list-option (click)="showManualBackupDiv()">
+                        <mat-list-option (click)="saveBackup()">
                             <div class="list-icon">
                                 <mat-icon>save_alt</mat-icon>
                             </div>
                             <div class="list-item-text">
-                                <p>{{ 'EXPORT' | transloco }}</p>
+                                <p>{{ 'EXPORT_SAVE' | transloco }}</p>
+                            </div>
+                        </mat-list-option>
+
+                        <mat-list-option (click)="shareBackup()">
+                            <div class="list-icon">
+                                <mat-icon>share</mat-icon>
+                            </div>
+                            <div class="list-item-text">
+                                <p>{{ 'EXPORT_FILE' | transloco }}</p>
                             </div>
                         </mat-list-option>
 
@@ -173,40 +182,6 @@
                                 <p>{{ 'EXPORT_PDF' | transloco }}</p>
                             </div>
                         </mat-list-option>
-
-                        <div id="manual-backup-div">
-                            <mat-expansion-panel-header class="mat-expansion-panel-header">
-                                <div class="panel-title" transloco="SETTINGS_MANUAL_SAVE_TITLE"></div>
-                                <div class="panel-description" transloco="SETTINGS_MANUAL_SAVE_SUBTITLE"></div>
-                            </mat-expansion-panel-header>
-
-                            <div class="mat-expansion-panel-content">
-                                <button id="generateBackupButton" mat-raised-button color="primary"
-                                    transloco="SETTINGS_MANUAL_SAVE_BUTTON" (click)="generateBackupData()"></button>
-                                <div *ngIf="generateData">
-                                    <button id="copyButton" mat-icon-button type="button"
-                                        [disabled]="showCopySuccessMessage" (click)="copyToClipboard()">
-                                        <mat-icon>file_copy</mat-icon>
-                                        <ng-template transloco let-t>
-                                            {{ showCopySuccessMessage ? t('COPIED') : t('COPY') }}
-                                        </ng-template>
-                                    </button>
-                                    <textarea matInput #jsonBackupTextArea cdkAutosizeMinRows="1"
-                                        cdkAutosizeMaxRows="5">{{ backupData }}</textarea>
-                                </div>
-                            </div>
-                            <div class="save-text">
-                                <p>
-                                    {{ 'SAVE_TEXT_1' | transloco }} <a
-                                        href="https://life-notes.fr{{ 'PREFIX' | transloco }}tools/save/">{{
-                                        'SAVE_TEXT_2' | transloco }}</a>
-                                </p>
-                            </div>
-                            <div class="help-container" (click)="openBackupHelpDialog()">
-                                <mat-icon class="help-icon">help</mat-icon>
-                                <span class="help-text">{{ 'HOW_TO_USE_BACKUPS' | transloco }}</span>
-                            </div>
-                        </div>
 
                     </mat-selection-list>
                 </div>
@@ -275,9 +250,64 @@
                         color="primary"></mat-slide-toggle>
                 </div>
                 <div class="toggle-container">
+                    <span class="toggle-label" transloco="SETTINGS_ADVANCED_SETTINGS_LABEL"></span>
+                    <mat-slide-toggle [(ngModel)]="showAdvancedSettings" (change)="setShowAdvancedSettings()"
+                        color="primary"></mat-slide-toggle>
+                </div>
+                <div class="toggle-container">
                     <span class="toggle-label" transloco="SETTINGS_SHOW_DEVELOPER_MODE_LABEL"></span>
                     <mat-slide-toggle [(ngModel)]="showDeveloperMode" (change)="setShowDeveloperMode()"
                         color="primary"></mat-slide-toggle>
+                </div>
+            </div>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel hideToggle *ngIf="showAdvancedSettings">
+            <mat-expansion-panel-header class="mat-expansion-panel-header">
+                <div class="panel-title" transloco="SETTINGS_ADVANCED_SETTINGS_TITLE"></div>
+                <div class="panel-description" transloco="SETTINGS_ADVANCED_SETTINGS_SUBTITLE"></div>
+                <div class="panel-icon">
+                    <mat-icon>settings_applications</mat-icon>
+                </div>
+            </mat-expansion-panel-header>
+
+            <div class="mat-expansion-panel-content">
+                <div class="manage-meds-container">
+                    <mat-selection-list multiple="false">
+                        <div id="manual-backup-div-content">
+                            <mat-expansion-panel-header class="mat-expansion-panel-header">
+                                <div class="panel-title" transloco="SETTINGS_MANUAL_SAVE_TITLE"></div>
+                                <div class="panel-description" transloco="SETTINGS_MANUAL_SAVE_SUBTITLE"></div>
+                            </mat-expansion-panel-header>
+
+                            <div class="mat-expansion-panel-content">
+                                <button id="generateBackupButton" mat-raised-button color="primary"
+                                    transloco="SETTINGS_MANUAL_SAVE_BUTTON" (click)="generateBackupData()"></button>
+                                <div *ngIf="generateData">
+                                    <button id="copyButton" mat-icon-button type="button"
+                                        [disabled]="showCopySuccessMessage" (click)="copyToClipboard()">
+                                        <mat-icon>file_copy</mat-icon>
+                                        <ng-template transloco let-t>
+                                            {{ showCopySuccessMessage ? t('COPIED') : t('COPY') }}
+                                        </ng-template>
+                                    </button>
+                                    <textarea matInput #jsonBackupTextArea cdkAutosizeMinRows="1"
+                                        cdkAutosizeMaxRows="5">{{ backupData }}</textarea>
+                                </div>
+                            </div>
+                            <div class="save-text">
+                                <p>
+                                    {{ 'SAVE_TEXT_1' | transloco }} <a
+                                        href="https://life-notes.fr{{ 'PREFIX' | transloco }}tools/save/">{{
+                                        'SAVE_TEXT_2' | transloco }}</a>
+                                </p>
+                            </div>
+                            <div class="help-container" (click)="openBackupHelpDialog()">
+                                <mat-icon class="help-icon">help</mat-icon>
+                                <span class="help-text">{{ 'HOW_TO_USE_BACKUPS' | transloco }}</span>
+                            </div>
+                        </div>
+                    </mat-selection-list>
                 </div>
             </div>
         </mat-expansion-panel>

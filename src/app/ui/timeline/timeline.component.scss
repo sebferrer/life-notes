@@ -3,9 +3,9 @@
  }
  
  .timeline-grid {
-    position: absolute;
-    left: 0;
-    top: 3.5rem;
+    position: relative; // Was absolute
+    // left: 0; // Removed
+    // top: 3.5rem; // Removed - let it flow naturally
     width: 100%;
 }
 

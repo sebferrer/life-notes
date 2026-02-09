@@ -1,13 +1,41 @@
-mat-toolbar {
+.fixed-header {
 	position: fixed;
-	margin-bottom: 1rem;
+	top: 0;
+	left: 0;
+	right: 0;
 	z-index: 150;
+	display: flex;
+	flex-direction: column;
+}
+
+.status-bar-layer {
+	height: env(safe-area-inset-top);
+	width: 100%;
+	background-color: #2c2c2c; // Dark gray for status bar
+	flex-shrink: 0;
+	min-height: 0; // Ensure it can be 0 if safe-area is 0
+}
+
+mat-toolbar {
+	// Moved position fixed to wrapper
+	position: relative; 
+	// Removed manual padding/height override, letting standard toolbar sizing take over
+	z-index: 151;
 }
 
 .content {
 	display: block;
-	width: 70%;
+	width: 100%; // Default to full width for mobile
+	max-width: 100%;
 	margin: auto;
+	// Push content down: Safe Area (status bar) + Toolbar Height (Standard 56px) - No extra gap
+	padding-top: calc(env(safe-area-inset-top) + 56px); 
+	padding-bottom: calc(50px + 2rem); // Add some bottom padding + safe area approximationblet/Desktop adjustment
+	// Tablet/Desktop adjustment
+	@media (min-width: 768px) {
+		width: 70%;
+		max-width: 1000px;
+	}
 }
 
 .menu-icon {
@@ -15,8 +43,10 @@ mat-toolbar {
 }
 
 #menu-icon-settings {
-	position: absolute;
-	right: 1rem;
+	// position: absolute; // Removed to respect parent padding/flow
+	// right: 1rem; // Removed
+	margin-left: auto; // Flex push to right
+	margin-right: 1rem;
 }
 
 #menu-icon-updates {

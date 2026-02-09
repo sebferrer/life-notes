@@ -4,6 +4,7 @@ import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bott
 @Component({
 	selector: 'app-bottom-sheet-add-event',
 	templateUrl: 'bottom-sheet-add-event.component.html',
+	styleUrls: ['./bottom-sheet-add-event.component.scss']
 })
 export class BottomSheetAddEventComponent {
 	constructor(

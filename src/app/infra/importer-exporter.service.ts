@@ -1,9 +1,12 @@
 import { Injectable } from '@angular/core';
 import { DaysService } from './days.service';
 import { getDetailedDate } from 'src/app/util/date.utils';
-import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { File as IonicFile } from '@ionic-native/file/ngx';
+import { Observable, of, from } from 'rxjs';
+import { map, switchMap, catchError } from 'rxjs/operators';
+import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
+import { Capacitor } from '@capacitor/core';
+import { Share } from '@capacitor/share';
+import FileSaver from './file-saver-plugin';
 import { BackupService } from './backup.service';
 import { SymptomsService } from './symptoms.service';
 import { SettingsService } from './settings.service';
@@ -11,7 +14,8 @@ import { IBackup } from '../models/backup.model';
 import { GlobalService } from './global.service';
 import { TranslocoService } from '@ngneat/transloco';
 import * as moment from 'moment';
-import jspdf from 'jspdf';
+import { saveAs } from 'file-saver';
+import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 
 @Injectable({
@@ -19,12 +23,9 @@ import html2canvas from 'html2canvas';
 })
 export class ImporterExporterService {
 
-	private readonly APP_DIRECTORY = 'Download/life-notes/';
+	private readonly BACKUP_DIRECTORY = 'LifeNotes';
 	private readonly BACKUP_FILE = 'backup.json';
 	private readonly AUTO_BACKUP_FILE = 'autobackup.json';
-	private readonly MAX_SAVE_TRIES = 3;
-
-	private nbSaveRetries = 0;
 
 	public debug = 'no error';
 
@@ -34,17 +35,8 @@ export class ImporterExporterService {
 		private symptomsService: SymptomsService,
 		private settingsService: SettingsService,
 		private backupService: BackupService,
-		private translocoService: TranslocoService,
-		private file: IonicFile
+		private translocoService: TranslocoService
 	) { }
-
-	private getExternalApplicationStorageDirectory(): string {
-		return this.file.externalDataDirectory;
-	}
-
-	private getDocumentsDirectoryFullPath(): string {
-		return this.file.externalRootDirectory;
-	}
 
 	private getBackupFile(isAuto: boolean): Observable<string> {
 		const fileName = isAuto ? this.AUTO_BACKUP_FILE : this.BACKUP_FILE;
@@ -79,13 +71,13 @@ export class ImporterExporterService {
 			const fileContent = readerLoadEvent.target.result;
 
 			if (fileContent == null || fileContent == '') {
-				this.debug += 'IMPORT DATA NATIVE MANUAL --> Wrong data format';
+				this.debug += 'IMPORT DATA MANUAL --> Wrong data format';
 				return of(null)
 			}
 
 			this.daysService.reset().subscribe(
 				() => {
-					this.loadContent(fileContent);
+					this.loadContent(fileContent as string);
 				},
 				error => {
 					this.debug += 'IMPORT DATA MANUAL' + error + ' --> ' + error.message;
@@ -101,31 +93,35 @@ export class ImporterExporterService {
 
 	public importDataNative(isAuto?: boolean): Observable<null> {
 		isAuto = isAuto || false;
-		const fileName = isAuto ? this.AUTO_BACKUP_FILE : this.BACKUP_FILE;
 
-		this.file.readAsText(this.getExternalApplicationStorageDirectory(), fileName).then(
-			fileContent => {
-
-				if (fileContent == null || fileContent == '') {
-					this.debug += 'IMPORT DATA NATIVE ERROR --> Wrong data format';
-					return of(null)
-				}
-
-				this.daysService.reset().subscribe(
-					() => {
-						this.loadContent(fileContent);
-					},
-					error => {
-						this.debug += 'IMPORT DATA NATIVE ERROR --> Reset error -->' + error + ' --> ' + error.message + ' ---- ' + this.getExternalApplicationStorageDirectory() + fileName;
-					}
+		return this.getBackupFile(isAuto).pipe(
+			switchMap(fileName => {
+				return from(Filesystem.readFile({
+					path: `${this.BACKUP_DIRECTORY}/${fileName}`,
+					directory: Directory.Documents,
+					encoding: Encoding.UTF8
+				})).pipe(
+					map(result => {
+						const fileContent = result.data as string;
+						if (!fileContent) {
+							throw new Error('Empty file');
+						}
+						return fileContent;
+					}),
+					switchMap(content => {
+						return this.daysService.reset().pipe(map(() => content));
+					}),
+					map(content => {
+						this.loadContent(content);
+						return null;
+					}),
+					catchError(error => {
+						this.debug += 'IMPORT DATA NATIVE ERROR --> ' + error;
+						return of(null);
+					})
 				);
-
 			})
-			.catch((error) => {
-				this.debug += 'IMPORT DATA NATIVE ERROR --> Read error --> ' + error + ' --> ' + error.message + ' ---- ' + this.getExternalApplicationStorageDirectory() + fileName;
-			})
-
-		return of(null)
+		);
 	}
 
 	public cleanBackupData(backup: IBackup): IBackup {
@@ -141,124 +137,260 @@ export class ImporterExporterService {
 		return backup;
 	}
 
-	public exportData(isAuto?: boolean): void {
-		isAuto = isAuto || false;
-		this.backupService.getBackup().subscribe(backup => {
+	public shareBackup(): void {
+		this.backupService.getBackup().subscribe(async backup => {
 			backup = this.cleanBackupData(backup);
 			const jsonBackup = JSON.stringify(backup);
-
-			// const file = new File([jsonBackup], 'calendar.json', { type: 'application/json;charset=utf-8' });
-			// saveAs(file);
 
 			if (this.emptyBackup(backup)) {
 				return;
 			}
 
-			this.saveBackup(jsonBackup, isAuto);
-		})
+			const fileName = this.generateBackupFileName();
+
+			try {
+				const result = await Filesystem.writeFile({
+					path: fileName,
+					data: jsonBackup,
+					directory: Directory.Cache,
+					encoding: Encoding.UTF8
+				});
+
+				await Share.share({
+					title: 'Life Notes Backup',
+					text: 'Here is your Life Notes backup data',
+					url: result.uri,
+					dialogTitle: 'Share Backup'
+				});
+			} catch (error) {
+				this.debug += 'SHARE ERROR: ' + error;
+			}
+		});
+	}
+
+	public saveBackup(): Promise<string> {
+		return new Promise((resolve, reject) => {
+			this.backupService.getBackup().subscribe(async backup => {
+				backup = this.cleanBackupData(backup);
+				const jsonBackup = JSON.stringify(backup);
+
+				if (this.emptyBackup(backup)) {
+					reject('Empty backup');
+					return;
+				}
+
+				const fileName = this.generateBackupFileName();
+
+				if (Capacitor.isNativePlatform()) {
+					try {
+						// 1. Write jsonBackup to temp file in Cache
+						const tempFileName = `temp_${fileName}`;
+						const writeResult = await Filesystem.writeFile({
+							path: tempFileName,
+							data: jsonBackup,
+							directory: Directory.Cache,
+							encoding: Encoding.UTF8
+						});
+
+						// 2. Pass path to FileSaver
+						const result = await FileSaver.saveFile({
+							path: writeResult.uri,
+							filename: fileName,
+							contentType: 'application/json'
+						});
+
+						// 3. Clean up temp file
+						await Filesystem.deleteFile({
+							path: tempFileName,
+							directory: Directory.Cache
+						});
+
+						resolve(result.uri);
+					} catch (error) {
+						reject(error);
+					}
+				} else {
+					const blob = new Blob([jsonBackup], { type: 'application/json' });
+					saveAs(blob, fileName);
+					resolve('download');
+				}
+			});
+		});
+	}
+
+	private generateBackupFileName(): string {
+		const now = new Date();
+		const yyyy = now.getFullYear();
+		const mm = String(now.getMonth() + 1).padStart(2, "0");
+		const dd = String(now.getDate()).padStart(2, "0");
+		const hh = String(now.getHours()).padStart(2, "0");
+		const min = String(now.getMinutes()).padStart(2, "0");
+
+		return `life-notes-save-${yyyy}${mm}${dd}${hh}${min}.json`;
 	}
 
 	private emptyBackup(backup: IBackup): boolean {
 		return backup.days.length === 0;
 	}
 
-	private saveBackup(jsonBackup: string, isAuto?: boolean): void {
-		isAuto = isAuto || false;
-		const fileName = isAuto ? this.AUTO_BACKUP_FILE : this.BACKUP_FILE;
+	public async htmltoPDF(element: HTMLElement, fileName: string = 'LifeNotes_Report.pdf', action: 'save' | 'share' = 'save'): Promise<void> {
+		let clone: HTMLElement | null = null;
+		try {
+			// Manual Cloning Strategy
+			clone = element.cloneNode(true) as HTMLElement;
 
-		this.saveBackupToDirectoryOrCreateDirectory(jsonBackup, this.getExternalApplicationStorageDirectory(), '', fileName);
+			// Setup Container for Clone
+			clone.style.width = '800px'; // Fixed width
+			clone.style.position = 'absolute';
+			clone.style.top = '0';
+			clone.style.left = '0';
+			clone.style.zIndex = '-9999'; // Hide behind
+			clone.style.background = 'white';
+			clone.style.height = 'auto';
+			clone.style.overflow = 'visible';
 
-		this.getBackupFile(isAuto).subscribe(
-			lastBackupFileName => {
-				this.saveBackupToDirectoryOrCreateDirectory(jsonBackup, this.getDocumentsDirectoryFullPath(), this.APP_DIRECTORY, lastBackupFileName);
+			// Fix specific child elements in the clone
+			const contentElement = clone.querySelector('.content') as HTMLElement;
+			if (contentElement) {
+				contentElement.style.height = 'auto';
+				contentElement.style.overflow = 'visible';
+				contentElement.style.position = 'static';
+				contentElement.style.marginTop = '2rem';   // Space between header and first symptom
 			}
-		);
-	}
 
-	private saveBackupToDirectoryOrCreateDirectory(jsonBackup: string, directoryPath: string, filesDirectory: string, fileName: string): void {
+			const calendarHeader = clone.querySelector('.calendar-header') as HTMLElement;
+			if (calendarHeader) {
+				calendarHeader.style.position = 'static';
+				calendarHeader.style.height = '3.5rem';
+				calendarHeader.style.width = '100%';
+			}
 
-		if (filesDirectory != '') {
-			this.file.checkDir(directoryPath, filesDirectory).then(
-				() => {
-					this.saveBackupToDirectory(jsonBackup, directoryPath + filesDirectory, fileName)
-				})
-				.catch((checkError) => {
-					this.debug += 'checkDir => ' + directoryPath + filesDirectory + ' not exists: ' + checkError + ' --> ' + checkError.message;
-					this.file.createDir(directoryPath, filesDirectory, false)
-						.then(
-							() =>
-								this.saveBackupToDirectory(jsonBackup, directoryPath + filesDirectory, fileName)
-						)
-						.catch(
-							createError => {
-								this.debug += '\ncreateDir => ' + createError + ' --> ' + createError.message + ' ---- ' + directoryPath + filesDirectory;
-							})
-				})
-		} else {
-			this.saveBackupToDirectory(jsonBackup, directoryPath + filesDirectory, fileName)
+			const calendarContainer = clone.id === 'calendar-container' ? clone : clone.querySelector('#calendar-container') as HTMLElement;
+			if (calendarContainer) {
+				calendarContainer.style.height = 'auto';
+				calendarContainer.style.overflow = 'visible';
+				calendarContainer.style.position = 'relative';
+			}
+
+			// Spacing for every 4th symptom to avoid cut on page break
+			const symptomContainers = clone.querySelectorAll('.sympmtom-container');
+			if (symptomContainers) {
+				symptomContainers.forEach((container, index) => {
+					if ((index + 1) % 4 === 0) {
+						(container as HTMLElement).style.marginBottom = '6rem';
+					}
+				});
+			}
+
+			// Copy Canvas Content (Pie Charts)
+			const originalCanvases = element.querySelectorAll('canvas');
+			const clonedCanvases = clone.querySelectorAll('canvas');
+			originalCanvases.forEach((orig, index) => {
+				if (clonedCanvases[index]) {
+					const ctx = clonedCanvases[index].getContext('2d');
+					if (ctx) {
+						ctx.drawImage(orig, 0, 0);
+					}
+				}
+			});
+
+			document.body.appendChild(clone);
+
+			// Wait a tick for rendering
+			await new Promise(resolve => setTimeout(resolve, 200));
+
+			const canvas = await html2canvas(clone, {
+				scale: 2,
+				useCORS: true,
+				logging: false, // Turn off logging if fixed
+				allowTaint: true,
+				scrollY: 0,
+				windowWidth: 800
+			});
+
+			const imgData = canvas.toDataURL('image/jpeg', 0.95);
+			const pdf = new jsPDF('p', 'mm', 'a4');
+			const pdfWidth = pdf.internal.pageSize.getWidth();
+			const pdfHeight = pdf.internal.pageSize.getHeight();
+
+			if (canvas.width === 0 || canvas.height === 0) {
+				throw new Error(`Canvas has 0 dimensions: ${canvas.width}x${canvas.height}`);
+			}
+
+			const imgHeight = (canvas.height * pdfWidth) / canvas.width;
+
+			let heightLeft = imgHeight;
+			let position = 0;
+
+			pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, imgHeight);
+			heightLeft -= pdfHeight;
+
+			while (heightLeft > 0) {
+				position = position - pdfHeight;
+				pdf.addPage();
+				pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, imgHeight);
+				heightLeft -= pdfHeight;
+			}
+
+			// Web: Download
+			if (!Capacitor.isNativePlatform()) {
+				pdf.save(fileName);
+			} else {
+				// Native: Save or Share
+				console.log('PDF Export Action:', action);
+				console.log('Is Native:', Capacitor.isNativePlatform());
+
+				const pdfOutput = pdf.output('datauristring');
+				const base64Data = pdfOutput.split(',')[1];
+
+				try {
+					// 1. Write to temp file in cache (needed for both operations)
+					const tempFileName = `temp_${fileName}`;
+					const writeResult = await Filesystem.writeFile({
+						path: tempFileName,
+						data: base64Data,
+						directory: Directory.Cache
+					});
+
+					if (action === 'save') {
+						// 2a. Pass path to FileSaver
+						await FileSaver.saveFile({
+							path: writeResult.uri,
+							filename: fileName,
+							contentType: 'application/pdf'
+						});
+
+						// 3. Clean up temp file
+						await Filesystem.deleteFile({
+							path: tempFileName,
+							directory: Directory.Cache
+						});
+					} else {
+						// 2b. Share the temp file
+						await Share.share({
+							title: 'Life Notes Report',
+							url: writeResult.uri,
+							dialogTitle: 'Share PDF'
+						});
+						// Do NOT delete immediately as share intent might need it
+					}
+
+					// Optional: Toast or feedback?
+				} catch (error) {
+					console.error("Export Error", error);
+					throw error;
+				}
+			}
+
+		} catch (error) {
+			this.debug += ' PDF Export Error: ' + JSON.stringify(error);
+			console.error('PDF Export Error', error);
+			throw error;
+		} finally {
+			if (clone && document.body.contains(clone)) {
+				document.body.removeChild(clone);
+			}
 		}
-	}
-
-	private saveBackupToDirectory(jsonBackup: string, directoryFullPath: string, fileName: string): void {
-		this.file.createFile(directoryFullPath, fileName, true)
-			.then(() => this.file.writeExistingFile(directoryFullPath, fileName, jsonBackup)
-				.catch(
-					error => {
-						this.debug += 'writeExistingFile => ' + error + ' --> ' + error.message + + ' ---- ' + directoryFullPath;
-						this.retrySaveBackupToDirectory(jsonBackup, directoryFullPath, fileName);
-					})
-			)
-			.catch(
-				error => {
-					this.debug += 'createFile => ' + error + ' --> ' + error.message + + ' ---- ' + directoryFullPath;
-				})
-	}
-
-	private retrySaveBackupToDirectory(jsonBackup: string, directoryFullPath: string, fileName: string) {
-		/*if (this.nbSaveRetries > this.MAX_SAVE_TRIES) {
-			return;
-		}
-		this.settingsService.updateLastInstall().subscribe(
-			settings => {
-				this.saveBackupToDirectory(jsonBackup, directoryFullPath, fileName.replace('.json', settings.lastInstall + '.json'));
-			}
-		).add(() => {
-			this.nbSaveRetries++;
-		});*/
-	}
-
-	public htmltoPDF(body: any) {
-		// parentdiv is the html element which has to be converted to PDF
-		html2canvas(body, {
-			height: 300 * 2,
-			windowHeight: 300 * 2
-		}).then(canvas => {
-			console.log(canvas.height + '-' + canvas.width);
-			let pdf = new jspdf('p', 'pt', [canvas.width, canvas.height]);
-
-			let imgData = canvas.toDataURL("image/png", 1.0);
-			pdf.addImage(imgData, 0, 0, canvas.width, canvas.height);
-			// pdf.save('converteddoc.pdf');
-
-			let pdfOutput = pdf.output();
-
-			let buffer = new ArrayBuffer(pdfOutput.length);
-
-			let array = new Uint8Array(buffer);
-
-			for (var i = 0; i < pdfOutput.length; i++) {
-				array[i] = pdfOutput.charCodeAt(i);
-			}
-
-			// const directory = this.file.externalApplicationStorageDirectory;
-			const directory = this.file.externalRootDirectory + 'life-notes/';
-
-			const fileName = "Test.pdf";
-
-			this.file.writeFile(directory, fileName, buffer)
-				.then((success) => this.debug += "File created Succesfully" + JSON.stringify(success))
-				.catch((error) => this.debug += "Cannot Create File " + JSON.stringify(error));
-		});
 	}
 
 	public exportHtml(): void {

@@ -12,6 +12,7 @@ import { DialogInfoComponent } from '../dialog/dialog-info';
 import { BackupService } from 'src/app/infra/backup.service';
 import { DialogExportConfirmComponent } from '../dialog/dialog-export-confirm';
 import { DialogExportPdfComponent } from '../dialog/dialog-export-pdf/dialog-export-pdf.component';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'app-settings',
@@ -28,6 +29,7 @@ export class SettingsComponent implements OnInit {
 	// DEVELOPER UPDATES NOTIFICATION FEATURE DISABLED
 	// public hideDeveloperUpdates: boolean;
 	public showDeveloperMode: boolean;
+	public showAdvancedSettings: boolean;
 	public calendarStartOnSunday: boolean;
 	public calendarBlockView: boolean;
 	public weeklyReminder: boolean;
@@ -47,7 +49,8 @@ export class SettingsComponent implements OnInit {
 		private backupService: BackupService,
 		private settingsService: SettingsService,
 		private dialog: MatDialog,
-		private snackBar: MatSnackBar
+		private snackBar: MatSnackBar,
+		private router: Router
 	) { }
 
 	public ngOnInit(): void {
@@ -60,6 +63,7 @@ export class SettingsComponent implements OnInit {
 			// DEVELOPER UPDATES NOTIFICATION FEATURE DISABLED
 			// this.hideDeveloperUpdates = settings.hideDeveloperUpdates;
 			this.showDeveloperMode = settings.showDeveloperMode;
+			this.showAdvancedSettings = settings.showAdvancedSettings;
 			this.calendarStartOnSunday = settings.calendarStartOnSunday;
 			this.calendarBlockView = settings.calendarBlockView;
 			this.weeklyReminder = settings.weeklyReminder;
@@ -87,6 +91,10 @@ export class SettingsComponent implements OnInit {
 
 	public setShowDeveloperMode(): void {
 		this.settingsService.setShowDeveloperMode(this.showDeveloperMode).subscribe();
+	}
+
+	public setShowAdvancedSettings(): void {
+		this.settingsService.setShowAdvancedSettings(this.showAdvancedSettings).subscribe();
 	}
 
 	public setCalendarStartOnSunday(): void {
@@ -170,21 +178,21 @@ export class SettingsComponent implements OnInit {
 		});
 	}
 
-	public exportData(): void {
-		this.dialog.open(DialogExportConfirmComponent, {
-			autoFocus: false,
-			width: '20rem',
-			panelClass: 'custom-modalbox'
-		}).afterClosed().subscribe(response => {
-			if (response == null || response.answer !== 'yes') {
-				return;
-			}
-			this.importerExporterService.exportData();
-			this.debug = this.importerExporterService.debug;
-			this.snackBar.open(this.translocoService.translate('DATA_EXPORT_SNACKBAR_SUCCESS'),
-				this.translocoService.translate('CLOSE'),
-				{ duration: 2000 });
-		});
+	public shareBackup(): void {
+		this.importerExporterService.shareBackup();
+	}
+
+	public saveBackup(): void {
+		this.importerExporterService.saveBackup()
+			.then(() => {
+				// Success handled via browser download
+			})
+			.catch((err) => {
+				this.debug = 'Save Error: ' + JSON.stringify(err);
+				this.snackBar.open('Error: ' + (err.message || JSON.stringify(err)),
+					this.translocoService.translate('CLOSE'),
+					{ duration: 5000 });
+			});
 	}
 
 	public generateBackupData(): void {
@@ -209,10 +217,7 @@ export class SettingsComponent implements OnInit {
 		this.importerExporterService.exportHtml();
 	}
 
-	public showManualBackupDiv() {
-		const div: HTMLInputElement = document.getElementById('manual-backup-div') as HTMLInputElement;
-		div.style.display = "block";
-	}
+
 
 	public getWindowLocationOrigin() {
 		return window.location.origin;
@@ -247,6 +252,10 @@ export class SettingsComponent implements OnInit {
 			autoFocus: false,
 			width: '20rem',
 			panelClass: 'custom-modalbox'
+		}).afterClosed().subscribe(result => {
+			if (result) {
+				this.router.navigate(['/monthlyreport', result.year + '-' + result.month]);
+			}
 		});
 	}
 }
