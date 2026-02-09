@@ -30,8 +30,7 @@ mat-toolbar {
 	margin: auto;
 	// Push content down: Safe Area (status bar) + Toolbar Height (Standard 56px) - No extra gap
 	padding-top: calc(env(safe-area-inset-top) + 56px); 
-	padding-bottom: 50px; // Add some bottom padding
-
+	padding-bottom: calc(50px + 2rem); // Add some bottom padding + safe area approximationblet/Desktop adjustment
 	// Tablet/Desktop adjustment
 	@media (min-width: 768px) {
 		width: 70%;
