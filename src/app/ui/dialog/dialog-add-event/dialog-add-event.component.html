@@ -13,12 +13,14 @@
     </div>
 </ng-template>
 <div mat-dialog-content>
-    <mat-form-field>
-        <mat-label transloco="TIME"></mat-label>
-        <input matInput placeholder="24hr format" aria-label="24hr format" [ngxTimepicker]="fullTime"
-            [format]="timeFormat" [(ngModel)]="data.time" required readonly>
-        <ngx-material-timepicker #fullTime></ngx-material-timepicker>
-    </mat-form-field>
+    <div class="custom-form-field">
+        <mat-label transloco="TIME" class="custom-label"></mat-label>
+        <ion-item lines="none" class="ion-no-padding">
+            <ion-datetime [displayFormat]="timeFormat === 12 ? 'h:mm A' : 'HH:mm'"
+                [pickerFormat]="timeFormat === 12 ? 'h:mm A' : 'HH:mm'" [(ngModel)]="isoTime" placeholder="Select Time">
+            </ion-datetime>
+        </ion-item>
+    </div>
     <div [ngSwitch]="data.type">
         <div *ngSwitchCase="'symptomLog'">
             <div class="dialog-symptom-field">

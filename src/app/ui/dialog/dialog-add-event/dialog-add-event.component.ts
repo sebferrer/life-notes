@@ -32,7 +32,8 @@ export interface IDialogData {
 
 @Component({
 	selector: 'app-dialog-add-event',
-	templateUrl: 'dialog-add-event.component.html'
+	templateUrl: 'dialog-add-event.component.html',
+	styleUrls: ['dialog-add-event.component.scss']
 })
 export class DialogAddEventComponent {
 	public myControl = new FormControl();
@@ -155,5 +156,19 @@ export class DialogAddEventComponent {
 
 	public onSymptomsClick(): void {
 		this.dialogRef.close({ 'answer': 'symptoms' });
+	}
+
+
+	public get isoTime(): string {
+		// Construct ISO string from date and time
+		// data.date is YYYY-MM-DD, data.time is HH:mm
+		return this.data.date + 'T' + this.data.time;
+	}
+
+	public set isoTime(value: string) {
+		// Extract HH:mm from ISO string
+		if (value) {
+			this.data.time = moment(value).format('HH:mm');
+		}
 	}
 }
