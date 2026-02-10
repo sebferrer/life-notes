@@ -40,7 +40,7 @@
                 <p transloco="TIMELINE_NO_SYMPTOMS_WARNING_1"></p>
                 <p transloco="TIMELINE_NO_SYMPTOMS_WARNING_2"></p>
             </div>
-            <div class="custom-form-field">
+            <div class="custom-form-field full-width">
                 <mat-label transloco="PAIN" class="custom-label"></mat-label>
                 <div id="pain-container">
                     <ion-range [max]="painScale" [min]="0" [step]="1" [pin]="true" [(ngModel)]="painValue">
@@ -48,10 +48,12 @@
                     <span class="pain-badge">{{ painValue }}</span>
                 </div>
             </div>
-            <mat-form-field>
-                <mat-label transloco="DETAIL"></mat-label>
-                <input matInput [(ngModel)]="data.detail">
-            </mat-form-field>
+            <div class="custom-form-field full-width">
+                <mat-label transloco="DETAIL" class="custom-label"></mat-label>
+                <ion-item lines="none" class="ion-no-padding">
+                    <ion-textarea [(ngModel)]="data.detail" rows="1" autoGrow="true"></ion-textarea>
+                </ion-item>
+            </div>
         </div>
         <div *ngSwitchCase="'log'">
             <mat-form-field>
@@ -64,10 +66,12 @@
                     </mat-option>
                 </mat-autocomplete>
             </mat-form-field>
-            <mat-form-field>
-                <mat-label transloco="DETAIL"></mat-label>
-                <input matInput [(ngModel)]="data.detail">
-            </mat-form-field>
+            <div class="custom-form-field full-width">
+                <mat-label transloco="DETAIL" class="custom-label"></mat-label>
+                <ion-item lines="none" class="ion-no-padding">
+                    <ion-textarea [(ngModel)]="data.detail" rows="1" autoGrow="true"></ion-textarea>
+                </ion-item>
+            </div>
         </div>
         <div *ngSwitchCase="'med'">
             <mat-form-field>
@@ -90,10 +94,12 @@
                 <mat-label>{{ data.type | transloco | titlecase }}</mat-label>
                 <input matInput [(ngModel)]="data.key" required>
             </mat-form-field>
-            <mat-form-field>
-                <mat-label transloco="DETAIL"></mat-label>
-                <input matInput [(ngModel)]="data.detail">
-            </mat-form-field>
+            <div class="custom-form-field full-width">
+                <mat-label transloco="DETAIL" class="custom-label"></mat-label>
+                <ion-item lines="none" class="ion-no-padding">
+                    <ion-textarea [(ngModel)]="data.detail" rows="1" autoGrow="true"></ion-textarea>
+                </ion-item>
+            </div>
         </div>
     </div>
     <div mat-dialog-actions>
