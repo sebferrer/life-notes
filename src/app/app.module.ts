@@ -32,7 +32,6 @@ import { HomeComponent } from './ui';
 import { CalendarComponent } from './ui/calendar';
 import { DayComponent } from './ui/day';
 import { TimelineComponent } from './ui/timeline';
-import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { SymptomsComponent } from './ui/symptoms';
 import { MedsComponent } from './ui/meds';
 import { BottomSheetAddEventComponent } from './ui/time/bottom-sheet-add-event';
@@ -147,7 +146,6 @@ import { DialogExportPdfComponent } from './ui/dialog/dialog-export-pdf/dialog-e
 		MatAutocompleteModule,
 		MatSlideToggleModule,
 		MatRadioModule,
-		NgxMaterialTimepickerModule,
 		TranslocoRootModule,
 		ChartsModule,
 		ReactiveFormsModule
