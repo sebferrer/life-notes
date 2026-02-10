@@ -15,8 +15,8 @@
 <div mat-dialog-content>
     <mat-form-field>
         <mat-label transloco="TIME"></mat-label>
-        <input matInput placeholder="24hr format" aria-label="24hr format" [ngxTimepicker]="fullTime" [format]="timeFormat"
-            [(ngModel)]="data.time" required readonly>
+        <input matInput placeholder="24hr format" aria-label="24hr format" [ngxTimepicker]="fullTime"
+            [format]="timeFormat" [(ngModel)]="data.time" required readonly>
         <ngx-material-timepicker #fullTime></ngx-material-timepicker>
     </mat-form-field>
     <div [ngSwitch]="data.type">
@@ -38,14 +38,14 @@
                 <p transloco="TIMELINE_NO_SYMPTOMS_WARNING_1"></p>
                 <p transloco="TIMELINE_NO_SYMPTOMS_WARNING_2"></p>
             </div>
-            <mat-form-field>
-                <mat-label transloco="PAIN"></mat-label>
+            <div class="custom-form-field">
+                <mat-label transloco="PAIN" class="custom-label"></mat-label>
                 <div id="pain-container">
-                    <mat-slider [max]="painScale" [min]="0" [step]="1" [thumbLabel]="true" [(ngModel)]="painValue">
-                    </mat-slider>
-                    <input matInput [(ngModel)]="painValue" readonly>
+                    <ion-range [max]="painScale" [min]="0" [step]="1" [pin]="true" [(ngModel)]="painValue">
+                    </ion-range>
+                    <span class="pain-badge">{{ painValue }}</span>
                 </div>
-            </mat-form-field>
+            </div>
             <mat-form-field>
                 <mat-label transloco="DETAIL"></mat-label>
                 <input matInput [(ngModel)]="data.detail">

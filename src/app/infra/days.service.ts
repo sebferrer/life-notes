@@ -13,6 +13,7 @@ import { map, switchMap, catchError, tap } from 'rxjs/operators';
 import { ICustomEvent } from '../models/customEvent.model';
 import { getDaysInMonth, subDays } from 'date-fns';
 import * as moment from 'moment';
+import { GlobalService } from './global.service';
 
 // const CALENDAR_API = '/api/calendar';
 // const CALENDAR_FROM_API = '/api/calendar-from';
@@ -23,7 +24,8 @@ export class DaysService {
 
 	constructor(
 		// private readonly http: HttpClient,
-		private readonly dbContext: DbContext
+		private readonly dbContext: DbContext,
+		private readonly globalService: GlobalService
 	) { }
 
 	public getDaysOverviews(): Observable<IDayOverview[]> {
@@ -198,6 +200,33 @@ export class DaysService {
 		}
 	}
 
+
+
+	public recalculateOverview(day: IDay, key: string): void {
+		if (!this.globalService.autoCalculateOverview) {
+			return;
+		}
+		const symptom = day.symptoms.find(s => s.key === key);
+		let symptomOverviewIndex = day.symptomOverviews.findIndex(s => s.key === key);
+
+		if (!symptom || !symptom.logs || symptom.logs.length === 0) {
+			if (symptomOverviewIndex !== -1) {
+				day.symptomOverviews.splice(symptomOverviewIndex, 1);
+			}
+			return;
+		}
+
+		const totalPain = symptom.logs.reduce((sum, log) => sum + (+log.pain), 0);
+		const averagePain = totalPain / symptom.logs.length;
+		const finalPain = Math.ceil(averagePain * 2) / 2;
+
+		if (symptomOverviewIndex === -1) {
+			day.symptomOverviews.push({ key, pain: finalPain });
+		} else {
+			day.symptomOverviews[symptomOverviewIndex].pain = finalPain;
+		}
+	}
+
 	public addEvent(date: string, customEvent: ICustomEvent): Observable<IDay> {
 		const day = this.getOrCreateDay(date);
 		return day.pipe(
@@ -206,6 +235,7 @@ export class DaysService {
 					switch (customEvent.type) {
 						case 'symptomLog':
 							this.addSymptomLog(d, customEvent.time, customEvent.key, customEvent.pain, customEvent.detail);
+							this.recalculateOverview(d, customEvent.key);
 							break;
 						case 'log':
 							this.addLog(d, customEvent.time, customEvent.key, customEvent.detail);
@@ -255,6 +285,7 @@ export class DaysService {
 						if (symptom.logs.length === 0) {
 							d.symptoms = d.symptoms.filter(s => s.key !== customEvent.key);
 						}
+						this.recalculateOverview(d, customEvent.key);
 						break;
 					case 'log':
 						d.logs = this.filterEvent(d.logs, customEvent.time, customEvent.key);

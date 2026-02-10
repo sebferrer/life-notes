@@ -7,7 +7,7 @@ android {
         applicationId "com.sebferrer.life_notes"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 3030
+        versionCode 3031
         versionName "0.3.3"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {

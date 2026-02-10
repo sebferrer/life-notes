@@ -3,9 +3,7 @@
  }
  
  .timeline-grid {
-    position: relative; // Was absolute
-    // left: 0; // Removed
-    // top: 3.5rem; // Removed - let it flow naturally
+    position: relative; 
     width: 100%;
 }
 
@@ -144,10 +142,10 @@
             height: 100%;
             overflow-y: auto;
             overflow-x: hidden;
-            -ms-overflow-style: none;  /* IE and Edge */
-            scrollbar-width: none;  /* Firefox */
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
-        .timeline-content::-webkit-scrollbar { /* Chrome, Safari and Opera */
+        .timeline-content::-webkit-scrollbar {
             display: none;
         }
     }
@@ -196,6 +194,22 @@
             .event-content {
                 display: table-cell;
                 vertical-align: middle;
+
+                .pain-badge {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 30px;
+                    height: 26px;
+                    background-color: transparent;
+                    /*color: white;
+                    border: 2px solid white;*/
+                    border-radius: 8px;
+                    margin-left: 0.8rem;
+                    font-size: 0.9em;
+                    font-weight: 800;
+                    box-shadow: none;
+                }
             }
             .event-content-eu {
                 width: 48vw;
@@ -222,7 +236,6 @@
 }
 
 .color-default {
-    /* color: #31AE1D; */
     color: var(--color-pain-0);
 }
 

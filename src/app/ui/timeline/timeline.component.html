@@ -51,7 +51,7 @@
 												[ngClass]="globalService.timeFormat === 'us' ? 'event-time-us' : 'event-time-eu'"
 												[innerHTML]="displayTimeHtml(content.time)"></div>
 											<div class="event-content">{{ symptomMap.get(content.key) }}
-												[{{ getPainValue(content.pain) }}/{{ painScale }}]
+												<span class="pain-badge">[ {{ getPainValue(content.pain) }} ]</span>
 											</div>
 										</div>
 										<div *ngSwitchCase="'log'" class="event">

@@ -25,7 +25,7 @@ export class DialogEditSymptomOverviewComponent {
 	}
 
 	public get painValue(): number {
-		return this.painScale === 10 ? (this.data.symptomOverview.pain * 2) : this.data.symptomOverview.pain;
+		return this.painScale === 10 ? (this.data.symptomOverview.pain * 2) : Math.ceil(this.data.symptomOverview.pain);
 	}
 
 	public set painValue(val: number) {

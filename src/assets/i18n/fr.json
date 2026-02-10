@@ -283,5 +283,10 @@
     "CHECK_UPDATE_NOTES": "Voir les notes de mise à jour",
     "EXPORT_PDF_DIALOG_CONTENT_SELECT": "Veuillez sélectionner le mois et l'année du rapport.",
     "MONTH_LABEL": "Mois",
-    "YEAR_LABEL": "Année"
+    "YEAR_LABEL": "Année",
+    "SETTINGS_AUTO_CALCULATE_OVERVIEW": "Calcul automatique du ressenti global",
+    "POPUP_AUTO_CALCULATE_TITLE": "Nouvelle fonctionnalité : Auto-Calcul",
+    "POPUP_AUTO_CALCULATE_CONTENT_1": "Nouveau ! La valeur de votre ressenti global peut maintenant être calculée automatiquement à partir de vos symptômes quotidiens.",
+    "POPUP_AUTO_CALCULATE_CONTENT_2": "Cette fonctionnalité est activée par défaut pour les nouveaux utilisateurs, mais désactivée pour les existants.",
+    "POPUP_AUTO_CALCULATE_CONTENT_3": "Vous pouvez l'activer/désactiver à tout moment dans Paramètres > Symptômes."
 }

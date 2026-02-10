@@ -1,7 +1,7 @@
 import { Observable, of } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { DbContext } from './database';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { ISettings } from '../models/settings.model';
 import { GlobalService } from './global.service';
 
@@ -263,6 +263,32 @@ export class SettingsService {
 		);
 	}
 
+	public setAutoCalculateOverview(auto: boolean): Observable<ISettings> {
+		const settings = this.getSettings();
+		return settings.pipe(
+			switchMap(s => {
+				s.autoCalculateOverview = auto;
+				this.globalService.autoCalculateOverview = auto;
+				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
+					map(() => s)
+				);
+			})
+		);
+	}
+
+	public setAutoOverviewPopupSeen(seen: boolean): Observable<ISettings> {
+		const settings = this.getSettings();
+		return settings.pipe(
+			switchMap(s => {
+				s.autoOverviewPopupSeen = seen;
+				this.globalService.autoOverviewPopupSeen = seen;
+				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
+					map(() => s)
+				);
+			})
+		);
+	}
+
 	public initSettings(): Observable<ISettings> {
 		return this.getSettings().pipe(
 			switchMap(s => {
@@ -272,7 +298,7 @@ export class SettingsService {
 						'targetSymptomKey': '',
 						'language': '',
 						'timeFormat': '',
-						'painScale': 5,
+						'painScale': 10, // Default 10 for new users
 						'firstStart': true,
 						'lastInstall': this.CURRENT_VERSION,
 						'lastUpdate': 0,
@@ -284,9 +310,16 @@ export class SettingsService {
 						'calendarBlockView': false,
 						'painPalette': '2',
 						'weeklyReminder': true,
-						'lastWeeklyReminder': 0
+						'lastWeeklyReminder': 0,
+						'autoCalculateOverview': true, // Default ON for new users
+						'autoOverviewPopupSeen': false
 					};
 					return this.dbContext.asObservable(this.dbContext.settingsCollection.put(settings)).pipe(
+						tap(() => {
+							this.globalService.painScale = settings.painScale;
+							this.globalService.autoCalculateOverview = settings.autoCalculateOverview;
+							this.globalService.autoOverviewPopupSeen = settings.autoOverviewPopupSeen;
+						}),
 						map(() => settings)
 					);
 				}
@@ -301,7 +334,7 @@ export class SettingsService {
 						changed = true;
 					}
 					if (s.painScale == null) {
-						s.painScale = 5;
+						s.painScale = 5; // Sustain 5 for existing users
 						changed = true;
 					}
 					if (s.lastUpdate == null) {
@@ -333,6 +366,20 @@ export class SettingsService {
 						s.painPalette = '2';
 						changed = true;
 					}
+					if (s.autoCalculateOverview == null) {
+						s.autoCalculateOverview = false; // Default OFF for existing users
+						changed = true;
+					}
+					if (s.autoOverviewPopupSeen == null) {
+						s.autoOverviewPopupSeen = false;
+						changed = true;
+					}
+
+					// Update GlobalService with loaded values
+					this.globalService.painScale = s.painScale;
+					this.globalService.autoCalculateOverview = s.autoCalculateOverview;
+					this.globalService.autoOverviewPopupSeen = s.autoOverviewPopupSeen;
+
 					if (changed) {
 						this.dbContext.settingsCollection.put(s);
 					}
@@ -340,7 +387,6 @@ export class SettingsService {
 				}
 			})
 		);
-
 	}
 
 }

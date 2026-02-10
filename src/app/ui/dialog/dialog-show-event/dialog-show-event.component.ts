@@ -28,4 +28,8 @@ export class DialogShowEventComponent {
 	public onYesClick(): void {
 		this.dialogRef.close({ 'answer': 'yes', 'type': this.data.customEvent.type });
 	}
+
+	public getPainValue(pain: number): number {
+		return this.globalService.painScale === 10 ? pain * 2 : Math.ceil(pain);
+	}
 }

@@ -53,19 +53,33 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
         .dialog-add-symptom-list-button {
             margin-left: 10%;
+            background-color: #E91E63 !important;
         }
     }
 
     #pain-container {
-        mat-slider {
-            width: 70%;
+        position: relative;
+
+        ion-range {
+            width: 65%;
+            padding-inline-start: 0;
+            padding-inline-end: 0;
         }
     
-        input {
-            width: 20%;
+        .pain-badge {
+            background-color: #E91E63;
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             position: absolute;
-            top: 35%;
-            right: 0;
+            right: 1.2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.9rem;
         }
     }
 
@@ -140,4 +154,13 @@ mat-spinner {
     position: absolute;
     top: 30vh;
     left: 20vw;
+}
+
+ion-range {
+    --knob-background: #E91E63;
+    --bar-background-active: #E91E63;
+    --pin-background: #E91E63;
+    --pin-color: white;
+    padding-top: 0;
+    padding-bottom: 0;
 }

@@ -98,6 +98,12 @@ export class SymptomsComponent implements OnInit {
 			this.symptoms.push(new SymptomViewModel({ type: null, key, label }));
 			this.symptoms$.next(this.symptoms);
 			this.globalService.loadSymptoms().subscribe(() => { });
+
+			if (!this.globalService.targetSymptomKey) {
+				this.settingsService.setTargetSymptomKey(key).subscribe(() => {
+					this.globalService.targetSymptomKey = key;
+				});
+			}
 		});
 	}
 
