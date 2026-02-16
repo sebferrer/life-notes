@@ -287,5 +287,9 @@
     "POPUP_AUTO_CALCULATE_TITLE": "Auto-Calculate Feature",
     "POPUP_AUTO_CALCULATE_CONTENT_1": "New! The pain overview value can now be auto-calculated from your daily symptoms.",
     "POPUP_AUTO_CALCULATE_CONTENT_2": "This feature is enabled by default for new users, but disabled for existing ones.",
-    "POPUP_AUTO_CALCULATE_CONTENT_3": "You can enable/disable it at any time in Settings > Symptoms."
+    "POPUP_AUTO_CALCULATE_CONTENT_3": "You can enable/disable it at any time in Settings > Symptoms.",
+    "INTENSITY_LOW": "Low",
+    "INTENSITY_MODERATE": "Moderate",
+    "INTENSITY_HIGH": "High",
+    "DELETE": "Delete"
 }

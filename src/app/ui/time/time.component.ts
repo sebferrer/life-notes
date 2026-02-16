@@ -61,14 +61,14 @@ export abstract class ATimeComponent {
 	}
 
 	public openShowDialog(date: string, customEvent: ICustomEvent, symptoms: ISymptom[]): void {
-		this.dialog.open(DialogShowEventComponent, {
-			autoFocus: false,
-			width: '20rem',
-			panelClass: 'custom-modalbox',
+		this.bottomSheet.open(DialogShowEventComponent, {
+			panelClass: 'event-bottom-sheet',
 			data: { date, 'detailedDate': getDetailedDate(date), customEvent }
-		}).afterClosed().subscribe(response => {
-			if (response == null || response.answer !== 'yes') {
+		}).afterDismissed().subscribe(response => {
+			if (response == null || response.answer === 'no') {
 				return;
+			} else if (response.answer === 'delete') {
+				this.openDeleteDialog(date, customEvent);
 			} else {
 				if (response.type === 'symptomLog') {
 					this.openAddSymptomDialog(customEvent.type, date, symptoms, customEvent);

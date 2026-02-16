@@ -25,11 +25,7 @@
                     <mat-icon>playlist_add</mat-icon>
                 </button>
             </div>
-            <div class="delete-event-container">
-                <button mat-icon-button class="delete-event" (click)="toggleRemovable(dayContent)">
-                    <mat-icon>delete_sweep</mat-icon>
-                </button>
-            </div>
+
         </div>
         <div *ngIf="!displayCharts" class="day-tile-content">
             <div class="corner-decoration"></div>
@@ -88,12 +84,7 @@
                                         {{ content.detail }}</div>
                                 </div>
                             </div>
-                            <div class="remove-event-container">
-                                <mat-icon matChipRemove *ngIf="dayContent.removable" class="remove-event"
-                                    (click)="openDeleteDialog(dayContent.date, content)">
-                                    cancel
-                                </mat-icon>
-                            </div>
+
                         </div>
                     </mat-chip>
                     <div class="day-chips-padding"></div>

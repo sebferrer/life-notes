@@ -288,5 +288,9 @@
     "POPUP_AUTO_CALCULATE_TITLE": "Nouvelle fonctionnalité : Auto-Calcul",
     "POPUP_AUTO_CALCULATE_CONTENT_1": "Nouveau ! La valeur de votre ressenti global peut maintenant être calculée automatiquement à partir de vos symptômes quotidiens.",
     "POPUP_AUTO_CALCULATE_CONTENT_2": "Cette fonctionnalité est activée par défaut pour les nouveaux utilisateurs, mais désactivée pour les existants.",
-    "POPUP_AUTO_CALCULATE_CONTENT_3": "Vous pouvez l'activer/désactiver à tout moment dans Paramètres > Symptômes."
+    "POPUP_AUTO_CALCULATE_CONTENT_3": "Vous pouvez l'activer/désactiver à tout moment dans Paramètres > Symptômes.",
+    "INTENSITY_LOW": "Faible",
+    "INTENSITY_MODERATE": "Modéré",
+    "INTENSITY_HIGH": "Élevé",
+    "DELETE": "Supprimer"
 }
