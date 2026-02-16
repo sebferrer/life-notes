@@ -291,5 +291,6 @@
     "INTENSITY_LOW": "Low",
     "INTENSITY_MODERATE": "Moderate",
     "INTENSITY_HIGH": "High",
-    "DELETE": "Delete"
+    "DELETE": "Delete",
+    "ADD_NEW_SYMPTOM": "Add a new symptom"
 }

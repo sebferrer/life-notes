@@ -1,5 +1,6 @@
-import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Component, Inject, ViewEncapsulation } from '@angular/core';
+import { Router } from '@angular/router';
+import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
 import { ICustomEvent } from 'src/app/models/customEvent.model';
 import { ISymptom } from 'src/app/models/symptom.model';
 import { IDetailedDate } from 'src/app/models/detailed.date';
@@ -33,7 +34,8 @@ export interface IDialogData {
 @Component({
 	selector: 'app-dialog-add-event',
 	templateUrl: 'dialog-add-event.component.html',
-	styleUrls: ['dialog-add-event.component.scss']
+	styleUrls: ['dialog-add-event.component.scss'],
+	encapsulation: ViewEncapsulation.None
 })
 export class DialogAddEventComponent {
 	public myControl = new FormControl();
@@ -44,11 +46,12 @@ export class DialogAddEventComponent {
 	public timeFormat: number;
 
 	constructor(
-		public dialogRef: MatDialogRef<DialogAddEventComponent>,
+		public bottomSheetRef: MatBottomSheetRef<DialogAddEventComponent>,
 		public globalService: GlobalService,
 		public medsService: MedsService,
 		public logsService: LogsService,
-		@Inject(MAT_DIALOG_DATA) public data: IDialogData
+		private router: Router,
+		@Inject(MAT_BOTTOM_SHEET_DATA) public data: IDialogData
 	) {
 		data.detailedDate = getDetailedDate(moment(data.date).format('YYYY-MM-DD'));
 		this.timeFormat = this.globalService.timeFormat == 'us' ? 12 : 24;
@@ -138,11 +141,11 @@ export class DialogAddEventComponent {
 	}
 
 	public onNoClick(): void {
-		this.dialogRef.close({ 'answer': 'no' });
+		this.bottomSheetRef.dismiss({ 'answer': 'no' });
 	}
 
 	public onYesClick(): void {
-		this.dialogRef.close({
+		this.bottomSheetRef.dismiss({
 			'answer': 'yes',
 			'edit': this.data.edit,
 			'time': this.data.time,
@@ -155,7 +158,8 @@ export class DialogAddEventComponent {
 	}
 
 	public onSymptomsClick(): void {
-		this.dialogRef.close({ 'answer': 'symptoms' });
+		this.bottomSheetRef.dismiss({ 'answer': 'symptoms' });
+		this.router.navigate(['/symptoms']);
 	}
 
 

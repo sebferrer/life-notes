@@ -81,23 +81,19 @@ export abstract class ATimeComponent {
 	}
 
 	public openAddDialog(type: string, date: string, customEvent?: ICustomEvent): void {
-		this.dialog.open(DialogAddEventComponent, {
-			autoFocus: false,
-			width: '20rem',
-			panelClass: 'custom-modalbox',
+		this.bottomSheet.open(DialogAddEventComponent, {
+			panelClass: 'event-bottom-sheet',
 			data: { type, date, customEvent }
-		}).afterClosed().subscribe(response => {
+		}).afterDismissed().subscribe(response => {
 			this.postAddDialog(date, response, type, customEvent);
 		});
 	}
 
 	public openAddSymptomDialog(type: string, date: string, symptoms: ISymptom[], customEvent?: ICustomEvent): void {
-		this.dialog.open(DialogAddEventComponent, {
-			autoFocus: false,
-			width: '20rem',
-			panelClass: 'custom-modalbox',
+		this.bottomSheet.open(DialogAddEventComponent, {
+			panelClass: 'event-bottom-sheet',
 			data: { type, date, symptoms, customEvent }
-		}).afterClosed().subscribe(response => {
+		}).afterDismissed().subscribe(response => {
 			this.postAddDialog(date, response, type, customEvent);
 		});
 	}
