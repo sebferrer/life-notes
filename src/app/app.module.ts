@@ -47,7 +47,7 @@ import { DialogDeleteEventComponent } from './ui/dialog/dialog-delete-event';
 import { DialogShowEventComponent } from './ui/dialog/dialog-show-event';
 import { DialogAddSymptomComponent } from './ui/dialog/dialog-add-symptom';
 import { DialogDeleteSymptomComponent } from './ui/dialog/dialog-delete-symptom';
-import { DialogEditSymptomOverviewComponent } from './ui/dialog/dialog-edit-symptom-overview';
+
 import { DialogImportConfirmComponent } from './ui/dialog/dialog-import-confirm';
 import { DialogNoSymptomWarningComponent } from './ui/dialog/dialog-no-symptom-warning';
 import { DialogSelectSymptomComponent } from './ui/dialog/dialog-select-symptom';
@@ -104,7 +104,6 @@ import { BottomSheetEditSymptomOverviewComponent } from './ui/bottom-sheet/botto
 		DialogShowEventComponent,
 		DialogAddSymptomComponent,
 		DialogDeleteSymptomComponent,
-		DialogEditSymptomOverviewComponent,
 		DialogImportConfirmComponent,
 		DialogExportConfirmComponent,
 		DialogExportPdfComponent,
@@ -195,7 +194,6 @@ import { BottomSheetEditSymptomOverviewComponent } from './ui/bottom-sheet/botto
 		DialogShowEventComponent,
 		DialogAddSymptomComponent,
 		DialogDeleteSymptomComponent,
-		DialogEditSymptomOverviewComponent,
 		DialogImportConfirmComponent,
 		DialogExportConfirmComponent,
 		DialogExportPdfComponent,
