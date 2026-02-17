@@ -4,7 +4,7 @@ import { DaysService } from 'src/app/infra';
 import { DialogAddEventComponent } from '../dialog/dialog-add-event';
 import { DialogDeleteEventComponent } from '../dialog/dialog-delete-event';
 import { DialogShowEventComponent } from '../dialog/dialog-show-event';
-import { DialogEditSymptomOverviewComponent } from '../dialog/dialog-edit-symptom-overview';
+import { BottomSheetEditSymptomOverviewComponent } from '../bottom-sheet/bottom-sheet-edit-symptom-overview';
 import { ICustomEvent } from 'src/app/models/customEvent.model';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -208,12 +208,10 @@ export abstract class ATimeComponent {
 					const symptomOverview = this.daysService.getSymptomOverview(d, this.globalService.targetSymptomKey)
 						|| { key: this.globalService.targetSymptomKey, pain: 0 };
 					const symptomMap = this.symptomMap;
-					this.dialog.open(DialogEditSymptomOverviewComponent, {
-						autoFocus: false,
-						width: '20rem',
-						panelClass: 'custom-modalbox',
+					this.bottomSheet.open(BottomSheetEditSymptomOverviewComponent, {
+						panelClass: 'event-bottom-sheet',
 						data: { date, symptomOverview, symptomMap }
-					}).afterClosed().subscribe(response => {
+					}).afterDismissed().subscribe(response => {
 						if (response == null || response.answer !== 'yes') {
 							return;
 						}

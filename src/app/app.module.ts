@@ -80,6 +80,7 @@ import { BottomSheetDeleteEventComponent } from './ui/bottom-sheet/bottom-sheet-
 import { BottomSheetEditMedComponent } from './ui/bottom-sheet/bottom-sheet-edit-med';
 import { BottomSheetEditLogComponent } from './ui/bottom-sheet/bottom-sheet-edit-log';
 import { BottomSheetDeleteOverviewComponent } from './ui/bottom-sheet/bottom-sheet-delete-overview';
+import { BottomSheetEditSymptomOverviewComponent } from './ui/bottom-sheet/bottom-sheet-edit-symptom-overview';
 
 @NgModule({
 	declarations: [
@@ -126,7 +127,8 @@ import { BottomSheetDeleteOverviewComponent } from './ui/bottom-sheet/bottom-she
 		BottomSheetDeleteOverviewComponent,
 
 		// Helpers
-		InfiniteScrollComponent
+		InfiniteScrollComponent,
+		BottomSheetEditSymptomOverviewComponent
 	],
 	imports: [
 		BrowserModule,
@@ -208,7 +210,8 @@ import { BottomSheetDeleteOverviewComponent } from './ui/bottom-sheet/bottom-she
 		DialogTutorialNoticeComponent,
 		BottomSheetEditMedComponent,
 		BottomSheetEditLogComponent,
-		BottomSheetDeleteOverviewComponent
+		BottomSheetDeleteOverviewComponent,
+		BottomSheetEditSymptomOverviewComponent
 	],
 	bootstrap: [AppComponent]
 })
