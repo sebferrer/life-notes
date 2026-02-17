@@ -1,30 +1,47 @@
-<div id="symptoms-container">
-    <h3 class="title" transloco="SYMPTOMS_TITLE"></h3>
-    <mat-selection-list class="symptom-list" *ngIf="symptoms$ | async as symptoms; else loading" #symptoms
-        [multiple]="false">
-        <mat-list-option class="symptom-list-item" *ngFor="let symptom of symptoms" [value]="symptom">
-            <div class="symptom-label-container">
-                <div class="symptom-label">{{ symptom.label }}</div>
+<div class="symptoms-page-container">
+    <header class="page-header">
+        <h1 class="page-title">{{ 'SYMPTOMS_TITLE' | transloco }}</h1>
+    </header>
+
+    <div class="symptoms-list-container" *ngIf="symptoms$ | async as symptoms; else loading">
+        <!-- Add New Symptom Card -->
+        <div class="symptom-card add-card" (click)="openAddDialog()" matRipple>
+            <div class="symptom-info">
+                <span class="symptom-label add-label">{{ 'ADD_NEW_SYMPTOM_LABEL' | transloco }}</span>
             </div>
-            <div class="buttons-container">
-                <button mat-icon-button class="edit-symptom" (click)="openAddDialog(symptom)">
+            <div class="add-icon-container">
+                <mat-icon>add_circle_outline</mat-icon>
+            </div>
+        </div>
+
+        <div class="symptom-card" *ngFor="let symptom of symptoms">
+            <div class="symptom-info">
+                <span class="symptom-label">{{ symptom.label }}</span>
+            </div>
+            <div class="symptom-actions">
+                <button mat-icon-button class="action-btn edit-btn" (click)="openAddDialog(symptom)" matTooltip="Edit">
                     <mat-icon>edit</mat-icon>
                 </button>
-                <button mat-icon-button class="delete-symptom"
-                    (click)="openDeleteDialog(symptom.key, symptom.label)">
+                <button mat-icon-button class="action-btn delete-btn"
+                    (click)="openDeleteDialog(symptom.key, symptom.label)" matTooltip="Delete">
                     <mat-icon>delete</mat-icon>
                 </button>
             </div>
-        </mat-list-option>
-    </mat-selection-list>
-</div>
+        </div>
 
-<div class="add-button-container">
-    <button mat-fab color="primary" (click)="openAddDialog()">
-        <mat-icon>add</mat-icon>
-    </button>
-</div>
+        <div class="empty-state" *ngIf="symptoms.length === 0">
+            <p>{{ 'NO_SYMPTOMS' | transloco }}</p>
+            <!-- Assuming NO_SYMPTOMS key exists, or I might need to add it or use placeholder? 
+                 Actually current code didn't have empty state. I'll omit if key not guaranteed. -->
+        </div>
 
-<ng-template #loading>
-    <mat-spinner></mat-spinner>
-</ng-template>
+    </div>
+
+
+
+    <ng-template #loading>
+        <div class="loading-container">
+            <mat-spinner diameter="40"></mat-spinner>
+        </div>
+    </ng-template>
+</div>

@@ -36,9 +36,8 @@ export class SymptomsComponent implements OnInit {
 	public ngOnInit(): void {
 		this.symptomsService.getSymptoms().subscribe(
 			symptoms => {
-				symptoms.forEach(symptom => {
-					this.symptoms.push(new SymptomViewModel(symptom));
-				});
+				this.symptoms = symptoms.map(s => new SymptomViewModel(s));
+				this.sortSymptoms();
 				this.symptoms$.next(this.symptoms);
 			});
 	}
@@ -78,6 +77,7 @@ export class SymptomsComponent implements OnInit {
 			}
 			this.symptomsService.deleteSymptom(key).subscribe(() => {
 				this.symptoms = this.symptoms.filter(symptom => symptom.key !== key);
+				this.sortSymptoms(); // Safety sort, though filter preserves order
 				this.symptoms$.next(this.symptoms);
 				if (this.globalService.targetSymptomKey === key) {
 					this.settingsService.setTargetSymptomKey(null).subscribe(() => {
@@ -96,6 +96,7 @@ export class SymptomsComponent implements OnInit {
 		const key: string = simplifyString(label);
 		this.symptomsService.createNewSymptom(key, label).subscribe(() => {
 			this.symptoms.push(new SymptomViewModel({ type: null, key, label }));
+			this.sortSymptoms();
 			this.symptoms$.next(this.symptoms);
 			this.globalService.loadSymptoms().subscribe(() => { });
 
@@ -111,9 +112,14 @@ export class SymptomsComponent implements OnInit {
 		this.symptomsService.editSymptom(key, label).subscribe(symptom => {
 			this.symptoms = this.symptoms.filter(s => s.key !== key);
 			this.symptoms.push(new SymptomViewModel(symptom));
+			this.sortSymptoms();
 			this.symptoms$.next(this.symptoms);
 			this.globalService.loadSymptoms().subscribe(() => { });
 		});
+	}
+
+	private sortSymptoms(): void {
+		this.symptoms.sort((a, b) => a.label.localeCompare(b.label));
 	}
 
 }
