@@ -13,7 +13,7 @@
                 </div>
                 <div class="main-title">
                     <span *ngIf="data.edit">{{ t('EDIT') }}</span>
-                    <span *ngIf="!data.edit">{{ t('ADD') }}</span>
+                    <span *ngIf="!data.edit && data.type !== 'wakeUp' && data.type !== 'goToBed'">{{ t('ADD') }}</span>
                     {{ t(data.type) | titlecase }}
                 </div>
             </div>
@@ -158,7 +158,8 @@
             <button mat-flat-button color="primary" (click)="onYesClick()" class="confirm-button"
                 [disabled]="!isValid()">
                 <span *ngIf="data.edit">{{ t('EDIT') }}</span>
-                <span *ngIf="!data.edit">{{ t('ADD') }}</span>
+                <span *ngIf="!data.edit && data.type !== 'wakeUp' && data.type !== 'goToBed'">{{ t('ADD') }}</span>
+                <span *ngIf="!data.edit && (data.type === 'wakeUp' || data.type === 'goToBed')">{{ t('SET') }}</span>
             </button>
         </div>
 
