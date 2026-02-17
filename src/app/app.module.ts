@@ -48,7 +48,7 @@ import { DialogShowEventComponent } from './ui/dialog/dialog-show-event';
 import { DialogAddSymptomComponent } from './ui/dialog/dialog-add-symptom';
 import { DialogDeleteSymptomComponent } from './ui/dialog/dialog-delete-symptom';
 
-import { DialogImportConfirmComponent } from './ui/dialog/dialog-import-confirm';
+
 import { DialogNoSymptomWarningComponent } from './ui/dialog/dialog-no-symptom-warning';
 import { DialogSelectSymptomComponent } from './ui/dialog/dialog-select-symptom';
 import { DialogSelectBackupComponent } from './ui/dialog/dialog-select-backup';
@@ -73,7 +73,7 @@ import { AboutComponent } from './ui/about';
 
 import { DialogTutorialNoticeComponent } from './ui/dialog/dialog-tutorial-notice';
 
-import { DialogExportPdfComponent } from './ui/dialog/dialog-export-pdf/dialog-export-pdf.component';
+
 import { DialogOccurrenceHistoryComponent } from './ui/dialog/dialog-occurrence-history';
 import { BottomSheetDeleteEventComponent } from './ui/bottom-sheet/bottom-sheet-delete-event';
 
@@ -81,6 +81,9 @@ import { BottomSheetEditMedComponent } from './ui/bottom-sheet/bottom-sheet-edit
 import { BottomSheetEditLogComponent } from './ui/bottom-sheet/bottom-sheet-edit-log';
 import { BottomSheetDeleteOverviewComponent } from './ui/bottom-sheet/bottom-sheet-delete-overview';
 import { BottomSheetEditSymptomOverviewComponent } from './ui/bottom-sheet/bottom-sheet-edit-symptom-overview';
+import { BottomSheetImportConfirmComponent } from './ui/bottom-sheet/bottom-sheet-import-confirm';
+import { BottomSheetExportPdfComponent } from './ui/bottom-sheet/bottom-sheet-export-pdf';
+
 
 @NgModule({
 	declarations: [
@@ -104,9 +107,7 @@ import { BottomSheetEditSymptomOverviewComponent } from './ui/bottom-sheet/botto
 		DialogShowEventComponent,
 		DialogAddSymptomComponent,
 		DialogDeleteSymptomComponent,
-		DialogImportConfirmComponent,
 		DialogExportConfirmComponent,
-		DialogExportPdfComponent,
 		DialogNoSymptomWarningComponent,
 		DialogNoTargetSymptomWarningComponent,
 		DialogSelectSymptomComponent,
@@ -127,7 +128,9 @@ import { BottomSheetEditSymptomOverviewComponent } from './ui/bottom-sheet/botto
 
 		// Helpers
 		InfiniteScrollComponent,
-		BottomSheetEditSymptomOverviewComponent
+		BottomSheetEditSymptomOverviewComponent,
+		BottomSheetImportConfirmComponent,
+		BottomSheetExportPdfComponent
 	],
 	imports: [
 		BrowserModule,
@@ -194,9 +197,7 @@ import { BottomSheetEditSymptomOverviewComponent } from './ui/bottom-sheet/botto
 		DialogShowEventComponent,
 		DialogAddSymptomComponent,
 		DialogDeleteSymptomComponent,
-		DialogImportConfirmComponent,
 		DialogExportConfirmComponent,
-		DialogExportPdfComponent,
 		DialogNoSymptomWarningComponent,
 		DialogNoTargetSymptomWarningComponent,
 		DialogSelectSymptomComponent,
@@ -209,7 +210,9 @@ import { BottomSheetEditSymptomOverviewComponent } from './ui/bottom-sheet/botto
 		BottomSheetEditMedComponent,
 		BottomSheetEditLogComponent,
 		BottomSheetDeleteOverviewComponent,
-		BottomSheetEditSymptomOverviewComponent
+		BottomSheetEditSymptomOverviewComponent,
+		BottomSheetImportConfirmComponent,
+		BottomSheetExportPdfComponent
 	],
 	bootstrap: [AppComponent]
 })

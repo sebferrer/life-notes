@@ -1,0 +1,20 @@
+<div class="bottom-sheet-container import-confirm">
+    <div class="header-section">
+        <h2 class="title">{{ 'IMPORT_DIALOG_TITLE' | transloco }}</h2>
+    </div>
+
+    <div class="content-body">
+        <p>{{ 'IMPORT_DIALOG_CONTENT_1' | transloco }}</p>
+        <p>{{ 'IMPORT_DIALOG_CONTENT_2' | transloco }}</p>
+        <p>{{ 'IMPORT_DIALOG_CONTENT_3' | transloco }}</p>
+    </div>
+
+    <div class="actions">
+        <button mat-stroked-button (click)="onNoClick()" class="cancel-button">
+            {{ 'NO' | transloco }}
+        </button>
+        <button mat-flat-button color="primary" (click)="onYesClick()" class="confirm-button">
+            {{ 'YES' | transloco }}
+        </button>
+    </div>
+</div>

@@ -1,0 +1,38 @@
+<div class="bottom-sheet-container export-pdf">
+    <div class="header-section">
+        <h2 class="title">{{ 'EXPORT_PDF_DIALOG_TITLE' | transloco }}</h2>
+    </div>
+
+    <div class="content-body">
+        <p>{{ 'EXPORT_PDF_DIALOG_CONTENT_SELECT' | transloco }}</p>
+
+        <div class="form-container">
+            <mat-form-field appearance="outline">
+                <mat-label>{{ 'MONTH_LABEL' | transloco }}</mat-label>
+                <mat-select [(ngModel)]="selectedMonth">
+                    <mat-option *ngFor="let m of months" [value]="m.value">
+                        {{ 'MONTH-' + m.value | transloco }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>{{ 'YEAR_LABEL' | transloco }}</mat-label>
+                <mat-select [(ngModel)]="selectedYear">
+                    <mat-option *ngFor="let y of years" [value]="y">
+                        {{ y }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </div>
+
+    <div class="actions">
+        <button mat-stroked-button (click)="onCloseClick()" class="cancel-button">
+            {{ 'CANCEL' | transloco }}
+        </button>
+        <button mat-flat-button color="primary" (click)="onConfirmClick()" class="confirm-button">
+            {{ 'SET' | transloco }}
+        </button>
+    </div>
+</div>

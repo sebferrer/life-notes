@@ -1,0 +1,52 @@
+
+
+.bottom-sheet-container.import-confirm {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 1rem 1.5rem 1rem;
+    gap: 1.5rem;
+    box-sizing: border-box;
+    width: 100%;
+    // Ensure it takes available height if needed (though 50vh constraint applies from panelClass)
+    height: 100%; 
+
+    .header-section {
+        .title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: rgba(0,0,0,0.85);
+            margin: 0;
+            text-align: center;
+        }
+    }
+
+    .content-body {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        overflow-y: auto;
+        gap: 1rem;
+
+        p {
+            margin: 0;
+            line-height: 1.5;
+            color: rgba(0,0,0,0.7);
+        }
+    }
+
+    .actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: auto; 
+
+        button {
+            flex: 1;
+            height: 3.5rem; // Matched to other sheets
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 600;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+    }
+}
