@@ -8,8 +8,7 @@
         <div class="field-container">
             <mat-label class="custom-label">{{ 'PAIN' | transloco }}</mat-label>
             <div class="pain-container">
-                <ion-range [max]="painScale" [min]="0" [step]="1" [pin]="true" [value]="painValue"
-                    [(ngModel)]="painValue">
+                <ion-range [max]="painScale" [min]="0" [step]="1" [(ngModel)]="painValue">
                 </ion-range>
                 <span class="pain-badge">{{ painValue }}</span>
             </div>
