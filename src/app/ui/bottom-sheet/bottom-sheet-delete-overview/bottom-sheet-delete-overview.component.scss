@@ -1,0 +1,56 @@
+.bottom-sheet-container.delete-overview {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 1rem 1.5rem 1rem;
+    gap: 1.5rem;
+    box-sizing: border-box;
+    width: 100%;
+
+    .header-section {
+        .title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: rgba(0,0,0,0.85);
+            margin: 0;
+            text-align: center;
+        }
+    }
+
+    .content-section {
+        text-align: center;
+        font-size: 1rem;
+        line-height: 1.5;
+        
+        .message {
+            margin: 0;
+            color: rgba(0,0,0,0.7);
+            margin-bottom: 0.5rem;
+
+            &:last-child {
+                color: #d32f2f;
+                font-weight: 500;
+                font-size: 0.9rem;
+            }
+        }
+    }
+
+    .actions {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        width: 100%;
+
+        button {
+            flex: 1;
+            height: 3rem;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .cancel-button {
+            border-color: rgba(0,0,0,0.15);
+            color: rgba(0,0,0,0.6);
+        }
+    }
+}

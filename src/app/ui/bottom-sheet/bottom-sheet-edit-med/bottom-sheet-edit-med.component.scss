@@ -1,0 +1,64 @@
+.bottom-sheet-container.edit-med {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 1rem 1.5rem 1rem;
+    gap: 1.5rem;
+    box-sizing: border-box;
+    width: 100%;
+
+    .header-section {
+        .title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: rgba(0,0,0,0.85);
+            margin: 0;
+            text-align: center;
+        }
+    }
+
+    .content-section {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+
+        .field-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+
+            mat-form-field {
+                width: 100%;
+            }
+        }
+
+        .warning-text {
+            p {
+                margin: 0;
+                color: #d32f2f;
+                font-size: 0.9rem;
+                font-style: italic;
+                text-align: center;
+            }
+        }
+    }
+
+    .actions {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        width: 100%;
+
+        button {
+            flex: 1;
+            height: 3rem;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .cancel-button {
+            border-color: rgba(0,0,0,0.15);
+            color: rgba(0,0,0,0.6);
+        }
+    }
+}

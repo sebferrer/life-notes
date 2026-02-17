@@ -10,9 +10,11 @@ import { GlobalService } from 'src/app/infra/global.service';
 import { TranslocoService } from '@ngneat/transloco';
 import { MedsService } from 'src/app/infra/meds.service';
 import { DialogConfirmComponent } from '../dialog/dialog-confirm';
-import { DialogEditMedComponent } from '../dialog/dialog-edit-med/dialog-edit-med.component';
+
 import { getSortOrder } from 'src/app/util/array.utils';
 import { DialogOccurrenceHistoryComponent } from '../dialog/dialog-occurrence-history';
+import { BottomSheetEditMedComponent } from '../bottom-sheet/bottom-sheet-edit-med';
+import { BottomSheetDeleteOverviewComponent } from '../bottom-sheet/bottom-sheet-delete-overview';
 
 @Component({
 	selector: 'app-meds',
@@ -60,15 +62,13 @@ export class MedsComponent implements OnInit {
 	}
 
 	public openEditDialog(med: MedHistoryViewModel): void {
-		this.dialog.open(DialogEditMedComponent, {
-			autoFocus: false,
-			width: '20rem',
-			panelClass: 'custom-modalbox',
+		this.bottomSheet.open(BottomSheetEditMedComponent, {
+			panelClass: 'event-bottom-sheet',
 			data: {
 				key: med.key,
 				quantity: med.quantity
 			}
-		}).afterClosed().subscribe(response => {
+		}).afterDismissed().subscribe(response => {
 			if (response == null || response.answer !== 'yes') {
 				return;
 			}
@@ -80,15 +80,13 @@ export class MedsComponent implements OnInit {
 	}
 
 	public openDeleteDialog(med: MedHistoryViewModel): void {
-		this.dialog.open(DialogConfirmComponent, {
-			autoFocus: false,
-			width: '20rem',
-			panelClass: 'custom-modalbox',
+		this.bottomSheet.open(BottomSheetDeleteOverviewComponent, {
+			panelClass: 'event-bottom-sheet',
 			data: {
 				title: 'DELETE_MED_DIALOG_TITLE',
 				content: ['DELETE_MED_DIALOG_CONTENT_1', 'DELETE_MED_DIALOG_CONTENT_2']
 			}
-		}).afterClosed().subscribe(response => {
+		}).afterDismissed().subscribe(response => {
 			if (response == null || response.answer !== 'yes') {
 				return;
 			}

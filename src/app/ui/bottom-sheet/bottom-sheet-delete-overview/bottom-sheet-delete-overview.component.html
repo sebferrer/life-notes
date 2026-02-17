@@ -1,0 +1,20 @@
+<ng-template transloco let-t>
+    <div class="bottom-sheet-container delete-overview">
+        <div class="header-section">
+            <h2 class="title">{{ t(data.title) }}</h2>
+        </div>
+
+        <div class="content-section">
+            <p class="message" *ngFor="let line of data.content">{{ t(line) }}</p>
+        </div>
+
+        <div class="actions">
+            <button mat-stroked-button (click)="onCancel()" class="cancel-button">
+                {{ t('CANCEL') }}
+            </button>
+            <button mat-flat-button color="warn" (click)="onConfirm()" class="delete-button">
+                {{ t('DELETE') }}
+            </button>
+        </div>
+    </div>
+</ng-template>

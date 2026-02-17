@@ -1,0 +1,34 @@
+<ng-template transloco let-t>
+    <div class="bottom-sheet-container edit-med">
+        <div class="header-section">
+            <h2 class="title">{{ t('EDIT_MED_TITLE') }}</h2>
+        </div>
+
+        <div class="content-section">
+            <div class="field-container">
+                <mat-form-field appearance="outline">
+                    <mat-label>{{ t('TABLE_MEDICINE') }}</mat-label>
+                    <input matInput [(ngModel)]="data.key" required>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>{{ t('TABLE_DOSAGE') }} (mg)</mat-label>
+                    <input matInput type="number" [(ngModel)]="data.quantity" required>
+                </mat-form-field>
+            </div>
+
+            <div class="warning-text">
+                <p>{{ t('EDIT_MED_WARNING') }}</p>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button mat-stroked-button (click)="onCancel()" class="cancel-button">
+                {{ t('CANCEL') }}
+            </button>
+            <button mat-flat-button color="primary" (click)="onConfirm()" [disabled]="!isValid()"
+                class="confirm-button">
+                {{ t('EDIT') }}
+            </button>
+        </div>
+    </div>
+</ng-template>

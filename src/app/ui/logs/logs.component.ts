@@ -9,10 +9,12 @@ import { GlobalService } from 'src/app/infra/global.service';
 import { TranslocoService } from '@ngneat/transloco';
 import { LogsService } from 'src/app/infra/logs.service';
 import { DialogConfirmComponent } from '../dialog/dialog-confirm';
-import { DialogEditLogComponent } from '../dialog/dialog-edit-log/dialog-edit-log.component';
+
 import { getSortOrder } from 'src/app/util/array.utils';
 import { LogHistoryViewModel } from 'src/app/models/log-history.view.model';
 import { DialogOccurrenceHistoryComponent } from '../dialog/dialog-occurrence-history';
+import { BottomSheetEditLogComponent } from '../bottom-sheet/bottom-sheet-edit-log';
+import { BottomSheetDeleteOverviewComponent } from '../bottom-sheet/bottom-sheet-delete-overview';
 
 @Component({
 	selector: 'app-logs',
@@ -60,14 +62,12 @@ export class LogsComponent implements OnInit {
 	}
 
 	public openEditDialog(log: LogHistoryViewModel): void {
-		this.dialog.open(DialogEditLogComponent, {
-			autoFocus: false,
-			width: '20rem',
-			panelClass: 'custom-modalbox',
+		this.bottomSheet.open(BottomSheetEditLogComponent, {
+			panelClass: 'event-bottom-sheet',
 			data: {
 				key: log.key
 			}
-		}).afterClosed().subscribe(response => {
+		}).afterDismissed().subscribe(response => {
 			if (response == null || response.answer !== 'yes') {
 				return;
 			}
@@ -79,15 +79,13 @@ export class LogsComponent implements OnInit {
 	}
 
 	public openDeleteDialog(log: LogHistoryViewModel): void {
-		this.dialog.open(DialogConfirmComponent, {
-			autoFocus: false,
-			width: '20rem',
-			panelClass: 'custom-modalbox',
+		this.bottomSheet.open(BottomSheetDeleteOverviewComponent, {
+			panelClass: 'event-bottom-sheet',
 			data: {
 				title: 'DELETE_LOG_DIALOG_TITLE',
 				content: ['DELETE_LOG_DIALOG_CONTENT_1', 'DELETE_LOG_DIALOG_CONTENT_2']
 			}
-		}).afterClosed().subscribe(response => {
+		}).afterDismissed().subscribe(response => {
 			if (response == null || response.answer !== 'yes') {
 				return;
 			}

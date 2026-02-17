@@ -77,6 +77,10 @@ import { DialogExportPdfComponent } from './ui/dialog/dialog-export-pdf/dialog-e
 import { DialogOccurrenceHistoryComponent } from './ui/dialog/dialog-occurrence-history';
 import { BottomSheetDeleteEventComponent } from './ui/bottom-sheet/bottom-sheet-delete-event';
 
+import { BottomSheetEditMedComponent } from './ui/bottom-sheet/bottom-sheet-edit-med';
+import { BottomSheetEditLogComponent } from './ui/bottom-sheet/bottom-sheet-edit-log';
+import { BottomSheetDeleteOverviewComponent } from './ui/bottom-sheet/bottom-sheet-delete-overview';
+
 @NgModule({
 	declarations: [
 		AppComponent,
@@ -117,6 +121,9 @@ import { BottomSheetDeleteEventComponent } from './ui/bottom-sheet/bottom-sheet-
 		DialogTutorialNoticeComponent,
 		DialogOccurrenceHistoryComponent,
 		BottomSheetDeleteEventComponent,
+		BottomSheetEditMedComponent,
+		BottomSheetEditLogComponent,
+		BottomSheetDeleteOverviewComponent,
 
 		// Helpers
 		InfiniteScrollComponent
@@ -198,7 +205,10 @@ import { BottomSheetDeleteEventComponent } from './ui/bottom-sheet/bottom-sheet-
 		DialogConfirmComponent,
 		DialogEditMedComponent,
 		DialogUpdatesComponent,
-		DialogTutorialNoticeComponent
+		DialogTutorialNoticeComponent,
+		BottomSheetEditMedComponent,
+		BottomSheetEditLogComponent,
+		BottomSheetDeleteOverviewComponent
 	],
 	bootstrap: [AppComponent]
 })
