@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { SymptomsService, SettingsService } from '../../infra';
 import { Subject } from 'rxjs';
 import { SymptomViewModel } from 'src/app/models/symptom.view.model';
-import { MatDialog } from '@angular/material/dialog';
+// import { MatDialog } from '@angular/material/dialog';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { DialogAddSymptomComponent } from '../dialog/dialog-add-symptom';
+import { BottomSheetAddSymptomComponent } from '../bottom-sheet/bottom-sheet-add-symptom';
 import * as simplifyString from 'simplify-string';
-import { DialogDeleteSymptomComponent } from '../dialog/dialog-delete-symptom';
+import { BottomSheetDeleteSymptomComponent } from '../bottom-sheet/bottom-sheet-delete-symptom';
 import { ISymptom } from 'src/app/models/symptom.model';
 import { GlobalService } from 'src/app/infra/global.service';
 import { TranslocoService } from '@ngneat/transloco';
@@ -26,7 +27,7 @@ export class SymptomsComponent implements OnInit {
 		private globalService: GlobalService,
 		private settingsService: SettingsService,
 		private symptomsService: SymptomsService,
-		private dialog: MatDialog,
+		private bottomSheet: MatBottomSheet,
 		private snackBar: MatSnackBar
 	) {
 		this.symptoms = new Array<SymptomViewModel>();
@@ -44,12 +45,10 @@ export class SymptomsComponent implements OnInit {
 
 	public openAddDialog(symptom?: ISymptom): void {
 		symptom = symptom == null ? { 'type': null, 'key': null } : symptom;
-		this.dialog.open(DialogAddSymptomComponent, {
-			autoFocus: false,
-			width: '20rem',
-			panelClass: 'custom-modalbox',
-			data: { symptom }
-		}).afterClosed().subscribe(response => {
+		this.bottomSheet.open(BottomSheetAddSymptomComponent, {
+			panelClass: 'bottom-sheet-container-panel',
+			data: { symptom: JSON.parse(JSON.stringify(symptom)) } // Clone to avoid mutation before save
+		}).afterDismissed().subscribe(response => {
 			if (response == null || response.answer !== 'yes') {
 				return;
 			}
@@ -66,12 +65,10 @@ export class SymptomsComponent implements OnInit {
 	}
 
 	public openDeleteDialog(key: string, label: string): void {
-		this.dialog.open(DialogDeleteSymptomComponent, {
-			autoFocus: false,
-			width: '20rem',
-			panelClass: 'custom-modalbox',
+		this.bottomSheet.open(BottomSheetDeleteSymptomComponent, {
+			panelClass: 'bottom-sheet-container-panel',
 			data: { key, label }
-		}).afterClosed().subscribe(response => {
+		}).afterDismissed().subscribe(response => {
 			if (response == null || response.answer !== 'yes') {
 				return;
 			}
