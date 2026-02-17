@@ -20,6 +20,24 @@ export class MedsService {
 		);
 	}
 
+	public getMedOccurrences(key: string, quantity: number): Observable<{ date: string, time: string, quantity: number }[]> {
+		return this.daysService.getDays().pipe(
+			map(days => {
+				const occurrences: { date: string, time: string, quantity: number }[] = [];
+				days.forEach(day => {
+					if (day.meds == null) return;
+					day.meds.forEach(med => {
+						const medQty = parseFloat('' + med.quantity);
+						if (med.key === key && (medQty === quantity || (isNaN(medQty) && isNaN(quantity)))) {
+							occurrences.push({ date: day.date, time: med.time, quantity: medQty });
+						}
+					});
+				});
+				return occurrences.sort((a, b) => b.date.localeCompare(a.date));
+			})
+		);
+	}
+
 	public getMed(key: string): Observable<IMedHistory> {
 		return this.dbContext.asObservable<IMedHistory>(
 			this.dbContext.medsCollection.get(key)

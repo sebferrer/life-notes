@@ -1,0 +1,45 @@
+<ng-template transloco let-t>
+    <div class="bottom-sheet-container occurrence-history" *ngIf="view === 'list'">
+
+        <div class="header-section">
+            <div class="title-row">
+                <div class="icon-bubble" [ngClass]="data.type">
+                    <img *ngIf="data.type === 'med'" src="/assets/svg/pill-capsule.svg" class="custom-svg" />
+                    <mat-icon *ngIf="data.type === 'log'">event_note</mat-icon>
+                </div>
+                <div class="main-title">{{ data.title }}</div>
+            </div>
+            <div class="date-time-row">
+                {{ data.occurrences.length }} {{ t('TABLE_OCCURRENCES') | lowercase }}
+            </div>
+        </div>
+
+        <div class="occurrences-list">
+            <div *ngFor="let occ of data.occurrences; let i = index" class="occurrence-item">
+                <div class="occurrence-index">{{ data.occurrences.length - i }}</div>
+                <div class="occurrence-info">
+                    <div class="occurrence-date">{{ formatDate(occ.date) }}</div>
+                    <div class="occurrence-time" *ngIf="occ.time">{{ formatTime(occ.time) }}</div>
+                </div>
+                <div class="occurrence-detail" *ngIf="occ.detail">{{ occ.detail }}</div>
+                <button mat-icon-button class="occurrence-delete" (click)="deleteOccurrence(occ, i)">
+                    <mat-icon>delete_outline</mat-icon>
+                </button>
+            </div>
+            <div *ngIf="data.occurrences.length === 0" class="empty-state">
+                {{ t('NO_OCCURRENCES') }}
+            </div>
+        </div>
+
+        <div class="actions">
+            <button mat-stroked-button (click)="onClose()" class="close-button">
+                {{ t('CLOSE') }}
+            </button>
+        </div>
+
+    </div>
+
+    <app-bottom-sheet-delete-event *ngIf="view === 'confirm'" [title]="deleteTitle" [message]="deleteMessage"
+        [warning]="deleteWarning" [itemDetails]="itemDetails" (confirm)="onConfirmDelete()" (cancel)="onCancelDelete()">
+    </app-bottom-sheet-delete-event>
+</ng-template>

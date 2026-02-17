@@ -1,0 +1,135 @@
+.bottom-sheet-container.delete-event {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 1rem 1.5rem 1rem;
+    gap: 1.5rem;
+    box-sizing: border-box;
+    width: 100%;
+
+    .header-section {
+        .title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: rgba(0,0,0,0.85);
+            margin: 0;
+            text-align: center;
+        }
+    }
+
+    .item-details-card {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        background-color: #F8F9FA;
+        border-radius: 12px;
+        border: 1px solid rgba(0,0,0,0.08);
+
+        .icon-bubble {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            
+            &.med { background-color: #0096BF; }
+            &.log { background-color: #98A2AE; }
+
+            mat-icon {
+                font-size: 1.6rem;
+                width: 1.6rem;
+                height: 1.6rem;
+                color: white;
+            }
+
+            .custom-svg {
+                width: 1.6rem;
+                height: 1.6rem;
+                filter: brightness(0) invert(1);
+            }
+        }
+
+        .details-text {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+            flex: 1;
+
+            .main-info {
+                display: flex;
+                align-items: baseline;
+                gap: 0.5rem;
+                
+                .name {
+                    font-size: 1.1rem;
+                    font-weight: 600;
+                    color: rgba(0,0,0,0.85);
+                }
+                .quantity {
+                    font-size: 0.9rem;
+                    color: rgba(0,0,0,0.6);
+                    font-weight: 500;
+                }
+            }
+
+            .sub-info {
+                display: flex;
+                align-items: center;
+                gap: 0.4rem;
+                font-size: 0.9rem;
+                color: rgba(0,0,0,0.5);
+                font-weight: 500;
+
+                .separator { font-size: 0.8rem; }
+            }
+
+            .detail-note {
+                font-size: 0.85rem;
+                color: rgba(0,0,0,0.5);
+                font-style: italic;
+                margin-top: 0.2rem;
+            }
+        }
+    }
+
+    .content-section {
+        text-align: center;
+        font-size: 1rem;
+        line-height: 1.5;
+        
+        .message {
+            margin: 0;
+            color: rgba(0,0,0,0.7);
+            margin-bottom: 0.5rem;
+        }
+
+        .warning {
+            margin: 0;
+            color: #d32f2f;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+    }
+
+    .actions {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        width: 100%;
+
+        button {
+            flex: 1;
+            height: 3rem;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .cancel-button {
+            border-color: rgba(0,0,0,0.15);
+            color: rgba(0,0,0,0.6);
+        }
+    }
+}

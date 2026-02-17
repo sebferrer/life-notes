@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SettingsService } from '../../infra';
 import { BehaviorSubject } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { IMedHistory } from 'src/app/models/med.model';
 import { GlobalService } from 'src/app/infra/global.service';
@@ -11,6 +12,7 @@ import { DialogConfirmComponent } from '../dialog/dialog-confirm';
 import { DialogEditLogComponent } from '../dialog/dialog-edit-log/dialog-edit-log.component';
 import { getSortOrder } from 'src/app/util/array.utils';
 import { LogHistoryViewModel } from 'src/app/models/log-history.view.model';
+import { DialogOccurrenceHistoryComponent } from '../dialog/dialog-occurrence-history';
 
 @Component({
 	selector: 'app-logs',
@@ -31,6 +33,7 @@ export class LogsComponent implements OnInit {
 		private settingsService: SettingsService,
 		private logsService: LogsService,
 		private dialog: MatDialog,
+		private bottomSheet: MatBottomSheet,
 		private snackBar: MatSnackBar
 	) {
 		this.logs = new Array<LogHistoryViewModel>();
@@ -53,7 +56,7 @@ export class LogsComponent implements OnInit {
 				s.editable = false;
 			}
 		}
-		med.editable = med.editable ? false : true;
+		med.editable = !med.editable;
 	}
 
 	public openEditDialog(log: LogHistoryViewModel): void {
@@ -95,6 +98,33 @@ export class LogsComponent implements OnInit {
 		});
 	}
 
+	public openOccurrenceHistory(log: LogHistoryViewModel): void {
+		this.logsService.getLogOccurrences(log.key).subscribe(occurrences => {
+			const ref = this.bottomSheet.open(DialogOccurrenceHistoryComponent, {
+				panelClass: 'event-bottom-sheet',
+				disableClose: true,
+				data: {
+					title: log.key,
+					type: 'log',
+					key: log.key,
+					occurrences: occurrences.map(o => ({
+						date: o.date,
+						time: o.time,
+						detail: o.detail
+					}))
+				}
+			});
+			ref.afterDismissed().subscribe(result => {
+				if (result?.hasChanges) {
+					this.refreshLogsList();
+				}
+				if (result?.reopen) {
+					this.openOccurrenceHistory(log);
+				}
+			});
+		});
+	}
+
 	public openRefreshDialog(): void {
 		this.dialog.open(DialogConfirmComponent, {
 			autoFocus: false,
@@ -108,11 +138,14 @@ export class LogsComponent implements OnInit {
 			if (response == null || response.answer !== 'yes') {
 				return;
 			}
-			this.logsService.refreshLogs().subscribe(meds => {
-				this.logs = meds.map(log => new LogHistoryViewModel(log)).sort(getSortOrder("lastEntry", true));
-				this.logs$.next(this.logs);
-			});
+			this.refreshLogsList();
 		});
 	}
 
+	private refreshLogsList(): void {
+		this.logsService.refreshLogs().subscribe(logs => {
+			this.logs = logs.map(l => new LogHistoryViewModel(l)).sort(getSortOrder("lastEntry", true));
+			this.logs$.next(this.logs);
+		});
+	}
 }

@@ -1,17 +1,21 @@
 export function getSortOrder(prop: any, desc?: boolean): any {
-	desc = desc == null ? false : true;
+	const isDesc = desc == null ? false : true;
 	return (a: any, b: any) => {
-		if (desc) {
-			if (a[prop] < b[prop]) {
-				return 1;
-			} else if (a[prop] > b[prop]) {
-				return -1;
-			}
-		}
-		if (a[prop] > b[prop]) {
-			return 1;
-		} else if (a[prop] < b[prop]) {
-			return -1;
+		const valA = a[prop];
+		const valB = b[prop];
+
+		// Handle missing values (undefined or null)
+		const hasA = valA !== undefined && valA !== null;
+		const hasB = valB !== undefined && valB !== null;
+
+		if (!hasA && !hasB) return 0;
+		if (!hasA) return 1; // Always push missing values to the bottom
+		if (!hasB) return -1;
+
+		if (valA < valB) {
+			return isDesc ? 1 : -1;
+		} else if (valA > valB) {
+			return isDesc ? -1 : 1;
 		}
 		return 0;
 	};

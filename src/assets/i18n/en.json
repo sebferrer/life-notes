@@ -57,6 +57,7 @@
     "EDIT": "Edit",
     "UPDATE": "Update",
     "CANCEL": "Cancel",
+    "CONFIRM": "Confirm",
     "CLOSE": "Close",
     "PAIN": "Intensity",
     "TIME": "Time",
@@ -292,5 +293,9 @@
     "INTENSITY_MODERATE": "Moderate",
     "INTENSITY_HIGH": "High",
     "DELETE": "Delete",
-    "ADD_NEW_SYMPTOM": "Add a new symptom"
+    "ADD_NEW_SYMPTOM": "Add a new symptom",
+    "NO_OCCURRENCES": "No occurrences found",
+    "DELETE_OCCURRENCE_TITLE": "Delete occurrence",
+    "DELETE_OCCURRENCE_CONTENT": "Are you sure you want to delete this occurrence?",
+    "IRREVERSIBLE_ACTION": "This action is irreversible."
 }

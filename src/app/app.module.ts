@@ -74,6 +74,8 @@ import { AboutComponent } from './ui/about';
 import { DialogTutorialNoticeComponent } from './ui/dialog/dialog-tutorial-notice';
 
 import { DialogExportPdfComponent } from './ui/dialog/dialog-export-pdf/dialog-export-pdf.component';
+import { DialogOccurrenceHistoryComponent } from './ui/dialog/dialog-occurrence-history';
+import { BottomSheetDeleteEventComponent } from './ui/bottom-sheet/bottom-sheet-delete-event';
 
 @NgModule({
 	declarations: [
@@ -113,6 +115,8 @@ import { DialogExportPdfComponent } from './ui/dialog/dialog-export-pdf/dialog-e
 		DialogEditLogComponent,
 		DialogUpdatesComponent,
 		DialogTutorialNoticeComponent,
+		DialogOccurrenceHistoryComponent,
+		BottomSheetDeleteEventComponent,
 
 		// Helpers
 		InfiniteScrollComponent

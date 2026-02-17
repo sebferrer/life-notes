@@ -57,6 +57,7 @@
     "EDIT": "Éditer",
     "UPDATE": "Modifier",
     "CANCEL": "Annuler",
+    "CONFIRM": "Confirmer",
     "CLOSE": "Fermer",
     "PAIN": "Intensité",
     "TIME": "Heure",
@@ -293,5 +294,9 @@
     "INTENSITY_MODERATE": "Modéré",
     "INTENSITY_HIGH": "Élevé",
     "DELETE": "Supprimer",
-    "ADD_NEW_SYMPTOM": "Ajouter un nouveau symptôme"
+    "ADD_NEW_SYMPTOM": "Ajouter un nouveau symptôme",
+    "NO_OCCURRENCES": "Aucune occurrence trouvée",
+    "DELETE_OCCURRENCE_TITLE": "Supprimer une occurrence",
+    "DELETE_OCCURRENCE_CONTENT": "Êtes-vous sûr de vouloir supprimer cette occurrence ?",
+    "IRREVERSIBLE_ACTION": "Cette action est irréversible."
 }

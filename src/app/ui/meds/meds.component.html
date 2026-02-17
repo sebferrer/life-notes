@@ -23,6 +23,9 @@
                 <th mat-header-cell *matHeaderCellDef></th>
                 <td mat-cell *matCellDef="let element">
                     <div style="display: flex; flex-direction: row; white-space: nowrap;">
+                        <button mat-icon-button (click)="openOccurrenceHistory(element)">
+                            <mat-icon>calendar_month</mat-icon>
+                        </button>
                         <button mat-icon-button (click)="openEditDialog(element)">
                             <mat-icon>edit</mat-icon>
                         </button>
