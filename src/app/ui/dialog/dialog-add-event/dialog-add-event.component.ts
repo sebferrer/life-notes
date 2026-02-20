@@ -44,6 +44,7 @@ export class DialogAddEventComponent {
 	public logsOptions: string[];
 	public filteredLogsOptions: Observable<string[]>;
 	public timeFormat: number;
+	public timePicker: string;
 
 	constructor(
 		public bottomSheetRef: MatBottomSheetRef<DialogAddEventComponent>,
@@ -55,6 +56,7 @@ export class DialogAddEventComponent {
 	) {
 		data.detailedDate = getDetailedDate(moment(data.date).format('YYYY-MM-DD'));
 		this.timeFormat = this.globalService.timeFormat == 'us' ? 12 : 24;
+		this.timePicker = this.globalService.timePicker || 'material';
 		if (data.customEvent != null) {
 			data.edit = true;
 			data.type = data.customEvent.type;

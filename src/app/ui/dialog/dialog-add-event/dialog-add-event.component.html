@@ -29,12 +29,19 @@
             <div class="form-field">
                 <div class="field-label">{{ t('TIME') }}</div>
                 <div class="field-input-box">
-                    <ion-item lines="none" class="ion-no-padding">
+                    <!-- Ionic time picker -->
+                    <ion-item *ngIf="timePicker === 'ionic'" lines="none" class="ion-no-padding">
                         <ion-datetime [displayFormat]="timeFormat === 12 ? 'h:mm A' : 'HH:mm'"
                             [pickerFormat]="timeFormat === 12 ? 'h:mm A' : 'HH:mm'" [(ngModel)]="isoTime"
                             placeholder="Select Time">
                         </ion-datetime>
                     </ion-item>
+                    <!-- Material time picker -->
+                    <mat-form-field *ngIf="timePicker === 'material'" appearance="none" class="clean-input">
+                        <input matInput [ngxTimepicker]="materialTimePicker" [(ngModel)]="data.time"
+                            [format]="timeFormat" readonly placeholder="Select Time">
+                        <ngx-material-timepicker #materialTimePicker></ngx-material-timepicker>
+                    </mat-form-field>
                 </div>
             </div>
 

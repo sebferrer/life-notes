@@ -17,4 +17,5 @@ export interface ISettings {
 	painPalette: string;
 	autoCalculateOverview: boolean;
 	autoOverviewPopupSeen: boolean;
+	timePicker: string;
 }

@@ -84,6 +84,7 @@ import { BottomSheetExportPdfComponent } from './ui/bottom-sheet/bottom-sheet-ex
 import { BottomSheetAddSymptomComponent } from './ui/bottom-sheet/bottom-sheet-add-symptom';
 import { BottomSheetDeleteSymptomComponent } from './ui/bottom-sheet/bottom-sheet-delete-symptom';
 import { SpacerItemComponent } from './ui/shared/spacer-item';
+import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 
 
 @NgModule({
@@ -167,7 +168,8 @@ import { SpacerItemComponent } from './ui/shared/spacer-item';
 		MatRadioModule,
 		TranslocoRootModule,
 		ChartsModule,
-		ReactiveFormsModule
+		ReactiveFormsModule,
+		NgxMaterialTimepickerModule
 	],
 	providers: [
 		DaysService,

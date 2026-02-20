@@ -36,6 +36,7 @@ export class SettingsComponent implements OnInit {
 	public weeklyReminder: boolean;
 	public painPalette: string;
 	public autoCalculateOverview: boolean;
+	public selectedTimePicker: string;
 
 	public debug = 'no error';
 	public backupData = '';
@@ -72,6 +73,7 @@ export class SettingsComponent implements OnInit {
 			this.weeklyReminder = settings.weeklyReminder;
 			this.painPalette = settings.painPalette;
 			this.autoCalculateOverview = settings.autoCalculateOverview;
+			this.selectedTimePicker = settings.timePicker || 'material';
 		});
 	}
 
@@ -119,6 +121,10 @@ export class SettingsComponent implements OnInit {
 
 	public setAutoCalculateOverview(): void {
 		this.settingsService.setAutoCalculateOverview(this.autoCalculateOverview).subscribe();
+	}
+
+	public setTimePicker(): void {
+		this.settingsService.setTimePicker(this.selectedTimePicker).subscribe();
 	}
 
 	public setTargetSymptom(): void {
