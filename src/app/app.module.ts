@@ -83,6 +83,7 @@ import { BottomSheetImportConfirmComponent } from './ui/bottom-sheet/bottom-shee
 import { BottomSheetExportPdfComponent } from './ui/bottom-sheet/bottom-sheet-export-pdf';
 import { BottomSheetAddSymptomComponent } from './ui/bottom-sheet/bottom-sheet-add-symptom';
 import { BottomSheetDeleteSymptomComponent } from './ui/bottom-sheet/bottom-sheet-delete-symptom';
+import { SpacerItemComponent } from './ui/shared/spacer-item';
 
 
 @NgModule({
@@ -132,7 +133,8 @@ import { BottomSheetDeleteSymptomComponent } from './ui/bottom-sheet/bottom-shee
 
 		BottomSheetExportPdfComponent,
 		BottomSheetAddSymptomComponent,
-		BottomSheetDeleteSymptomComponent
+		BottomSheetDeleteSymptomComponent,
+		SpacerItemComponent
 	],
 	imports: [
 		BrowserModule,
