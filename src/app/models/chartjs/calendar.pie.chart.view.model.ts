@@ -36,9 +36,6 @@ export class CalendarPieChartViewModel extends APieChartViewModel {
 			const symptomPain = symptom == null ? 0 : symptom.pain;
 			let key = Math.ceil(symptomPain);
 
-			if (painScale === 10 && key > 0) {
-				key = Math.ceil(key / 2.0);
-			}
 			// Safety clamp to ensure it falls within color/label range
 			if (key > this.NB_PAIN_LEVELS) {
 				key = this.NB_PAIN_LEVELS;
