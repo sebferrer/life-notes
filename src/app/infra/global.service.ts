@@ -103,6 +103,12 @@ export class GlobalService {
 		this._autoOverviewPopupSeen = value;
 	}
 
+	private _timePicker: string = 'material';
+	public get timePicker(): string { return this._timePicker; }
+	public set timePicker(value: string) {
+		this._timePicker = value;
+	}
+
 	private updateCssVariables(): void {
 		const colors = this.getPainColors();
 		document.documentElement.style.setProperty('--color-pain-0', colors[0]);

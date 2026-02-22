@@ -1,0 +1,33 @@
+<div class="bottom-sheet-container add-symptom">
+
+    <div class="header-section">
+        <h1 class="title">
+            <span *ngIf="data.edit">{{ 'EDIT_SYMPTOM' | transloco }}</span>
+            <span *ngIf="!data.edit">{{ 'ADD_SYMPTOM' | transloco }}</span>
+        </h1>
+    </div>
+
+    <div class="content-body">
+        <div class="form-field">
+            <div class="field-label">{{ 'SYMPTOM' | transloco | titlecase }}</div>
+            <div class="field-input-box">
+                <mat-form-field appearance="none" class="clean-input">
+                    <input matInput [(ngModel)]="data.symptom.label" cdkFocusInitial placeholder="Ex: Migraine">
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
+
+    <div class="actions">
+        <button mat-stroked-button (click)="onNoClick()">
+            {{ 'CANCEL' | transloco }}
+        </button>
+        <button mat-flat-button color="primary" (click)="onYesClick()" [disabled]="!data.symptom.label">
+            <span *ngIf="data.edit">{{ 'EDIT' | transloco }}</span>
+            <span *ngIf="!data.edit">{{ 'ADD' | transloco }}</span>
+        </button>
+    </div>
+
+    <app-spacer-item></app-spacer-item>
+
+</div>

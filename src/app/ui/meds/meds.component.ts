@@ -3,14 +3,18 @@ import { SettingsService } from '../../infra';
 import { BehaviorSubject } from 'rxjs';
 import { MedHistoryViewModel } from 'src/app/models/med-history.view.model';
 import { MatDialog } from '@angular/material/dialog';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { IMedHistory } from 'src/app/models/med.model';
 import { GlobalService } from 'src/app/infra/global.service';
 import { TranslocoService } from '@ngneat/transloco';
 import { MedsService } from 'src/app/infra/meds.service';
 import { DialogConfirmComponent } from '../dialog/dialog-confirm';
-import { DialogEditMedComponent } from '../dialog/dialog-edit-med/dialog-edit-med.component';
+
 import { getSortOrder } from 'src/app/util/array.utils';
+import { DialogOccurrenceHistoryComponent } from '../dialog/dialog-occurrence-history';
+import { BottomSheetEditMedComponent } from '../bottom-sheet/bottom-sheet-edit-med';
+import { BottomSheetDeleteOverviewComponent } from '../bottom-sheet/bottom-sheet-delete-overview';
 
 @Component({
 	selector: 'app-meds',
@@ -31,6 +35,7 @@ export class MedsComponent implements OnInit {
 		private settingsService: SettingsService,
 		private medsService: MedsService,
 		private dialog: MatDialog,
+		private bottomSheet: MatBottomSheet,
 		private snackBar: MatSnackBar
 	) {
 		this.meds = new Array<MedHistoryViewModel>();
@@ -53,19 +58,17 @@ export class MedsComponent implements OnInit {
 				s.editable = false;
 			}
 		}
-		med.editable = med.editable ? false : true;
+		med.editable = !med.editable;
 	}
 
 	public openEditDialog(med: MedHistoryViewModel): void {
-		this.dialog.open(DialogEditMedComponent, {
-			autoFocus: false,
-			width: '20rem',
-			panelClass: 'custom-modalbox',
+		this.bottomSheet.open(BottomSheetEditMedComponent, {
+			panelClass: 'event-bottom-sheet',
 			data: {
 				key: med.key,
 				quantity: med.quantity
 			}
-		}).afterClosed().subscribe(response => {
+		}).afterDismissed().subscribe(response => {
 			if (response == null || response.answer !== 'yes') {
 				return;
 			}
@@ -77,21 +80,48 @@ export class MedsComponent implements OnInit {
 	}
 
 	public openDeleteDialog(med: MedHistoryViewModel): void {
-		this.dialog.open(DialogConfirmComponent, {
-			autoFocus: false,
-			width: '20rem',
-			panelClass: 'custom-modalbox',
+		this.bottomSheet.open(BottomSheetDeleteOverviewComponent, {
+			panelClass: 'event-bottom-sheet',
 			data: {
 				title: 'DELETE_MED_DIALOG_TITLE',
 				content: ['DELETE_MED_DIALOG_CONTENT_1', 'DELETE_MED_DIALOG_CONTENT_2']
 			}
-		}).afterClosed().subscribe(response => {
+		}).afterDismissed().subscribe(response => {
 			if (response == null || response.answer !== 'yes') {
 				return;
 			}
 			this.medsService.deleteMedication(med.key, med.quantity).subscribe(meds => {
 				this.meds = meds.map(m => new MedHistoryViewModel(m)).sort(getSortOrder("lastEntry", true));
 				this.meds$.next(this.meds);
+			});
+		});
+	}
+
+	public openOccurrenceHistory(med: MedHistoryViewModel): void {
+		this.medsService.getMedOccurrences(med.key, med.quantity).subscribe(occurrences => {
+			const title = med.key + (med.quantity ? ' ' + med.quantity + ' mg' : '');
+			const ref = this.bottomSheet.open(DialogOccurrenceHistoryComponent, {
+				panelClass: 'event-bottom-sheet',
+				disableClose: true,
+				data: {
+					title,
+					type: 'med',
+					key: med.key,
+					quantity: med.quantity,
+					occurrences: occurrences.map(o => ({
+						date: o.date,
+						time: o.time,
+						quantity: o.quantity
+					}))
+				}
+			});
+			ref.afterDismissed().subscribe(result => {
+				if (result?.hasChanges) {
+					this.refreshMedsList();
+				}
+				if (result?.reopen) {
+					this.openOccurrenceHistory(med);
+				}
 			});
 		});
 	}
@@ -109,37 +139,14 @@ export class MedsComponent implements OnInit {
 			if (response == null || response.answer !== 'yes') {
 				return;
 			}
-			this.medsService.refreshMeds().subscribe(meds => {
-				this.meds = meds.map(med => new MedHistoryViewModel(med)).sort(getSortOrder("lastEntry", true));
-				this.meds$.next(this.meds);
-			});
+			this.refreshMedsList();
 		});
 	}
 
-	/*public openDeleteDialog(key: string, label: string): void {
-		this.dialog.open(DialogDeleteMedHistoryComponent, {
-			autoFocus: false,
-			width: '20rem',
-			panelClass: 'custom-modalbox',
-			data: { key, label }
-		}).afterClosed().subscribe(response => {
-			if (response == null || response.answer !== 'yes') {
-				return;
-			}
-			this.medsService.deleteSymptom(key).subscribe(() => {
-				this.meds = this.meds.filter(med => med.key !== key);
-				this.meds$.next(this.meds);
-				if (this.globalService.targetSymptomKey === key) {
-					this.settingsService.setTargetSymptomKey(null).subscribe(() => {
-						this.globalService.targetSymptomKey = null;
-					});
-				}
-				this.globalService.loadSymptoms().subscribe(() => { });
-			});
-			this.snackBar.open(this.translocoService.translate('DELETE_SYMPTOM_SNACKBAR', { label }),
-				this.translocoService.translate('CLOSE'),
-				{ duration: 2000 });
+	private refreshMedsList(): void {
+		this.medsService.refreshMeds().subscribe(meds => {
+			this.meds = meds.map(m => new MedHistoryViewModel(m)).sort(getSortOrder("lastEntry", true));
+			this.meds$.next(this.meds);
 		});
-	}*/
-
+	}
 }

@@ -1,0 +1,22 @@
+.spacer-item {
+    display: block;
+    height: 3rem;
+    min-height: 3rem;
+    width: 100%;
+    pointer-events: none;
+    cursor: default;
+    background-color: transparent !important;
+    position: relative;
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 80%;
+        height: 4px;
+        background-color: #e0e0e0;
+        border-radius: 2px;
+    }
+}

@@ -20,6 +20,23 @@ export class LogsService {
 		);
 	}
 
+	public getLogOccurrences(key: string): Observable<{ date: string, time: string, detail: string }[]> {
+		return this.daysService.getDays().pipe(
+			map(days => {
+				const occurrences: { date: string, time: string, detail: string }[] = [];
+				days.forEach(day => {
+					if (day.logs == null) return;
+					day.logs.forEach(log => {
+						if (log.key === key) {
+							occurrences.push({ date: day.date, time: log.time, detail: log.detail });
+						}
+					});
+				});
+				return occurrences.sort((a, b) => b.date.localeCompare(a.date));
+			})
+		);
+	}
+
 	public getLog(key: string): Observable<ILogHistory> {
 		return this.dbContext.asObservable<ILogHistory>(
 			this.dbContext.logsCollection.get(key)

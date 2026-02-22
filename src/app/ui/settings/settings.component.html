@@ -251,6 +251,16 @@
                     </mat-radio-group>
                 </div>
                 <div class="toggle-container">
+                    <span class="toggle-label" transloco="SETTINGS_TIME_PICKER_LABEL"></span>
+                    <mat-radio-group [(ngModel)]="selectedTimePicker" (change)="setTimePicker()" color="primary"
+                        class="radio-group">
+                        <mat-radio-button value="material" class="radio-button">{{ 'TIME_PICKER_CLOCK' | transloco
+                            }}</mat-radio-button>
+                        <mat-radio-button value="ionic" class="radio-button">{{ 'TIME_PICKER_SCROLLER' | transloco
+                            }}</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+                <div class="toggle-container">
                     <span class="toggle-label" transloco="SETTINGS_WEEKLY_REMINDER_LABEL"></span>
                     <mat-slide-toggle [(ngModel)]="weeklyReminder" (change)="setWeeklyReminder()"
                         color="primary"></mat-slide-toggle>

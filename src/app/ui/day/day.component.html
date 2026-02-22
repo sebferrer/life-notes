@@ -25,13 +25,18 @@
                     <mat-icon>playlist_add</mat-icon>
                 </button>
             </div>
-            <div class="delete-event-container">
-                <button mat-icon-button class="delete-event" (click)="toggleRemovable(dayContent)">
-                    <mat-icon>delete_sweep</mat-icon>
-                </button>
-            </div>
+
         </div>
         <div *ngIf="!displayCharts" class="day-tile-content">
+            <div class="corner-decoration"></div>
+            <div class="wakeup-container" (click)="openAddDialog('wakeUp', dayContent.date)">
+                <mat-icon class="wakeup-icon">alarm</mat-icon>
+                <div class="wakeup-time">{{ dayContent.wakeUp }}</div>
+            </div>
+            <div class="gotobed-container" (click)="openAddDialog('goToBed', dayContent.date)">
+                <mat-icon class="gotobed-icon">bedtime</mat-icon>
+                <div class="gotobed-time">{{ dayContent.goToBed }}</div>
+            </div>
             <div class="day-content">
                 <mat-chip-list class="mat-chip-list-stacked">
                     <div class="day-chips-padding"></div>
@@ -79,12 +84,7 @@
                                         {{ content.detail }}</div>
                                 </div>
                             </div>
-                            <div class="remove-event-container">
-                                <mat-icon matChipRemove *ngIf="dayContent.removable" class="remove-event"
-                                    (click)="openDeleteDialog(dayContent.date, content)">
-                                    cancel
-                                </mat-icon>
-                            </div>
+
                         </div>
                     </mat-chip>
                     <div class="day-chips-padding"></div>
@@ -98,14 +98,5 @@
         </div>
         <div *ngIf="displayCharts" class="day-tile-chart">
         </div>
-    </div>
-    <div *ngIf="!displayCharts" class="corner-decoration"></div>
-    <div class="wakeup-container" (click)="openAddDialog('wakeUp', dayContent.date)">
-        <mat-icon class="wakeup-icon">alarm</mat-icon>
-        <div class="wakeup-time">{{ dayContent.wakeUp }}</div>
-    </div>
-    <div class="gotobed-container" (click)="openAddDialog('goToBed', dayContent.date)">
-        <mat-icon class="gotobed-icon">bedtime</mat-icon>
-        <div class="gotobed-time">{{ dayContent.goToBed }}</div>
     </div>
 </div>

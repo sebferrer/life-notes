@@ -14,7 +14,7 @@ export class SettingsService {
 	public readonly AVAILABLE_TIME_FORMATS = ['us', 'eu'];
 	public readonly AVAILABLE_PAIN_SCALES = [5, 10];
 
-	public readonly CURRENT_VERSION = "0.3.3";
+	public readonly CURRENT_VERSION = "0.3.5";
 
 	constructor(
 		private readonly dbContext: DbContext,
@@ -289,6 +289,19 @@ export class SettingsService {
 		);
 	}
 
+	public setTimePicker(picker: string): Observable<ISettings> {
+		const settings = this.getSettings();
+		return settings.pipe(
+			switchMap(s => {
+				s.timePicker = picker;
+				this.globalService.timePicker = picker;
+				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
+					map(() => s)
+				);
+			})
+		);
+	}
+
 	public initSettings(): Observable<ISettings> {
 		return this.getSettings().pipe(
 			switchMap(s => {
@@ -312,13 +325,15 @@ export class SettingsService {
 						'weeklyReminder': true,
 						'lastWeeklyReminder': 0,
 						'autoCalculateOverview': true, // Default ON for new users
-						'autoOverviewPopupSeen': false
+						'autoOverviewPopupSeen': false,
+						'timePicker': 'material'
 					};
 					return this.dbContext.asObservable(this.dbContext.settingsCollection.put(settings)).pipe(
 						tap(() => {
 							this.globalService.painScale = settings.painScale;
 							this.globalService.autoCalculateOverview = settings.autoCalculateOverview;
 							this.globalService.autoOverviewPopupSeen = settings.autoOverviewPopupSeen;
+							this.globalService.timePicker = settings.timePicker;
 						}),
 						map(() => settings)
 					);
@@ -375,10 +390,16 @@ export class SettingsService {
 						changed = true;
 					}
 
+					if (s.timePicker == null) {
+						s.timePicker = 'material';
+						changed = true;
+					}
+
 					// Update GlobalService with loaded values
 					this.globalService.painScale = s.painScale;
 					this.globalService.autoCalculateOverview = s.autoCalculateOverview;
 					this.globalService.autoOverviewPopupSeen = s.autoOverviewPopupSeen;
+					this.globalService.timePicker = s.timePicker;
 
 					if (changed) {
 						this.dbContext.settingsCollection.put(s);

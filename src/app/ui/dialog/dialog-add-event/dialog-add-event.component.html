@@ -1,104 +1,176 @@
 <ng-template transloco let-t>
-    <div mat-dialog-title>
-        <span *ngIf="data.edit; else addSpan">
-            {{ t('EDIT_EVENT_DIALOG_TITLE', { type: t(data.type), monthShort: t('MONTH-SHORT-'+data.detailedDate.month),
-            day: data.detailedDate.day }) }}
-        </span>
-        <ng-template #addSpan>
-            <span>
-                {{ t('ADD_EVENT_DIALOG_TITLE', { type: t(data.type), monthShort:
-                t('MONTH-SHORT-'+data.detailedDate.month), day: data.detailedDate.day }) }}
-            </span>
-        </ng-template>
-    </div>
-</ng-template>
-<div mat-dialog-content>
-    <mat-form-field>
-        <mat-label transloco="TIME"></mat-label>
-        <input matInput placeholder="24hr format" aria-label="24hr format" [ngxTimepicker]="fullTime"
-            [format]="timeFormat" [(ngModel)]="data.time" required readonly>
-        <ngx-material-timepicker #fullTime></ngx-material-timepicker>
-    </mat-form-field>
-    <div [ngSwitch]="data.type">
-        <div *ngSwitchCase="'symptomLog'">
-            <div class="dialog-symptom-field">
-                <mat-form-field>
-                    <mat-label>{{ data.type | transloco | titlecase }}</mat-label>
-                    <mat-select [(ngModel)]="data.key" required>
-                        <mat-option *ngFor="let symptom of data.symptoms" [value]="symptom.key">{{ symptom.label }}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-                <button mat-mini-fab color="primary" routerLink="/symptoms" (click)="onSymptomsClick()"
-                    class="dialog-add-symptom-list-button">
-                    <mat-icon>add</mat-icon>
-                </button>
-            </div>
-            <div *ngIf="data.symptoms.length === 0" class="empty-symptom-list-warning">
-                <p transloco="TIMELINE_NO_SYMPTOMS_WARNING_1"></p>
-                <p transloco="TIMELINE_NO_SYMPTOMS_WARNING_2"></p>
-            </div>
-            <div class="custom-form-field">
-                <mat-label transloco="PAIN" class="custom-label"></mat-label>
-                <div id="pain-container">
-                    <ion-range [max]="painScale" [min]="0" [step]="1" [pin]="true" [(ngModel)]="painValue">
-                    </ion-range>
-                    <span class="pain-badge">{{ painValue }}</span>
+    <div class="bottom-sheet-container {{ data.type }}">
+
+        <div class="header-section">
+            <div class="title-row">
+                <div class="icon-bubble">
+                    <mat-icon *ngIf="data.type === 'symptomLog'">spa</mat-icon>
+                    <mat-icon *ngIf="data.type === 'log'">event_note</mat-icon>
+                    <img *ngIf="data.type === 'med'" src="/assets/svg/pill-capsule.svg" class="custom-svg" />
+                    <img *ngIf="data.type === 'meal'" src="/assets/svg/curry-chronicles.svg" class="custom-svg" />
+                    <mat-icon *ngIf="data.type === 'wakeUp'">alarm</mat-icon>
+                    <mat-icon *ngIf="data.type === 'goToBed'">bedtime</mat-icon>
+                </div>
+                <div class="main-title">
+                    <span *ngIf="data.edit">{{ t('EDIT') }}</span>
+                    <span *ngIf="!data.edit && data.type !== 'wakeUp' && data.type !== 'goToBed'">{{ t('ADD') }}</span>
+                    {{ t(data.type) | titlecase }}
                 </div>
             </div>
-            <mat-form-field>
-                <mat-label transloco="DETAIL"></mat-label>
-                <input matInput [(ngModel)]="data.detail">
-            </mat-form-field>
+
+            <div class="date-time-row">
+                {{ t('SHOW_EVENT_DIALOG_TITLE', {'month': t('MONTH-'+data.detailedDate.month), 'day':
+                data.detailedDate.day, 'year': data.detailedDate.year}) }}
+            </div>
         </div>
-        <div *ngSwitchCase="'log'">
-            <mat-form-field>
-                <mat-label>{{ data.type | transloco | titlecase }}</mat-label>
-                <input type="text" matInput [formControl]="myControl" [(ngModel)]="data.key" [matAutocomplete]="autolog"
-                    required>
-                <mat-autocomplete #autolog="matAutocomplete" (optionSelected)="setLog($event.option.value)">
-                    <mat-option *ngFor="let option of filteredLogsOptions | async" [value]="option">
-                        {{option}}
-                    </mat-option>
-                </mat-autocomplete>
-            </mat-form-field>
-            <mat-form-field>
-                <mat-label transloco="DETAIL"></mat-label>
-                <input matInput [(ngModel)]="data.detail">
-            </mat-form-field>
+
+        <div class="content-body">
+            <!-- Time Field -->
+            <div class="form-field">
+                <div class="field-label">{{ t('TIME') }}</div>
+                <div class="field-input-box">
+                    <!-- Ionic time picker -->
+                    <ion-item *ngIf="timePicker === 'ionic'" lines="none" class="ion-no-padding">
+                        <ion-datetime [displayFormat]="timeFormat === 12 ? 'h:mm A' : 'HH:mm'"
+                            [pickerFormat]="timeFormat === 12 ? 'h:mm A' : 'HH:mm'" [(ngModel)]="isoTime"
+                            placeholder="Select Time">
+                        </ion-datetime>
+                    </ion-item>
+                    <!-- Material time picker -->
+                    <mat-form-field *ngIf="timePicker === 'material'" appearance="none" class="clean-input">
+                        <input matInput [ngxTimepicker]="materialTimePicker" [(ngModel)]="data.time"
+                            [format]="timeFormat" readonly placeholder="Select Time">
+                        <ngx-material-timepicker #materialTimePicker></ngx-material-timepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div [ngSwitch]="data.type">
+                <!-- Symptom Log -->
+                <div *ngSwitchCase="'symptomLog'" class="form-fields-group">
+                    <div class="form-field">
+                        <div class="field-label">{{ t(data.type) | titlecase }}</div>
+                        <div class="field-input-box">
+                            <mat-form-field appearance="none" class="clean-select">
+                                <mat-select [(ngModel)]="data.key" required>
+                                    <mat-option *ngFor="let symptom of data.symptoms" [value]="symptom.key">{{
+                                        symptom.label }}</mat-option>
+                                    <mat-option value="__add_new__" (click)="onSymptomsClick()" class="add-new-option">
+                                        <mat-icon>add</mat-icon> {{ t('ADD_NEW_SYMPTOM') }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div *ngIf="data.symptoms.length === 0" class="empty-warning">
+                        <p transloco="TIMELINE_NO_SYMPTOMS_WARNING_1"></p>
+                        <p transloco="TIMELINE_NO_SYMPTOMS_WARNING_2"></p>
+                    </div>
+                    <div class="form-field">
+                        <div class="field-label">{{ t('PAIN') }}</div>
+                        <div class="pain-input-container">
+                            <ion-range [max]="painScale" [min]="0" [step]="1" [(ngModel)]="painValue">
+                            </ion-range>
+                            <span class="pain-badge">{{ painValue }}</span>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <div class="field-label">{{ t('DETAIL') }}</div>
+                        <div class="field-input-box">
+                            <ion-item lines="none" class="ion-no-padding">
+                                <ion-textarea [(ngModel)]="data.detail" rows="1" autoGrow="true"></ion-textarea>
+                            </ion-item>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Log -->
+                <div *ngSwitchCase="'log'" class="form-fields-group">
+                    <div class="form-field">
+                        <div class="field-label">{{ t(data.type) | titlecase }}</div>
+                        <div class="field-input-box">
+                            <mat-form-field appearance="none" class="clean-input">
+                                <input type="text" matInput [formControl]="myControl" [(ngModel)]="data.key"
+                                    [matAutocomplete]="autolog" required>
+                                <mat-autocomplete #autolog="matAutocomplete"
+                                    (optionSelected)="setLog($event.option.value)">
+                                    <mat-option *ngFor="let option of filteredLogsOptions | async"
+                                        [value]="option">{{option}}</mat-option>
+                                </mat-autocomplete>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <div class="field-label">{{ t('DETAIL') }}</div>
+                        <div class="field-input-box">
+                            <ion-item lines="none" class="ion-no-padding">
+                                <ion-textarea [(ngModel)]="data.detail" rows="1" autoGrow="true"></ion-textarea>
+                            </ion-item>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Med -->
+                <div *ngSwitchCase="'med'" class="form-fields-group">
+                    <div class="form-field">
+                        <div class="field-label">{{ t(data.type) | titlecase }}</div>
+                        <div class="field-input-box">
+                            <mat-form-field appearance="none" class="clean-input">
+                                <input type="text" matInput [formControl]="myControl" [(ngModel)]="data.key"
+                                    [matAutocomplete]="automed" required>
+                                <mat-autocomplete #automed="matAutocomplete"
+                                    (optionSelected)="setMed($event.option.value)">
+                                    <mat-option *ngFor="let option of filteredMedsOptions | async"
+                                        [value]="option">{{option}}</mat-option>
+                                </mat-autocomplete>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <div class="field-label">{{ t('QUANTITY') }} (mg)</div>
+                        <div class="field-input-box">
+                            <mat-form-field appearance="none" class="clean-input">
+                                <input matInput [(ngModel)]="data.quantity">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Meal -->
+                <div *ngSwitchCase="'meal'" class="form-fields-group">
+                    <div class="form-field">
+                        <div class="field-label">{{ t(data.type) | titlecase }}</div>
+                        <div class="field-input-box">
+                            <mat-form-field appearance="none" class="clean-input">
+                                <input matInput [(ngModel)]="data.key" required>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <div class="field-label">{{ t('DETAIL') }}</div>
+                        <div class="field-input-box">
+                            <ion-item lines="none" class="ion-no-padding">
+                                <ion-textarea [(ngModel)]="data.detail" rows="1" autoGrow="true"></ion-textarea>
+                            </ion-item>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div *ngSwitchCase="'med'">
-            <mat-form-field>
-                <mat-label>{{ data.type | transloco | titlecase }}</mat-label>
-                <input type="text" matInput [formControl]="myControl" [(ngModel)]="data.key" [matAutocomplete]="automed"
-                    required>
-                <mat-autocomplete #automed="matAutocomplete" (optionSelected)="setMed($event.option.value)">
-                    <mat-option *ngFor="let option of filteredMedsOptions | async" [value]="option">
-                        {{option}}
-                    </mat-option>
-                </mat-autocomplete>
-            </mat-form-field>
-            <mat-form-field>
-                <mat-label>{{ 'QUANTITY' | transloco }} (mg)</mat-label>
-                <input matInput [(ngModel)]="data.quantity">
-            </mat-form-field>
+
+        <div class="actions">
+            <button mat-stroked-button (click)="onNoClick()" class="cancel-button">
+                {{ t('CANCEL') }}
+            </button>
+            <button mat-flat-button color="primary" (click)="onYesClick()" class="confirm-button"
+                [disabled]="!isValid()">
+                <span *ngIf="data.edit">{{ t('EDIT') }}</span>
+                <span *ngIf="!data.edit && data.type !== 'wakeUp' && data.type !== 'goToBed'">{{ t('ADD') }}</span>
+                <span *ngIf="!data.edit && (data.type === 'wakeUp' || data.type === 'goToBed')">{{ t('SET') }}</span>
+            </button>
         </div>
-        <div *ngSwitchCase="'meal'">
-            <mat-form-field>
-                <mat-label>{{ data.type | transloco | titlecase }}</mat-label>
-                <input matInput [(ngModel)]="data.key" required>
-            </mat-form-field>
-            <mat-form-field>
-                <mat-label transloco="DETAIL"></mat-label>
-                <input matInput [(ngModel)]="data.detail">
-            </mat-form-field>
-        </div>
+
+        <app-spacer-item></app-spacer-item>
+
     </div>
-    <div mat-dialog-actions>
-        <button mat-button (click)="onNoClick()" transloco="CANCEL"></button>
-        <button mat-button cdkFocusInitial (click)="onYesClick()" color="primary" [disabled]="!isValid()">
-            <span *ngIf="data.edit; else addButton" transloco="EDIT"></span>
-            <ng-template #addButton><span transloco="ADD"></span></ng-template>
-        </button>
-    </div>
-</div>
+</ng-template>

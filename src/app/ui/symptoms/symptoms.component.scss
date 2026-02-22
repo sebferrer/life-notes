@@ -1,59 +1,133 @@
-#symptoms-container {
-    position: relative;
-    top: auto;
-    left: 0;
-    width: 100%;
 
-    .title {
-        margin-left: 1rem;
-        margin-top: 0.8rem;
+
+// Host style to ensure full height/width coverage
+:host {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+// Main Container
+.symptoms-page-container {
+    padding: 1.5rem;
+    padding-top: calc(56px + env(safe-area-inset-top) + 1.5rem); // Account for fixed header
+    height: 100%;
+    // Ensure background covers everything
+    background-color: #f8f9fa; 
+    position: absolute; // Force coverage
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; 
+}
+
+// Header
+.page-header {
+    margin-bottom: 1.5rem;
+    padding-left: 0.5rem;
+    padding-top: 0.5rem; // Add some top padding
+
+    .page-title {
         font-size: 1.5rem;
-        color: #212121;
+        font-weight: 500;
+        color: rgba(0, 0, 0, 0.87);
+        margin: 0;
+        letter-spacing: -0.5px;
     }
 }
 
-.symptom-list {
-    margin-bottom: 2rem;
-    width: 80%;
-    margin-left: 10%
+// List Container
+.symptoms-list-container {
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 2rem; 
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
-.symptom-label-container {
-    height: 3rem;
-    width: 10rem;
-    padding-top: 1rem;
-    float: left;
-    display: table;
-    position: relative;
-    overflow-x: auto;
+// Card Style
+.symptom-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 1rem 1.25rem;
+    min-height: 3.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid rgba(0,0,0,0.03);
+    cursor: default;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    }
+
+    .symptom-info {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        
+        .symptom-label {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: rgba(0, 0, 0, 0.87);
+        }
+    }
+
+    .symptom-actions {
+        display: flex;
+        gap: 0.5rem;
+        
+        .action-btn {
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            color: #656565; // Lighter gray as requested (was #424242)
+            
+            mat-icon {
+                font-size: 22px;
+            }
+        }
+    }
 }
 
-.symptom-label {
-    position: absolute;
-    top: 30%;
-    display: table-cell;
-    vertical-align: middle;
+// Add Card Special Styling
+.add-card {
+    cursor: pointer;
+    border: 1px dashed rgba(var(--primary-rgb, 63, 81, 181), 0.3); // Hint of color border
+    background-color: rgba(255, 255, 255, 0.8);
+
+    .symptom-label.add-label {
+        color: rgba(0, 0, 0, 0.6); // Lighter text for "Add..."
+        font-weight: 500;
+    }
+
+    .add-icon-container {
+        color: var(--primary-color, #3f51b5); // Primary color icon
+        display: flex;
+        align-items: center;
+    }
+
+    &:hover {
+        background-color: #ffffff;
+        border-color: var(--primary-color, #3f51b5);
+    }
 }
 
-.edit-symptom {
-    display: inline-block;
-    margin-left: 1rem;
-}
-
-.delete-symptom {
-    display: inline-block;
-    margin-left: 1rem;
-}
-
-.buttons-container {
-    position: absolute;
-    top: 10%;
-    right: 0%;
-    height: 2rem;
-}
-
-.add-button-container {
-    position: absolute;
-    bottom: 5rem;
-    right: 1.5rem;
+// Loading
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50%;
 }

@@ -32,7 +32,6 @@ import { HomeComponent } from './ui';
 import { CalendarComponent } from './ui/calendar';
 import { DayComponent } from './ui/day';
 import { TimelineComponent } from './ui/timeline';
-import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { SymptomsComponent } from './ui/symptoms';
 import { MedsComponent } from './ui/meds';
 import { BottomSheetAddEventComponent } from './ui/time/bottom-sheet-add-event';
@@ -46,10 +45,8 @@ import { BackupService } from './infra/backup.service';
 import { DialogAddEventComponent } from './ui/dialog/dialog-add-event';
 import { DialogDeleteEventComponent } from './ui/dialog/dialog-delete-event';
 import { DialogShowEventComponent } from './ui/dialog/dialog-show-event';
-import { DialogAddSymptomComponent } from './ui/dialog/dialog-add-symptom';
-import { DialogDeleteSymptomComponent } from './ui/dialog/dialog-delete-symptom';
-import { DialogEditSymptomOverviewComponent } from './ui/dialog/dialog-edit-symptom-overview';
-import { DialogImportConfirmComponent } from './ui/dialog/dialog-import-confirm';
+
+
 import { DialogNoSymptomWarningComponent } from './ui/dialog/dialog-no-symptom-warning';
 import { DialogSelectSymptomComponent } from './ui/dialog/dialog-select-symptom';
 import { DialogSelectBackupComponent } from './ui/dialog/dialog-select-backup';
@@ -74,7 +71,21 @@ import { AboutComponent } from './ui/about';
 
 import { DialogTutorialNoticeComponent } from './ui/dialog/dialog-tutorial-notice';
 
-import { DialogExportPdfComponent } from './ui/dialog/dialog-export-pdf/dialog-export-pdf.component';
+
+import { DialogOccurrenceHistoryComponent } from './ui/dialog/dialog-occurrence-history';
+import { BottomSheetDeleteEventComponent } from './ui/bottom-sheet/bottom-sheet-delete-event';
+
+import { BottomSheetEditMedComponent } from './ui/bottom-sheet/bottom-sheet-edit-med';
+import { BottomSheetEditLogComponent } from './ui/bottom-sheet/bottom-sheet-edit-log';
+import { BottomSheetDeleteOverviewComponent } from './ui/bottom-sheet/bottom-sheet-delete-overview';
+import { BottomSheetEditSymptomOverviewComponent } from './ui/bottom-sheet/bottom-sheet-edit-symptom-overview';
+import { BottomSheetImportConfirmComponent } from './ui/bottom-sheet/bottom-sheet-import-confirm';
+import { BottomSheetExportPdfComponent } from './ui/bottom-sheet/bottom-sheet-export-pdf';
+import { BottomSheetAddSymptomComponent } from './ui/bottom-sheet/bottom-sheet-add-symptom';
+import { BottomSheetDeleteSymptomComponent } from './ui/bottom-sheet/bottom-sheet-delete-symptom';
+import { SpacerItemComponent } from './ui/shared/spacer-item';
+import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
+
 
 @NgModule({
 	declarations: [
@@ -96,12 +107,8 @@ import { DialogExportPdfComponent } from './ui/dialog/dialog-export-pdf/dialog-e
 		DialogAddEventComponent,
 		DialogDeleteEventComponent,
 		DialogShowEventComponent,
-		DialogAddSymptomComponent,
-		DialogDeleteSymptomComponent,
-		DialogEditSymptomOverviewComponent,
-		DialogImportConfirmComponent,
+
 		DialogExportConfirmComponent,
-		DialogExportPdfComponent,
 		DialogNoSymptomWarningComponent,
 		DialogNoTargetSymptomWarningComponent,
 		DialogSelectSymptomComponent,
@@ -114,9 +121,21 @@ import { DialogExportPdfComponent } from './ui/dialog/dialog-export-pdf/dialog-e
 		DialogEditLogComponent,
 		DialogUpdatesComponent,
 		DialogTutorialNoticeComponent,
+		DialogOccurrenceHistoryComponent,
+		BottomSheetDeleteEventComponent,
+		BottomSheetEditMedComponent,
+		BottomSheetEditLogComponent,
+		BottomSheetDeleteOverviewComponent,
 
 		// Helpers
-		InfiniteScrollComponent
+		InfiniteScrollComponent,
+		BottomSheetEditSymptomOverviewComponent,
+		BottomSheetImportConfirmComponent,
+
+		BottomSheetExportPdfComponent,
+		BottomSheetAddSymptomComponent,
+		BottomSheetDeleteSymptomComponent,
+		SpacerItemComponent
 	],
 	imports: [
 		BrowserModule,
@@ -147,10 +166,10 @@ import { DialogExportPdfComponent } from './ui/dialog/dialog-export-pdf/dialog-e
 		MatAutocompleteModule,
 		MatSlideToggleModule,
 		MatRadioModule,
-		NgxMaterialTimepickerModule,
 		TranslocoRootModule,
 		ChartsModule,
-		ReactiveFormsModule
+		ReactiveFormsModule,
+		NgxMaterialTimepickerModule
 	],
 	providers: [
 		DaysService,
@@ -182,12 +201,8 @@ import { DialogExportPdfComponent } from './ui/dialog/dialog-export-pdf/dialog-e
 		DialogAddEventComponent,
 		DialogDeleteEventComponent,
 		DialogShowEventComponent,
-		DialogAddSymptomComponent,
-		DialogDeleteSymptomComponent,
-		DialogEditSymptomOverviewComponent,
-		DialogImportConfirmComponent,
+
 		DialogExportConfirmComponent,
-		DialogExportPdfComponent,
 		DialogNoSymptomWarningComponent,
 		DialogNoTargetSymptomWarningComponent,
 		DialogSelectSymptomComponent,
@@ -196,7 +211,16 @@ import { DialogExportPdfComponent } from './ui/dialog/dialog-export-pdf/dialog-e
 		DialogConfirmComponent,
 		DialogEditMedComponent,
 		DialogUpdatesComponent,
-		DialogTutorialNoticeComponent
+		DialogTutorialNoticeComponent,
+		BottomSheetEditMedComponent,
+		BottomSheetEditLogComponent,
+		BottomSheetDeleteOverviewComponent,
+		BottomSheetEditSymptomOverviewComponent,
+		BottomSheetImportConfirmComponent,
+
+		BottomSheetExportPdfComponent,
+		BottomSheetAddSymptomComponent,
+		BottomSheetDeleteSymptomComponent
 	],
 	bootstrap: [AppComponent]
 })

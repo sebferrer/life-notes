@@ -4,14 +4,15 @@ import { Observable } from 'rxjs';
 import { ISymptom } from 'src/app/models/symptom.model';
 import { TranslocoService } from '@ngneat/transloco';
 import { ImporterExporterService, SettingsService } from 'src/app/infra';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { DialogImportConfirmComponent } from '../dialog/dialog-import-confirm';
+import { BottomSheetImportConfirmComponent } from '../bottom-sheet/bottom-sheet-import-confirm';
+import { BottomSheetExportPdfComponent } from '../bottom-sheet/bottom-sheet-export-pdf';
 import { DialogSelectBackupComponent } from '../dialog/dialog-select-backup';
 import { DialogInfoComponent } from '../dialog/dialog-info';
 import { BackupService } from 'src/app/infra/backup.service';
 import { DialogExportConfirmComponent } from '../dialog/dialog-export-confirm';
-import { DialogExportPdfComponent } from '../dialog/dialog-export-pdf/dialog-export-pdf.component';
 import { Router } from '@angular/router';
 
 @Component({
@@ -35,6 +36,7 @@ export class SettingsComponent implements OnInit {
 	public weeklyReminder: boolean;
 	public painPalette: string;
 	public autoCalculateOverview: boolean;
+	public selectedTimePicker: string;
 
 	public debug = 'no error';
 	public backupData = '';
@@ -49,6 +51,7 @@ export class SettingsComponent implements OnInit {
 		private importerExporterService: ImporterExporterService,
 		private backupService: BackupService,
 		private settingsService: SettingsService,
+		private bottomSheet: MatBottomSheet,
 		private dialog: MatDialog,
 		private snackBar: MatSnackBar,
 		private router: Router
@@ -70,6 +73,7 @@ export class SettingsComponent implements OnInit {
 			this.weeklyReminder = settings.weeklyReminder;
 			this.painPalette = settings.painPalette;
 			this.autoCalculateOverview = settings.autoCalculateOverview;
+			this.selectedTimePicker = settings.timePicker || 'material';
 		});
 	}
 
@@ -119,6 +123,10 @@ export class SettingsComponent implements OnInit {
 		this.settingsService.setAutoCalculateOverview(this.autoCalculateOverview).subscribe();
 	}
 
+	public setTimePicker(): void {
+		this.settingsService.setTimePicker(this.selectedTimePicker).subscribe();
+	}
+
 	public setTargetSymptom(): void {
 		this.settingsService.setTargetSymptomKey(this.selectedSymptom).subscribe();
 		this.globalService.targetSymptomKey = this.selectedSymptom;
@@ -131,11 +139,9 @@ export class SettingsComponent implements OnInit {
 	}
 
 	public importDataWeb(event: any): void {
-		this.dialog.open(DialogImportConfirmComponent, {
-			autoFocus: false,
-			width: '20rem',
-			panelClass: 'custom-modalbox'
-		}).afterClosed().subscribe(response => {
+		this.bottomSheet.open(BottomSheetImportConfirmComponent, {
+			panelClass: 'bottom-sheet-container'
+		}).afterDismissed().subscribe(response => {
 			if (response == null || response.answer !== 'yes') {
 				return;
 			}
@@ -149,11 +155,9 @@ export class SettingsComponent implements OnInit {
 
 	public importDataNative(auto?: boolean): void {
 		auto = auto || false;
-		this.dialog.open(DialogImportConfirmComponent, {
-			autoFocus: false,
-			width: '20rem',
-			panelClass: 'custom-modalbox'
-		}).afterClosed().subscribe(response => {
+		this.bottomSheet.open(BottomSheetImportConfirmComponent, {
+			panelClass: 'bottom-sheet-container'
+		}).afterDismissed().subscribe(response => {
 			if (response == null || response.answer !== 'yes') {
 				return;
 			}
@@ -254,11 +258,9 @@ export class SettingsComponent implements OnInit {
 	}
 
 	public openExportPdfDialog(): void {
-		this.dialog.open(DialogExportPdfComponent, {
-			autoFocus: false,
-			width: '20rem',
-			panelClass: 'custom-modalbox'
-		}).afterClosed().subscribe(result => {
+		this.bottomSheet.open(BottomSheetExportPdfComponent, {
+			panelClass: 'bottom-sheet-container'
+		}).afterDismissed().subscribe(result => {
 			if (result) {
 				this.router.navigate(['/monthlyreport', result.year + '-' + result.month]);
 			}

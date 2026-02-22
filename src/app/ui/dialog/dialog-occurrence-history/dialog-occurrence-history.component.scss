@@ -1,0 +1,158 @@
+$color-med: #0096BF;
+$color-log: #98A2AE;
+
+.bottom-sheet-container.occurrence-history {
+    display: flex;
+    flex-direction: column;
+    padding: 0 0.7rem 1.5rem 0.7rem;
+    gap: 1.2rem;
+    height: 100%;
+    box-sizing: border-box;
+
+    .header-section {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        padding-top: 1rem;
+
+        .title-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+
+            .icon-bubble {
+                width: 3rem;
+                height: 3rem;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+
+                &.med { background-color: $color-med; }
+                &.log { background-color: $color-log; }
+
+                mat-icon {
+                    font-size: 1.8rem;
+                    width: 1.8rem;
+                    height: 1.8rem;
+                    color: white;
+                }
+
+                .custom-svg {
+                    width: 1.8rem;
+                    height: 1.8rem;
+                    filter: brightness(0) invert(1);
+                }
+            }
+
+            .main-title {
+                font-size: 1.6rem;
+                font-weight: 700;
+                color: rgba(0,0,0,0.87);
+                line-height: 1.2;
+            }
+        }
+
+        .date-time-row {
+            font-size: 1rem;
+            color: rgba(0,0,0,0.5);
+            font-weight: 500;
+            margin-left: 4.1rem;
+        }
+    }
+
+    .occurrences-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        max-height: 50vh;
+        overflow-y: auto;
+        border-radius: 12px;
+        background-color: #F5F5F5;
+
+        .occurrence-item {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1rem;
+            gap: 0.8rem;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+
+            &:last-child {
+                border-bottom: none;
+            }
+
+            .occurrence-index {
+                width: 1.8rem;
+                height: 1.8rem;
+                border-radius: 50%;
+                background-color: rgba(0,0,0,0.08);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 0.75rem;
+                font-weight: 600;
+                color: rgba(0,0,0,0.5);
+                flex-shrink: 0;
+            }
+
+            .occurrence-info {
+                display: flex;
+                flex-direction: column;
+                flex: 1;
+
+                .occurrence-date {
+                    font-size: 0.95rem;
+                    font-weight: 600;
+                    color: rgba(0,0,0,0.8);
+                }
+
+                .occurrence-time {
+                    font-size: 0.8rem;
+                    color: rgba(0,0,0,0.45);
+                }
+            }
+
+            .occurrence-detail {
+                font-size: 0.85rem;
+                color: rgba(0,0,0,0.5);
+                max-width: 40%;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+            }
+
+            .occurrence-delete {
+                flex-shrink: 0;
+                color: rgba(0,0,0,0.3);
+                
+                &:hover {
+                    color: #d32f2f;
+                }
+            }
+        }
+
+        .empty-state {
+            padding: 2rem;
+            text-align: center;
+            color: rgba(0,0,0,0.4);
+            font-size: 0.9rem;
+        }
+    }
+
+    .actions {
+        margin-top: auto;
+        padding-top: 0.5rem;
+        display: flex;
+
+        .close-button {
+            flex: 1;
+            height: 3.5rem;
+            border-radius: 14px !important;
+            font-size: 1rem;
+            font-weight: 600;
+            border-color: rgba(0,0,0,0.1);
+            color: rgba(0,0,0,0.45);
+        }
+    }
+}

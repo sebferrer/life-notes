@@ -1,0 +1,33 @@
+<ng-template transloco let-t>
+    <div class="bottom-sheet-container edit-log">
+        <div class="header-section">
+            <h2 class="title">{{ t('EDIT_LOG_TITLE') }}</h2>
+        </div>
+
+        <div class="content-section">
+            <div class="field-container">
+                <mat-form-field appearance="outline">
+                    <mat-label>{{ t('TABLE_NOTE') }}</mat-label>
+                    <input matInput [(ngModel)]="data.key" required>
+                </mat-form-field>
+            </div>
+
+            <div class="warning-text">
+                <p>{{ t('EDIT_LOG_WARNING') }}</p>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button mat-stroked-button (click)="onCancel()" class="cancel-button">
+                {{ t('CANCEL') }}
+            </button>
+            <button mat-flat-button color="primary" (click)="onConfirm()" [disabled]="!isValid()"
+                class="confirm-button">
+                {{ t('EDIT') }}
+            </button>
+        </div>
+
+        <app-spacer-item></app-spacer-item>
+
+    </div>
+</ng-template>

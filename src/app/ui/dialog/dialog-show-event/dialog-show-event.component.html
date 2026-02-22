@@ -1,53 +1,99 @@
 <ng-template transloco let-t>
-    <h1 mat-dialog-title>
-        {{ t('SHOW_EVENT_DIALOG_TITLE', {'month': t('MONTH-'+data.detailedDate.month), 'day': data.detailedDate.day,
-        'year': data.detailedDate.year}) }}
-    </h1>
+    <div class="bottom-sheet-container {{ data.customEvent.type }}">
+
+        <div class="header-section">
+            <div class="title-row">
+                <div class="icon-bubble">
+                    <mat-icon *ngIf="data.customEvent.type === 'symptomLog'">spa</mat-icon>
+                    <mat-icon *ngIf="data.customEvent.type === 'log'">event_note</mat-icon>
+                    <img *ngIf="data.customEvent.type === 'med'" src="/assets/svg/pill-capsule.svg"
+                        class="custom-svg" />
+                    <img *ngIf="data.customEvent.type === 'meal'" src="/assets/svg/curry-chronicles.svg"
+                        class="custom-svg" />
+                </div>
+                <div class="main-title" [ngSwitch]="data.customEvent.type">
+                    <span *ngSwitchCase="'symptomLog'">{{ globalService.symptomMap.get(data.customEvent.key) }}</span>
+                    <span *ngSwitchDefault>{{ data.customEvent.key }}</span>
+                </div>
+            </div>
+
+            <div class="date-time-row">
+                {{ t('SHOW_EVENT_DIALOG_TITLE', {'month': t('MONTH-'+data.detailedDate.month), 'day':
+                data.detailedDate.day, 'year': data.detailedDate.year}) }}
+                &bull; {{ data.customEvent.time }}
+            </div>
+        </div>
+
+        <div class="content-body">
+
+            <div [ngSwitch]="data.customEvent.type" class="main-info-card">
+
+                <div *ngSwitchCase="'symptomLog'" class="info-content symptom-layout">
+                    <div class="intensity-header">
+                        <span class="label">{{ t('PAIN') }}</span>
+                        <div class="value-container">
+                            <span class="value">{{ getPainValue(data.customEvent.pain) }}</span><span class="max">/{{
+                                globalService.painScale }}</span>
+                        </div>
+                    </div>
+
+                    <div class="scale-visual-container">
+                        <div class="scale-visual">
+                            <div class="pain-bar"
+                                [style.width.%]="(getPainValue(data.customEvent.pain) / globalService.painScale) * 100">
+                            </div>
+                            <div class="knob"
+                                [style.left.%]="(getPainValue(data.customEvent.pain) / globalService.painScale) * 100">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="scale-labels">
+                        <span>{{ t('INTENSITY_LOW') }}</span>
+                        <span>{{ t('INTENSITY_MODERATE') }}</span>
+                        <span>{{ t('INTENSITY_HIGH') }}</span>
+                    </div>
+                </div>
+
+                <div *ngSwitchCase="'log'" class="info-content">
+                </div>
+
+                <div *ngSwitchCase="'med'" class="info-content">
+                    <div class="med-quantity">
+                        <span class="label">{{ t('QUANTITY') }}</span>
+                        <div class="qty-group">
+                            <span class="qty">{{ data.customEvent.quantity }}</span> <span class="unit">mg</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div *ngSwitchCase="'meal'" class="info-content">
+                </div>
+
+            </div>
+
+            <div class="detail-section" *ngIf="data.customEvent.detail">
+                <div class="detail-label">{{ t('DETAIL') }}</div>
+                <div class="detail-box">
+                    <div class="detail-text">{{ data.customEvent.detail }}</div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="actions">
+            <button mat-stroked-button color="warn" (click)="onDeleteClick()" class="delete-button">
+                {{ t('DELETE') }}
+            </button>
+            <button mat-flat-button color="primary" (click)="onYesClick()" class="edit-button">
+                {{ t('UPDATE') }}
+            </button>
+        </div>
+
+        <app-spacer-item></app-spacer-item>
+
+    </div>
 </ng-template>
-<div mat-dialog-content>
-    <div>
-        <mat-label>{{ data.customEvent.time }}</mat-label>
-    </div>
-    <div [ngSwitch]="data.customEvent.type">
-        <div *ngSwitchCase="'symptomLog'">
-            <mat-label>{{ globalService.symptomMap.get(data.customEvent.key) }}</mat-label>
-            <div>
-                <mat-label>{{ getPainValue(data.customEvent.pain) }} / {{ globalService.painScale }}</mat-label>
-            </div>
-            <div>
-                <mat-label>{{ data.customEvent.detail }}</mat-label>
-            </div>
-        </div>
-        <div *ngSwitchCase="'log'">
-            <div>
-                <mat-label>{{ data.customEvent.key }}</mat-label>
-            </div>
-            <div>
-                <mat-label>{{ data.customEvent.detail }}</mat-label>
-            </div>
-        </div>
-        <div *ngSwitchCase="'med'">
-            <div>
-                <mat-label>{{ data.customEvent.key }}</mat-label>
-            </div>
-            <div>
-                <mat-label>{{ data.customEvent.quantity }}mg</mat-label>
-            </div>
-        </div>
-        <div *ngSwitchCase="'meal'">
-            <div>
-                <mat-label>{{ data.customEvent.key }}</mat-label>
-            </div>
-            <div>
-                <mat-label>{{ data.customEvent.detail }}</mat-label>
-            </div>
-        </div>
-    </div>
-    <div mat-dialog-actions>
-        <button mat-button (click)="onNoClick()" transloco="CLOSE"></button>
-        <button mat-button cdkFocusInitial (click)="onYesClick()" color="primary" transloco="UPDATE"></button>
-    </div>
-</div>
 
 <ng-template #loading>
     <mat-spinner></mat-spinner>

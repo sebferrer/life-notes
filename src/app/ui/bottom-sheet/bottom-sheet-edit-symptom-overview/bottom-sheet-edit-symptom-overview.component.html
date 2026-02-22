@@ -1,0 +1,29 @@
+<div class="bottom-sheet-container edit-symptom-overview">
+    <div class="header-section">
+        <h2 class="title">{{ 'EDIT_SYMPTOM_OVERVIEW_DIALOG_TITLE' | transloco: { 'symptom':
+            data.symptomMap.get(data.symptomOverview.key) } }}</h2>
+    </div>
+
+    <div class="content-body">
+        <div class="field-container">
+            <mat-label class="custom-label">{{ 'PAIN' | transloco }}</mat-label>
+            <div class="pain-container">
+                <ion-range [max]="painScale" [min]="0" [step]="1" [(ngModel)]="painValue">
+                </ion-range>
+                <span class="pain-badge">{{ painValue }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="actions">
+        <button mat-stroked-button (click)="onCancel()" class="cancel-button">
+            {{ 'CANCEL' | transloco }}
+        </button>
+        <button mat-flat-button color="primary" (click)="onConfirm()" class="confirm-button">
+            {{ 'SET' | transloco }}
+        </button>
+    </div>
+
+    <app-spacer-item></app-spacer-item>
+
+</div>

@@ -1,0 +1,22 @@
+<div class="bottom-sheet-container delete-symptom">
+
+    <div class="header-section">
+        <h1 class="title">{{ 'DELETE_SYMPTOM_DIALOG_TITLE' | transloco: { symptom: data.label } }}</h1>
+    </div>
+
+    <div class="content-body">
+        <p>{{ 'DELETE_SYMPTOM_DIALOG_CONTENT' | transloco: { symptom: data.label } }}</p>
+    </div>
+
+    <div class="actions">
+        <button mat-stroked-button (click)="onNoClick()">
+            {{ 'NO' | transloco }}
+        </button>
+        <button mat-flat-button color="warn" (click)="onYesClick()">
+            {{ 'YES' | transloco }}
+        </button>
+    </div>
+
+    <app-spacer-item></app-spacer-item>
+
+</div>

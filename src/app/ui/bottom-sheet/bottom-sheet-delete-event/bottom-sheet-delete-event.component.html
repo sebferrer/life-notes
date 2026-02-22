@@ -1,0 +1,43 @@
+<ng-template transloco let-t>
+    <div class="bottom-sheet-container delete-event">
+        <div class="header-section">
+            <h2 class="title">{{ t(title) }}</h2>
+        </div>
+
+        <div class="item-details-card" *ngIf="itemDetails">
+            <div class="icon-bubble" [ngClass]="itemDetails.type">
+                <img *ngIf="itemDetails.type === 'med'" src="/assets/svg/pill-capsule.svg" class="custom-svg" />
+                <mat-icon *ngIf="itemDetails.type === 'log'">event_note</mat-icon>
+            </div>
+            <div class="details-text">
+                <div class="main-info">
+                    <span class="name">{{ itemDetails.name }}</span>
+                    <span class="quantity" *ngIf="itemDetails.quantityLabel">{{ itemDetails.quantityLabel }}</span>
+                </div>
+                <div class="sub-info">
+                    <span class="date">{{ itemDetails.dateLabel }}</span>
+                    <span class="separator">•</span>
+                    <span class="time">{{ itemDetails.timeLabel }}</span>
+                </div>
+                <div class="detail-note" *ngIf="itemDetails.detail">{{ itemDetails.detail }}</div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <p class="message">{{ t(message) }}</p>
+            <p class="warning" *ngIf="warning">{{ t(warning) }}</p>
+        </div>
+
+        <div class="actions">
+            <button mat-stroked-button (click)="onCancel()" class="cancel-button">
+                {{ t('CANCEL') }}
+            </button>
+            <button mat-flat-button color="primary" (click)="onConfirm()" class="confirm-button">
+                {{ t('CONFIRM') }}
+            </button>
+        </div>
+
+        <app-spacer-item></app-spacer-item>
+
+    </div>
+</ng-template>

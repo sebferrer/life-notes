@@ -1,0 +1,102 @@
+// Event Type Colors (matching DialogAddEventComponent)
+$color-symptom: #FF3154;
+
+.bottom-sheet-container.edit-symptom-overview {
+    display: flex;
+    flex-direction: column;
+    padding: 0 0.7rem 1.5rem 0.7rem; // Matches DialogAddEvent
+    gap: 1.2rem;
+    height: 100%;
+    box-sizing: border-box;
+    width: 100%;
+
+    --event-color: #{$color-symptom};
+
+    .header-section {
+        padding-top: 1rem;
+        
+        .title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: rgba(0,0,0,0.85);
+            margin: 0;
+            text-align: center;
+        }
+    }
+
+    .content-body {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        flex: 1;
+        overflow-y: auto;
+
+        .field-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+
+            .custom-label {
+                color: rgba(0,0,0,0.6);
+                font-size: 0.9rem;
+                font-weight: 500;
+            }
+
+            .pain-container {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+
+                ion-range {
+                    flex: 1;
+                    padding-inline-start: 14px;
+                    padding-inline-end: 14px;
+                    --knob-background: var(--event-color);
+                    --bar-background-active: var(--event-color);
+                    --pin-background: var(--event-color);
+                    --pin-color: white;
+                    --knob-size: 24px;
+                }
+
+                .pain-badge {
+                    background-color: var(--event-color);
+                    color: white;
+                    width: 30px;
+                    height: 30px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: 600;
+                    font-size: 0.9rem;
+                    flex-shrink: 0;
+                }
+            }
+        }
+    }
+
+    .actions {
+        margin-top: auto;
+        padding-top: 1rem;
+        display: flex;
+        gap: 1rem;
+        
+        button {
+            height: 3.5rem;
+            border-radius: 14px !important;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .cancel-button {
+            flex: 1;
+            border-color: rgba(0,0,0,0.1);
+            color: rgba(0,0,0,0.45);
+        }
+
+        .confirm-button {
+            flex: 2;
+            box-shadow: none;
+        }
+    }
+}

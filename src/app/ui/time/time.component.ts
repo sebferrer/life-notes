@@ -4,7 +4,7 @@ import { DaysService } from 'src/app/infra';
 import { DialogAddEventComponent } from '../dialog/dialog-add-event';
 import { DialogDeleteEventComponent } from '../dialog/dialog-delete-event';
 import { DialogShowEventComponent } from '../dialog/dialog-show-event';
-import { DialogEditSymptomOverviewComponent } from '../dialog/dialog-edit-symptom-overview';
+import { BottomSheetEditSymptomOverviewComponent } from '../bottom-sheet/bottom-sheet-edit-symptom-overview';
 import { ICustomEvent } from 'src/app/models/customEvent.model';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -61,14 +61,14 @@ export abstract class ATimeComponent {
 	}
 
 	public openShowDialog(date: string, customEvent: ICustomEvent, symptoms: ISymptom[]): void {
-		this.dialog.open(DialogShowEventComponent, {
-			autoFocus: false,
-			width: '20rem',
-			panelClass: 'custom-modalbox',
+		this.bottomSheet.open(DialogShowEventComponent, {
+			panelClass: 'event-bottom-sheet',
 			data: { date, 'detailedDate': getDetailedDate(date), customEvent }
-		}).afterClosed().subscribe(response => {
-			if (response == null || response.answer !== 'yes') {
+		}).afterDismissed().subscribe(response => {
+			if (response == null || response.answer === 'no') {
 				return;
+			} else if (response.answer === 'delete') {
+				this.openDeleteDialog(date, customEvent);
 			} else {
 				if (response.type === 'symptomLog') {
 					this.openAddSymptomDialog(customEvent.type, date, symptoms, customEvent);
@@ -81,23 +81,19 @@ export abstract class ATimeComponent {
 	}
 
 	public openAddDialog(type: string, date: string, customEvent?: ICustomEvent): void {
-		this.dialog.open(DialogAddEventComponent, {
-			autoFocus: false,
-			width: '20rem',
-			panelClass: 'custom-modalbox',
+		this.bottomSheet.open(DialogAddEventComponent, {
+			panelClass: 'event-bottom-sheet',
 			data: { type, date, customEvent }
-		}).afterClosed().subscribe(response => {
+		}).afterDismissed().subscribe(response => {
 			this.postAddDialog(date, response, type, customEvent);
 		});
 	}
 
 	public openAddSymptomDialog(type: string, date: string, symptoms: ISymptom[], customEvent?: ICustomEvent): void {
-		this.dialog.open(DialogAddEventComponent, {
-			autoFocus: false,
-			width: '20rem',
-			panelClass: 'custom-modalbox',
+		this.bottomSheet.open(DialogAddEventComponent, {
+			panelClass: 'event-bottom-sheet',
 			data: { type, date, symptoms, customEvent }
-		}).afterClosed().subscribe(response => {
+		}).afterDismissed().subscribe(response => {
 			this.postAddDialog(date, response, type, customEvent);
 		});
 	}
@@ -212,12 +208,10 @@ export abstract class ATimeComponent {
 					const symptomOverview = this.daysService.getSymptomOverview(d, this.globalService.targetSymptomKey)
 						|| { key: this.globalService.targetSymptomKey, pain: 0 };
 					const symptomMap = this.symptomMap;
-					this.dialog.open(DialogEditSymptomOverviewComponent, {
-						autoFocus: false,
-						width: '20rem',
-						panelClass: 'custom-modalbox',
+					this.bottomSheet.open(BottomSheetEditSymptomOverviewComponent, {
+						panelClass: 'event-bottom-sheet',
 						data: { date, symptomOverview, symptomMap }
-					}).afterClosed().subscribe(response => {
+					}).afterDismissed().subscribe(response => {
 						if (response == null || response.answer !== 'yes') {
 							return;
 						}
