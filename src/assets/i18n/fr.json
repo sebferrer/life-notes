@@ -302,5 +302,10 @@
     "NO_OCCURRENCES": "Aucune occurrence trouvée",
     "DELETE_OCCURRENCE_TITLE": "Supprimer une occurrence",
     "DELETE_OCCURRENCE_CONTENT": "Êtes-vous sûr de vouloir supprimer cette occurrence ?",
-    "IRREVERSIBLE_ACTION": "Cette action est irréversible."
+    "IRREVERSIBLE_ACTION": "Cette action est irréversible.",
+    "IMPORT_ERROR_TITLE": "Erreur d'import",
+    "IMPORT_ERROR_NOT_JSON_FILE": "Le fichier doit être un fichier .json.",
+    "IMPORT_ERROR_INVALID_JSON": "Les données ne sont pas au format attendu.",
+    "IMPORT_ERROR_EMPTY_FILE": "Le fichier est vide.",
+    "IMPORT_ERROR_INVALID_SCHEMA": "Les données ne correspondent pas à un fichier de sauvegarde Life Notes."
 }

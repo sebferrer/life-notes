@@ -80,6 +80,7 @@ import { BottomSheetEditLogComponent } from './ui/bottom-sheet/bottom-sheet-edit
 import { BottomSheetDeleteOverviewComponent } from './ui/bottom-sheet/bottom-sheet-delete-overview';
 import { BottomSheetEditSymptomOverviewComponent } from './ui/bottom-sheet/bottom-sheet-edit-symptom-overview';
 import { BottomSheetImportConfirmComponent } from './ui/bottom-sheet/bottom-sheet-import-confirm';
+import { BottomSheetImportErrorComponent } from './ui/bottom-sheet/bottom-sheet-import-error';
 import { BottomSheetExportPdfComponent } from './ui/bottom-sheet/bottom-sheet-export-pdf';
 import { BottomSheetAddSymptomComponent } from './ui/bottom-sheet/bottom-sheet-add-symptom';
 import { BottomSheetDeleteSymptomComponent } from './ui/bottom-sheet/bottom-sheet-delete-symptom';
@@ -131,6 +132,7 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 		InfiniteScrollComponent,
 		BottomSheetEditSymptomOverviewComponent,
 		BottomSheetImportConfirmComponent,
+		BottomSheetImportErrorComponent,
 
 		BottomSheetExportPdfComponent,
 		BottomSheetAddSymptomComponent,
@@ -217,6 +219,7 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 		BottomSheetDeleteOverviewComponent,
 		BottomSheetEditSymptomOverviewComponent,
 		BottomSheetImportConfirmComponent,
+		BottomSheetImportErrorComponent,
 
 		BottomSheetExportPdfComponent,
 		BottomSheetAddSymptomComponent,
