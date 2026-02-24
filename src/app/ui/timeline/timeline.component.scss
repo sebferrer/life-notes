@@ -15,11 +15,13 @@
     height: 30rem;
 
     .timeline-tile-header {
+        position: relative;
         width: 100%;
         background-color: #9E9E9E;
         color: white;
         height: 12%;
         display: table;
+        z-index: 5;
     
         .timeline-tile-header-date {
             height: 100%;
@@ -105,6 +107,7 @@
             height: 20%;
             background-color: #CECECE;
             border-radius: 100% 0 0 0;
+            z-index: 1;
              -moz-border-radius: 100% 0 0 0;
              -webkit-border-radius: 100% 0 0 0;
     
