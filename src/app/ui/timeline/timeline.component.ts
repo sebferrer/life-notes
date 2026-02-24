@@ -23,7 +23,7 @@ export class TimelineComponent extends ATimeComponent implements OnInit {
 
 	private daysContents: DayViewModel[];
 	public daysContents$: Subject<DayViewModel[]>;
-	private readonly BATCH_SIZE = 14;
+	private readonly BATCH_SIZE = 60;
 	private nbDays = 0;
 	@ViewChildren('dayRefs') dayRefs: QueryList<ElementRef>;
 
