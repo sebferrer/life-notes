@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BottomSheetImportConfirmComponent } from '../bottom-sheet/bottom-sheet-import-confirm';
 import { BottomSheetImportErrorComponent } from '../bottom-sheet/bottom-sheet-import-error';
+import { BottomSheetForceLoadWarningComponent } from '../bottom-sheet/bottom-sheet-force-load-warning';
 import { BottomSheetExportPdfComponent } from '../bottom-sheet/bottom-sheet-export-pdf';
 import { DialogSelectBackupComponent } from '../dialog/dialog-select-backup';
 import { DialogInfoComponent } from '../dialog/dialog-info';
@@ -200,6 +201,39 @@ export class SettingsComponent implements OnInit {
 		this.bottomSheet.open(BottomSheetImportErrorComponent, {
 			panelClass: 'bottom-sheet-container',
 			data: { errorMessageKey: errorKey }
+		});
+	}
+
+	public forceLoadFileClickFire(): void {
+		this.bottomSheet.open(BottomSheetForceLoadWarningComponent, {
+			panelClass: 'bottom-sheet-container'
+		}).afterDismissed().subscribe(response => {
+			if (response == null || response.answer !== 'yes') {
+				return;
+			}
+			const fileInput: HTMLInputElement = document.getElementById('file-force-import') as HTMLInputElement;
+			fileInput.value = '';
+			fileInput.click();
+		});
+	}
+
+	public forceImportDataWeb(event: any): void {
+		const selectedFile = event.target.files[0];
+		if (!selectedFile) {
+			return;
+		}
+
+		this.bottomSheet.open(BottomSheetImportConfirmComponent, {
+			panelClass: 'bottom-sheet-container'
+		}).afterDismissed().subscribe(response => {
+			if (response == null || response.answer !== 'yes') {
+				return;
+			}
+			this.importerExporterService.importDataWeb(event).subscribe(() => { });
+			this.debug = this.importerExporterService.debug;
+			this.snackBar.open(this.translocoService.translate('DATA_IMPORT_SNACKBAR_SUCCESS'),
+				this.translocoService.translate('CLOSE'),
+				{ duration: 2000 });
 		});
 	}
 

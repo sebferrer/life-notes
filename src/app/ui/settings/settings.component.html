@@ -325,6 +325,20 @@
                         </div>
                     </mat-selection-list>
                 </div>
+
+                <div class="import-export-buttons-container">
+                    <mat-selection-list multiple="false">
+                        <mat-list-option (click)="forceLoadFileClickFire()">
+                            <div class="list-icon">
+                                <mat-icon>warning_amber</mat-icon>
+                            </div>
+                            <div class="list-item-text">
+                                <p>{{ 'FORCE_LOAD' | transloco }}</p>
+                            </div>
+                        </mat-list-option>
+                    </mat-selection-list>
+                </div>
+                <input type="file" id="file-force-import" (change)="forceImportDataWeb($event)">
             </div>
         </mat-expansion-panel>
 

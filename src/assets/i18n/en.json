@@ -306,5 +306,10 @@
     "IMPORT_ERROR_NOT_JSON_FILE": "The file must be a .json file.",
     "IMPORT_ERROR_INVALID_JSON": "The data is not in the expected format.",
     "IMPORT_ERROR_EMPTY_FILE": "The file is empty.",
-    "IMPORT_ERROR_INVALID_SCHEMA": "The data does not match a Life Notes backup file."
+    "IMPORT_ERROR_INVALID_SCHEMA": "The data does not match a Life Notes backup file.",
+    "FORCE_LOAD": "Force Load",
+    "FORCE_LOAD_BUTTON": "Force Load",
+    "FORCE_LOAD_WARNING_TITLE": "Warning",
+    "FORCE_LOAD_WARNING_CONTENT_1": "This is the Force Load feature. It could compromise your data as it bypasses all safety checks on the imported file.",
+    "FORCE_LOAD_WARNING_CONTENT_2": "Only use this if you know what you are doing. Otherwise, use the classic import feature."
 }

@@ -307,5 +307,10 @@
     "IMPORT_ERROR_NOT_JSON_FILE": "Le fichier doit être un fichier .json.",
     "IMPORT_ERROR_INVALID_JSON": "Les données ne sont pas au format attendu.",
     "IMPORT_ERROR_EMPTY_FILE": "Le fichier est vide.",
-    "IMPORT_ERROR_INVALID_SCHEMA": "Les données ne correspondent pas à un fichier de sauvegarde Life Notes."
+    "IMPORT_ERROR_INVALID_SCHEMA": "Les données ne correspondent pas à un fichier de sauvegarde Life Notes.",
+    "FORCE_LOAD": "Forcer le chargement",
+    "FORCE_LOAD_BUTTON": "Forcer le chargement",
+    "FORCE_LOAD_WARNING_TITLE": "Attention",
+    "FORCE_LOAD_WARNING_CONTENT_1": "Ceci est la fonctionnalité de chargement forcé. Elle pourrait compromettre vos données car elle contourne toutes les vérifications de sécurité sur le fichier importé.",
+    "FORCE_LOAD_WARNING_CONTENT_2": "Ne l'utilisez que si vous savez ce que vous faites. Sinon, utilisez la fonctionnalité d'import classique."
 }
