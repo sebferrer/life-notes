@@ -43,7 +43,6 @@ import { InfiniteScrollComponent } from './ui/infinite-scroll';
 import { ChartsModule } from 'ng2-charts';
 import { BackupService } from './infra/backup.service';
 import { DialogAddEventComponent } from './ui/dialog/dialog-add-event';
-import { DialogDeleteEventComponent } from './ui/dialog/dialog-delete-event';
 import { DialogShowEventComponent } from './ui/dialog/dialog-show-event';
 
 
@@ -86,6 +85,7 @@ import { BottomSheetAddSymptomComponent } from './ui/bottom-sheet/bottom-sheet-a
 import { BottomSheetDeleteSymptomComponent } from './ui/bottom-sheet/bottom-sheet-delete-symptom';
 import { BottomSheetForceLoadWarningComponent } from './ui/bottom-sheet/bottom-sheet-force-load-warning';
 import { BottomSheetInfoComponent } from './ui/bottom-sheet/bottom-sheet-info';
+import { BottomSheetDeleteTimelineEventComponent } from './ui/bottom-sheet/bottom-sheet-delete-timeline-event';
 import { SpacerItemComponent } from './ui/shared/spacer-item';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 
@@ -108,7 +108,6 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 		LineChartComponent,
 		SwipingFingerComponent,
 		DialogAddEventComponent,
-		DialogDeleteEventComponent,
 		DialogShowEventComponent,
 
 		DialogExportConfirmComponent,
@@ -141,6 +140,7 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 		BottomSheetDeleteSymptomComponent,
 		BottomSheetForceLoadWarningComponent,
 		BottomSheetInfoComponent,
+		BottomSheetDeleteTimelineEventComponent,
 		SpacerItemComponent
 	],
 	imports: [
@@ -205,7 +205,6 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 	],
 	entryComponents: [
 		DialogAddEventComponent,
-		DialogDeleteEventComponent,
 		DialogShowEventComponent,
 
 		DialogExportConfirmComponent,
@@ -229,7 +228,8 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 		BottomSheetAddSymptomComponent,
 		BottomSheetDeleteSymptomComponent,
 		BottomSheetForceLoadWarningComponent,
-		BottomSheetInfoComponent
+		BottomSheetInfoComponent,
+		BottomSheetDeleteTimelineEventComponent
 	],
 	bootstrap: [AppComponent]
 })

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { DaysService } from 'src/app/infra';
 import { DialogAddEventComponent } from '../dialog/dialog-add-event';
-import { DialogDeleteEventComponent } from '../dialog/dialog-delete-event';
+import { BottomSheetDeleteTimelineEventComponent } from '../bottom-sheet/bottom-sheet-delete-timeline-event';
 import { DialogShowEventComponent } from '../dialog/dialog-show-event';
 import { BottomSheetEditSymptomOverviewComponent } from '../bottom-sheet/bottom-sheet-edit-symptom-overview';
 import { ICustomEvent } from 'src/app/models/customEvent.model';
@@ -168,12 +168,10 @@ export abstract class ATimeComponent {
 	}
 
 	public openDeleteDialog(date: string, customEvent: ICustomEvent): void {
-		this.dialog.open(DialogDeleteEventComponent, {
-			autoFocus: false,
-			width: '20rem',
-			panelClass: 'custom-modalbox',
+		this.bottomSheet.open(BottomSheetDeleteTimelineEventComponent, {
+			panelClass: 'bottom-sheet-container',
 			data: { date, 'detailedDate': getDetailedDate(date), 'type': customEvent.type, 'key': customEvent.key, 'time': customEvent.time }
-		}).afterClosed().subscribe(response => {
+		}).afterDismissed().subscribe(response => {
 			if (response == null || response.answer !== 'yes') {
 				return;
 			}
