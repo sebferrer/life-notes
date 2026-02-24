@@ -159,7 +159,7 @@
     "SETTINGS_WEEKLY_REMINDER_LABEL": "Weekly reminder",
     "SETTINGS_SHOW_DEVELOPER_MODE_LABEL": "Show developer mode",
     "SETTINGS_CALENDAR_START_SUNDAY_LABEL": "Calendar: Start week on Sunday",
-    "SETTINGS_CALENDAR_BLOCK_VIEW_LABEL": "Calendar: Block view (compact)",
+    "SETTINGS_CALENDAR_BLOCK_VIEW_LABEL": "Calendar: Compact view",
     "SETTINGS_PAIN_PALETTE_LABEL": "Color palette",
     "SETTINGS_TIME_PICKER_LABEL": "Time picker",
     "TIME_PICKER_CLOCK": "Clock",
@@ -311,5 +311,8 @@
     "FORCE_LOAD_BUTTON": "Force Load",
     "FORCE_LOAD_WARNING_TITLE": "Warning",
     "FORCE_LOAD_WARNING_CONTENT_1": "This is the Force Load feature. It could compromise your data as it bypasses all safety checks on the imported file.",
-    "FORCE_LOAD_WARNING_CONTENT_2": "Only use this if you know what you are doing. Otherwise, use the classic import feature."
+    "FORCE_LOAD_WARNING_CONTENT_2": "Only use this if you know what you are doing. Otherwise, use the classic import feature.",
+    "BLOCK_VIEW_HELP_TITLE": "Block view",
+    "BLOCK_VIEW_HELP_CONTENT_1": "The block view displays the calendar as large contiguous blocks, without aligning the days to their corresponding day of the week.",
+    "BLOCK_VIEW_HELP_CONTENT_2": "This provides a more compact view that uses less space."
 }

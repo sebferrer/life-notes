@@ -1,0 +1,19 @@
+<div class="bottom-sheet-container info">
+    <div class="header-section">
+        <mat-icon class="info-icon">help_outline</mat-icon>
+        <h2 class="title">{{ data.titleKey | transloco }}</h2>
+    </div>
+
+    <div class="content-body">
+        <p *ngFor="let contentKey of data.contentKeys">{{ contentKey | transloco }}</p>
+    </div>
+
+    <div class="actions">
+        <button mat-flat-button color="primary" (click)="onCloseClick()" class="confirm-button">
+            {{ 'CLOSE' | transloco }}
+        </button>
+    </div>
+
+    <app-spacer-item></app-spacer-item>
+
+</div>

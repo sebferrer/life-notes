@@ -10,6 +10,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { BottomSheetImportConfirmComponent } from '../bottom-sheet/bottom-sheet-import-confirm';
 import { BottomSheetImportErrorComponent } from '../bottom-sheet/bottom-sheet-import-error';
 import { BottomSheetForceLoadWarningComponent } from '../bottom-sheet/bottom-sheet-force-load-warning';
+import { BottomSheetInfoComponent } from '../bottom-sheet/bottom-sheet-info';
 import { BottomSheetExportPdfComponent } from '../bottom-sheet/bottom-sheet-export-pdf';
 import { DialogSelectBackupComponent } from '../dialog/dialog-select-backup';
 import { DialogInfoComponent } from '../dialog/dialog-info';
@@ -127,6 +128,13 @@ export class SettingsComponent implements OnInit {
 
 	public setTimePicker(): void {
 		this.settingsService.setTimePicker(this.selectedTimePicker).subscribe();
+	}
+
+	public openInfoBottomSheet(titleKey: string, contentKeys: string[]): void {
+		this.bottomSheet.open(BottomSheetInfoComponent, {
+			panelClass: 'bottom-sheet-container',
+			data: { titleKey, contentKeys }
+		});
 	}
 
 	public setTargetSymptom(): void {

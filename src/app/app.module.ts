@@ -85,6 +85,7 @@ import { BottomSheetExportPdfComponent } from './ui/bottom-sheet/bottom-sheet-ex
 import { BottomSheetAddSymptomComponent } from './ui/bottom-sheet/bottom-sheet-add-symptom';
 import { BottomSheetDeleteSymptomComponent } from './ui/bottom-sheet/bottom-sheet-delete-symptom';
 import { BottomSheetForceLoadWarningComponent } from './ui/bottom-sheet/bottom-sheet-force-load-warning';
+import { BottomSheetInfoComponent } from './ui/bottom-sheet/bottom-sheet-info';
 import { SpacerItemComponent } from './ui/shared/spacer-item';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 
@@ -139,6 +140,7 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 		BottomSheetAddSymptomComponent,
 		BottomSheetDeleteSymptomComponent,
 		BottomSheetForceLoadWarningComponent,
+		BottomSheetInfoComponent,
 		SpacerItemComponent
 	],
 	imports: [
@@ -226,7 +228,8 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 		BottomSheetExportPdfComponent,
 		BottomSheetAddSymptomComponent,
 		BottomSheetDeleteSymptomComponent,
-		BottomSheetForceLoadWarningComponent
+		BottomSheetForceLoadWarningComponent,
+		BottomSheetInfoComponent
 	],
 	bootstrap: [AppComponent]
 })
