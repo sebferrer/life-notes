@@ -300,6 +300,7 @@
     "DELETE": "Supprimer",
     "ADD_NEW_SYMPTOM": "Ajouter un nouveau symptôme",
     "NO_OCCURRENCES": "Aucune occurrence trouvée",
+    "NO_SYMPTOMS": "Vous n'avez pas encore ajouté de symptôme. Appuyez sur le bouton ci-dessus pour en créer un.",
     "DELETE_OCCURRENCE_TITLE": "Supprimer une occurrence",
     "DELETE_OCCURRENCE_CONTENT": "Êtes-vous sûr de vouloir supprimer cette occurrence ?",
     "IRREVERSIBLE_ACTION": "Cette action est irréversible.",

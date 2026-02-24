@@ -299,6 +299,7 @@
     "DELETE": "Delete",
     "ADD_NEW_SYMPTOM": "Add a new symptom",
     "NO_OCCURRENCES": "No occurrences found",
+    "NO_SYMPTOMS": "You haven't added any symptoms yet. Tap the button above to create your first one.",
     "DELETE_OCCURRENCE_TITLE": "Delete occurrence",
     "DELETE_OCCURRENCE_CONTENT": "Are you sure you want to delete this occurrence?",
     "IRREVERSIBLE_ACTION": "This action is irreversible.",
