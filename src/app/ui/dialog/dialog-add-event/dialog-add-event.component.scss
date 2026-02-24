@@ -119,6 +119,8 @@ $color-log: #98A2AE;
                 ion-textarea {
                     max-height: 80px;
                     overflow: hidden;
+                    --padding-top: 0;
+                    --padding-bottom: 0;
                 }
             }
 
