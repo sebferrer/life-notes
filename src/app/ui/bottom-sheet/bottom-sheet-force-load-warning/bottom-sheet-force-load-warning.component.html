@@ -1,0 +1,23 @@
+<div class="bottom-sheet-container force-load-warning">
+    <div class="header-section">
+        <mat-icon class="warning-icon">warning_amber</mat-icon>
+        <h2 class="title">{{ 'FORCE_LOAD_WARNING_TITLE' | transloco }}</h2>
+    </div>
+
+    <div class="content-body">
+        <p>{{ 'FORCE_LOAD_WARNING_CONTENT_1' | transloco }}</p>
+        <p>{{ 'FORCE_LOAD_WARNING_CONTENT_2' | transloco }}</p>
+    </div>
+
+    <div class="actions">
+        <button mat-stroked-button (click)="onCancelClick()" class="cancel-button">
+            {{ 'CANCEL' | transloco }}
+        </button>
+        <button mat-flat-button color="warn" (click)="onConfirmClick()" class="confirm-button">
+            {{ 'FORCE_LOAD_BUTTON' | transloco }}
+        </button>
+    </div>
+
+    <app-spacer-item></app-spacer-item>
+
+</div>

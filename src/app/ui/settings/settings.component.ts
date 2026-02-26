@@ -8,6 +8,9 @@ import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BottomSheetImportConfirmComponent } from '../bottom-sheet/bottom-sheet-import-confirm';
+import { BottomSheetImportErrorComponent } from '../bottom-sheet/bottom-sheet-import-error';
+import { BottomSheetForceLoadWarningComponent } from '../bottom-sheet/bottom-sheet-force-load-warning';
+import { BottomSheetInfoComponent } from '../bottom-sheet/bottom-sheet-info';
 import { BottomSheetExportPdfComponent } from '../bottom-sheet/bottom-sheet-export-pdf';
 import { DialogSelectBackupComponent } from '../dialog/dialog-select-backup';
 import { DialogInfoComponent } from '../dialog/dialog-info';
@@ -127,6 +130,13 @@ export class SettingsComponent implements OnInit {
 		this.settingsService.setTimePicker(this.selectedTimePicker).subscribe();
 	}
 
+	public openInfoBottomSheet(titleKey: string, contentKeys: string[]): void {
+		this.bottomSheet.open(BottomSheetInfoComponent, {
+			panelClass: 'bottom-sheet-container',
+			data: { titleKey, contentKeys }
+		});
+	}
+
 	public setTargetSymptom(): void {
 		this.settingsService.setTargetSymptomKey(this.selectedSymptom).subscribe();
 		this.globalService.targetSymptomKey = this.selectedSymptom;
@@ -139,18 +149,44 @@ export class SettingsComponent implements OnInit {
 	}
 
 	public importDataWeb(event: any): void {
-		this.bottomSheet.open(BottomSheetImportConfirmComponent, {
-			panelClass: 'bottom-sheet-container'
-		}).afterDismissed().subscribe(response => {
-			if (response == null || response.answer !== 'yes') {
+		const selectedFile = event.target.files[0];
+		if (!selectedFile) {
+			return;
+		}
+
+		// Check file extension
+		if (!selectedFile.name.toLowerCase().endsWith('.json')) {
+			this.showImportError('IMPORT_ERROR_NOT_JSON_FILE');
+			return;
+		}
+
+		// Read file content and validate before asking for confirmation
+		const reader = new FileReader();
+		reader.onload = (readerLoadEvent: any) => {
+			const fileContent = readerLoadEvent.target.result as string;
+
+			// Validate JSON and schema
+			const validation = this.importerExporterService.validateBackupContent(fileContent);
+			if (!validation.valid) {
+				this.showImportError(validation.errorKey);
 				return;
 			}
-			this.importerExporterService.importDataWeb(event).subscribe(() => { });
-			this.debug = this.importerExporterService.debug;
-			this.snackBar.open(this.translocoService.translate('DATA_IMPORT_SNACKBAR_SUCCESS'),
-				this.translocoService.translate('CLOSE'),
-				{ duration: 2000 });
-		});
+
+			// File is valid, ask for confirmation
+			this.bottomSheet.open(BottomSheetImportConfirmComponent, {
+				panelClass: 'bottom-sheet-container'
+			}).afterDismissed().subscribe(response => {
+				if (response == null || response.answer !== 'yes') {
+					return;
+				}
+				this.importerExporterService.importDataWeb(event).subscribe(() => { });
+				this.debug = this.importerExporterService.debug;
+				this.snackBar.open(this.translocoService.translate('DATA_IMPORT_SNACKBAR_SUCCESS'),
+					this.translocoService.translate('CLOSE'),
+					{ duration: 2000 });
+			});
+		};
+		reader.readAsText(selectedFile);
 	}
 
 	public importDataNative(auto?: boolean): void {
@@ -162,6 +198,46 @@ export class SettingsComponent implements OnInit {
 				return;
 			}
 			this.importerExporterService.importDataNative(auto).subscribe(() => { });
+			this.debug = this.importerExporterService.debug;
+			this.snackBar.open(this.translocoService.translate('DATA_IMPORT_SNACKBAR_SUCCESS'),
+				this.translocoService.translate('CLOSE'),
+				{ duration: 2000 });
+		});
+	}
+
+	private showImportError(errorKey: string): void {
+		this.bottomSheet.open(BottomSheetImportErrorComponent, {
+			panelClass: 'bottom-sheet-container',
+			data: { errorMessageKey: errorKey }
+		});
+	}
+
+	public forceLoadFileClickFire(): void {
+		this.bottomSheet.open(BottomSheetForceLoadWarningComponent, {
+			panelClass: 'bottom-sheet-container'
+		}).afterDismissed().subscribe(response => {
+			if (response == null || response.answer !== 'yes') {
+				return;
+			}
+			const fileInput: HTMLInputElement = document.getElementById('file-force-import') as HTMLInputElement;
+			fileInput.value = '';
+			fileInput.click();
+		});
+	}
+
+	public forceImportDataWeb(event: any): void {
+		const selectedFile = event.target.files[0];
+		if (!selectedFile) {
+			return;
+		}
+
+		this.bottomSheet.open(BottomSheetImportConfirmComponent, {
+			panelClass: 'bottom-sheet-container'
+		}).afterDismissed().subscribe(response => {
+			if (response == null || response.answer !== 'yes') {
+				return;
+			}
+			this.importerExporterService.importDataWeb(event).subscribe(() => { });
 			this.debug = this.importerExporterService.debug;
 			this.snackBar.open(this.translocoService.translate('DATA_IMPORT_SNACKBAR_SUCCESS'),
 				this.translocoService.translate('CLOSE'),

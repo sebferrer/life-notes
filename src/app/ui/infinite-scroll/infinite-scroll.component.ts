@@ -6,9 +6,28 @@ import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, 
 	template: `
 		<ng-content></ng-content>
 		<div #anchor></div>
-	`
+		<div *ngIf="isLoading" class="infinite-scroll-spinner">
+			<ion-spinner name="crescent"></ion-spinner>
+		</div>
+	`,
+	styles: [`
+		.infinite-scroll-spinner {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			padding: 16px 0;
+		}
+		.infinite-scroll-spinner ion-spinner {
+			--color: var(--ion-color-primary, #3880ff);
+			width: 32px;
+			height: 32px;
+		}
+	`]
 })
 export class InfiniteScrollComponent implements AfterViewInit, OnDestroy {
+
+	@Input()
+	public isLoading = false;
 
 	@Output()
 	public scrolled = new EventEmitter();

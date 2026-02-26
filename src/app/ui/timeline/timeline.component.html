@@ -1,7 +1,7 @@
 <div *ngIf="daysContents$ | async as daysContents; else loading" cols="1" gutterSize="0" class="timeline-grid">
 	<div *ngIf="symptoms$ | async as symptoms; else loading">
 		<div class="tiles-container">
-			<app-infinite-scroll (scrolled)="loadBatch()">
+			<app-infinite-scroll (scrolled)="loadBatch()" [isLoading]="isLoading">
 				<div *ngFor="let dayContent of daysContents" #dayRefs class="timeline-tile"
 					id="day-{{ dayContent.date }}">
 					<div class="timeline-tile-header">

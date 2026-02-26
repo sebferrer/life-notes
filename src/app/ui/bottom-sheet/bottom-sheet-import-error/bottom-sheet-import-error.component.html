@@ -1,0 +1,19 @@
+<div class="bottom-sheet-container import-error">
+    <div class="header-section">
+        <mat-icon class="error-icon">error_outline</mat-icon>
+        <h2 class="title">{{ 'IMPORT_ERROR_TITLE' | transloco }}</h2>
+    </div>
+
+    <div class="content-body">
+        <p>{{ errorMessageKey | transloco }}</p>
+    </div>
+
+    <div class="actions">
+        <button mat-flat-button color="primary" (click)="onCloseClick()" class="confirm-button">
+            {{ 'CLOSE' | transloco }}
+        </button>
+    </div>
+
+    <app-spacer-item></app-spacer-item>
+
+</div>

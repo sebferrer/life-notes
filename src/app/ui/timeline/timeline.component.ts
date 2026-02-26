@@ -23,8 +23,9 @@ export class TimelineComponent extends ATimeComponent implements OnInit {
 
 	private daysContents: DayViewModel[];
 	public daysContents$: Subject<DayViewModel[]>;
-	private readonly BATCH_SIZE = 14;
+	private readonly BATCH_SIZE = 60;
 	private nbDays = 0;
+	public isLoading = false;
 	@ViewChildren('dayRefs') dayRefs: QueryList<ElementRef>;
 
 	constructor(
@@ -55,6 +56,7 @@ export class TimelineComponent extends ATimeComponent implements OnInit {
 	}
 
 	public loadBatch() {
+		this.isLoading = true;
 		this.daysService.getDays(this.BATCH_SIZE, this.nbDays).subscribe(
 			days => {
 				days.forEach(day => {
@@ -62,6 +64,7 @@ export class TimelineComponent extends ATimeComponent implements OnInit {
 				});
 				this.nbDays += this.BATCH_SIZE;
 				this.daysContents$.next(this.daysContents);
+				this.isLoading = false;
 			}
 		);
 		this.globalService.timeFormat$.subscribe(() => {

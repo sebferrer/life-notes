@@ -238,7 +238,11 @@
                         color="primary"></mat-slide-toggle>
                 </div>
                 <div class="toggle-container">
-                    <span class="toggle-label" transloco="SETTINGS_CALENDAR_BLOCK_VIEW_LABEL"></span>
+                    <span class="toggle-label">
+                        {{ 'SETTINGS_CALENDAR_BLOCK_VIEW_LABEL' | transloco }}
+                        <mat-icon class="help-icon-inline"
+                            (click)="openInfoBottomSheet('BLOCK_VIEW_HELP_TITLE', ['BLOCK_VIEW_HELP_CONTENT_1', 'BLOCK_VIEW_HELP_CONTENT_2'])">help_outline</mat-icon>
+                    </span>
                     <mat-slide-toggle [(ngModel)]="calendarBlockView" (change)="setCalendarBlockView()"
                         color="primary"></mat-slide-toggle>
                 </div>
@@ -325,6 +329,20 @@
                         </div>
                     </mat-selection-list>
                 </div>
+
+                <div class="import-export-buttons-container">
+                    <mat-selection-list multiple="false">
+                        <mat-list-option (click)="forceLoadFileClickFire()">
+                            <div class="list-icon">
+                                <mat-icon>warning_amber</mat-icon>
+                            </div>
+                            <div class="list-item-text">
+                                <p>{{ 'FORCE_LOAD' | transloco }}</p>
+                            </div>
+                        </mat-list-option>
+                    </mat-selection-list>
+                </div>
+                <input type="file" id="file-force-import" (change)="forceImportDataWeb($event)">
             </div>
         </mat-expansion-panel>
 

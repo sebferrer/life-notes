@@ -1,0 +1,24 @@
+<ng-template transloco let-t>
+    <div class="bottom-sheet-container delete-timeline-event">
+        <div class="header-section">
+            <h2 class="title">{{ t('DELETE_EVENT_DIALOG_TITLE', { type: t(data.type) }) }}</h2>
+        </div>
+
+        <div class="content-body">
+            <p>{{ t('DELETE_EVENT_DIALOG_CONTENT', { type: t(data.type), time: data.time, month:
+                t('MONTH-'+data.detailedDate.month), day: data.detailedDate.day }) }}</p>
+        </div>
+
+        <div class="actions">
+            <button mat-stroked-button (click)="onCancelClick()" class="cancel-button">
+                {{ t('NO') }}
+            </button>
+            <button mat-flat-button color="primary" (click)="onConfirmClick()" class="confirm-button">
+                {{ t('YES') }}
+            </button>
+        </div>
+
+        <app-spacer-item></app-spacer-item>
+
+    </div>
+</ng-template>

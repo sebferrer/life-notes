@@ -38,7 +38,7 @@ $color-log: #98A2AE;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+                /*box-shadow: 0 4px 10px rgba(0,0,0,0.15);*/
 
                 mat-icon {
                     font-size: 1.8rem;
@@ -119,6 +119,8 @@ $color-log: #98A2AE;
                 ion-textarea {
                     max-height: 80px;
                     overflow: hidden;
+                    --padding-top: 0;
+                    --padding-bottom: 0;
                 }
             }
 

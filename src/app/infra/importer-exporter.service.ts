@@ -393,6 +393,33 @@ export class ImporterExporterService {
 		}
 	}
 
+	public validateBackupContent(content: string): { valid: boolean; errorKey: string } {
+		if (!content || content.trim().length === 0) {
+			return { valid: false, errorKey: 'IMPORT_ERROR_EMPTY_FILE' };
+		}
+
+		let parsed: any;
+		try {
+			parsed = JSON.parse(content);
+		} catch (e) {
+			return { valid: false, errorKey: 'IMPORT_ERROR_INVALID_JSON' };
+		}
+
+		if (
+			parsed == null ||
+			typeof parsed !== 'object' ||
+			!Array.isArray(parsed.days) ||
+			!Array.isArray(parsed.symptoms) ||
+			parsed.settings == null ||
+			typeof parsed.settings !== 'object' ||
+			Array.isArray(parsed.settings)
+		) {
+			return { valid: false, errorKey: 'IMPORT_ERROR_INVALID_SCHEMA' };
+		}
+
+		return { valid: true, errorKey: '' };
+	}
+
 	public exportHtml(): void {
 	}
 }

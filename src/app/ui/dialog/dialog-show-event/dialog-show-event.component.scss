@@ -37,7 +37,7 @@ $color-log: #98A2AE;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+                /*box-shadow: 0 4px 10px rgba(0,0,0,0.15);*/
 
                 mat-icon {
                     font-size: 1.8rem;
@@ -204,11 +204,14 @@ $color-log: #98A2AE;
             background-color: #F5F5F5;
             padding: 1rem;
             border-radius: 12px;
+            max-height: 8rem;
+            overflow-y: auto;
 
             .detail-text {
                 font-size: 1rem;
                 color: rgba(0,0,0,0.8);
                 line-height: 1.5;
+                white-space: pre-wrap;
             }
         }
     }

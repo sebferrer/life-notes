@@ -43,7 +43,6 @@ import { InfiniteScrollComponent } from './ui/infinite-scroll';
 import { ChartsModule } from 'ng2-charts';
 import { BackupService } from './infra/backup.service';
 import { DialogAddEventComponent } from './ui/dialog/dialog-add-event';
-import { DialogDeleteEventComponent } from './ui/dialog/dialog-delete-event';
 import { DialogShowEventComponent } from './ui/dialog/dialog-show-event';
 
 
@@ -80,9 +79,13 @@ import { BottomSheetEditLogComponent } from './ui/bottom-sheet/bottom-sheet-edit
 import { BottomSheetDeleteOverviewComponent } from './ui/bottom-sheet/bottom-sheet-delete-overview';
 import { BottomSheetEditSymptomOverviewComponent } from './ui/bottom-sheet/bottom-sheet-edit-symptom-overview';
 import { BottomSheetImportConfirmComponent } from './ui/bottom-sheet/bottom-sheet-import-confirm';
+import { BottomSheetImportErrorComponent } from './ui/bottom-sheet/bottom-sheet-import-error';
 import { BottomSheetExportPdfComponent } from './ui/bottom-sheet/bottom-sheet-export-pdf';
 import { BottomSheetAddSymptomComponent } from './ui/bottom-sheet/bottom-sheet-add-symptom';
 import { BottomSheetDeleteSymptomComponent } from './ui/bottom-sheet/bottom-sheet-delete-symptom';
+import { BottomSheetForceLoadWarningComponent } from './ui/bottom-sheet/bottom-sheet-force-load-warning';
+import { BottomSheetInfoComponent } from './ui/bottom-sheet/bottom-sheet-info';
+import { BottomSheetDeleteTimelineEventComponent } from './ui/bottom-sheet/bottom-sheet-delete-timeline-event';
 import { SpacerItemComponent } from './ui/shared/spacer-item';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 
@@ -105,7 +108,6 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 		LineChartComponent,
 		SwipingFingerComponent,
 		DialogAddEventComponent,
-		DialogDeleteEventComponent,
 		DialogShowEventComponent,
 
 		DialogExportConfirmComponent,
@@ -131,10 +133,14 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 		InfiniteScrollComponent,
 		BottomSheetEditSymptomOverviewComponent,
 		BottomSheetImportConfirmComponent,
+		BottomSheetImportErrorComponent,
 
 		BottomSheetExportPdfComponent,
 		BottomSheetAddSymptomComponent,
 		BottomSheetDeleteSymptomComponent,
+		BottomSheetForceLoadWarningComponent,
+		BottomSheetInfoComponent,
+		BottomSheetDeleteTimelineEventComponent,
 		SpacerItemComponent
 	],
 	imports: [
@@ -199,7 +205,6 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 	],
 	entryComponents: [
 		DialogAddEventComponent,
-		DialogDeleteEventComponent,
 		DialogShowEventComponent,
 
 		DialogExportConfirmComponent,
@@ -217,10 +222,14 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 		BottomSheetDeleteOverviewComponent,
 		BottomSheetEditSymptomOverviewComponent,
 		BottomSheetImportConfirmComponent,
+		BottomSheetImportErrorComponent,
 
 		BottomSheetExportPdfComponent,
 		BottomSheetAddSymptomComponent,
-		BottomSheetDeleteSymptomComponent
+		BottomSheetDeleteSymptomComponent,
+		BottomSheetForceLoadWarningComponent,
+		BottomSheetInfoComponent,
+		BottomSheetDeleteTimelineEventComponent
 	],
 	bootstrap: [AppComponent]
 })
