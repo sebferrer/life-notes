@@ -13,6 +13,8 @@ import { TutorialComponent } from './ui/tutorial';
 import { AboutComponent } from './ui/about';
 import { MedsComponent } from './ui/meds';
 import { LogsComponent } from './ui/logs';
+import { SportsComponent } from './ui/sports';
+import { ManageComponent } from './ui/manage';
 import { MonthlyReportComponent } from './ui/monthly-report';
 
 const routes: Routes = [
@@ -52,6 +54,14 @@ const routes: Routes = [
 	{
 		path: 'logs',
 		component: LogsComponent
+	},
+	{
+		path: 'sports',
+		component: SportsComponent
+	},
+	{
+		path: 'manage',
+		component: ManageComponent
 	},
 	{
 		path: 'settings',

@@ -1,5 +1,8 @@
 <ng-template transloco let-t>
-    <div class="bottom-sheet-container edit-med">
+    <div class="bottom-sheet-container closable-sheet edit-med">
+        <button mat-icon-button class="sheet-close-button" (click)="onCancel()" [attr.aria-label]="t('CLOSE')">
+            <mat-icon>close</mat-icon>
+        </button>
         <div class="header-section">
             <h2 class="title">{{ t('EDIT_MED_TITLE') }}</h2>
         </div>
@@ -22,9 +25,6 @@
         </div>
 
         <div class="actions">
-            <button mat-stroked-button (click)="onCancel()" class="cancel-button">
-                {{ t('CANCEL') }}
-            </button>
             <button mat-flat-button color="primary" (click)="onConfirm()" [disabled]="!isValid()"
                 class="confirm-button">
                 {{ t('EDIT') }}

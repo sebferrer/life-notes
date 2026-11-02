@@ -1,0 +1,13 @@
+<div class="manage-page-container">
+    <header class="page-header">
+        <h1 class="page-title">{{ 'MANAGE_TITLE' | transloco }}</h1>
+    </header>
+
+    <div class="manage-grid">
+        <button *ngFor="let tile of tiles" class="manage-tile {{ tile.type }}" [routerLink]="tile.route" matRipple>
+            <mat-icon *ngIf="tile.icon" class="manage-tile-icon">{{ tile.icon }}</mat-icon>
+            <img *ngIf="tile.svg" [src]="tile.svg" class="manage-tile-icon manage-tile-svg" />
+            <span class="manage-tile-label">{{ tile.label | transloco }}</span>
+        </button>
+    </div>
+</div>

@@ -34,6 +34,7 @@ export class CalendarComponent implements OnInit {
 	public symptomPainColorMap: Map<number, string>;
 	public monthMap: Map<number, string>;
 	public today: IDetailedDate;
+	private readonly todayDate = moment().format('YYYY-MM-DD');
 	public pieCharts: Map<string, CalendarPieChartViewModel>;
 	public bedTimeChart: BedTimeChartViewModel;
 	public wakeUpChart: WakeUpChartViewModel;
@@ -192,5 +193,14 @@ export class CalendarComponent implements OnInit {
 
 	public getPainColor(pain: number): string {
 		return this.symptomPainColorMap.get(Math.ceil(pain));
+	}
+
+	public isToday(overview: DayOverviewViewModel): boolean {
+		return overview.date === this.todayDate;
+	}
+
+	public isFuture(overview: DayOverviewViewModel): boolean {
+		// ISO dates (YYYY-MM-DD) compare as strings
+		return overview.date > this.todayDate;
 	}
 }

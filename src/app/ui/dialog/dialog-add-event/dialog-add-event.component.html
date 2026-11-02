@@ -1,13 +1,17 @@
 <ng-template transloco let-t>
-    <div class="bottom-sheet-container {{ data.type }}">
+    <div class="bottom-sheet-container closable-sheet {{ data.type }}">
+        <button mat-icon-button class="sheet-close-button" (click)="onNoClick()" [attr.aria-label]="t('CLOSE')">
+            <mat-icon>close</mat-icon>
+        </button>
 
         <div class="header-section">
             <div class="title-row">
                 <div class="icon-bubble">
                     <mat-icon *ngIf="data.type === 'symptomLog'">spa</mat-icon>
                     <mat-icon *ngIf="data.type === 'log'">event_note</mat-icon>
-                    <img *ngIf="data.type === 'med'" src="/assets/svg/pill-capsule.svg" class="custom-svg" />
-                    <img *ngIf="data.type === 'meal'" src="/assets/svg/curry-chronicles.svg" class="custom-svg" />
+                    <mat-icon *ngIf="data.type === 'sport'">fitness_center</mat-icon>
+                    <span *ngIf="data.type === 'med'" class="svg-icon pill custom-svg"></span>
+                    <span *ngIf="data.type === 'meal'" class="svg-icon meal custom-svg"></span>
                     <mat-icon *ngIf="data.type === 'wakeUp'">alarm</mat-icon>
                     <mat-icon *ngIf="data.type === 'goToBed'">bedtime</mat-icon>
                 </div>
@@ -40,7 +44,7 @@
                     <mat-form-field *ngIf="timePicker === 'material'" appearance="none" class="clean-input">
                         <input matInput [ngxTimepicker]="materialTimePicker" [(ngModel)]="data.time"
                             [format]="timeFormat" readonly placeholder="Select Time">
-                        <ngx-material-timepicker #materialTimePicker></ngx-material-timepicker>
+                        <ngx-material-timepicker #materialTimePicker [theme]="timepickerTheme"></ngx-material-timepicker>
                     </mat-form-field>
                 </div>
             </div>
@@ -110,6 +114,32 @@
                     </div>
                 </div>
 
+                <!-- Sport -->
+                <div *ngSwitchCase="'sport'" class="form-fields-group">
+                    <div class="form-field">
+                        <div class="field-label">{{ t(data.type) | titlecase }}</div>
+                        <div class="field-input-box">
+                            <mat-form-field appearance="none" class="clean-input">
+                                <input type="text" matInput [formControl]="myControl" [(ngModel)]="data.key"
+                                    [matAutocomplete]="autosport" required>
+                                <mat-autocomplete #autosport="matAutocomplete"
+                                    (optionSelected)="setSport($event.option.value)">
+                                    <mat-option *ngFor="let option of filteredSportsOptions | async"
+                                        [value]="option">{{option}}</mat-option>
+                                </mat-autocomplete>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <div class="field-label">{{ t('DETAIL') }}</div>
+                        <div class="field-input-box">
+                            <ion-item lines="none" class="ion-no-padding">
+                                <ion-textarea [(ngModel)]="data.detail" rows="1" autoGrow="true"></ion-textarea>
+                            </ion-item>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Med -->
                 <div *ngSwitchCase="'med'" class="form-fields-group">
                     <div class="form-field">
@@ -159,9 +189,6 @@
         </div>
 
         <div class="actions">
-            <button mat-stroked-button (click)="onNoClick()" class="cancel-button">
-                {{ t('CANCEL') }}
-            </button>
             <button mat-flat-button color="primary" (click)="onYesClick()" class="confirm-button"
                 [disabled]="!isValid()">
                 <span *ngIf="data.edit">{{ t('EDIT') }}</span>

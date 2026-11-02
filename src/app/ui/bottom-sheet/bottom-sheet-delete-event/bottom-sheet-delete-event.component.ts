@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
 
 export interface IDeleteConfirmationDetails {
-    type: 'med' | 'log';
+    type: 'med' | 'log' | 'sport';
     name: string;
     dateLabel: string;
     timeLabel: string;

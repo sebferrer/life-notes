@@ -1,9 +1,3 @@
-// Event Type Colors (same as show-event)
-$color-symptom: #FF3154;
-$color-med: #0096BF;
-$color-meal: #31AE1D;
-$color-log: #98A2AE;
-
 .bottom-sheet-container {
     display: flex;
     flex-direction: column;
@@ -12,12 +6,15 @@ $color-log: #98A2AE;
     height: 100%;
     box-sizing: border-box;
 
-    &.symptomLog { --event-color: #{$color-symptom}; }
-    &.med { --event-color: #{$color-med}; }
-    &.meal { --event-color: #{$color-meal}; }
-    &.log { --event-color: #{$color-log}; }
-    &.wakeUp { --event-color: #FFA726; }
-    &.goToBed { --event-color: #5C6BC0; }
+    @each $type in symptomLog, med, meal, log, sport, wakeUp, goToBed {
+        &.#{$type} {
+            --event-color: var(--color-event-#{$type});
+            --event-soft: var(--color-event-#{$type}-soft);
+            --event-icon: var(--color-event-#{$type}-icon);
+            --event-on-color: var(--color-event-#{$type}-on);
+            --event-badge-text: var(--color-event-#{$type}-badge-text);
+        }
+    }
 
     .header-section {
         display: flex;
@@ -33,8 +30,10 @@ $color-log: #98A2AE;
             .icon-bubble {
                 width: 3rem;
                 height: 3rem;
+                // A long title must not squeeze the circle into an oval
+                flex-shrink: 0;
                 border-radius: 50%;
-                background-color: var(--event-color);
+                background-color: var(--event-soft);
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -44,27 +43,29 @@ $color-log: #98A2AE;
                     font-size: 1.8rem;
                     width: 1.8rem;
                     height: 1.8rem;
-                    color: white;
+                    color: var(--event-icon);
                 }
 
                 .custom-svg {
                     width: 1.8rem;
                     height: 1.8rem;
-                    filter: brightness(0) invert(1);
+                    color: var(--event-icon);
                 }
             }
 
             .main-title {
+                min-width: 0;
                 font-size: 1.8rem;
                 font-weight: 700;
-                color: rgba(0,0,0,0.87);
+                color: var(--text-strong);
                 line-height: 1.2;
+                overflow-wrap: anywhere;
             }
         }
 
         .date-time-row {
             font-size: 1rem;
-            color: rgba(0,0,0,0.5);
+            color: var(--text-weak);
             font-weight: 500;
             margin-left: 4.1rem;
         }
@@ -91,12 +92,12 @@ $color-log: #98A2AE;
 
         .field-label {
             font-size: 0.75rem;
-            color: rgba(0,0,0,0.6);
+            color: var(--text-medium);
             font-weight: 500;
         }
 
         .field-input-box {
-            background-color: #F5F5F5;
+            background-color: var(--surface-variant);
             border-radius: 12px;
             padding: 0.4rem 0.8rem;
 
@@ -113,7 +114,7 @@ $color-log: #98A2AE;
                     padding-bottom: 4px;
                     padding-left: 0;
                     font-size: 1rem;
-                    color: rgba(0,0,0,0.87);
+                    color: var(--text-strong);
                 }
 
                 ion-textarea {
@@ -136,7 +137,7 @@ $color-log: #98A2AE;
 
             .add-new-option {
                 font-style: italic;
-                color: rgba(0,0,0,0.5);
+                color: var(--text-weak);
                 
                 .mat-icon {
                     font-size: 18px;
@@ -174,13 +175,14 @@ $color-log: #98A2AE;
                 --knob-background: var(--event-color);
                 --bar-background-active: var(--event-color);
                 --pin-background: var(--event-color);
-                --pin-color: white;
+                --pin-color: var(--event-on-color);
                 --knob-size: 24px;
             }
 
             .pain-badge {
-                background-color: var(--event-color);
-                color: white;
+                background-color: var(--surface);
+                border: 1.5px solid var(--event-color);
+                color: var(--event-badge-text);
                 border-radius: 50%;
                 width: 30px;
                 height: 30px;
@@ -197,7 +199,7 @@ $color-log: #98A2AE;
 
     .empty-warning {
         font-size: 0.85rem;
-        color: rgba(0,0,0,0.5);
+        color: var(--text-weak);
         padding: 0 0.5rem;
     }
 
@@ -216,8 +218,8 @@ $color-log: #98A2AE;
 
         .cancel-button {
             flex: 1;
-            border-color: rgba(0,0,0,0.1);
-            color: rgba(0,0,0,0.45);
+            border-color: var(--border-medium);
+            color: var(--text-weak);
         }
 
         .confirm-button {

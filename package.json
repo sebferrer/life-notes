@@ -32,6 +32,7 @@
     "@capacitor/core": "^8.0.2",
     "@capacitor/filesystem": "^8.1.0",
     "@capacitor/keyboard": "^8.0.0",
+    "@capacitor/screen-orientation": "^8.0.2",
     "@capacitor/share": "^8.0.0",
     "@capacitor/splash-screen": "^8.0.0",
     "@capacitor/status-bar": "^8.0.0",
@@ -51,6 +52,7 @@
     "material-design-icons": "^3.0.1",
     "moment": "^2.29.1",
     "ng2-charts": "^2.4.2",
+    "ngx-material-timepicker": "^5.5.3",
     "pouchdb": "^7.2.2",
     "rxjs": "~6.6.3",
     "simplify-string": "^1.0.3",
@@ -85,6 +87,9 @@
     "ts-node": "~7.0.0",
     "tslint": "~6.1.0",
     "typescript": "~4.0.5"
+  },
+  "overrides": {
+    "websocket-driver": "^0.7.4"
   },
   "description": "Life notes and stats",
   "cordova": {

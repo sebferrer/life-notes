@@ -17,6 +17,9 @@ import { DialogInfoComponent } from '../dialog/dialog-info';
 import { BackupService } from 'src/app/infra/backup.service';
 import { DialogExportConfirmComponent } from '../dialog/dialog-export-confirm';
 import { Router } from '@angular/router';
+import {
+	IEventPalettes, completeEventPalettes, getDefaultEventPalettes, getEventOnColor, getEventOnFilter
+} from 'src/app/models/event-colors.model';
 
 @Component({
 	selector: 'app-settings',
@@ -37,9 +40,22 @@ export class SettingsComponent implements OnInit {
 	public calendarStartOnSunday: boolean;
 	public calendarBlockView: boolean;
 	public weeklyReminder: boolean;
+	public dailyReminder: boolean;
 	public painPalette: string;
 	public autoCalculateOverview: boolean;
 	public selectedTimePicker: string;
+	public darkMode: boolean;
+	public landscapeMode: boolean;
+	public timelineStyle: string;
+	public eventPalettes: IEventPalettes;
+	public readonly paletteThemes: ('light' | 'dark')[] = ['light', 'dark'];
+	public painPalettes: { key: string, colors: string[] }[];
+	public readonly eventColorItems = [
+		{ type: 'symptomLog', label: 'MANAGE_SYMPTOMS', icon: 'spa' },
+		{ type: 'med', label: 'MANAGE_MEDS', svg: '/assets/svg/pill-capsule.svg' },
+		{ type: 'log', label: 'MANAGE_LOGS', icon: 'event_note' },
+		{ type: 'sport', label: 'MANAGE_SPORTS', icon: 'fitness_center' }
+	];
 
 	public debug = 'no error';
 	public backupData = '';
@@ -66,6 +82,15 @@ export class SettingsComponent implements OnInit {
 		this.selectedLanguage = this.globalService.language;
 		this.selectedTimeFormat = this.globalService.timeFormat;
 		this.selectedPainScale = this.globalService.painScale;
+		this.darkMode = this.globalService.darkMode;
+		this.landscapeMode = this.globalService.landscapeMode;
+		this.timelineStyle = this.globalService.timelineStyle;
+		this.eventPalettes = {
+			light: { ...this.globalService.eventPalettes.light },
+			dark: { ...this.globalService.eventPalettes.dark }
+		};
+		this.painPalettes = Object.keys(this.globalService.PALETTES)
+			.map(key => ({ key, colors: this.globalService.PALETTES[key] }));
 		this.settingsService.getSettings().subscribe(settings => {
 			// DEVELOPER UPDATES NOTIFICATION FEATURE DISABLED
 			// this.hideDeveloperUpdates = settings.hideDeveloperUpdates;
@@ -74,9 +99,15 @@ export class SettingsComponent implements OnInit {
 			this.calendarStartOnSunday = settings.calendarStartOnSunday;
 			this.calendarBlockView = settings.calendarBlockView;
 			this.weeklyReminder = settings.weeklyReminder;
+			this.dailyReminder = settings.dailyReminder;
 			this.painPalette = settings.painPalette;
 			this.autoCalculateOverview = settings.autoCalculateOverview;
 			this.selectedTimePicker = settings.timePicker || 'material';
+			// GlobalService may not be initialized yet when the app is opened on this page
+			this.darkMode = !!settings.darkMode;
+			this.landscapeMode = !!settings.landscapeMode;
+			this.timelineStyle = settings.timelineStyle || 'modern';
+			this.eventPalettes = completeEventPalettes(settings.eventColors);
 		});
 	}
 
@@ -118,6 +149,10 @@ export class SettingsComponent implements OnInit {
 		this.settingsService.setWeeklyReminder(this.weeklyReminder).subscribe();
 	}
 
+	public setDailyReminder(): void {
+		this.settingsService.setDailyReminder(this.dailyReminder).subscribe();
+	}
+
 	public setPainPalette(): void {
 		this.settingsService.setPainPalette(this.painPalette).subscribe();
 	}
@@ -130,11 +165,57 @@ export class SettingsComponent implements OnInit {
 		this.settingsService.setTimePicker(this.selectedTimePicker).subscribe();
 	}
 
+	public setDarkMode(): void {
+		this.settingsService.setDarkMode(this.darkMode).subscribe();
+	}
+
+	public setTimelineStyle(): void {
+		this.settingsService.setTimelineStyle(this.timelineStyle).subscribe();
+	}
+
+	public setLandscapeMode(): void {
+		this.settingsService.setLandscapeMode(this.landscapeMode).subscribe();
+	}
+
+	public setEventColor(theme: 'light' | 'dark', type: string, color: string): void {
+		this.eventPalettes = { ...this.eventPalettes, [theme]: { ...this.eventPalettes[theme], [type]: color } };
+		this.saveEventColors();
+	}
+
+	public resetEventColors(theme: 'light' | 'dark'): void {
+		this.eventPalettes = { ...this.eventPalettes, [theme]: getDefaultEventPalettes()[theme] };
+		this.saveEventColors();
+	}
+
+	private saveEventColors(): void {
+		this.settingsService.setEventColors(this.eventPalettes).subscribe();
+	}
+
+	// Color of the icon drawn on a swatch, as it would be drawn in the app
+	public getOnColor(theme: 'light' | 'dark', type: string): string {
+		return getEventOnColor(this.eventPalettes[theme][type], theme === 'dark');
+	}
+
+	public getOnFilter(theme: 'light' | 'dark', type: string): string {
+		return getEventOnFilter(this.getOnColor(theme, type));
+	}
+
 	public openInfoBottomSheet(titleKey: string, contentKeys: string[]): void {
 		this.bottomSheet.open(BottomSheetInfoComponent, {
 			panelClass: 'bottom-sheet-container',
 			data: { titleKey, contentKeys }
 		});
+	}
+
+	public openBackupWhyManualInfo(): void {
+		this.openInfoBottomSheet('BACKUP_WHY_MANUAL_TITLE', [
+			'BACKUP_WHY_MANUAL_CONTENT_1',
+			'BACKUP_WHY_MANUAL_CONTENT_2',
+			'BACKUP_WHY_MANUAL_CONTENT_3',
+			'BACKUP_WHY_MANUAL_CONTENT_4',
+			'BACKUP_WHY_MANUAL_CONTENT_5',
+			'BACKUP_WHY_MANUAL_CONTENT_6'
+		]);
 	}
 
 	public setTargetSymptom(): void {

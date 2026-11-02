@@ -11,6 +11,7 @@ export class DbContext {
 	public symptomsCollection = new Collection('symptoms');
 	public medsCollection = new Collection('meds');
 	public logsCollection = new Collection('logs');
+	public sportsCollection = new Collection('sports');
 	public settingsCollection = new Collection('settings');
 
 	public asArrayObservable<T>(dbSet: Promise<{ rows: { doc: T }[] }>): Observable<T[]> {

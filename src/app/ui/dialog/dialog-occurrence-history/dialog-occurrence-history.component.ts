@@ -13,7 +13,7 @@ export interface IOccurrence {
 
 export interface IOccurrenceHistoryData {
     title: string;
-    type: 'med' | 'log';
+    type: 'med' | 'log' | 'sport';
     key: string;
     quantity?: number;
     occurrences: IOccurrence[];

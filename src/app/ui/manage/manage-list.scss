@@ -1,0 +1,165 @@
+// Entries of the manage menu (medicines, notes, sports): one card per entry, in the colors of the event type
+.manage-list-page {
+    // Bottom room so the refresh button never hides the last entry
+    padding: 0.5rem 0.75rem 6rem 0.75rem;
+
+    @each $type in med, log, sport {
+        &.#{$type} {
+            --type-soft: var(--color-event-#{$type}-soft);
+            --type-icon: var(--color-event-#{$type}-icon);
+            --type-badge-text: var(--color-event-#{$type}-badge-text);
+        }
+    }
+}
+
+.manage-list-header {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0 0.75rem 0;
+
+    button {
+        flex-shrink: 0;
+        color: var(--text-medium);
+    }
+
+    .manage-list-title {
+        margin: 0;
+        font-size: 1.35rem;
+        font-weight: 600;
+        line-height: 1.25;
+        color: var(--text-strong);
+    }
+}
+
+.manage-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.manage-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.7rem 0.25rem 0.7rem 0.75rem;
+    background-color: var(--surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 16px;
+    box-shadow: 0 1px 3px var(--shadow);
+}
+
+// Tonal bubble, as in the timeline
+.manage-item-bubble {
+    flex: 0 0 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--type-soft);
+    color: var(--type-icon);
+
+    mat-icon {
+        font-size: 1.45rem;
+        width: 1.45rem;
+        height: 1.45rem;
+    }
+
+    .svg-icon {
+        width: 1.4rem;
+        height: 1.4rem;
+    }
+}
+
+.manage-item-text {
+    flex: 1;
+    min-width: 0;
+
+    .manage-item-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-strong);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .manage-item-meta {
+        font-size: 0.82rem;
+        line-height: 1.35;
+        color: var(--text-medium);
+    }
+
+    .manage-item-dose {
+        font-weight: 600;
+        color: var(--type-badge-text);
+    }
+}
+
+.manage-item-actions {
+    display: flex;
+    flex-shrink: 0;
+
+    button {
+        color: var(--text-medium);
+    }
+}
+
+.manage-list-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2.5rem 1rem 0 1rem;
+    text-align: center;
+    color: var(--text-medium);
+
+    .manage-item-bubble {
+        flex: 0 0 auto;
+        width: 4rem;
+        height: 4rem;
+        margin-bottom: 1rem;
+
+        mat-icon {
+            font-size: 2rem;
+            width: 2rem;
+            height: 2rem;
+        }
+
+        .svg-icon {
+            width: 1.9rem;
+            height: 1.9rem;
+        }
+    }
+
+    p {
+        margin: 0 0 0.75rem 0;
+        line-height: 1.5;
+
+        mat-icon {
+            font-size: 1.2rem;
+            width: 1.2rem;
+            height: 1.2rem;
+            vertical-align: middle;
+        }
+    }
+}
+
+.manage-list-refresh {
+    position: fixed;
+    right: 1.5rem;
+    bottom: calc(1.5rem + env(safe-area-inset-bottom));
+    z-index: 10;
+}
+
+// Narrow phones: more room for the names
+@media (max-width: 400px) {
+    .manage-item {
+        gap: 0.5rem;
+        padding-left: 0.6rem;
+    }
+
+    .manage-item-actions button {
+        width: 34px;
+    }
+}

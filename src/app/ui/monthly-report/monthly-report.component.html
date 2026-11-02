@@ -32,14 +32,14 @@
 					<!-- Top Meds -->
 					<div *ngIf="topMeds.length > 0" style="margin-bottom: 3rem;">
 						<h3 *transloco="let t"
-							style="margin-bottom: 1rem; color: #555; text-transform: uppercase; font-size: 0.9rem; font-weight: bold;">
+							style="margin-bottom: 1rem; color: var(--text-medium); text-transform: uppercase; font-size: 0.9rem; font-weight: bold;">
 							{{ t('TOP_MEDS') }}
 						</h3>
-						<div style="background: #f9f9f9; border-radius: 8px; padding: 1rem;">
+						<div style="background: var(--surface-variant); border-radius: 8px; padding: 1rem;">
 							<div *ngFor="let item of topMeds"
-								style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #eee;">
+								style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--border-subtle);">
 								<span style="font-weight: 500;">{{ item.name }}</span>
-								<span style="color: #777;">{{ item.count }}</span>
+								<span style="color: var(--text-weak);">{{ item.count }}</span>
 							</div>
 						</div>
 					</div>
@@ -47,14 +47,29 @@
 					<!-- Top Logs -->
 					<div *ngIf="topLogs.length > 0" style="margin-bottom: 3rem;">
 						<h3 *transloco="let t"
-							style="margin-bottom: 1rem; color: #555; text-transform: uppercase; font-size: 0.9rem; font-weight: bold;">
+							style="margin-bottom: 1rem; color: var(--text-medium); text-transform: uppercase; font-size: 0.9rem; font-weight: bold;">
 							{{ t('TOP_LOGS') }}
 						</h3>
-						<div style="background: #f9f9f9; border-radius: 8px; padding: 1rem;">
+						<div style="background: var(--surface-variant); border-radius: 8px; padding: 1rem;">
 							<div *ngFor="let item of topLogs"
-								style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #eee;">
+								style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--border-subtle);">
 								<span style="font-weight: 500;">{{ item.name }}</span>
-								<span style="color: #777;">{{ item.count }}</span>
+								<span style="color: var(--text-weak);">{{ item.count }}</span>
+							</div>
+						</div>
+					</div>
+
+					<!-- Top Sports -->
+					<div *ngIf="topSports.length > 0" style="margin-bottom: 3rem;">
+						<h3 *transloco="let t"
+							style="margin-bottom: 1rem; color: var(--text-medium); text-transform: uppercase; font-size: 0.9rem; font-weight: bold;">
+							{{ t('TOP_SPORTS') }}
+						</h3>
+						<div style="background: var(--surface-variant); border-radius: 8px; padding: 1rem;">
+							<div *ngFor="let item of topSports"
+								style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--border-subtle);">
+								<span style="font-weight: 500;">{{ item.name }}</span>
+								<span style="color: var(--text-weak);">{{ item.count }}</span>
 							</div>
 						</div>
 					</div>
@@ -98,7 +113,7 @@
 			<mat-spinner diameter="50"></mat-spinner>
 			<ng-template transloco let-t>
 				<p style="font-weight: bold;">{{ t('EXPORT_IN_PROGRESS') }}</p>
-				<p style="font-size: 0.9rem; color: #666;">{{ t('EXPORT_MSG_LONG') }}</p>
+				<p style="font-size: 0.9rem; color: var(--text-medium);">{{ t('EXPORT_MSG_LONG') }}</p>
 			</ng-template>
 		</mat-card-content>
 	</mat-card>

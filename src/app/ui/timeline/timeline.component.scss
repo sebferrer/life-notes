@@ -17,7 +17,7 @@
     .timeline-tile-header {
         position: relative;
         width: 100%;
-        background-color: #9E9E9E;
+        background-color: var(--tile-header);
         color: white;
         height: 12%;
         display: table;
@@ -66,7 +66,7 @@
             left: 0;
             width: 60%;
             height: 60%;
-            background-color: #EBEBEB;
+            background-color: var(--tile-body);
             border-radius: 0 0 100% 0;
             -moz-border-radius: 0 0 100% 0;
             -webkit-border-radius: 0 0 100% 0;
@@ -78,7 +78,7 @@
             right: 0;
             width: 20%;
             height: 20%;
-            background-color: #CECECE;
+            background-color: var(--tile-side);
             border-radius: 0 0 0 100%;
              -moz-border-radius: 0 0 0 100%;
              -webkit-border-radius: 0 0 0 100%;
@@ -95,7 +95,7 @@
                 right: 20%;
                 top: 40%;
                 font-size: 200%;
-                color: #98A2AE;
+                color: var(--tile-side-text);
             }
         }
         
@@ -105,7 +105,7 @@
             right: 0;
             width: 20%;
             height: 20%;
-            background-color: #CECECE;
+            background-color: var(--tile-side);
             border-radius: 100% 0 0 0;
             z-index: 1;
              -moz-border-radius: 100% 0 0 0;
@@ -123,7 +123,7 @@
                 right: 20%;
                 top: 20%;
                 font-size: 200%;
-                color: #98A2AE;
+                color: var(--tile-side-text);
             }
         }
 
@@ -154,20 +154,12 @@
     }
 }
 
-.timeline-day-item-symptomLog {
-    background-color: #FF3154;
-}
-
-.timeline-day-item-log {
-    background-color: #98A2AE;
-}
-
-.timeline-day-item-med {
-    background-color: #0096BF;
-}
-
-.timeline-day-item-meal {
-    background-color: #31AE1D;
+// Must beat the Material chip theme selector (.dark-theme .mat-chip.mat-standard-chip)
+@each $type in symptomLog, log, med, meal, sport {
+    .mat-chip.mat-standard-chip.timeline-day-item-#{$type} {
+        background-color: var(--color-event-#{$type});
+        color: var(--color-event-#{$type}-on);
+    }
 }
 
 .event-chips {
@@ -177,7 +169,7 @@
 
     .event-container {
         width: 100%;
-        color: white;
+        color: inherit;
     
         .event {
             display: table;
@@ -260,4 +252,23 @@
 
 .color-pain-5 {
     color: var(--color-pain-5);
+}
+
+// Landscape phones: vh/vw based sizes become too small or too wide, use fixed sizes
+@media (orientation: landscape) and (max-height: 600px) {
+    .event-chips {
+        width: calc(100% - 2rem) !important;
+        height: 2.5rem !important;
+
+        .event-container .event {
+            height: 2.5rem;
+
+            .event-time-eu {
+                width: 3.5rem;
+            }
+            .event-time-us {
+                width: 5rem;
+            }
+        }
+    }
 }

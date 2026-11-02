@@ -4,6 +4,7 @@ import { DbContext } from './database';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { ISettings } from '../models/settings.model';
 import { GlobalService } from './global.service';
+import { IEventPalettes, completeEventPalettes, getDefaultEventPalettes } from '../models/event-colors.model';
 
 const KEY = 'settings';
 
@@ -35,6 +36,19 @@ export class SettingsService {
 			switchMap(s => {
 				s.language = newSettings.language;
 				s.targetSymptomKey = newSettings.targetSymptomKey;
+				// Backups made before the appearance settings existed don't contain them
+				if (newSettings.darkMode != null) {
+					s.darkMode = newSettings.darkMode;
+				}
+				if (newSettings.timelineStyle != null) {
+					s.timelineStyle = newSettings.timelineStyle;
+				}
+				if (newSettings.landscapeMode != null) {
+					s.landscapeMode = newSettings.landscapeMode;
+				}
+				if (newSettings.eventColors != null) {
+					s.eventColors = completeEventPalettes(newSettings.eventColors);
+				}
 				s.lastInstall = this.CURRENT_VERSION
 				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
 					map(() => s)
@@ -186,6 +200,32 @@ export class SettingsService {
 		);
 	}
 
+	public setDailyReminder(dailyReminder: boolean): Observable<ISettings> {
+		const settings = this.getSettings();
+		return settings.pipe(
+			switchMap(s => {
+				s.dailyReminder = dailyReminder;
+				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
+					map(() => s)
+				);
+			})
+		);
+	}
+
+	public setLastDailyReminder(lastDailyReminder: number): Observable<ISettings> {
+		const settings = this.getSettings();
+		return settings.pipe(
+			switchMap(s => {
+				s.lastDailyReminder = lastDailyReminder;
+				// A backup reminder has just been shown: no need for the weekly one too
+				s.lastWeeklyReminder = lastDailyReminder;
+				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
+					map(() => s)
+				);
+			})
+		);
+	}
+
 	// DEVELOPER UPDATES NOTIFICATION FEATURE DISABLED
 	// public setHideDeveloperUpdates(hide: boolean): Observable<ISettings> {
 	// 	const settings = this.getSettings();
@@ -302,6 +342,58 @@ export class SettingsService {
 		);
 	}
 
+	public setDarkMode(darkMode: boolean): Observable<ISettings> {
+		const settings = this.getSettings();
+		return settings.pipe(
+			switchMap(s => {
+				s.darkMode = darkMode;
+				this.globalService.darkMode = darkMode;
+				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
+					map(() => s)
+				);
+			})
+		);
+	}
+
+	public setTimelineStyle(timelineStyle: string): Observable<ISettings> {
+		const settings = this.getSettings();
+		return settings.pipe(
+			switchMap(s => {
+				s.timelineStyle = timelineStyle;
+				this.globalService.timelineStyle = timelineStyle;
+				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
+					map(() => s)
+				);
+			})
+		);
+	}
+
+	public setLandscapeMode(landscapeMode: boolean): Observable<ISettings> {
+		const settings = this.getSettings();
+		return settings.pipe(
+			switchMap(s => {
+				s.landscapeMode = landscapeMode;
+				this.globalService.landscapeMode = landscapeMode;
+				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
+					map(() => s)
+				);
+			})
+		);
+	}
+
+	public setEventColors(eventColors: IEventPalettes): Observable<ISettings> {
+		const settings = this.getSettings();
+		return settings.pipe(
+			switchMap(s => {
+				s.eventColors = completeEventPalettes(eventColors);
+				this.globalService.eventPalettes = s.eventColors;
+				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
+					map(() => s)
+				);
+			})
+		);
+	}
+
 	public initSettings(): Observable<ISettings> {
 		return this.getSettings().pipe(
 			switchMap(s => {
@@ -324,9 +416,15 @@ export class SettingsService {
 						'painPalette': '2',
 						'weeklyReminder': true,
 						'lastWeeklyReminder': 0,
+						'dailyReminder': false,
+						'lastDailyReminder': 0,
 						'autoCalculateOverview': true, // Default ON for new users
 						'autoOverviewPopupSeen': false,
-						'timePicker': 'material'
+						'timePicker': 'material',
+						'darkMode': false,
+						'landscapeMode': false,
+						'timelineStyle': 'modern',
+						'eventColors': getDefaultEventPalettes()
 					};
 					return this.dbContext.asObservable(this.dbContext.settingsCollection.put(settings)).pipe(
 						tap(() => {
@@ -334,6 +432,10 @@ export class SettingsService {
 							this.globalService.autoCalculateOverview = settings.autoCalculateOverview;
 							this.globalService.autoOverviewPopupSeen = settings.autoOverviewPopupSeen;
 							this.globalService.timePicker = settings.timePicker;
+							this.globalService.darkMode = settings.darkMode;
+							this.globalService.landscapeMode = settings.landscapeMode;
+							this.globalService.timelineStyle = settings.timelineStyle;
+							this.globalService.eventPalettes = settings.eventColors;
 						}),
 						map(() => settings)
 					);
@@ -346,6 +448,14 @@ export class SettingsService {
 					}
 					if (s.lastWeeklyReminder == null) {
 						s.lastWeeklyReminder = 0;
+						changed = true;
+					}
+					if (s.dailyReminder == null) {
+						s.dailyReminder = false;
+						changed = true;
+					}
+					if (s.lastDailyReminder == null) {
+						s.lastDailyReminder = 0;
 						changed = true;
 					}
 					if (s.painScale == null) {
@@ -395,11 +505,35 @@ export class SettingsService {
 						changed = true;
 					}
 
+					if (s.darkMode == null) {
+						s.darkMode = false;
+						changed = true;
+					}
+
+					if (s.timelineStyle == null) {
+						s.timelineStyle = 'modern';
+						changed = true;
+					}
+
+					if (s.landscapeMode == null) {
+						s.landscapeMode = false;
+						changed = true;
+					}
+
+					if (s.eventColors == null) {
+						s.eventColors = getDefaultEventPalettes();
+						changed = true;
+					}
+
 					// Update GlobalService with loaded values
 					this.globalService.painScale = s.painScale;
 					this.globalService.autoCalculateOverview = s.autoCalculateOverview;
 					this.globalService.autoOverviewPopupSeen = s.autoOverviewPopupSeen;
 					this.globalService.timePicker = s.timePicker;
+					this.globalService.darkMode = s.darkMode;
+					this.globalService.landscapeMode = s.landscapeMode;
+					this.globalService.timelineStyle = s.timelineStyle;
+					this.globalService.eventPalettes = s.eventColors;
 
 					if (changed) {
 						this.dbContext.settingsCollection.put(s);

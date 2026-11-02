@@ -10,7 +10,7 @@
         .title {
             font-size: 1.3rem;
             font-weight: 700;
-            color: rgba(0,0,0,0.85);
+            color: var(--text-strong);
             margin: 0;
             text-align: center;
         }
@@ -21,9 +21,9 @@
         align-items: center;
         gap: 1rem;
         padding: 1rem;
-        background-color: #F8F9FA;
+        background-color: var(--surface-variant);
         border-radius: 12px;
-        border: 1px solid rgba(0,0,0,0.08);
+        border: 1px solid var(--border-subtle);
 
         .icon-bubble {
             width: 3rem;
@@ -33,21 +33,27 @@
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            
-            &.med { background-color: #0096BF; }
-            &.log { background-color: #98A2AE; }
+            background-color: var(--event-soft);
+
+            @each $type in med, log, sport {
+                &.#{$type} {
+                    --event-color: var(--color-event-#{$type});
+                    --event-soft: var(--color-event-#{$type}-soft);
+                    --event-icon: var(--color-event-#{$type}-icon);
+                }
+            }
 
             mat-icon {
                 font-size: 1.6rem;
                 width: 1.6rem;
                 height: 1.6rem;
-                color: white;
+                color: var(--event-icon);
             }
 
             .custom-svg {
                 width: 1.6rem;
                 height: 1.6rem;
-                filter: brightness(0) invert(1);
+                color: var(--event-icon);
             }
         }
 
@@ -65,11 +71,11 @@
                 .name {
                     font-size: 1.1rem;
                     font-weight: 600;
-                    color: rgba(0,0,0,0.85);
+                    color: var(--text-strong);
                 }
                 .quantity {
                     font-size: 0.9rem;
-                    color: rgba(0,0,0,0.6);
+                    color: var(--text-medium);
                     font-weight: 500;
                 }
             }
@@ -79,7 +85,7 @@
                 align-items: center;
                 gap: 0.4rem;
                 font-size: 0.9rem;
-                color: rgba(0,0,0,0.5);
+                color: var(--text-weak);
                 font-weight: 500;
 
                 .separator { font-size: 0.8rem; }
@@ -87,7 +93,7 @@
 
             .detail-note {
                 font-size: 0.85rem;
-                color: rgba(0,0,0,0.5);
+                color: var(--text-weak);
                 font-style: italic;
                 margin-top: 0.2rem;
             }
@@ -101,13 +107,13 @@
         
         .message {
             margin: 0;
-            color: rgba(0,0,0,0.7);
+            color: var(--text-medium);
             margin-bottom: 0.5rem;
         }
 
         .warning {
             margin: 0;
-            color: #d32f2f;
+            color: var(--danger);
             font-weight: 500;
             font-size: 0.9rem;
         }
@@ -128,8 +134,8 @@
         }
 
         .cancel-button {
-            border-color: rgba(0,0,0,0.15);
-            color: rgba(0,0,0,0.6);
+            border-color: var(--border-medium);
+            color: var(--text-medium);
         }
     }
 }

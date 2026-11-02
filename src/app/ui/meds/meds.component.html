@@ -1,59 +1,57 @@
-<div id="meds-container">
-    <h3 class="title" transloco="MEDS_TITLE"></h3>
+<div class="manage-list-page med">
+    <header class="manage-list-header">
+        <button mat-icon-button routerLink="/manage">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+        <h1 class="manage-list-title" transloco="MEDS_TITLE"></h1>
+    </header>
 
-    <div *ngIf="meds$ | async as meds; else loading">
-        <table mat-table #meds [dataSource]="meds" class="med-list mat-elevation-z8">
-
-            <ng-container matColumnDef="key">
-                <th mat-header-cell *matHeaderCellDef> {{ 'TABLE_MEDICINE' | transloco }} </th>
-                <td mat-cell *matCellDef="let element"> {{ element.key }} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="quantity">
-                <th mat-header-cell *matHeaderCellDef> {{ 'TABLE_DOSAGE' | transloco }} (mg) </th>
-                <td mat-cell *matCellDef="let element"> {{ element.quantity }} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="occurrences">
-                <th mat-header-cell *matHeaderCellDef> {{ 'TABLE_OCCURRENCES' | transloco }} </th>
-                <td mat-cell *matCellDef="let element"> {{ element.occurrences }} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="actions">
-                <th mat-header-cell *matHeaderCellDef></th>
-                <td mat-cell *matCellDef="let element">
-                    <div style="display: flex; flex-direction: row; white-space: nowrap;">
-                        <button mat-icon-button (click)="openOccurrenceHistory(element)">
-                            <mat-icon>calendar_month</mat-icon>
-                        </button>
-                        <button mat-icon-button (click)="openEditDialog(element)">
-                            <mat-icon>edit</mat-icon>
-                        </button>
-                        <button mat-icon-button (click)="openDeleteDialog(element)">
-                            <mat-icon>delete</mat-icon>
-                        </button>
+    <div *ngIf="meds$ | async as meds; else loading" class="manage-list">
+        <div *ngFor="let med of meds" class="manage-item">
+            <div class="manage-item-bubble">
+                <span class="svg-icon pill"></span>
+            </div>
+            <div class="manage-item-text">
+                <div class="manage-item-title">{{ med.key }}</div>
+                <div class="manage-item-meta">
+                    <span *ngIf="med.quantity" class="manage-item-dose">{{ med.quantity }} mg</span>
+                    <span *ngIf="med.quantity">&nbsp;·&nbsp;</span>
+                    {{ (med.occurrences === 1 ? 'OCCURRENCE_COUNT_ONE' : 'OCCURRENCE_COUNT_MANY') |
+                    transloco: { count: med.occurrences } }}
+                </div>
+                <ng-template transloco let-t>
+                    <div *ngIf="med.lastEntryDate" class="manage-item-meta">
+                        {{ t('LAST_ENTRY_DATE', { day: med.lastEntryDate.day,
+                        month: t('MONTH-SHORT-' + med.lastEntryDate.month), year: med.lastEntryDate.year }) }}
                     </div>
-                </td>
-            </ng-container>
+                </ng-template>
+            </div>
+            <div class="manage-item-actions">
+                <button mat-icon-button (click)="openOccurrenceHistory(med)">
+                    <mat-icon fontSet="material-icons-outlined">calendar_month</mat-icon>
+                </button>
+                <button mat-icon-button (click)="openEditDialog(med)">
+                    <mat-icon fontSet="material-icons-outlined">edit</mat-icon>
+                </button>
+                <button mat-icon-button (click)="openDeleteDialog(med)">
+                    <mat-icon fontSet="material-icons-outlined">delete</mat-icon>
+                </button>
+            </div>
+        </div>
 
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
-
-        <div *ngIf="meds.length === 0" class="empty-table">
-            <p>{{ 'EMPTY_MEDS_1' | transloco }}&nbsp;<mat-icon>view_day</mat-icon>
-            </p>
-            <p>{{ 'EMPTY_MEDS_2' | transloco }}&nbsp;<mat-icon>refresh</mat-icon>
-            </p>
+        <div *ngIf="meds.length === 0" class="manage-list-empty">
+            <div class="manage-item-bubble">
+                <span class="svg-icon pill"></span>
+            </div>
+            <p>{{ 'EMPTY_MEDS_1' | transloco }}&nbsp;<mat-icon>view_day</mat-icon></p>
+            <p>{{ 'EMPTY_MEDS_2' | transloco }}&nbsp;<mat-icon>refresh</mat-icon></p>
         </div>
     </div>
 </div>
 
-<div class="add-button-container">
-    <button mat-fab color="primary" (click)="openRefreshDialog()">
-        <mat-icon>refresh</mat-icon>
-    </button>
-</div>
+<button mat-fab color="primary" class="manage-list-refresh" (click)="openRefreshDialog()">
+    <mat-icon>refresh</mat-icon>
+</button>
 
 <ng-template #loading>
     <mat-spinner></mat-spinner>

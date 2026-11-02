@@ -47,6 +47,8 @@ export class SymptomsComponent implements OnInit {
 		symptom = symptom == null ? { 'type': null, 'key': null } : symptom;
 		this.bottomSheet.open(BottomSheetAddSymptomComponent, {
 			panelClass: 'bottom-sheet-container-panel',
+			// Only the close button can dismiss it, to avoid losing an ongoing edition
+			disableClose: true,
 			data: { symptom: JSON.parse(JSON.stringify(symptom)) } // Clone to avoid mutation before save
 		}).afterDismissed().subscribe(response => {
 			if (response == null || response.answer !== 'yes') {

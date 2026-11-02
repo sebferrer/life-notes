@@ -48,6 +48,7 @@ export class MonthlyReportComponent implements OnInit {
 
 	public topMeds: { name: string, count: number }[];
 	public topLogs: { name: string, count: number }[];
+	public topSports: { name: string, count: number }[];
 
 	constructor(
 		public globalService: GlobalService,
@@ -70,6 +71,7 @@ export class MonthlyReportComponent implements OnInit {
 		this.previousOverviews$ = new Subject<DayOverviewViewModel[]>();
 		this.topMeds = [];
 		this.topLogs = [];
+		this.topSports = [];
 	}
 
 	public ngOnInit(): void {
@@ -102,11 +104,12 @@ export class MonthlyReportComponent implements OnInit {
 
 	public organizeSymptoms(symptoms: ISymptom[]): ISymptom[] {
 		// Filter out existing dummies to avoid re-sorting them
-		const cleanSymptoms = symptoms.filter(s => s.key !== 'dummy');
+		// Only keep symptoms having data this month, to avoid empty blocks in the report
+		const cleanSymptoms = symptoms.filter(s => s.key !== 'dummy' && this.hasDataInMonth(s.key));
 		let result: ISymptom[] = [];
 
 		if (this.globalService.targetSymptomKey && this.globalService.targetSymptomKey !== '') {
-			const target = this.symptoms.find(symptom => symptom.key === this.globalService.targetSymptomKey);
+			const target = cleanSymptoms.find(symptom => symptom.key === this.globalService.targetSymptomKey);
 			const others = cleanSymptoms.filter(symptom => symptom.key !== this.globalService.targetSymptomKey);
 			others.sort((a, b) => {
 				if (a.label < b.label) { return -1; }
@@ -127,6 +130,11 @@ export class MonthlyReportComponent implements OnInit {
 		}
 
 		return this.padSymptoms(result);
+	}
+
+	private hasDataInMonth(symptomKey: string): boolean {
+		return this.overviews.some(day =>
+			day.getSymptomPain(symptomKey) > 0 || day.loggedSymptomKeys.includes(symptomKey));
 	}
 
 	private padSymptoms(symptoms: ISymptom[]): ISymptom[] {
@@ -174,6 +182,19 @@ export class MonthlyReportComponent implements OnInit {
 			.map(([name, count]) => ({ name, count }))
 			.sort((a, b) => b.count - a.count)
 			.slice(0, 10);
+
+		// Top Sports
+		const sportMap = new Map<string, number>();
+		this.overviews.forEach(day => {
+			day.sports.forEach(sport => {
+				const count = sportMap.get(sport.key) || 0;
+				sportMap.set(sport.key, count + 1);
+			});
+		});
+		this.topSports = Array.from(sportMap.entries())
+			.map(([name, count]) => ({ name, count }))
+			.sort((a, b) => b.count - a.count)
+			.slice(0, 10);
 	}
 
 	public loadSymptoms(): void {
@@ -197,7 +218,6 @@ export class MonthlyReportComponent implements OnInit {
 	}
 
 	public updateCalendar(month: number, year: number): void {
-		this.loadSymptoms();
 		this.daysService.getMonthDaysOverviews(month, year).subscribe(
 			days => {
 				const previousMonth = month - 1 === 0 ? 12 : month - 1;
@@ -213,6 +233,8 @@ export class MonthlyReportComponent implements OnInit {
 							this.previousOverviews.push(new DayOverviewViewModel(day));
 						});
 
+						// Symptoms are filtered on this month's data, so load them once the overviews are known
+						this.loadSymptoms();
 						this.overviews$.next(this.overviews);
 						this.previousOverviews$.next(this.previousOverviews);
 						this.updateCharts();

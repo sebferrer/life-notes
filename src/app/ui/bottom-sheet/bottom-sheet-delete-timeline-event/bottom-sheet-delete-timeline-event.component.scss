@@ -12,7 +12,7 @@
         .title {
             font-size: 1.3rem;
             font-weight: 700;
-            color: rgba(0,0,0,0.85);
+            color: var(--text-strong);
             margin: 0;
             text-align: center;
         }
@@ -29,7 +29,7 @@
         p {
             margin: 0;
             line-height: 1.5;
-            color: rgba(0,0,0,0.7);
+            color: var(--text-medium);
             text-align: center;
         }
     }
@@ -49,8 +49,8 @@
         }
 
         .cancel-button {
-            border-color: rgba(0,0,0,0.15);
-            color: rgba(0,0,0,0.6);
+            border-color: var(--border-medium);
+            color: var(--text-medium);
         }
     }
 }

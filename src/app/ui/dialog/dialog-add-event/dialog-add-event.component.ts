@@ -12,7 +12,25 @@ import { FormControl } from '@angular/forms';
 import { map, startWith } from 'rxjs/operators';
 import { MedsService } from 'src/app/infra/meds.service';
 import { LogsService } from 'src/app/infra/logs.service';
+import { SportsService } from 'src/app/infra/sports.service';
 import { getSortOrder } from 'src/app/util/array.utils';
+import { NgxMaterialTimepickerTheme } from 'ngx-material-timepicker';
+
+const DARK_TIMEPICKER_THEME: NgxMaterialTimepickerTheme = {
+	container: {
+		bodyBackgroundColor: '#1e1e1e',
+		buttonColor: '#7986cb'
+	},
+	dial: {
+		dialBackgroundColor: '#2a2a2a'
+	},
+	clockFace: {
+		clockFaceBackgroundColor: '#2a2a2a',
+		clockHandColor: '#7986cb',
+		clockFaceTimeInactiveColor: 'rgba(255, 255, 255, 0.87)',
+		clockFaceInnerTimeInactiveColor: 'rgba(255, 255, 255, 0.6)'
+	}
+};
 
 export interface IDialogData {
 	date: string;
@@ -43,6 +61,8 @@ export class DialogAddEventComponent {
 	public filteredMedsOptions: Observable<string[]>;
 	public logsOptions: string[];
 	public filteredLogsOptions: Observable<string[]>;
+	public sportsOptions: string[];
+	public filteredSportsOptions: Observable<string[]>;
 	public timeFormat: number;
 	public timePicker: string;
 
@@ -51,6 +71,7 @@ export class DialogAddEventComponent {
 		public globalService: GlobalService,
 		public medsService: MedsService,
 		public logsService: LogsService,
+		public sportsService: SportsService,
 		private router: Router,
 		@Inject(MAT_BOTTOM_SHEET_DATA) public data: IDialogData
 	) {
@@ -98,6 +119,18 @@ export class DialogAddEventComponent {
 					);
 			});
 		}
+		else if (data.type === 'sport') {
+			this.sportsService.getSports().pipe(
+				map(sports => sports.sort(getSortOrder('lastEntry', true)))
+			).subscribe(sports => {
+				this.sportsOptions = sports.map(sport => sport.key);
+				this.filteredSportsOptions = this.myControl.valueChanges
+					.pipe(
+						startWith(''),
+						map(value => this._filter(this.sportsOptions, value))
+					);
+			});
+		}
 	}
 
 	public setMed(med: string) {
@@ -114,6 +147,17 @@ export class DialogAddEventComponent {
 			return;
 		}
 		this.data.key = log;
+	}
+
+	public setSport(sport: string) {
+		if (this.data.type !== 'sport') {
+			return;
+		}
+		this.data.key = sport;
+	}
+
+	public get timepickerTheme(): NgxMaterialTimepickerTheme {
+		return this.globalService.darkMode ? DARK_TIMEPICKER_THEME : undefined;
 	}
 
 	public get painScale(): number {
@@ -135,7 +179,7 @@ export class DialogAddEventComponent {
 	}
 
 	public isValid(): boolean {
-		if (['symptomLog', 'log', 'med', 'meal'].includes(this.data.type)) {
+		if (['symptomLog', 'log', 'med', 'meal', 'sport'].includes(this.data.type)) {
 			return this.data.time != null && this.data.time !== ''
 				&& this.data.key != null && this.data.key !== '';
 		}

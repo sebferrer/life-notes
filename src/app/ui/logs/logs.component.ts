@@ -19,14 +19,13 @@ import { BottomSheetDeleteOverviewComponent } from '../bottom-sheet/bottom-sheet
 @Component({
 	selector: 'app-logs',
 	templateUrl: './logs.component.html',
-	styleUrls: ['./logs.component.scss']
+	styleUrls: ['../manage/manage-list.scss']
 })
 export class LogsComponent implements OnInit {
 
 	public logs: LogHistoryViewModel[];
 	public logs$: BehaviorSubject<LogHistoryViewModel[]>;
 
-	public displayedColumns: string[] = ['key', 'occurrences', 'actions'];
 	public dataSource: IMedHistory[];
 
 	constructor(
@@ -64,6 +63,8 @@ export class LogsComponent implements OnInit {
 	public openEditDialog(log: LogHistoryViewModel): void {
 		this.bottomSheet.open(BottomSheetEditLogComponent, {
 			panelClass: 'event-bottom-sheet',
+			// Only the close button can dismiss it, to avoid losing an ongoing edition
+			disableClose: true,
 			data: {
 				key: log.key
 			}

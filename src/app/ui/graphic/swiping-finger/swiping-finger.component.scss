@@ -8,7 +8,7 @@ $width: 100%;
 		mat-icon {
 			position: absolute;
 			display: inline-block;
-			color: #212121;
+			color: var(--text-strong);
 			border-radius: 100%;
 			animation: hint-finger ease-in 2s;
 			animation-iteration-count: infinite;

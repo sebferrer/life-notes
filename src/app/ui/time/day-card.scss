@@ -1,0 +1,208 @@
+// ---------------------------------------------------------------------------
+// Modern design of a day (timeline and day view), see the "timelineStyle" setting.
+// The classic design stays in each component stylesheet.
+// ---------------------------------------------------------------------------
+::ng-deep .ampm-suffix {
+    font-size: 0.7em;
+}
+
+.day-card {
+    --time-col: 2.75rem;
+    --marker-size: 2.25rem;
+    --rail-gap: 0.75rem;
+
+    margin: 0.75rem;
+    background-color: var(--surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 16px;
+    box-shadow: 0 1px 3px var(--shadow);
+    overflow: hidden;
+
+    &.us-time {
+        --time-col: 4.25rem;
+    }
+}
+
+.day-card-header {
+    display: flex;
+    align-items: center;
+    padding: 0.25rem 0.25rem 0 1rem;
+
+    .day-card-date {
+        flex: 1;
+        min-width: 0;
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-strong);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        &.today {
+            color: var(--primary);
+        }
+    }
+
+    button {
+        color: var(--text-medium);
+    }
+}
+
+.day-card-rail {
+    position: relative;
+    padding: 0.25rem 1rem 0.75rem 1rem;
+
+    // Vertical line linking the markers, from the wake up one to the bedtime one
+    &::before {
+        content: '';
+        position: absolute;
+        top: 1.8rem;
+        bottom: 2.3rem;
+        left: calc(1rem + var(--time-col) + var(--rail-gap) + var(--marker-size) / 2 - 1px);
+        width: 2px;
+        background-color: var(--border-medium);
+    }
+}
+
+.rail-row {
+    display: flex;
+    align-items: center;
+    gap: var(--rail-gap);
+    min-height: 2.75rem;
+    padding: 0.2rem 0;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+
+    .rail-time {
+        flex: 0 0 var(--time-col);
+        text-align: right;
+        font-size: 0.85rem;
+        font-weight: 500;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+        color: var(--text-medium);
+
+        &.empty {
+            color: var(--text-weak);
+        }
+    }
+
+    .rail-marker {
+        position: relative;
+        z-index: 1;
+        flex: 0 0 var(--marker-size);
+        height: var(--marker-size);
+        box-sizing: border-box;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        // Ring of the card color, so the rail line looks cut around the marker
+        box-shadow: 0 0 0 3px var(--surface);
+
+        mat-icon {
+            font-size: 1.3rem;
+            width: 1.3rem;
+            height: 1.3rem;
+        }
+
+        .rail-marker-svg {
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+    }
+}
+
+// Colors of the row type: soft (pastel) background for the marker and the card, with darker texts and icon
+// of the same hue
+.rail-row {
+    --row-color: var(--color-event-log);
+    --row-icon: var(--color-event-log-icon);
+    --row-soft: var(--color-event-log-soft);
+    --row-soft-text: var(--color-event-log-soft-text);
+    --row-soft-text-muted: var(--color-event-log-soft-text-muted);
+    --row-badge-text: var(--color-event-log-badge-text);
+
+    @each $type in symptomLog, med, meal, log, sport, wakeUp, goToBed {
+        &.#{$type} {
+            --row-color: var(--color-event-#{$type});
+            --row-icon: var(--color-event-#{$type}-icon);
+            --row-soft: var(--color-event-#{$type}-soft);
+            --row-soft-text: var(--color-event-#{$type}-soft-text);
+            --row-soft-text-muted: var(--color-event-#{$type}-soft-text-muted);
+            --row-badge-text: var(--color-event-#{$type}-badge-text);
+        }
+    }
+
+    .rail-marker {
+        background-color: var(--row-soft);
+        color: var(--row-icon);
+    }
+}
+
+.sleep-row {
+    .sleep-label {
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: var(--text-medium);
+    }
+
+    // Not filled in yet: outlined marker, to tell it apart from the filled ones
+    &.empty .rail-marker {
+        background-color: var(--surface);
+        border: 1.5px dashed var(--row-icon);
+    }
+}
+
+.event-row {
+    .event-card {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        // On narrow screens the badge goes below the title instead of squeezing it
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.25rem 0.5rem;
+        padding: 0.5rem 0.75rem;
+        border-radius: 12px;
+        background-color: var(--row-soft);
+        transition: transform 0.1s ease;
+
+        .event-card-text {
+            flex: 1 1 6rem;
+            min-width: 6rem;
+        }
+
+        .event-card-title {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--row-soft-text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .event-card-detail {
+            font-size: 0.8rem;
+            color: var(--row-soft-text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .event-card-badge {
+            flex-shrink: 0;
+            padding: 0.1rem 0.5rem;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            white-space: nowrap;
+            color: var(--row-badge-text);
+            background-color: var(--surface);
+        }
+    }
+
+    &:active .event-card {
+        transform: scale(0.98);
+    }
+}

@@ -63,6 +63,9 @@ import { DialogEditMedComponent } from './ui/dialog/dialog-edit-med/dialog-edit-
 import { DialogEditLogComponent } from './ui/dialog/dialog-edit-log/dialog-edit-log.component';
 import { LogsService } from './infra/logs.service';
 import { LogsComponent } from './ui/logs/logs.component';
+import { SportsService } from './infra/sports.service';
+import { SportsComponent } from './ui/sports';
+import { ManageComponent } from './ui/manage';
 import { DialogSelectLanguageComponent } from './ui/dialog/dialog-select-language';
 import { MonthlyReportComponent } from './ui/monthly-report';
 import { DialogUpdatesComponent } from './ui/dialog/dialog-updates';
@@ -100,6 +103,8 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 		SymptomsComponent,
 		MedsComponent,
 		LogsComponent,
+		SportsComponent,
+		ManageComponent,
 		SettingsComponent,
 		TutorialComponent,
 		AboutComponent,
@@ -187,6 +192,7 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 		BackupService,
 		MedsService,
 		LogsService,
+		SportsService,
 		SettingsService,
 		BackupService,
 		MedsService,

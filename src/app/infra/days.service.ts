@@ -59,6 +59,7 @@ export class DaysService {
 					'logs': [],
 					'meds': [],
 					'meals': [],
+					'sports': [],
 					'wakeUp': '',
 					'goToBed': ''
 				};
@@ -189,6 +190,13 @@ export class DaysService {
 		day.meals.push({ type: 'meal', time, key, detail });
 	}
 
+	public addSport(day: IDay, time: string, key: string, detail: string): void {
+		if (day.sports == null) {
+			day.sports = [];
+		}
+		day.sports.push({ type: 'sport', time, key, detail });
+	}
+
 	public setStartEnd(day: IDay, time: string, type: string): void {
 		switch (type) {
 			case 'wakeUp':
@@ -246,6 +254,9 @@ export class DaysService {
 						case 'meal':
 							this.addMeal(d, customEvent.time, customEvent.key, customEvent.detail);
 							break;
+						case 'sport':
+							this.addSport(d, customEvent.time, customEvent.key, customEvent.detail);
+							break;
 						case 'wakeUp':
 						case 'goToBed':
 							this.setStartEnd(d, customEvent.time, customEvent.type);
@@ -296,6 +307,9 @@ export class DaysService {
 					case 'meal':
 						d.meals = this.filterEvent(d.meals, customEvent.time, customEvent.key);
 						break;
+					case 'sport':
+						d.sports = this.filterEvent(d.sports || [], customEvent.time, customEvent.key);
+						break;
 				}
 				return this.dbContext.asObservable(this.dbContext.daysCollection.put(d)).pipe(
 					map(() => d)
@@ -319,6 +333,7 @@ export class DaysService {
 			day.symptoms.length === 0 &&
 			day.meds.length === 0 &&
 			day.meals.length === 0 &&
+			(day.sports == null || day.sports.length === 0) &&
 			day.wakeUp === '' && day.goToBed === '';
 	}
 
@@ -337,6 +352,7 @@ export class DaysService {
 			'logs': [],
 			'meds': [],
 			'meals': [],
+			'sports': [],
 			'wakeUp': '',
 			'goToBed': ''
 		};
@@ -359,6 +375,7 @@ export class DaysService {
 			'logs': [],
 			'meds': [],
 			'meals': [],
+			'sports': [],
 			'wakeUp': '',
 			'goToBed': ''
 		};

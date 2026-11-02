@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { SettingsService, ImporterExporterService, DaysService } from './infra';
 import { Subject, Observable } from 'rxjs';
 import { ISymptom } from './models/symptom.model';
@@ -22,6 +24,8 @@ export class AppComponent implements OnInit {
 	public title = 'Life Notes - Symptom Tracking';
 	public symptoms: ISymptom[];
 	public symptoms$: Subject<ISymptom[]>;
+	// Toolbar entry of the current page, highlighted in the toolbar
+	public activeSection: string;
 	// DEVELOPER UPDATES NOTIFICATION FEATURE DISABLED
 	// public updatesCount: number = 0;
 	// private lastUpdate: number = 0;
@@ -32,22 +36,44 @@ export class AppComponent implements OnInit {
 		private settingsService: SettingsService,
 		private importerExporterService: ImporterExporterService,
 		private dialog: MatDialog,
-		private updatesService: UpdatesService
+		private updatesService: UpdatesService,
+		private router: Router
 	) {
 		/*this.symptoms = new Array<ISymptom>();
 		this.symptoms$ = new Subject<ISymptom[]>();*/
 	}
 
 	public ngOnInit(): void {
+		this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
+			this.activeSection = this.getSection(event.urlAfterRedirects);
+		});
 		// this.updateSymptoms();
 		this.settingsService.initSettings().subscribe(settings => {
 			this.initSettings(settings);
 			// DEVELOPER UPDATES NOTIFICATION FEATURE DISABLED
 			// this.lastUpdate = settings.lastUpdate;
 			// this.checkUpdates();
-			this.checkWeeklyReminder(settings);
+			this.checkBackupReminders(settings);
 		});
 		// this.daysService.reset().subscribe(() => {});
+	}
+
+	// Sub pages highlight their parent entry, the day view highlights none
+	private getSection(url: string): string {
+		const page = url.split(/[/?#]/).filter(part => part.length > 0)[0] || '';
+		if (page === '' || page === 'timeline') {
+			return 'timeline';
+		}
+		if (page === 'calendar' || page === 'monthlyreport') {
+			return 'calendar';
+		}
+		if (['manage', 'symptoms', 'meds', 'logs', 'sports'].includes(page)) {
+			return 'manage';
+		}
+		if (['settings', 'about', 'tutorial'].includes(page)) {
+			return 'settings';
+		}
+		return null;
 	}
 
 	// DEVELOPER UPDATES NOTIFICATION FEATURE DISABLED
@@ -60,18 +86,20 @@ export class AppComponent implements OnInit {
 	// 	});
 	// }
 
-	public checkWeeklyReminder(settings: ISettings): void {
-		if (settings.weeklyReminder) {
-			const now = Date.now();
-			const oneWeek = 7 * 24 * 60 * 60 * 1000;
-			if (now - settings.lastWeeklyReminder > oneWeek) {
-				this.openWeeklyReminderDialog();
-				this.settingsService.setLastWeeklyReminder(now).subscribe();
-			}
+	public checkBackupReminders(settings: ISettings): void {
+		const now = Date.now();
+		const oneDay = 24 * 60 * 60 * 1000;
+		// The daily reminder takes precedence, so both are never shown on the same day
+		if (settings.dailyReminder && now - settings.lastDailyReminder > oneDay) {
+			this.openBackupReminderDialog('DAILY_REMINDER_CONTENT_1');
+			this.settingsService.setLastDailyReminder(now).subscribe();
+		} else if (settings.weeklyReminder && now - settings.lastWeeklyReminder > 7 * oneDay) {
+			this.openBackupReminderDialog('WEEKLY_REMINDER_CONTENT_1');
+			this.settingsService.setLastWeeklyReminder(now).subscribe();
 		}
 	}
 
-	public openWeeklyReminderDialog() {
+	public openBackupReminderDialog(firstContentKey: string) {
 		this.dialog.open(DialogInfoComponent, {
 			autoFocus: false,
 			width: '20rem',
@@ -79,7 +107,7 @@ export class AppComponent implements OnInit {
 			data: {
 				title: 'WEEKLY_REMINDER_TITLE',
 				content: [
-					'WEEKLY_REMINDER_CONTENT_1',
+					firstContentKey,
 					'WEEKLY_REMINDER_CONTENT_2',
 					'WEEKLY_REMINDER_CONTENT_3',
 					'WEEKLY_REMINDER_CONTENT_4',

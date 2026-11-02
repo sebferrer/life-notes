@@ -1,3 +1,5 @@
+import { IEventPalettes } from './event-colors.model';
+
 export interface ISettings {
 	targetSymptomKey: string;
 	language: string;
@@ -10,6 +12,8 @@ export interface ISettings {
 	// hideDeveloperUpdates: boolean;
 	weeklyReminder: boolean;
 	lastWeeklyReminder: number;
+	dailyReminder: boolean;
+	lastDailyReminder: number;
 	showDeveloperMode: boolean;
 	showAdvancedSettings: boolean;
 	calendarStartOnSunday: boolean;
@@ -18,4 +22,8 @@ export interface ISettings {
 	autoCalculateOverview: boolean;
 	autoOverviewPopupSeen: boolean;
 	timePicker: string;
+	darkMode: boolean;
+	landscapeMode: boolean;
+	timelineStyle: string;
+	eventColors: IEventPalettes;
 }

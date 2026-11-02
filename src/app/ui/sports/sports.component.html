@@ -1,0 +1,56 @@
+<div class="manage-list-page sport">
+    <header class="manage-list-header">
+        <button mat-icon-button routerLink="/manage">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+        <h1 class="manage-list-title" transloco="SPORTS_TITLE"></h1>
+    </header>
+
+    <div *ngIf="sports$ | async as sports; else loading" class="manage-list">
+        <div *ngFor="let sport of sports" class="manage-item">
+            <div class="manage-item-bubble">
+                <mat-icon>fitness_center</mat-icon>
+            </div>
+            <div class="manage-item-text">
+                <div class="manage-item-title">{{ sport.key }}</div>
+                <div class="manage-item-meta">
+                    {{ (sport.occurrences === 1 ? 'OCCURRENCE_COUNT_ONE' : 'OCCURRENCE_COUNT_MANY') |
+                    transloco: { count: sport.occurrences } }}
+                </div>
+                <ng-template transloco let-t>
+                    <div *ngIf="sport.lastEntryDate" class="manage-item-meta">
+                        {{ t('LAST_ENTRY_DATE', { day: sport.lastEntryDate.day,
+                        month: t('MONTH-SHORT-' + sport.lastEntryDate.month), year: sport.lastEntryDate.year }) }}
+                    </div>
+                </ng-template>
+            </div>
+            <div class="manage-item-actions">
+                <button mat-icon-button (click)="openOccurrenceHistory(sport)">
+                    <mat-icon fontSet="material-icons-outlined">calendar_month</mat-icon>
+                </button>
+                <button mat-icon-button (click)="openEditDialog(sport)">
+                    <mat-icon fontSet="material-icons-outlined">edit</mat-icon>
+                </button>
+                <button mat-icon-button (click)="openDeleteDialog(sport)">
+                    <mat-icon fontSet="material-icons-outlined">delete</mat-icon>
+                </button>
+            </div>
+        </div>
+
+        <div *ngIf="sports.length === 0" class="manage-list-empty">
+            <div class="manage-item-bubble">
+                <mat-icon>fitness_center</mat-icon>
+            </div>
+            <p>{{ 'EMPTY_SPORTS_1' | transloco }}&nbsp;<mat-icon>view_day</mat-icon></p>
+            <p>{{ 'EMPTY_SPORTS_2' | transloco }}&nbsp;<mat-icon>refresh</mat-icon></p>
+        </div>
+    </div>
+</div>
+
+<button mat-fab color="primary" class="manage-list-refresh" (click)="openRefreshDialog()">
+    <mat-icon>refresh</mat-icon>
+</button>
+
+<ng-template #loading>
+    <mat-spinner></mat-spinner>
+</ng-template>

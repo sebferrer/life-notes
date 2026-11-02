@@ -26,6 +26,7 @@ export class DayViewModel extends DayOverviewViewModel {
 
 		this.content.push(...day.meds);
 		this.content.push(...day.meals);
+		this.content.push(...(day.sports || []));
 
 		this.content.sort(getSortOrder('time'));
 

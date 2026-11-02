@@ -6,8 +6,9 @@
 
         <div class="item-details-card" *ngIf="itemDetails">
             <div class="icon-bubble" [ngClass]="itemDetails.type">
-                <img *ngIf="itemDetails.type === 'med'" src="/assets/svg/pill-capsule.svg" class="custom-svg" />
+                <span *ngIf="itemDetails.type === 'med'" class="svg-icon pill custom-svg"></span>
                 <mat-icon *ngIf="itemDetails.type === 'log'">event_note</mat-icon>
+                <mat-icon *ngIf="itemDetails.type === 'sport'">fitness_center</mat-icon>
             </div>
             <div class="details-text">
                 <div class="main-info">

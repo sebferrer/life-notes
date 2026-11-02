@@ -10,7 +10,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid var(--border-medium);
     padding-bottom: 10px;
     
     .title {
@@ -27,7 +27,7 @@
     .date {
         font-style: italic;
         margin-bottom: 10px;
-        color: #666;
+        color: var(--text-medium);
     }
     
     .message {
@@ -40,16 +40,16 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-top: 1px solid #ccc;
+    border-top: 1px solid var(--border-medium);
     padding-top: 10px;
     
     .dots {
         span {
             font-size: 2rem;
-            color: #ccc;
+            color: var(--text-weak);
             margin: 0 5px;
             &.active {
-                color: #333;
+                color: var(--text-strong);
             }
         }
     }

@@ -10,7 +10,7 @@
     top: 3.5rem;
     width: 100%;
     height: 3.5rem;
-    background-color: #9E9E9E;
+    background-color: var(--tile-header);
     text-align: center;
     color: white;
     z-index: 3;
@@ -68,7 +68,7 @@
 }
 
 .day-label-today {
-    background-color: rgb(0, 174, 255);
+    background-color: var(--selection);
     margin-left: 25%;
     color: white;
     font-size: 1rem;
@@ -84,7 +84,7 @@
 }
 
 .help-container {
-    color: #0070C0;
+    color: var(--highlight);
     position: absolute;
     top: 27rem;
     right: 1rem;
@@ -114,4 +114,12 @@
 
 .color-pain-5 {
     background-color: var(--color-pain-5);
+}
+
+// Landscape phones: 3vh is too small for the day bubbles
+@media (orientation: landscape) and (max-height: 600px) {
+    .day-label-today {
+        width: 1.6rem;
+        height: 1.6rem;
+    }
 }

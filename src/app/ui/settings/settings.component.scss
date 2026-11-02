@@ -1,3 +1,7 @@
+// Icon tile color of each settings section
+$panel-colors: (symptoms: #EC407A, language: #42A5F5, time: #FFA726, backup: #66BB6A, tutorial: #AB47BC,
+    appearance: #7E57C2, customization: #26A69A, advanced: #78909C, developer: #8D6E63, about: #5C6BC0);
+
 #settings-container {
     position: relative;
     top: auto;
@@ -6,18 +10,19 @@
 
 
     .title {
-        margin-left: 1rem;
-        margin-top: 0.8rem;
+        margin: 1rem 1.25rem 0.75rem 1.25rem;
         font-size: 1.5rem;
-        color: #212121;
+        font-weight: 600;
+        color: var(--text-strong);
     }
 
     .accordion {
         position: relative;
         top: auto;
-        width: 100%;
+        display: block;
+        padding: 0 0.75rem 1rem 0.75rem;
 
-
+        // Nested panels (advanced and developer settings)
         .mat-expansion-panel-header {
             .panel-title {
                 width: 35%;
@@ -25,11 +30,64 @@
 
             .panel-description {
                 width: 60%;
-                color: #757575;
+                color: var(--text-medium);
+            }
+        }
+
+        // One rounded card per section, instead of a single block of rows
+        > .mat-expansion-panel {
+            margin: 0 0 0.6rem 0;
+            border-radius: 16px !important;
+            border: 1px solid var(--border-subtle);
+            box-shadow: 0 1px 3px var(--shadow) !important;
+        }
+
+        .main-header {
+            height: auto !important;
+            min-height: 4rem;
+            padding: 0.6rem 1rem 0.6rem 0.75rem;
+
+            ::ng-deep .mat-content {
+                align-items: center;
             }
 
             .panel-icon {
-                color: #757575;
+                flex: 0 0 2.5rem;
+                height: 2.5rem;
+                margin-right: 0.9rem;
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #ffffff;
+                background-color: var(--panel-color);
+
+                @each $panel, $color in $panel-colors {
+                    &.#{$panel} {
+                        --panel-color: #{$color};
+                    }
+                }
+            }
+
+            .panel-text {
+                flex: 1;
+                min-width: 0;
+                display: flex;
+                flex-direction: column;
+                gap: 0.1rem;
+
+                .panel-title {
+                    width: auto;
+                    font-size: 1rem;
+                    font-weight: 600;
+                    color: var(--text-strong);
+                }
+
+                .panel-description {
+                    width: auto;
+                    font-size: 0.85rem;
+                    color: var(--text-medium);
+                }
             }
         }
     }
@@ -60,7 +118,7 @@
 }
 
 .list-item-text {
-    color: #212121;
+    color: var(--text-strong);
     width: 80%;
     float: left;
 }
@@ -93,17 +151,127 @@
     margin-bottom: 1rem;
 }
 #copyButton:disabled {
-    color: #5cb85c;
+    color: var(--success);
 }
 
 textarea {
     height: 5rem;
 }
 
-.list-icon-svg {
-    width: 1.4rem;
-    filter: grayscale(100%) contrast(375%);
-    opacity: 0.5;
+.settings-section-title {
+    margin: 1rem 0 0.25rem 0;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--primary);
+
+    &:first-child {
+        margin-top: 0;
+    }
+}
+
+// Light and dark palettes, each one shown on its own theme
+.palette-card {
+    margin: 0.5rem 0;
+    padding: 0.25rem 0.5rem 0.75rem 0.75rem;
+    border-radius: 14px;
+    border: 1px solid var(--border-medium);
+    background-color: var(--surface);
+    color: var(--text-strong);
+
+    .palette-card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+
+        .palette-card-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .palette-reset {
+            flex-shrink: 0;
+            color: var(--primary);
+            padding: 0 0.5rem;
+
+            mat-icon {
+                font-size: 1.2rem;
+                width: 1.2rem;
+                height: 1.2rem;
+                vertical-align: middle;
+                margin-right: 0.2rem;
+            }
+        }
+    }
+
+    .palette-swatches {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.25rem;
+        padding-top: 0.25rem;
+    }
+
+    .palette-swatch {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.35rem;
+        min-width: 0;
+        cursor: pointer;
+
+        .swatch-circle {
+            position: relative;
+            width: 2.75rem;
+            height: 2.75rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 1px 3px var(--shadow);
+
+            img {
+                width: 1.3rem;
+                height: 1.3rem;
+            }
+
+            // Native color picker, hidden but still opened by the label
+            input[type="color"] {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                opacity: 0;
+                border: none;
+                padding: 0;
+                cursor: pointer;
+            }
+        }
+
+        .swatch-label {
+            max-width: 100%;
+            font-size: 0.7rem;
+            color: var(--text-medium);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+}
+
+// Intensity palettes previewed as color strips
+.pain-palette-preview {
+    display: inline-flex;
+    border-radius: 6px;
+    overflow: hidden;
+    vertical-align: middle;
+
+    span {
+        width: 0.9rem;
+        height: 1.1rem;
+    }
 }
 
 
@@ -128,12 +296,12 @@ textarea {
         height: 1.5rem;
         width: 1.5rem;
         margin-right: 0.5rem;
-        color: #3f51b5;
+        color: var(--primary);
     }
 
     .help-text {
         font-size: 1rem;
-        color: #212121;
+        color: var(--text-strong);
     }
 }
 
@@ -141,11 +309,19 @@ textarea {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 0.75rem;
     padding: 10px 0;
 
     .toggle-label {
         font-size: 1rem;
-        color: rgba(0, 0, 0, 0.87);
+        color: var(--text-strong);
+    }
+
+    // Label above its options (radio groups don't fit next to it on small screens)
+    &.stacked {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
     }
 }
 
@@ -155,13 +331,14 @@ textarea {
     height: 1.1rem;
     vertical-align: middle;
     margin-left: 0.3rem;
-    color: #3f51b5;
+    color: var(--primary);
     cursor: pointer;
 }
 
 .radio-group {
     display: flex;
-    gap: 10px;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
 }
 
 .radio-button {

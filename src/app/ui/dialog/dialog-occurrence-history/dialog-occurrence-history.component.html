@@ -4,8 +4,9 @@
         <div class="header-section">
             <div class="title-row">
                 <div class="icon-bubble" [ngClass]="data.type">
-                    <img *ngIf="data.type === 'med'" src="/assets/svg/pill-capsule.svg" class="custom-svg" />
+                    <span *ngIf="data.type === 'med'" class="svg-icon pill custom-svg"></span>
                     <mat-icon *ngIf="data.type === 'log'">event_note</mat-icon>
+                    <mat-icon *ngIf="data.type === 'sport'">fitness_center</mat-icon>
                 </div>
                 <div class="main-title">{{ data.title }}</div>
             </div>

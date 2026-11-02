@@ -4,7 +4,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #fafafa;
+    background-color: var(--app-background);
 }
 
 .day-tile-header {
@@ -12,7 +12,7 @@
     top: 0;
     height: 3.5rem;
     width: 100%;
-    background-color: #9E9E9E;
+    background-color: var(--tile-header);
     color: white;
     font-size: 1.2rem;
     display: table;
@@ -89,20 +89,12 @@
     display: none;
 }
 
-.day-day-item-symptomLog {
-    background-color: #FF3154;
-}
-
-.day-day-item-log {
-    background-color: #98A2AE;
-}
-
-.day-day-item-med {
-    background-color: #0096BF;
-}
-
-.day-day-item-meal {
-    background-color: #31AE1D;
+// Must beat the Material chip theme selector (.dark-theme .mat-chip.mat-standard-chip)
+@each $type in symptomLog, log, med, meal, sport {
+    .mat-chip.mat-standard-chip.day-day-item-#{$type} {
+        background-color: var(--color-event-#{$type});
+        color: var(--color-event-#{$type}-on);
+    }
 }
 
 .event-chips {
@@ -113,7 +105,7 @@
 
     .event-container {
         width: 100%;
-        color: white;
+        color: inherit;
     
         .event {
             display: table;
@@ -235,7 +227,7 @@
     right: 0;
     width: 20%;
     height: 6rem;
-    background-color: #CECECE;
+    background-color: var(--tile-side);
     border-radius: 0 0 0 100%;
      -moz-border-radius: 0 0 0 100%;
      -webkit-border-radius: 0 0 0 100%;
@@ -248,7 +240,7 @@
     right: 0;
     width: 20%;
     height: 6rem;
-    background-color: #CECECE;
+    background-color: var(--tile-side);
     border-radius: 100% 0 0 0;
      -moz-border-radius: 100% 0 0 0;
      -webkit-border-radius: 100% 0 0 0;
@@ -268,7 +260,7 @@
     right: 20%;
     top: 40%;
     font-size: 200%;
-    color: #98A2AE;
+    color: var(--tile-side-text);
     z-index: 11;
 }
 
@@ -286,7 +278,7 @@
     right: 20%;
     top: 20%;
     font-size: 200%;
-    color: #98A2AE;
+    color: var(--tile-side-text);
     z-index: 11;
 }
 
@@ -296,8 +288,80 @@
     left: 0;
     width: 60%;
     height: 18rem;
-    background-color: #EBEBEB;
+    background-color: var(--tile-body);
     border-radius: 0 0 100% 0;
     -moz-border-radius: 0 0 100% 0;
     -webkit-border-radius: 0 0 100% 0;
+}
+
+// Landscape phones: vh/vw based sizes become too small or too wide, use fixed sizes
+@media (orientation: landscape) and (max-height: 600px) {
+    .event-chips {
+        width: calc(100% - 2rem) !important;
+        height: 3.5rem !important;
+
+        .event-container .event {
+            height: 2.5rem;
+
+            .event-time-eu {
+                width: 3.5rem;
+            }
+            .event-time-us {
+                width: 5rem;
+            }
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Modern design (the day card is shared with the timeline: time/day-card.scss)
+// ---------------------------------------------------------------------------
+.day-page {
+    padding-bottom: 1rem;
+}
+
+.day-page-header {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.75rem 0.5rem 0 0.25rem;
+
+    button {
+        flex-shrink: 0;
+        color: var(--text-medium);
+    }
+
+    .day-page-title {
+        flex: 1;
+        min-width: 0;
+
+        .day-page-weekday {
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--text-weak);
+        }
+
+        .day-page-date {
+            font-size: 1.4rem;
+            font-weight: 700;
+            line-height: 1.2;
+            color: var(--text-strong);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        &.today .day-page-weekday {
+            color: var(--primary);
+        }
+    }
+}
+
+// The timeline cuts the detail to one line, here there is room to show all of it
+.event-row .event-card .event-card-detail.full {
+    white-space: pre-wrap;
+    overflow: visible;
+    overflow-wrap: anywhere;
 }

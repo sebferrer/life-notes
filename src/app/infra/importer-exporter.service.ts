@@ -56,9 +56,13 @@ export class ImporterExporterService {
 		this.symptomsService.addSymptoms(symptomsJsonArr).subscribe(() => {
 			this.globalService.loadSymptoms().subscribe(() => { });
 		});
-		this.settingsService.editSettings(settingsJsonOnj).subscribe(() => {
+		this.settingsService.editSettings(settingsJsonOnj).subscribe(settings => {
 			this.globalService.language = settingsJsonOnj.language;
 			this.globalService.targetSymptomKey = settingsJsonOnj.targetSymptomKey;
+			this.globalService.darkMode = settings.darkMode;
+			this.globalService.landscapeMode = settings.landscapeMode;
+			this.globalService.timelineStyle = settings.timelineStyle;
+			this.globalService.eventPalettes = settings.eventColors;
 			this.translocoService.setActiveLang(settingsJsonOnj.language);
 		});
 	}
@@ -294,6 +298,8 @@ export class ImporterExporterService {
 				}
 			});
 
+			// The PDF is always rendered with the light theme, even when the app is in dark mode
+			clone.classList.add('force-light-theme');
 			document.body.appendChild(clone);
 
 			// Wait a tick for rendering

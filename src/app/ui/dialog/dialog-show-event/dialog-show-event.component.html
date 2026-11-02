@@ -6,10 +6,9 @@
                 <div class="icon-bubble">
                     <mat-icon *ngIf="data.customEvent.type === 'symptomLog'">spa</mat-icon>
                     <mat-icon *ngIf="data.customEvent.type === 'log'">event_note</mat-icon>
-                    <img *ngIf="data.customEvent.type === 'med'" src="/assets/svg/pill-capsule.svg"
-                        class="custom-svg" />
-                    <img *ngIf="data.customEvent.type === 'meal'" src="/assets/svg/curry-chronicles.svg"
-                        class="custom-svg" />
+                    <mat-icon *ngIf="data.customEvent.type === 'sport'">fitness_center</mat-icon>
+                    <span *ngIf="data.customEvent.type === 'med'" class="svg-icon pill custom-svg"></span>
+                    <span *ngIf="data.customEvent.type === 'meal'" class="svg-icon meal custom-svg"></span>
                 </div>
                 <div class="main-title" [ngSwitch]="data.customEvent.type">
                     <span *ngSwitchCase="'symptomLog'">{{ globalService.symptomMap.get(data.customEvent.key) }}</span>
@@ -68,6 +67,9 @@
                 </div>
 
                 <div *ngSwitchCase="'meal'" class="info-content">
+                </div>
+
+                <div *ngSwitchCase="'sport'" class="info-content">
                 </div>
 
             </div>

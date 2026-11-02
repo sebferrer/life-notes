@@ -1,8 +1,10 @@
 <div *ngIf="dayContent$ | async as dayContent">
-    <div #dayRefs class="day-container" id="day-{{ dayContent.date }}">
+    <!-- Classic design, kept for the "classic" timeline style setting -->
+    <div *ngIf="globalService.timelineStyle === 'classic'; else modernDay" class="day-container"
+        id="day-{{ dayContent.date }}">
         <div class="day-tile-header">
             <div class="go-back-container">
-                <button mat-icon-button class="go-back" routerLink="/timeline">
+                <button mat-icon-button class="go-back" (click)="goBack()">
                     <mat-icon>arrow_back_ios</mat-icon>
                 </button>
             </div>
@@ -84,6 +86,16 @@
                                         {{ content.detail }}</div>
                                 </div>
                             </div>
+                            <div *ngSwitchCase="'sport'" class="event">
+                                <div class="event-time"
+                                    [ngClass]="globalService.timeFormat === 'us' ? 'event-time-us' : 'event-time-eu'">{{
+                                    displayTime(content.time) }}</div>
+                                <div class="event-content-container">
+                                    <div class="event-content">{{ content.key }}</div>
+                                    <div *ngIf="content.detail != null && content.detail.length" class="event-detail">
+                                        {{ content.detail }}</div>
+                                </div>
+                            </div>
 
                         </div>
                     </mat-chip>
@@ -99,4 +111,82 @@
         <div *ngIf="displayCharts" class="day-tile-chart">
         </div>
     </div>
+    <ng-template #modernDay>
+        <!-- Modern design: same day card as the modern timeline, under a bigger header -->
+        <div class="day-page" id="day-{{ dayContent.date }}">
+            <div class="day-page-header">
+                <button mat-icon-button class="day-page-back" (click)="goBack()">
+                    <mat-icon>arrow_back</mat-icon>
+                </button>
+                <ng-template transloco let-t>
+                    <div class="day-page-title" [class.today]="isToday(dayContent.date)">
+                        <div class="day-page-weekday">
+                            {{ t('DAY-OF-WEEK-SHORT-' + dayContent.detailedDate.dayOfWeek) }}</div>
+                        <div class="day-page-date">
+                            {{ t('DAY_VIEW_DATE', {'day': dayContent.detailedDate.day, 'month':
+                            t('MONTH-' + dayContent.detailedDate.month), 'year': dayContent.detailedDate.year}) }}
+                        </div>
+                    </div>
+                    <button mat-icon-button class="day-card-overview"
+                        (click)="openEditSymptomOverviewDialog(dayContent.date)"
+                        [attr.aria-label]="t('TIMELINE_DAY_INTENSITY')">
+                        <mat-icon class="color-{{ getPainColor(dayContent.getSymptomPain(globalService.targetSymptomKey)) }}">
+                            fiber_manual_record</mat-icon>
+                    </button>
+                </ng-template>
+                <button mat-icon-button (click)="openBottomSheet(dayContent.date)" class="add-event">
+                    <mat-icon>playlist_add</mat-icon>
+                </button>
+            </div>
+
+            <div class="day-card" [class.us-time]="globalService.timeFormat === 'us'">
+                <div class="day-card-rail">
+                    <div class="rail-row sleep-row wakeUp" [class.empty]="!dayContent.wakeUp"
+                        (click)="openAddDialog('wakeUp', dayContent.date)">
+                        <div class="rail-time" [class.empty]="!dayContent.wakeUp"
+                            [innerHTML]="displayTimeHtml(dayContent.wakeUp) || '--:--'"></div>
+                        <div class="rail-marker">
+                            <mat-icon>alarm</mat-icon>
+                        </div>
+                        <div class="sleep-label">{{ 'TIMELINE_WAKE_UP' | transloco }}</div>
+                    </div>
+
+                    <div *ngFor="let content of dayContent.content" class="rail-row event-row {{ content.type }}"
+                        (click)="openShowDialog(dayContent.date, content, symptoms)">
+                        <div class="rail-time" [innerHTML]="displayTimeHtml(content.time)"></div>
+                        <div class="rail-marker" [ngSwitch]="content.type">
+                            <mat-icon *ngSwitchCase="'symptomLog'">spa</mat-icon>
+                            <span *ngSwitchCase="'med'" class="svg-icon pill rail-marker-svg"></span>
+                            <span *ngSwitchCase="'meal'" class="svg-icon meal rail-marker-svg"></span>
+                            <mat-icon *ngSwitchCase="'sport'">fitness_center</mat-icon>
+                            <mat-icon *ngSwitchDefault>event_note</mat-icon>
+                        </div>
+                        <div class="event-card" [ngSwitch]="content.type">
+                            <div class="event-card-text">
+                                <div *ngSwitchCase="'symptomLog'" class="event-card-title">
+                                    {{ symptomMap.get(content.key) }}</div>
+                                <div *ngSwitchDefault class="event-card-title">{{ content.key }}</div>
+                                <!-- More room than in the timeline: the whole detail is shown -->
+                                <div *ngIf="content.detail" class="event-card-detail full">{{ content.detail }}</div>
+                            </div>
+                            <span *ngSwitchCase="'symptomLog'" class="event-card-badge">
+                                {{ getPainValue(content.pain) }}/{{ painScale }}</span>
+                            <span *ngIf="content.type === 'med' && content.quantity" class="event-card-badge">
+                                {{ content.quantity }} mg</span>
+                        </div>
+                    </div>
+
+                    <div class="rail-row sleep-row goToBed" [class.empty]="!dayContent.goToBed"
+                        (click)="openAddDialog('goToBed', dayContent.date)">
+                        <div class="rail-time" [class.empty]="!dayContent.goToBed"
+                            [innerHTML]="displayTimeHtml(dayContent.goToBed) || '--:--'"></div>
+                        <div class="rail-marker">
+                            <mat-icon>bedtime</mat-icon>
+                        </div>
+                        <div class="sleep-label">{{ 'TIMELINE_GO_TO_BED' | transloco }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-template>
 </div>

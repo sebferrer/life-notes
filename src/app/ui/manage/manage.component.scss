@@ -1,0 +1,77 @@
+.manage-page-container {
+    padding: 1.5rem;
+}
+
+.page-header {
+    margin-bottom: 1.5rem;
+    padding-left: 0.5rem;
+    padding-top: 0.5rem;
+
+    .page-title {
+        font-size: 1.5rem;
+        font-weight: 500;
+        color: var(--text-strong);
+        margin: 0;
+        letter-spacing: -0.5px;
+    }
+}
+
+.manage-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    max-width: 32rem;
+    margin: 0 auto;
+}
+
+.manage-tile {
+    aspect-ratio: 1 / 1;
+    border: none;
+    border-radius: 20px;
+    padding: 1rem;
+    background-color: var(--event-color);
+    color: var(--event-on-color);
+    font-family: inherit;
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+
+    &:active {
+        transform: scale(0.97);
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+    }
+
+    @each $type in symptomLog, med, log, sport {
+        &.#{$type} {
+            --event-color: var(--color-event-#{$type});
+            --event-on-color: var(--color-event-#{$type}-on);
+            --event-on-filter: var(--color-event-#{$type}-on-filter);
+        }
+    }
+
+    .manage-tile-icon {
+        font-size: 3rem;
+        width: 3rem;
+        height: 3rem;
+    }
+
+    .manage-tile-svg {
+        // The pill svg is dark: render it like the material icons
+        filter: var(--event-on-filter);
+    }
+
+    .manage-tile-label {
+        font-size: 1.1rem;
+        font-weight: 500;
+        text-align: center;
+    }
+}

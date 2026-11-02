@@ -19,14 +19,13 @@ import { BottomSheetDeleteOverviewComponent } from '../bottom-sheet/bottom-sheet
 @Component({
 	selector: 'app-meds',
 	templateUrl: './meds.component.html',
-	styleUrls: ['./meds.component.scss']
+	styleUrls: ['../manage/manage-list.scss']
 })
 export class MedsComponent implements OnInit {
 
 	public meds: MedHistoryViewModel[];
 	public meds$: BehaviorSubject<MedHistoryViewModel[]>;
 
-	public displayedColumns: string[] = ['key', 'quantity', 'occurrences', 'actions'];
 	public dataSource: IMedHistory[];
 
 	constructor(
@@ -64,6 +63,8 @@ export class MedsComponent implements OnInit {
 	public openEditDialog(med: MedHistoryViewModel): void {
 		this.bottomSheet.open(BottomSheetEditMedComponent, {
 			panelClass: 'event-bottom-sheet',
+			// Only the close button can dismiss it, to avoid losing an ongoing edition
+			disableClose: true,
 			data: {
 				key: med.key,
 				quantity: med.quantity

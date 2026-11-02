@@ -1,9 +1,3 @@
-// Event Type Colors
-$color-symptom: #FF3154;
-$color-med: #0096BF;
-$color-meal: #31AE1D;
-$color-log: #98A2AE;
-
 .bottom-sheet-container {
     display: flex;
     flex-direction: column;
@@ -13,10 +7,13 @@ $color-log: #98A2AE;
     box-sizing: border-box;
     font-family: 'Inter', sans-serif; // Ensure modern font if available
 
-    &.symptomLog { --event-color: #{$color-symptom}; }
-    &.med { --event-color: #{$color-med}; }
-    &.meal { --event-color: #{$color-meal}; }
-    &.log { --event-color: #{$color-log}; }
+    @each $type in symptomLog, med, meal, log, sport {
+        &.#{$type} {
+            --event-color: var(--color-event-#{$type});
+            --event-soft: var(--color-event-#{$type}-soft);
+            --event-icon: var(--color-event-#{$type}-icon);
+        }
+    }
 
     .header-section {
         display: flex;
@@ -32,8 +29,10 @@ $color-log: #98A2AE;
             .icon-bubble {
                 width: 3rem;
                 height: 3rem;
+                // A long title must not squeeze the circle into an oval
+                flex-shrink: 0;
                 border-radius: 50%;
-                background-color: var(--event-color); // Colored background like screenshot
+                background-color: var(--event-soft); // Colored background like screenshot
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -43,27 +42,29 @@ $color-log: #98A2AE;
                     font-size: 1.8rem;
                     width: 1.8rem;
                     height: 1.8rem;
-                    color: white;
+                    color: var(--event-icon);
                 }
 
                 .custom-svg {
                     width: 1.8rem;
                     height: 1.8rem;
-                    filter: brightness(0) invert(1); // Make white
+                    color: var(--event-icon);
                 }
             }
 
             .main-title {
+                min-width: 0;
                 font-size: 1.8rem;
                 font-weight: 700;
-                color: rgba(0,0,0,0.87);
+                color: var(--text-strong);
                 line-height: 1.2;
+                overflow-wrap: anywhere;
             }
         }
 
         .date-time-row {
             font-size: 1rem;
-            color: rgba(0,0,0,0.5);
+            color: var(--text-weak);
             font-weight: 500;
             margin-left: 4.1rem;
         }
@@ -96,7 +97,7 @@ $color-log: #98A2AE;
                     .label {
                         font-size: 1.1rem;
                         font-weight: 600;
-                        color: rgba(0,0,0,0.8);
+                        color: var(--text-strong);
                     }
 
                     .value-container {
@@ -105,7 +106,7 @@ $color-log: #98A2AE;
                         color: var(--event-color);
                         
                         .value { font-size: 1.4rem; font-weight: 700; }
-                        .max { font-size: 1rem; color: rgba(0,0,0,0.4); font-weight: 500; }
+                        .max { font-size: 1rem; color: var(--text-weak); font-weight: 500; }
                     }
                 }
 
@@ -117,7 +118,7 @@ $color-log: #98A2AE;
                     .scale-visual {
                         width: 95%; // "90% de la largeur" roughly
                         height: 12px;
-                        background-color: #F0F0F0;
+                        background-color: var(--surface-variant);
                         border-radius: 6px;
                         position: relative;
 
@@ -152,7 +153,7 @@ $color-log: #98A2AE;
                     width: 95%;
                     margin: 0 auto;
                     font-size: 0.85rem;
-                    color: rgba(0,0,0,0.4);
+                    color: var(--text-weak);
                     font-weight: 500;
                 }
             }
@@ -165,7 +166,7 @@ $color-log: #98A2AE;
                 .label {
                     font-size: 0.9rem;
                     text-transform: uppercase;
-                    color: rgba(0,0,0,0.5);
+                    color: var(--text-weak);
                     font-weight: 600;
                 }
 
@@ -181,7 +182,7 @@ $color-log: #98A2AE;
                     }
                     .unit {
                         font-size: 1.1rem;
-                        color: rgba(0,0,0,0.6);
+                        color: var(--text-medium);
                         font-weight: 500;
                     }
                 }
@@ -196,12 +197,12 @@ $color-log: #98A2AE;
 
         .detail-label {
             font-size: 0.75rem;
-            color: rgba(0,0,0,0.6);
+            color: var(--text-medium);
             font-weight: 500;
         }
 
         .detail-box {
-            background-color: #F5F5F5;
+            background-color: var(--surface-variant);
             padding: 1rem;
             border-radius: 12px;
             max-height: 8rem;
@@ -209,7 +210,7 @@ $color-log: #98A2AE;
 
             .detail-text {
                 font-size: 1rem;
-                color: rgba(0,0,0,0.8);
+                color: var(--text-strong);
                 line-height: 1.5;
                 white-space: pre-wrap;
             }
@@ -231,8 +232,8 @@ $color-log: #98A2AE;
 
         .delete-button {
             flex: 1;
-            border-color: rgba(0,0,0,0.1);
-            color: rgba(0,0,0,0.45);
+            border-color: var(--border-medium);
+            color: var(--text-weak);
         }
 
         .edit-button {

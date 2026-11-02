@@ -1,8 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ISymptom } from '../models/symptom.model';
 import { SymptomsService } from './symptoms.service';
 import { SettingsService } from './settings.service';
+import * as ChartJs from 'chart.js';
+import { Capacitor } from '@capacitor/core';
+import { ScreenOrientation } from '@capacitor/screen-orientation';
+import {
+	CUSTOMIZABLE_EVENT_TYPES, IEventColors, IEventPalettes, completeEventPalettes, getDefaultEventPalettes,
+	getEventOnColor, getEventOnFilter, getEventSoftColor, getEventSoftTextColor, getEventBadgeTextColor,
+	getEventTonalIconColor
+} from '../models/event-colors.model';
 
 @Injectable({ providedIn: 'root' })
 export class GlobalService {
@@ -53,7 +62,10 @@ export class GlobalService {
 
 	public loadSymptoms(): Observable<ISymptom[]> {
 		this._symptomMap = new Map();
-		this._symptoms$ = this.symptomsService.getSymptoms();
+		// Alphabetical order everywhere (toolbar menu, settings, add event...)
+		this._symptoms$ = this.symptomsService.getSymptoms().pipe(
+			map(symptoms => symptoms.sort((a, b) => (a.label || '').localeCompare(b.label || '')))
+		);
 		this._symptoms$.subscribe(s => s.map(x => this._symptomMap.set(x.key, x.label)));
 		return this._symptoms$;
 	}
@@ -109,6 +121,70 @@ export class GlobalService {
 		this._timePicker = value;
 	}
 
+	private _darkMode: boolean = false;
+	public get darkMode(): boolean { return this._darkMode; }
+	public set darkMode(value: boolean) {
+		this._darkMode = !!value;
+		this.updateTheme();
+	}
+
+	private _eventPalettes: IEventPalettes = getDefaultEventPalettes();
+	public get eventPalettes(): IEventPalettes { return this._eventPalettes; }
+	public set eventPalettes(value: IEventPalettes) {
+		this._eventPalettes = completeEventPalettes(value);
+		this.updateTheme();
+	}
+
+	// Palette of the theme currently displayed
+	public get eventColors(): IEventColors {
+		return this.darkMode ? this._eventPalettes.dark : this._eventPalettes.light;
+	}
+
+	// 'modern' or 'classic' (the original timeline design)
+	private _timelineStyle: string = 'modern';
+	public get timelineStyle(): string { return this._timelineStyle; }
+	public set timelineStyle(value: string) {
+		this._timelineStyle = value;
+	}
+
+	private _landscapeMode: boolean = false;
+	public get landscapeMode(): boolean { return this._landscapeMode; }
+	public set landscapeMode(value: boolean) {
+		this._landscapeMode = !!value;
+		this.updateOrientation();
+	}
+
+	private updateOrientation(): void {
+		// The Android manifest locks portrait by default, the plugin overrides it at runtime
+		if (!Capacitor.isNativePlatform()) {
+			return;
+		}
+		ScreenOrientation.lock({ orientation: this._landscapeMode ? 'landscape' : 'portrait' })
+			.catch(error => console.error('Screen orientation lock failed', error));
+	}
+
+	private updateTheme(): void {
+		document.body.classList.toggle('dark-theme', this._darkMode);
+		const colors = this.eventColors;
+		const style = document.body.style;
+		CUSTOMIZABLE_EVENT_TYPES.forEach(type => {
+			const onColor = getEventOnColor(colors[type], this._darkMode);
+			style.setProperty('--color-event-' + type, colors[type]);
+			style.setProperty('--color-event-' + type + '-on', onColor);
+			style.setProperty('--color-event-' + type + '-on-filter', getEventOnFilter(onColor));
+			style.setProperty('--color-event-' + type + '-soft', getEventSoftColor(colors[type], this._darkMode));
+			style.setProperty('--color-event-' + type + '-soft-text', getEventSoftTextColor(colors[type], this._darkMode, false));
+			style.setProperty('--color-event-' + type + '-soft-text-muted', getEventSoftTextColor(colors[type], this._darkMode, true));
+			style.setProperty('--color-event-' + type + '-icon', getEventTonalIconColor(colors[type], this._darkMode));
+			style.setProperty('--color-event-' + type + '-badge-text', getEventBadgeTextColor(colors[type], this._darkMode));
+		});
+		// Chart.js draws on canvas, it can't use the CSS variables
+		ChartJs.defaults.global.defaultFontColor = this._darkMode ? '#B0B0B0' : '#666';
+		// White doughnut separators look like rings on dark cards. Transparent rather than the card color
+		// so that charts exported in the (always light) PDF stay clean.
+		ChartJs.defaults.global.elements.arc.borderColor = this._darkMode ? 'transparent' : '#FFFFFF';
+	}
+
 	private updateCssVariables(): void {
 		const colors = this.getPainColors();
 		document.documentElement.style.setProperty('--color-pain-0', colors[0]);
@@ -124,5 +200,6 @@ export class GlobalService {
 	) {
 		this.loadSymptoms();
 		this.updateCssVariables();
+		this.updateTheme();
 	}
 }
