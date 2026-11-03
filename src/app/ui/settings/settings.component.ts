@@ -48,7 +48,10 @@ export class SettingsComponent implements OnInit {
 	public landscapeMode: boolean;
 	public timelineStyle: string;
 	public eventPalettes: IEventPalettes;
-	public readonly paletteThemes: ('light' | 'dark')[] = ['light', 'dark'];
+	// The palette edited is the one of the theme currently displayed
+	public get currentTheme(): 'light' | 'dark' {
+		return this.darkMode ? 'dark' : 'light';
+	}
 	public painPalettes: { key: string, colors: string[] }[];
 	public readonly eventColorItems = [
 		{ type: 'symptomLog', label: 'MANAGE_SYMPTOMS', icon: 'spa' },
@@ -215,6 +218,15 @@ export class SettingsComponent implements OnInit {
 			'BACKUP_WHY_MANUAL_CONTENT_4',
 			'BACKUP_WHY_MANUAL_CONTENT_5',
 			'BACKUP_WHY_MANUAL_CONTENT_6'
+		]);
+	}
+
+	public openManualBackupInfo(): void {
+		this.openInfoBottomSheet('MANUAL_BACKUP_INFO_TITLE', [
+			'MANUAL_BACKUP_INFO_CONTENT_1',
+			'MANUAL_BACKUP_INFO_CONTENT_2',
+			'MANUAL_BACKUP_INFO_CONTENT_3',
+			'MANUAL_BACKUP_INFO_CONTENT_4'
 		]);
 	}
 

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SymptomsService, SettingsService } from '../../infra';
+import { SymptomsService, SettingsService, DaysService } from '../../infra';
 import { Subject } from 'rxjs';
 import { SymptomViewModel } from 'src/app/models/symptom.view.model';
 // import { MatDialog } from '@angular/material/dialog';
@@ -11,22 +11,32 @@ import { BottomSheetDeleteSymptomComponent } from '../bottom-sheet/bottom-sheet-
 import { ISymptom } from 'src/app/models/symptom.model';
 import { GlobalService } from 'src/app/infra/global.service';
 import { TranslocoService } from '@ngneat/transloco';
+import { IDetailedDate } from 'src/app/models/detailed.date';
+import { getDetailedDate } from 'src/app/util/date.utils';
 
 @Component({
 	selector: 'app-symptoms',
 	templateUrl: './symptoms.component.html',
-	styleUrls: ['./symptoms.component.scss']
+	styleUrls: ['../manage/manage-list.scss']
 })
 export class SymptomsComponent implements OnInit {
 
 	public symptoms: SymptomViewModel[];
 	public symptoms$: Subject<SymptomViewModel[]>;
+	// Number of entries and last day with data of each symptom
+	public stats = new Map<string, { count: number, lastDate: IDetailedDate }>();
+
+	// Symptom shown in the toolbar
+	public get trackedSymptomKey(): string {
+		return this.globalService.targetSymptomKey;
+	}
 
 	constructor(
 		private translocoService: TranslocoService,
 		private globalService: GlobalService,
 		private settingsService: SettingsService,
 		private symptomsService: SymptomsService,
+		private daysService: DaysService,
 		private bottomSheet: MatBottomSheet,
 		private snackBar: MatSnackBar
 	) {
@@ -41,6 +51,33 @@ export class SymptomsComponent implements OnInit {
 				this.sortSymptoms();
 				this.symptoms$.next(this.symptoms);
 			});
+		this.loadStats();
+	}
+
+	// Entries are the symptoms added to the days; an intensity of the day also counts for the last day
+	private loadStats(): void {
+		this.daysService.getDays().subscribe(days => {
+			const counts = new Map<string, number>();
+			const lastDates = new Map<string, string>();
+			days.forEach(day => {
+				const keys = new Set<string>();
+				(day.symptoms || []).forEach(symptom => {
+					const count = (symptom.logs || []).length;
+					if (count > 0) {
+						counts.set(symptom.key, (counts.get(symptom.key) || 0) + count);
+						keys.add(symptom.key);
+					}
+				});
+				(day.symptomOverviews || []).filter(overview => overview.pain > 0).forEach(overview => keys.add(overview.key));
+				keys.forEach(key => {
+					if (!lastDates.has(key) || day.date > lastDates.get(key)) {
+						lastDates.set(key, day.date);
+					}
+				});
+			});
+			this.stats = new Map([...lastDates.entries()].map(([key, date]) =>
+				[key, { count: counts.get(key) || 0, lastDate: getDetailedDate(date) }]));
+		});
 	}
 
 	public openAddDialog(symptom?: ISymptom): void {

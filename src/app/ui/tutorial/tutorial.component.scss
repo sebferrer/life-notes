@@ -22,13 +22,6 @@ ion-slides {
     margin-top: 2.8rem;
 }
 
-.swiper-slide img {
-    max-height: 50%;
-    max-width: 80%;
-    margin: 60px 0 40px;
-    pointer-events: none;
-}
-
 b {
     font-weight: 500;
 }
@@ -45,9 +38,6 @@ p b {
 }
 
 .slide {
-    img {
-        margin-bottom: 0;
-    }
     app-swiping-finger {
         position: absolute;
         width: 100%;
@@ -59,21 +49,6 @@ p b {
         position: absolute;
         top: 15vh;
         left: 10%;
-    }
-    .slide-text-tutorial {
-        width: 80%;
-        margin-left: auto;
-        margin-right: auto;
-        height: 30vh;
-        overflow-y: auto;
-    }
-    .slide-text-tutorial-longtext {
-        width: 80%;
-        position: absolute;
-        top: 45vh;
-        left: 10%;
-        height: 40vh;
-        overflow-y: auto;
     }
     .slide-text-header {
         width: 80%;
@@ -87,4 +62,31 @@ p b {
         top: 20vh;
         left: 10%;
     }
+}
+
+// Illustrated slides: the scene on top, then the explanation
+.slide-scene {
+    padding-top: 1rem;
+
+    h2 {
+        margin-top: 1rem;
+    }
+
+    .slide-text-scene {
+        max-width: 32rem;
+        margin: 0 auto;
+        padding-bottom: 2rem;
+    }
+
+    p {
+        padding: 0 1.5rem;
+        text-align: left;
+    }
+}
+
+// Icons inside the translated texts (innerHTML, hence ::ng-deep)
+:host ::ng-deep .tuto-inline-icon {
+    font-size: 1.2em;
+    vertical-align: -0.25em;
+    color: var(--primary);
 }

@@ -3,7 +3,7 @@
     // Bottom room so the refresh button never hides the last entry
     padding: 0.5rem 0.75rem 6rem 0.75rem;
 
-    @each $type in med, log, sport {
+    @each $type in symptomLog, med, log, sport {
         &.#{$type} {
             --type-soft: var(--color-event-#{$type}-soft);
             --type-icon: var(--color-event-#{$type}-icon);
@@ -94,6 +94,55 @@
     .manage-item-dose {
         font-weight: 600;
         color: var(--type-badge-text);
+    }
+
+    .manage-item-title-row {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        min-width: 0;
+
+        .manage-item-title {
+            min-width: 0;
+        }
+    }
+
+    // e.g. the symptom currently tracked
+    .manage-item-tag {
+        flex-shrink: 0;
+        padding: 0.05rem 0.45rem;
+        border-radius: 999px;
+        background-color: var(--type-soft);
+        color: var(--type-badge-text);
+        font-size: 0.72rem;
+        font-weight: 600;
+    }
+}
+
+// "Add" entry at the top of a list
+.manage-add-item {
+    width: 100%;
+    min-height: 3.6rem;
+    border: 1px dashed var(--border-medium);
+    box-shadow: none;
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+
+    .manage-item-bubble {
+        background-color: rgba(var(--primary-rgb), 0.12);
+        color: var(--primary);
+    }
+
+    .manage-item-title {
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: var(--text-medium);
+    }
+
+    &:active {
+        transform: scale(0.99);
     }
 }
 

@@ -55,6 +55,7 @@ import { DialogNoTargetSymptomWarningComponent } from './ui/dialog/dialog-no-tar
 import { DialogExportConfirmComponent } from './ui/dialog/dialog-export-confirm';
 import { DialogInfoComponent } from './ui/dialog/dialog-info';
 import { TutorialComponent } from './ui/tutorial';
+import { TutorialSceneComponent } from './ui/tutorial/tutorial-scene';
 import { IonicModule } from '@ionic/angular';
 import { SwipingFingerComponent } from './ui/graphic/swiping-finger';
 import { MedsService } from './infra/meds.service';
@@ -107,6 +108,7 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 		ManageComponent,
 		SettingsComponent,
 		TutorialComponent,
+		TutorialSceneComponent,
 		AboutComponent,
 		MonthlyReportComponent,
 		PieChartComponent,

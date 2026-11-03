@@ -52,6 +52,15 @@ npm install
 ionic serve
 ```
 
+### Run the tests
+
+```bash
+npm test
+```
+
+Builds the app and runs the regression tests (unit, user flows and screenshots) in a headless Chrome.
+See [tests/README.md](tests/README.md).
+
 ### Build and run on Android
 
 ```bash

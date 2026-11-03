@@ -256,9 +256,8 @@
                 </div>
 
                 <div class="settings-section-title" transloco="SETTINGS_EVENT_COLORS_TITLE"></div>
-                <!-- Each palette is previewed on its own theme, whatever the current one -->
-                <div *ngFor="let theme of paletteThemes" class="palette-card"
-                    [class.force-light-theme]="theme === 'light'" [class.force-dark-theme]="theme === 'dark'">
+                <!-- Palette of the current theme only: each theme has its own one -->
+                <div *ngIf="currentTheme as theme" class="palette-card">
                     <div class="palette-card-header">
                         <span class="palette-card-title">
                             {{ (theme === 'dark' ? 'SETTINGS_EVENT_COLORS_DARK' : 'SETTINGS_EVENT_COLORS_LIGHT') |
@@ -342,7 +341,12 @@
                     <mat-selection-list multiple="false">
                         <div id="manual-backup-div-content">
                             <mat-expansion-panel-header class="mat-expansion-panel-header">
-                                <div class="panel-title" transloco="SETTINGS_MANUAL_SAVE_TITLE"></div>
+                                <div class="panel-title">
+                                    {{ 'SETTINGS_MANUAL_SAVE_TITLE' | transloco }}
+                                    <!-- stopPropagation: this header belongs to the "Advanced" panel, which would close -->
+                                    <mat-icon class="help-icon-inline manual-backup-info"
+                                        (click)="openManualBackupInfo(); $event.stopPropagation()">info</mat-icon>
+                                </div>
                                 <div class="panel-description" transloco="SETTINGS_MANUAL_SAVE_SUBTITLE"></div>
                             </mat-expansion-panel-header>
 

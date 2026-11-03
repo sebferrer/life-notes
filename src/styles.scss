@@ -59,14 +59,14 @@ $dark-event-colors: (symptomLog: #FF7A90, med: #5CC8F2, log: #AAB4C0, sport: #FF
     meal: #7ED492, wakeUp: #FFD166, goToBed: #A5B4FC);
 
 // Icons of the tonal bubbles, as computed by getEventTonalIconColor (event-colors.model.ts) for the colors above.
-// Sass has no luminance function, so they are precomputed.
-$light-event-icons: (symptomLog: #E62C4C, med: #0087AC, log: #7A828B, sport: #BF6900,
-    meal: #2A9419, wakeUp: #B3751B, goToBed: #5C6BC0);
+// Sass has no luminance function, so they are precomputed (tests/unit/event-colors.spec.ts checks they match).
+$light-event-icons: (symptomLog: #E52C4C, med: #0087AC, log: #7A828B, sport: #BF6900,
+    meal: #2A9419, wakeUp: #B2751B, goToBed: #5C6BC0);
 $dark-event-icons: $dark-event-colors;
 
 // Texts of the badges (surface pill), as computed by getEventBadgeTextColor for the colors above
-$light-event-badge-texts: (symptomLog: #D92A47, med: #0080A2, log: #6A717A, sport: #B36200,
-    meal: #258316, wakeUp: #996417, goToBed: #5C6BC0);
+$light-event-badge-texts: (symptomLog: #D92A47, med: #007FA2, log: #6A717A, sport: #B26200,
+    meal: #258216, wakeUp: #996417, goToBed: #5C6BC0);
 $dark-event-badge-texts: $dark-event-colors;
 
 // How the variants of the event colors are derived in each theme (weights are the part of the event color)
@@ -197,13 +197,6 @@ body.dark-theme {
 // Used to render light content inside the dark theme (e.g. PDF export)
 .force-light-theme {
     @include light-theme-tokens;
-    background-color: var(--app-background);
-    color: var(--text-strong);
-}
-
-// Used to preview the dark theme inside the light one (e.g. settings palettes)
-.force-dark-theme {
-    @include dark-theme-tokens;
     background-color: var(--app-background);
     color: var(--text-strong);
 }

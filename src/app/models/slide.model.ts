@@ -3,5 +3,8 @@ export interface ISlide {
 	label: string;
 	title: string;
 	text: string;
-	img?: string;
+	// Illustration (see TutorialSceneComponent)
+	scene?: string;
+	// Text of the classic timeline design, when it differs
+	classicText?: string;
 }

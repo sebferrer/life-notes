@@ -1,45 +1,62 @@
-<div class="symptoms-page-container">
-    <header class="page-header">
-        <h1 class="page-title">{{ 'SYMPTOMS_TITLE' | transloco }}</h1>
+<div class="manage-list-page symptomLog">
+    <header class="manage-list-header">
+        <button mat-icon-button routerLink="/manage">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+        <h1 class="manage-list-title">{{ 'SYMPTOMS_TITLE' | transloco }}</h1>
     </header>
 
-    <div class="symptoms-list-container" *ngIf="symptoms$ | async as symptoms; else loading">
-        <!-- Add New Symptom Card -->
-        <div class="symptom-card add-card" (click)="openAddDialog()" matRipple>
-            <div class="symptom-info">
-                <span class="symptom-label add-label">{{ 'ADD_NEW_SYMPTOM_LABEL' | transloco }}</span>
+    <div *ngIf="symptoms$ | async as symptoms; else loading" class="manage-list">
+        <button class="manage-item manage-add-item symptom-card add-card" (click)="openAddDialog()">
+            <span class="manage-item-bubble"><mat-icon>add</mat-icon></span>
+            <span class="manage-item-title symptom-label">{{ 'ADD_NEW_SYMPTOM_LABEL' | transloco }}</span>
+        </button>
+
+        <div *ngFor="let symptom of symptoms" class="manage-item symptom-card">
+            <div class="manage-item-bubble">
+                <mat-icon>spa</mat-icon>
             </div>
-            <div class="add-icon-container">
-                <mat-icon>add_circle_outline</mat-icon>
+            <div class="manage-item-text">
+                <div class="manage-item-title-row">
+                    <span class="manage-item-title symptom-label">{{ symptom.label }}</span>
+                    <span *ngIf="symptom.key === trackedSymptomKey" class="manage-item-tag">
+                        {{ 'SYMPTOM_TRACKED' | transloco }}</span>
+                </div>
+                <ng-container *ngIf="stats.get(symptom.key) as stat; else noEntry">
+                    <div *ngIf="stat.count > 0" class="manage-item-meta">
+                        {{ (stat.count === 1 ? 'OCCURRENCE_COUNT_ONE' : 'OCCURRENCE_COUNT_MANY') |
+                        transloco: { count: stat.count } }}
+                    </div>
+                    <ng-template transloco let-t>
+                        <div class="manage-item-meta">
+                            {{ t('LAST_ENTRY_DATE', { day: stat.lastDate.day,
+                            month: t('MONTH-SHORT-' + stat.lastDate.month), year: stat.lastDate.year }) }}
+                        </div>
+                    </ng-template>
+                </ng-container>
+                <ng-template #noEntry>
+                    <div class="manage-item-meta">{{ 'SYMPTOM_NO_ENTRY' | transloco }}</div>
+                </ng-template>
+            </div>
+            <div class="manage-item-actions">
+                <button mat-icon-button class="edit-btn" (click)="openAddDialog(symptom)">
+                    <mat-icon fontSet="material-icons-outlined">edit</mat-icon>
+                </button>
+                <button mat-icon-button class="delete-btn" (click)="openDeleteDialog(symptom.key, symptom.label)">
+                    <mat-icon fontSet="material-icons-outlined">delete</mat-icon>
+                </button>
             </div>
         </div>
 
-        <div class="symptom-card" *ngFor="let symptom of symptoms">
-            <div class="symptom-info">
-                <span class="symptom-label">{{ symptom.label }}</span>
+        <div *ngIf="symptoms.length === 0" class="manage-list-empty">
+            <div class="manage-item-bubble">
+                <mat-icon>spa</mat-icon>
             </div>
-            <div class="symptom-actions">
-                <button mat-icon-button class="action-btn edit-btn" (click)="openAddDialog(symptom)" matTooltip="Edit">
-                    <mat-icon>edit</mat-icon>
-                </button>
-                <button mat-icon-button class="action-btn delete-btn"
-                    (click)="openDeleteDialog(symptom.key, symptom.label)" matTooltip="Delete">
-                    <mat-icon>delete</mat-icon>
-                </button>
-            </div>
-        </div>
-
-        <div class="empty-state" *ngIf="symptoms.length === 0">
             <p>{{ 'NO_SYMPTOMS' | transloco }}</p>
         </div>
-
     </div>
-
-
-
-    <ng-template #loading>
-        <div class="loading-container">
-            <mat-spinner diameter="40"></mat-spinner>
-        </div>
-    </ng-template>
 </div>
+
+<ng-template #loading>
+    <mat-spinner></mat-spinner>
+</ng-template>

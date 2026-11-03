@@ -7,9 +7,14 @@
     "ng": "ng",
     "start": "set NODE_OPTIONS=--openssl-legacy-provider && ng serve",
     "build": "set NODE_OPTIONS=--openssl-legacy-provider && ng build",
-    "test": "ng test",
-    "lint": "ng lint",
-    "e2e": "ng e2e"
+    "test": "npm run build && npm run test:run",
+    "test:run": "playwright test --config=playwright.config.ts",
+    "test:unit": "playwright test --config=playwright.config.ts --project=unit",
+    "test:e2e": "npm run build && playwright test --config=playwright.config.ts --project=unit --project=e2e",
+    "test:visual": "npm run build && playwright test --config=playwright.config.ts --project=visual",
+    "test:visual:update": "npm run build && playwright test --config=playwright.config.ts --project=visual --update-snapshots",
+    "test:report": "playwright show-report tests/report",
+    "lint": "ng lint"
   },
   "private": true,
   "dependencies": {
@@ -67,6 +72,7 @@
     "@angular/language-service": "~11.0.2",
     "@capacitor/assets": "^3.0.5",
     "@ionic/angular-toolkit": "^3.0.0",
+    "@playwright/test": "^1.64.1",
     "@types/chart.js": "^2.9.29",
     "@types/file-saver": "^2.0.1",
     "@types/jasmine": "~3.5.0",

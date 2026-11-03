@@ -1,0 +1,637 @@
+<div #root class="scene scene-{{ scene }}" [class.classic]="classic" [style.height]="'calc(' + height + ' * var(--u))'">
+<ng-container *transloco="let t">
+
+    <!-- ===================================================================================== -->
+    <!-- Building blocks                                                                       -->
+    <!-- ===================================================================================== -->
+
+    <!-- Toolbar of the app; tag prefixes the anchors, tap is the highlighted entry -->
+    <ng-template #toolbar let-tag="tag" let-active="active" let-chip="chip" let-tap="tap" let-step="step"
+        let-glow="glow">
+        <div class="m-toolbar">
+            <span class="m-nav" [class.active]="active === 'timeline'">
+                <mat-icon [fontSet]="active === 'timeline' ? 'material-icons' : 'material-icons-outlined'">view_day
+                </mat-icon>
+            </span>
+            <span class="m-nav" [class.active]="active === 'calendar'" [class.tap]="tap === 'calendar'"
+                [attr.data-anchor]="tag + '-calendar'">
+                <mat-icon [fontSet]="active === 'calendar' ? 'material-icons' : 'material-icons-outlined'">
+                    calendar_month</mat-icon>
+                <span *ngIf="tap === 'calendar' && step" class="step">{{ step }}</span>
+            </span>
+            <span class="m-nav" [class.active]="active === 'manage'" [class.tap]="tap === 'manage'"
+                [attr.data-anchor]="tag + '-manage'">
+                <mat-icon [fontSet]="active === 'manage' ? 'material-icons' : 'material-icons-outlined'">grid_view
+                </mat-icon>
+                <span *ngIf="tap === 'manage' && step" class="step">{{ step }}</span>
+            </span>
+            <span class="m-chip" [class.tap]="tap === 'chip'" [class.glow]="glow === 'chip'"
+                [attr.data-anchor]="tag + '-chip'">
+                <mat-icon class="m-chip-icon">spa</mat-icon>
+                <span *ngIf="chip" class="m-chip-label">{{ t(chip) }}</span>
+                <mat-icon class="m-chip-arrow">arrow_drop_down</mat-icon>
+                <span *ngIf="tap === 'chip' && step" class="step">{{ step }}</span>
+            </span>
+            <span class="m-nav m-end" [class.active]="active === 'settings'" [class.tap]="tap === 'settings'"
+                [attr.data-anchor]="tag + '-settings'">
+                <mat-icon [fontSet]="active === 'settings' ? 'material-icons' : 'material-icons-outlined'">settings
+                </mat-icon>
+                <span *ngIf="tap === 'settings' && step" class="step">{{ step }}</span>
+            </span>
+        </div>
+    </ng-template>
+
+    <!-- Header of a day card: date, intensity dot, add button -->
+    <ng-template #dayHeader let-tag="tag" let-level="level" let-tap="tap" let-step="step" let-glow="glow">
+        <div class="m-day-header">
+            <span class="m-date">{{ t('TIMELINE_TILE_DATE', { dayOfWeek: t('DAY-OF-WEEK-SHORT-' + today.dayOfWeek),
+                month: t('MONTH-SHORT-' + today.month), day: today.day, year: today.year }) }}</span>
+            <span class="m-dot-button" [class.tap]="tap === 'dot'" [class.glow]="glow === 'dot'"
+                [attr.data-anchor]="tag + '-dot'">
+                <span class="m-dot level-{{ level }}"></span>
+                <span *ngIf="tap === 'dot' && step" class="step">{{ step }}</span>
+            </span>
+            <span class="m-icon-button" [class.tap]="tap === 'add'" [attr.data-anchor]="tag + '-add'">
+                <mat-icon>playlist_add</mat-icon>
+                <span *ngIf="tap === 'add' && step" class="step">{{ step }}</span>
+            </span>
+            <span class="m-icon-button">
+                <mat-icon>chevron_right</mat-icon>
+            </span>
+        </div>
+    </ng-template>
+
+    <!-- Event of the day rail -->
+    <ng-template #eventRow let-type="type" let-time="time" let-title="title" let-detail="detail" let-badge="badge"
+        let-anchor="anchor" let-tap="tap" let-step="step">
+        <div class="m-row {{ type }}">
+            <span class="m-time">{{ time }}</span>
+            <span class="m-marker">
+                <span *ngIf="type === 'med'" class="svg-icon pill"></span>
+                <mat-icon *ngIf="type === 'symptomLog'">spa</mat-icon>
+                <mat-icon *ngIf="type === 'log'">event_note</mat-icon>
+                <mat-icon *ngIf="type === 'sport'">fitness_center</mat-icon>
+            </span>
+            <span class="m-event" [class.tap]="tap" [attr.data-anchor]="anchor">
+                <span class="m-event-text">
+                    <span class="m-event-title">{{ t(title) }}</span>
+                    <span *ngIf="detail" class="m-event-detail">{{ t(detail) }}</span>
+                </span>
+                <span *ngIf="badge" class="m-badge">{{ badge }}</span>
+                <span *ngIf="tap && step" class="step">{{ step }}</span>
+            </span>
+        </div>
+    </ng-template>
+
+    <!-- Wake up / bedtime line of the day rail -->
+    <ng-template #sleepRow let-type="type" let-time="time">
+        <div class="m-row m-sleep {{ type }}" [class.empty]="!time">
+            <span class="m-time">{{ time || '--:--' }}</span>
+            <span class="m-marker">
+                <mat-icon>{{ type === 'wakeUp' ? 'alarm' : 'bedtime' }}</mat-icon>
+            </span>
+            <span class="m-sleep-label">{{ t(type === 'wakeUp' ? 'TIMELINE_WAKE_UP' : 'TIMELINE_GO_TO_BED') }}</span>
+        </div>
+    </ng-template>
+
+    <!-- Classic design (timeline style setting): grey header of a day -->
+    <ng-template #classicHeader let-tag="tag" let-tap="tap" let-step="step" let-dayPage="dayPage">
+        <div class="c-header">
+            <mat-icon *ngIf="dayPage">arrow_back_ios</mat-icon>
+            <span class="c-date">{{ t('TIMELINE_TILE_DATE', { dayOfWeek: t('DAY-OF-WEEK-SHORT-' + today.dayOfWeek),
+                month: t('MONTH-SHORT-' + today.month), day: today.day, year: today.year }) }}</span>
+            <mat-icon *ngIf="!dayPage">arrow_forward_ios</mat-icon>
+            <span class="c-icon-button" [class.tap]="tap === 'add'" [attr.data-anchor]="tag + '-add'">
+                <mat-icon>playlist_add</mat-icon>
+                <span *ngIf="tap === 'add' && step" class="step">{{ step }}</span>
+            </span>
+        </div>
+    </ng-template>
+
+    <!-- Classic design: body of a day, with its event chips, intensity dot and sleep corners -->
+    <ng-template #classicBody let-tag="tag" let-level="level" let-tap="tap" let-step="step" let-glow="glow"
+        let-events="events" let-wakeUp="wakeUp">
+        <div class="c-body">
+            <span class="c-corner"></span>
+            <span class="c-wake"><span>{{ wakeUp }}</span><mat-icon>alarm</mat-icon></span>
+            <span class="c-bed"><mat-icon>bedtime</mat-icon></span>
+            <span class="c-chips">
+                <span *ngFor="let event of events" class="c-chip {{ event.type }}" [class.tap]="event.tap"
+                    [attr.data-anchor]="event.anchor">
+                    <span>{{ event.time }}</span>
+                    <span>{{ t(event.title) }}</span>
+                    <span *ngIf="event.badge">{{ event.badge }}</span>
+                    <span *ngIf="event.tap && event.step" class="step">{{ event.step }}</span>
+                </span>
+            </span>
+            <span class="c-dot-button" [class.tap]="tap === 'dot'" [class.glow]="glow === 'dot'"
+                [attr.data-anchor]="tag + '-dot'">
+                <span class="c-dot level-{{ level }}"></span>
+                <span *ngIf="tap === 'dot' && step" class="step">{{ step }}</span>
+            </span>
+        </div>
+    </ng-template>
+
+    <!-- Header of a settings section -->
+    <ng-template #settingsHeader let-row="row">
+        <div class="m-settings-row">
+            <span class="m-settings-icon {{ row.key }}"><mat-icon>{{ row.icon }}</mat-icon></span>
+            <span class="m-settings-text">
+                <span class="m-settings-title">{{ t(row.title) }}</span>
+                <span class="m-settings-subtitle">{{ t(row.subtitle) }}</span>
+            </span>
+        </div>
+    </ng-template>
+
+    <!-- Entries of the Import / Export section -->
+    <ng-template #backupItem let-icon="icon" let-label="label" let-anchor="anchor" let-tap="tap" let-step="step">
+        <div class="m-list-item" [class.tap]="tap" [attr.data-anchor]="anchor">
+            <mat-icon>{{ icon }}</mat-icon>
+            <span>{{ t(label) }}</span>
+            <span *ngIf="tap && step" class="step">{{ step }}</span>
+        </div>
+    </ng-template>
+
+    <!-- ===================================================================================== -->
+    <!-- Scenes                                                                                -->
+    <!-- ===================================================================================== -->
+
+    <ng-container [ngSwitch]="scene">
+
+        <!-- Create a symptom: Manage > Symptoms > Add -->
+        <ng-container *ngSwitchCase="'create-symptom'">
+            <div class="screen page s1">
+                <ng-container
+                    *ngTemplateOutlet="toolbar; context: { tag: 'a', active: 'manage', tap: 'manage', step: 1 }">
+                </ng-container>
+                <div class="m-page-title">{{ t('MANAGE_TITLE') }}</div>
+                <div class="m-tiles">
+                    <span class="m-tile symptomLog tap" data-anchor="tile">
+                        <mat-icon>spa</mat-icon>{{ t('MANAGE_SYMPTOMS') }}<span class="step">2</span>
+                    </span>
+                    <span class="m-tile med"><span class="svg-icon pill"></span>{{ t('MANAGE_MEDS') }}</span>
+                    <span class="m-tile log"><mat-icon>event_note</mat-icon>{{ t('MANAGE_LOGS') }}</span>
+                    <span class="m-tile sport"><mat-icon>fitness_center</mat-icon>{{ t('MANAGE_SPORTS') }}</span>
+                </div>
+            </div>
+            <div class="screen page s2" data-anchor="list">
+                <div class="m-page-title">{{ t('SYMPTOMS_TITLE') }}</div>
+                <div class="m-add-card tap" data-anchor="add-card">
+                    <span>{{ t('ADD_NEW_SYMPTOM_LABEL') }}</span>
+                    <mat-icon>add_circle_outline</mat-icon>
+                    <span class="step">3</span>
+                </div>
+            </div>
+            <div class="screen sheet s3" data-anchor="sheet">
+                <mat-icon class="m-close">close</mat-icon>
+                <div class="m-sheet-title">{{ t('ADD_SYMPTOM') }}</div>
+                <div class="m-field-label">{{ t('SYMPTOM') | titlecase }}</div>
+                <div class="m-input">{{ t('TUTORIAL_MOCK_SYMPTOM_1') }}<span class="m-caret"></span></div>
+                <div class="m-button">{{ t('ADD') }}</div>
+            </div>
+        </ng-container>
+
+        <!-- Target a symptom: chip > list > chip updated -->
+        <ng-container *ngSwitchCase="'target-symptom'">
+            <div class="screen page s1">
+                <ng-container
+                    *ngTemplateOutlet="toolbar; context: { tag: 'a', active: 'timeline', chip: 'TUTORIAL_MOCK_SYMPTOM_2', tap: 'chip', step: 1 }">
+                </ng-container>
+            </div>
+            <div class="screen page s2">
+                <ng-container
+                    *ngTemplateOutlet="toolbar; context: { tag: 'b', active: 'timeline', chip: 'TUTORIAL_MOCK_SYMPTOM_2' }">
+                </ng-container>
+                <div *ngIf="!classic" class="m-day-card m-faded">
+                    <ng-container *ngTemplateOutlet="dayHeader; context: { tag: 'b', level: 'default' }">
+                    </ng-container>
+                </div>
+                <div *ngIf="classic" class="m-faded">
+                    <ng-container *ngTemplateOutlet="classicHeader; context: { tag: 'b' }"></ng-container>
+                </div>
+                <div class="m-menu" data-anchor="menu">
+                    <div class="m-menu-item">{{ t('TUTORIAL_MOCK_SYMPTOM_2') }}</div>
+                    <div class="m-menu-item tap" data-anchor="item">
+                        {{ t('TUTORIAL_MOCK_SYMPTOM_1') }}<span class="step">2</span>
+                    </div>
+                </div>
+            </div>
+            <div class="screen page s3">
+                <ng-container
+                    *ngTemplateOutlet="toolbar; context: { tag: 'c', active: 'timeline', chip: 'TUTORIAL_MOCK_SYMPTOM_1', glow: 'chip' }">
+                </ng-container>
+            </div>
+        </ng-container>
+
+        <!-- Overview of the day: dot > intensity > dot colored -->
+        <ng-container *ngSwitchCase="'day-overview'">
+            <div class="screen page s1">
+                <ng-container *ngIf="classic">
+                    <ng-container *ngTemplateOutlet="classicHeader; context: { tag: 'h' }"></ng-container>
+                    <ng-container
+                        *ngTemplateOutlet="classicBody; context: { tag: 'a', level: 'default', tap: 'dot', step: 1, wakeUp: '07:30', events: [{ type: 'symptomLog', time: '10:15', title: 'TUTORIAL_MOCK_SYMPTOM_1', badge: '[6/10]' }] }">
+                    </ng-container>
+                </ng-container>
+                <div *ngIf="!classic" class="m-day-card">
+                    <ng-container *ngTemplateOutlet="dayHeader; context: { tag: 'a', level: 'default', tap: 'dot', step: 1 }">
+                    </ng-container>
+                    <div class="m-rail">
+                        <ng-container *ngTemplateOutlet="sleepRow; context: { type: 'wakeUp', time: '07:30' }">
+                        </ng-container>
+                        <ng-container
+                            *ngTemplateOutlet="eventRow; context: { type: 'symptomLog', time: '10:15', title: 'TUTORIAL_MOCK_SYMPTOM_1', badge: '6/10' }">
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+            <div class="screen sheet s2" data-anchor="sheet">
+                <mat-icon class="m-close">close</mat-icon>
+                <div class="m-sheet-title centered">
+                    {{ t('EDIT_SYMPTOM_OVERVIEW_DIALOG_TITLE', { symptom: t('TUTORIAL_MOCK_SYMPTOM_1') }) }}</div>
+                <div class="m-field-label">{{ t('PAIN') }}</div>
+                <div class="m-slider-row">
+                    <span class="m-slider"><span class="m-slider-fill"></span><span class="m-slider-knob"></span></span>
+                    <span class="m-pain-badge">6</span>
+                </div>
+                <div class="m-button tap" data-anchor="set">{{ t('SET') }}<span class="step">2</span></div>
+            </div>
+            <div class="screen page s3">
+                <ng-container *ngIf="classic">
+                    <ng-container
+                        *ngTemplateOutlet="classicBody; context: { tag: 'c', level: '3', glow: 'dot', wakeUp: '07:30', events: [{ type: 'symptomLog', time: '10:15', title: 'TUTORIAL_MOCK_SYMPTOM_1', badge: '[6/10]' }] }">
+                    </ng-container>
+                </ng-container>
+                <div *ngIf="!classic" class="m-day-card">
+                    <ng-container *ngTemplateOutlet="dayHeader; context: { tag: 'c', level: '3', glow: 'dot' }">
+                    </ng-container>
+                </div>
+            </div>
+        </ng-container>
+
+        <!-- Calendar: colored month, tap a day to open it -->
+        <ng-container *ngSwitchCase="'calendar'">
+            <div class="screen page s1">
+                <ng-container
+                    *ngTemplateOutlet="toolbar; context: { tag: 'a', active: 'calendar', tap: 'calendar', step: 1, chip: 'TUTORIAL_MOCK_SYMPTOM_1' }">
+                </ng-container>
+                <div class="m-card m-calendar">
+                    <div class="m-calendar-header">
+                        <span class="m-round-button"><mat-icon>chevron_left</mat-icon></span>
+                        <span class="m-calendar-title">{{ t('CALENDAR_HEADER_DATE', { month: t('MONTH-' + today.month),
+                            year: today.year }) }}</span>
+                        <span class="m-round-button"><mat-icon>chevron_right</mat-icon></span>
+                    </div>
+                    <div class="m-calendar-grid">
+                        <span *ngFor="let day of weekDays" class="m-weekday">{{ t('DAY-OF-WEEK-VERY-SHORT-' + day) }}</span>
+                        <span *ngFor="let slot of calendarOffset" class="m-day empty"></span>
+                        <span *ngFor="let cell of calendarCells" class="m-day level-{{ cell.level }}"
+                            [class.future]="cell.future" [class.today]="cell.today" [class.tap]="cell.today"
+                            [attr.data-anchor]="cell.today ? 'today' : null">
+                            {{ cell.day }}<span *ngIf="cell.today" class="step">2</span>
+                        </span>
+                    </div>
+                </div>
+                <div class="m-card m-stats">
+                    <span class="m-donut"></span>
+                    <span class="m-legend">
+                        <span class="level-default"></span><span class="level-1"></span><span class="level-2"></span>
+                        <span class="level-3"></span><span class="level-4"></span><span class="level-5"></span>
+                    </span>
+                </div>
+            </div>
+            <div *ngIf="classic" class="screen page s2" data-anchor="day">
+                <ng-container *ngTemplateOutlet="classicHeader; context: { tag: 'd', dayPage: true }"></ng-container>
+                <ng-container
+                    *ngTemplateOutlet="classicBody; context: { tag: 'd', level: '3', wakeUp: '07:30', events: [{ type: 'symptomLog', time: '10:15', title: 'TUTORIAL_MOCK_SYMPTOM_1', badge: '[6/10]' }] }">
+                </ng-container>
+            </div>
+            <div *ngIf="!classic" class="screen page s2" data-anchor="day">
+                <div class="m-day-page-header">
+                    <mat-icon>arrow_back</mat-icon>
+                    <span>
+                        <span class="m-day-page-weekday">{{ t('DAY-OF-WEEK-SHORT-' + today.dayOfWeek) }}</span>
+                        <span class="m-day-page-date">{{ t('DAY_VIEW_DATE', { day: today.day, month: t('MONTH-' +
+                            today.month), year: today.year }) }}</span>
+                    </span>
+                </div>
+                <div class="m-day-card">
+                    <div class="m-rail">
+                        <ng-container
+                            *ngTemplateOutlet="eventRow; context: { type: 'symptomLog', time: '10:15', title: 'TUTORIAL_MOCK_SYMPTOM_1', badge: '6/10' }">
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+
+        <!-- Add an event: day + > menu > form -->
+        <ng-container *ngSwitchCase="'add-event'">
+            <div class="screen page s1">
+                <ng-container *ngIf="classic">
+                    <ng-container *ngTemplateOutlet="classicHeader; context: { tag: 'a', tap: 'add', step: 1 }">
+                    </ng-container>
+                </ng-container>
+                <div *ngIf="!classic" class="m-day-card">
+                    <ng-container *ngTemplateOutlet="dayHeader; context: { tag: 'a', level: '3', tap: 'add', step: 1 }">
+                    </ng-container>
+                </div>
+            </div>
+            <div class="screen sheet s2" data-anchor="menu">
+                <div class="m-menu-row"><mat-icon>spa</mat-icon>{{ t('ADD_SYMPTOM_BOTTOMSHEET') }}</div>
+                <div class="m-menu-row"><span class="svg-icon meal"></span>{{ t('ADD_MEAL_BOTTOMSHEET') }}</div>
+                <div class="m-menu-row tap" data-anchor="menu-med">
+                    <span class="svg-icon pill"></span>{{ t('ADD_DRUG_BOTTOMSHEET') }}<span class="step">2</span>
+                </div>
+                <div class="m-menu-row"><mat-icon>event_note</mat-icon>{{ t('ADD_NOTE_BOTTOMSHEET') }}</div>
+                <div class="m-menu-row"><mat-icon>fitness_center</mat-icon>{{ t('ADD_SPORT_BOTTOMSHEET') }}</div>
+            </div>
+            <div class="screen sheet s3 med" data-anchor="form">
+                <mat-icon class="m-close">close</mat-icon>
+                <div class="m-sheet-heading">
+                    <span class="m-bubble"><span class="svg-icon pill"></span></span>
+                    <span class="m-sheet-title">{{ t('ADD') }}</span>
+                </div>
+                <div class="m-fields">
+                    <span>
+                        <span class="m-field-label">{{ t('TABLE_MEDICINE') }}</span>
+                        <span class="m-input">{{ t('TUTORIAL_MOCK_MED_1') }}</span>
+                    </span>
+                    <span>
+                        <span class="m-field-label">{{ t('QUANTITY') }} (mg)</span>
+                        <span class="m-input">1000</span>
+                    </span>
+                </div>
+                <div class="m-button tap" data-anchor="add-button">{{ t('ADD') }}<span class="step">3</span></div>
+            </div>
+        </ng-container>
+
+        <!-- Edit or delete an event: event > details > confirmation -->
+        <ng-container *ngSwitchCase="'edit-event'">
+            <div class="screen page s1">
+                <ng-container *ngIf="classic">
+                    <ng-container
+                        *ngTemplateOutlet="classicBody; context: { tag: 'a', level: '3', wakeUp: '07:30', events: [
+                            { type: 'symptomLog', time: '10:15', title: 'TUTORIAL_MOCK_SYMPTOM_1', badge: '[6/10]', anchor: 'event', tap: true, step: 1 },
+                            { type: 'med', time: '12:00', title: 'TUTORIAL_MOCK_MED_1', badge: '1000mg' }] }">
+                    </ng-container>
+                </ng-container>
+                <div *ngIf="!classic" class="m-day-card">
+                    <div class="m-rail">
+                        <ng-container
+                            *ngTemplateOutlet="eventRow; context: { type: 'symptomLog', time: '10:15', title: 'TUTORIAL_MOCK_SYMPTOM_1', badge: '6/10', anchor: 'event', tap: true, step: 1 }">
+                        </ng-container>
+                        <ng-container
+                            *ngTemplateOutlet="eventRow; context: { type: 'med', time: '12:00', title: 'TUTORIAL_MOCK_MED_1', badge: '1000 mg' }">
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+            <div class="screen sheet s2 symptomLog" data-anchor="show">
+                <div class="m-sheet-heading">
+                    <span class="m-bubble"><mat-icon>spa</mat-icon></span>
+                    <span class="m-sheet-title">{{ t('TUTORIAL_MOCK_SYMPTOM_1') }}</span>
+                </div>
+                <div class="m-intensity">
+                    <span>{{ t('PAIN') }}</span><span class="m-intensity-value">6/10</span>
+                </div>
+                <span class="m-bar"><span class="m-bar-fill"></span></span>
+                <div class="m-actions">
+                    <span class="m-button stroked tap" data-anchor="delete">{{ t('DELETE') }}<span class="step">2</span></span>
+                    <span class="m-button tap">{{ t('UPDATE') }}</span>
+                </div>
+            </div>
+            <div class="screen sheet s3" data-anchor="confirm">
+                <div class="m-sheet-title centered">{{ t('DELETE_EVENT_DIALOG_TITLE', { type: t('symptomLog') }) }}</div>
+                <div class="m-actions">
+                    <span class="m-button stroked">{{ t('NO') }}</span>
+                    <span class="m-button tap">{{ t('YES') }}<span class="step">3</span></span>
+                </div>
+            </div>
+        </ng-container>
+
+        <!-- Manage the lists: Manage > Medications > actions -->
+        <ng-container *ngSwitchCase="'manage'">
+            <div class="screen page s1">
+                <ng-container
+                    *ngTemplateOutlet="toolbar; context: { tag: 'a', active: 'manage', tap: 'manage', step: 1, chip: 'TUTORIAL_MOCK_SYMPTOM_1' }">
+                </ng-container>
+                <div class="m-page-title">{{ t('MANAGE_TITLE') }}</div>
+                <div class="m-tiles">
+                    <span class="m-tile symptomLog"><mat-icon>spa</mat-icon>{{ t('MANAGE_SYMPTOMS') }}</span>
+                    <span class="m-tile med tap" data-anchor="tile">
+                        <span class="svg-icon pill"></span>{{ t('MANAGE_MEDS') }}<span class="step">2</span>
+                    </span>
+                    <span class="m-tile log"><mat-icon>event_note</mat-icon>{{ t('MANAGE_LOGS') }}</span>
+                    <span class="m-tile sport"><mat-icon>fitness_center</mat-icon>{{ t('MANAGE_SPORTS') }}</span>
+                </div>
+            </div>
+            <div class="screen page s2 med" data-anchor="list">
+                <div class="m-list-header">
+                    <mat-icon>arrow_back</mat-icon><span>{{ t('MEDS_TITLE') }}</span>
+                </div>
+                <div class="m-card m-entry">
+                    <span class="m-bubble"><span class="svg-icon pill"></span></span>
+                    <span class="m-entry-text">
+                        <span class="m-entry-title">{{ t('TUTORIAL_MOCK_MED_1') }}</span>
+                        <span class="m-entry-meta"><b>1000 mg</b> · {{ t('OCCURRENCE_COUNT_MANY', { count: 12 }) }}</span>
+                    </span>
+                    <span class="m-entry-actions tap">
+                        <mat-icon fontSet="material-icons-outlined">calendar_month</mat-icon>
+                        <mat-icon fontSet="material-icons-outlined">edit</mat-icon>
+                        <mat-icon fontSet="material-icons-outlined">delete</mat-icon>
+                        <span class="step">3</span>
+                    </span>
+                </div>
+                <div class="m-card m-entry">
+                    <span class="m-bubble"><span class="svg-icon pill"></span></span>
+                    <span class="m-entry-text">
+                        <span class="m-entry-title">{{ t('TUTORIAL_MOCK_MED_2') }}</span>
+                        <span class="m-entry-meta"><b>400 mg</b> · {{ t('OCCURRENCE_COUNT_MANY', { count: 3 }) }}</span>
+                    </span>
+                    <span class="m-entry-actions">
+                        <mat-icon fontSet="material-icons-outlined">calendar_month</mat-icon>
+                        <mat-icon fontSet="material-icons-outlined">edit</mat-icon>
+                        <mat-icon fontSet="material-icons-outlined">delete</mat-icon>
+                    </span>
+                </div>
+            </div>
+        </ng-container>
+
+        <!-- Settings: gear > sections -->
+        <ng-container *ngSwitchCase="'settings'">
+            <div class="screen page s1">
+                <ng-container
+                    *ngTemplateOutlet="toolbar; context: { tag: 'a', active: 'timeline', tap: 'settings', step: 1, chip: 'TUTORIAL_MOCK_SYMPTOM_1' }">
+                </ng-container>
+            </div>
+            <div class="screen page s2" data-anchor="page">
+                <div class="m-page-title">{{ t('SETTINGS_TITLE') }}</div>
+                <div *ngFor="let row of settingsRows" class="m-card m-settings-card"
+                    [class.glow]="row.key === 'appearance' || row.key === 'backup'">
+                    <ng-container *ngTemplateOutlet="settingsHeader; context: { row: row }"></ng-container>
+                </div>
+            </div>
+        </ng-container>
+
+        <!-- Why backups are manual: data on the phone only, reminders -->
+        <ng-container *ngSwitchCase="'backup-why'">
+            <div class="m-phone">
+                <span class="m-phone-notch"></span>
+                <mat-icon class="m-phone-icon">lock</mat-icon>
+                <span class="m-phone-label">{{ t('TUTORIAL_MOCK_YOUR_DATA') }}</span>
+            </div>
+            <div class="m-no-cloud">
+                <span class="m-no-cloud-circle"><mat-icon>cloud_off</mat-icon></span>
+                <span class="m-no-cloud-label">{{ t('TUTORIAL_MOCK_NO_CLOUD') }}</span>
+            </div>
+            <div class="screen page padded s1">
+                <div class="m-card m-settings-card">
+                    <ng-container *ngTemplateOutlet="settingsHeader; context: { row: settingsRows[3] }"></ng-container>
+                    <div class="m-help-link tap">
+                        <mat-icon>info</mat-icon><span>{{ t('BACKUP_WHY_MANUAL_LINK') }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="screen page padded s2">
+                <div class="m-card m-settings-card">
+                    <ng-container *ngTemplateOutlet="settingsHeader; context: { row: settingsRows[6] }"></ng-container>
+                    <div class="m-toggle-row glow">
+                        <span>{{ t('SETTINGS_WEEKLY_REMINDER_LABEL') }}</span><span class="m-toggle on"></span>
+                    </div>
+                    <div class="m-toggle-row">
+                        <span>{{ t('SETTINGS_DAILY_REMINDER_LABEL') }}</span><span class="m-toggle"></span>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+
+        <!-- Save a backup: Save (Android save dialog) or Share (Android share sheet) -->
+        <ng-container *ngSwitchCase="'backup-save'">
+            <div class="screen page padded s1">
+                <div class="m-card m-settings-card">
+                    <ng-container *ngTemplateOutlet="settingsHeader; context: { row: settingsRows[3] }"></ng-container>
+                    <ng-container *ngTemplateOutlet="backupItem; context: { icon: 'dynamic_feed', label: 'IMPORT' }">
+                    </ng-container>
+                    <ng-container
+                        *ngTemplateOutlet="backupItem; context: { icon: 'save_alt', label: 'EXPORT_SAVE', anchor: 'save', tap: true }">
+                    </ng-container>
+                    <ng-container
+                        *ngTemplateOutlet="backupItem; context: { icon: 'share', label: 'EXPORT_FILE', anchor: 'share', tap: true }">
+                    </ng-container>
+                </div>
+            </div>
+            <div class="screen system s2" data-anchor="save-dialog">
+                <div class="m-system-header"><mat-icon>folder</mat-icon>{{ t('TUTORIAL_MOCK_DOWNLOADS') }}</div>
+                <div class="m-system-input">{{ backupFileName }}</div>
+                <div class="m-system-actions">
+                    <span>{{ t('CANCEL') }}</span><span class="primary">{{ t('TUTORIAL_MOCK_SAVE') }}</span>
+                </div>
+            </div>
+            <div class="screen system s3" data-anchor="share-sheet">
+                <div class="m-system-title">{{ t('TUTORIAL_MOCK_SHARE_WITH') }}</div>
+                <div class="m-share-apps">
+                    <span><span class="m-share-app"><mat-icon>mail</mat-icon></span>{{ t('TUTORIAL_MOCK_EMAIL') }}</span>
+                    <span><span class="m-share-app"><mat-icon>cloud_upload</mat-icon></span>{{ t('TUTORIAL_MOCK_DRIVE') }}</span>
+                    <span><span class="m-share-app"><mat-icon>chat</mat-icon></span>{{ t('TUTORIAL_MOCK_MESSAGES') }}</span>
+                    <span><span class="m-share-app"><mat-icon>more_horiz</mat-icon></span>{{ t('TUTORIAL_MOCK_MORE') }}</span>
+                </div>
+            </div>
+        </ng-container>
+
+        <!-- Restore a backup: Import > file > confirmation > done -->
+        <ng-container *ngSwitchCase="'backup-restore'">
+            <div class="screen page padded s1">
+                <div class="m-card m-settings-card">
+                    <ng-container
+                        *ngTemplateOutlet="backupItem; context: { icon: 'dynamic_feed', label: 'IMPORT', anchor: 'import', tap: true, step: 1 }">
+                    </ng-container>
+                    <ng-container *ngTemplateOutlet="backupItem; context: { icon: 'save_alt', label: 'EXPORT_SAVE' }">
+                    </ng-container>
+                    <ng-container *ngTemplateOutlet="backupItem; context: { icon: 'share', label: 'EXPORT_FILE' }">
+                    </ng-container>
+                </div>
+            </div>
+            <div class="screen system s2" data-anchor="picker">
+                <div class="m-system-header"><mat-icon>folder</mat-icon>{{ t('TUTORIAL_MOCK_DOWNLOADS') }}</div>
+                <div class="m-file tap" data-anchor="file">
+                    <mat-icon>description</mat-icon><span>{{ backupFileName }}</span><span class="step">2</span>
+                </div>
+                <div class="m-file">
+                    <mat-icon>description</mat-icon><span>{{ olderBackupFileName }}</span>
+                </div>
+            </div>
+            <div class="screen sheet s3" data-anchor="confirm">
+                <div class="m-sheet-title centered">{{ t('IMPORT_DIALOG_TITLE') }}</div>
+                <div class="m-sheet-text warning">{{ t('IMPORT_DIALOG_CONTENT_2') }}</div>
+                <div class="m-actions">
+                    <span class="m-button stroked">{{ t('NO') }}</span>
+                    <span class="m-button tap" data-anchor="yes">{{ t('YES') }}<span class="step">3</span></span>
+                </div>
+            </div>
+            <div class="m-snackbar s4" data-anchor="snack">{{ t('DATA_IMPORT_SNACKBAR_SUCCESS') }}</div>
+        </ng-container>
+
+        <!-- PDF report: Export as PDF > month > report -->
+        <ng-container *ngSwitchCase="'pdf-report'">
+            <div class="screen page padded s1">
+                <div class="m-card m-settings-card">
+                    <ng-container *ngTemplateOutlet="backupItem; context: { icon: 'share', label: 'EXPORT_FILE' }">
+                    </ng-container>
+                    <ng-container
+                        *ngTemplateOutlet="backupItem; context: { icon: 'picture_as_pdf', label: 'EXPORT_PDF', anchor: 'pdf', tap: true, step: 1 }">
+                    </ng-container>
+                </div>
+            </div>
+            <div class="screen sheet s2" data-anchor="month-sheet">
+                <div class="m-sheet-title centered">{{ t('EXPORT_PDF_DIALOG_TITLE') }}</div>
+                <div class="m-fields">
+                    <span>
+                        <span class="m-field-label">{{ t('MONTH_LABEL') }}</span>
+                        <span class="m-input">{{ t('MONTH-' + reportMonth.month) }}</span>
+                    </span>
+                    <span>
+                        <span class="m-field-label">{{ t('YEAR_LABEL') }}</span>
+                        <span class="m-input">{{ reportMonth.year }}</span>
+                    </span>
+                </div>
+                <div class="m-actions">
+                    <span class="m-button stroked">{{ t('CANCEL') }}</span>
+                    <span class="m-button tap" data-anchor="month-set">{{ t('SET') }}<span class="step">2</span></span>
+                </div>
+            </div>
+            <div class="screen page s3" data-anchor="report">
+                <div class="m-report-title">{{ t('CALENDAR_HEADER_DATE', { month: t('MONTH-' + reportMonth.month),
+                    year: reportMonth.year }) }}</div>
+                <div class="m-report-body">
+                    <span class="m-report-grid">
+                        <span *ngFor="let level of reportCells" class="level-{{ level }}"></span>
+                    </span>
+                    <span class="m-donut"></span>
+                </div>
+                <div class="m-report-top med">
+                    <span class="m-report-top-title">{{ t('TOP_MEDS') }}</span>
+                    <span class="m-report-top-row"><span class="svg-icon pill"></span>{{ t('TUTORIAL_MOCK_MED_1') }}
+                        <b>×12</b></span>
+                    <span class="m-report-top-row"><span class="svg-icon pill"></span>{{ t('TUTORIAL_MOCK_MED_2') }}
+                        <b>×3</b></span>
+                </div>
+                <div class="m-fabs tap">
+                    <span class="m-fab"><mat-icon>share</mat-icon></span>
+                    <span class="m-fab"><mat-icon>save_alt</mat-icon></span>
+                    <span class="step">3</span>
+                </div>
+            </div>
+        </ng-container>
+
+    </ng-container>
+
+    <!-- Arrows, on the grid of the scene -->
+    <svg class="arrows" [attr.viewBox]="'0 0 300 ' + height" preserveAspectRatio="none" aria-hidden="true">
+        <ng-container *ngFor="let arrow of arrows; trackBy: trackByIndex">
+            <path class="arrow-line" [attr.d]="arrow.line"></path>
+            <path class="arrow-head" [attr.d]="arrow.head"></path>
+        </ng-container>
+    </svg>
+
+</ng-container>
+</div>

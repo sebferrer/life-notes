@@ -87,6 +87,10 @@ export class AppComponent implements OnInit {
 	// }
 
 	public checkBackupReminders(settings: ISettings): void {
+		// The first launch belongs to the language choice and the welcome dialogs
+		if (settings.firstStart) {
+			return;
+		}
 		const now = Date.now();
 		const oneDay = 24 * 60 * 60 * 1000;
 		// The daily reminder takes precedence, so both are never shown on the same day

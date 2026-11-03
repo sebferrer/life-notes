@@ -33,3 +33,7 @@ www
 *.keystore
 *.apk
 *.aab
+
+# Playwright tests (see tests/README.md)
+tests/report
+tests/results
