@@ -1,0 +1,116 @@
+.occurrence-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+// One row, whatever the number of figures
+.stats-figures {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    gap: 0.5rem;
+
+    &.compact {
+        gap: 0.4rem;
+
+        .stats-figure {
+            padding: 0.6rem 0.25rem;
+        }
+
+        .stats-value {
+            font-size: 1.15rem;
+        }
+
+        .stats-label {
+            font-size: 0.7rem;
+        }
+    }
+}
+
+.stats-figure {
+    padding: 0.6rem 0.5rem;
+    border-radius: 12px;
+    background-color: var(--surface-variant);
+    text-align: center;
+
+    .stats-value {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--text-strong);
+        white-space: nowrap;
+    }
+
+    .stats-unit {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--text-medium);
+    }
+
+    .stats-label {
+        margin-top: 0.1rem;
+        font-size: 0.75rem;
+        line-height: 1.2;
+        color: var(--text-medium);
+    }
+}
+
+.stats-chart-card {
+    padding: 0.75rem 0.75rem 0.5rem 0.75rem;
+    border-radius: 12px;
+    background-color: var(--surface-variant);
+
+    .stats-chart-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        min-height: 2rem;
+    }
+
+    .stats-chart-title {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--text-strong);
+    }
+
+    .stats-chart-subtitle {
+        font-size: 0.75rem;
+        color: var(--text-medium);
+    }
+
+    .stats-chart {
+        position: relative;
+        height: 10rem;
+        margin-top: 0.25rem;
+    }
+
+    &.evolution .stats-chart {
+        height: 11.5rem;
+    }
+}
+
+.period-toggle {
+    display: flex;
+    padding: 2px;
+    border-radius: 10px;
+    background-color: var(--surface);
+
+    .period-button {
+        border: none;
+        border-radius: 8px;
+        padding: 0.3rem 0.65rem;
+        font: inherit;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text-medium);
+        background: transparent;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+
+        &.active {
+            color: var(--primary);
+            background-color: var(--surface-variant);
+        }
+    }
+}

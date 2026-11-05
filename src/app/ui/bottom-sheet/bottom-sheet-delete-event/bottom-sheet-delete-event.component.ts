@@ -1,7 +1,9 @@
 import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
+import { GlobalService } from 'src/app/infra/global.service';
 
 export interface IDeleteConfirmationDetails {
-    type: 'med' | 'log' | 'sport';
+    type: 'symptomLog' | 'med' | 'log' | 'sport' | 'custom';
+    customType?: string;
     name: string;
     dateLabel: string;
     timeLabel: string;
@@ -24,7 +26,7 @@ export class BottomSheetDeleteEventComponent {
     @Output() public confirm = new EventEmitter<void>();
     @Output() public cancel = new EventEmitter<void>();
 
-    constructor() { }
+    constructor(public globalService: GlobalService) { }
 
     public onConfirm(): void {
         this.confirm.emit();

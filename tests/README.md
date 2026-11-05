@@ -27,11 +27,23 @@ Add `--headed` to watch it, or `--ui` for the interactive mode.
   - event colors: palettes, migrations, readability of texts and icons on any customized color, and the
     colors precomputed in `styles.scss` (they must match the code)
   - translations: same keys and parameters in French and English, every key used by the app exists
+  - custom event types: limit of 10 types, icons, ready-made colors, light and dark variants, type keys
+  - inverted intensity scale of a symptom (colors, doughnut charts), statistics of an event (periods, key
+    figures, hours of the day)
 - `e2e/`: user flows, in French, each test starting from a fresh app (empty database)
-  - first launch, symptoms, timeline (every event type, edit, delete, wake-up/bedtime, intensity, classic design),
-    day view, calendar, manage lists, settings, backups (export, import, another phone, invalid files),
-    PDF report, tutorial, small screens
-- `visual/`: main screens in light and dark themes, compared pixel by pixel to `visual/__screenshots__`
+  - first launch, symptoms (inverted intensity scale too), timeline (every event type, edit, delete, wake-up/bedtime, intensity, V1),
+    day view, calendar (V1 too), Year in Pixels, manage lists (refreshed from their header), statistics of an event, settings, backups (export, import, another phone, invalid files),
+    PDF report, tutorial, small screens, the cross of every bottom sheet
+  - event types created by the user: creation (the icons must all exist in the Material Icons font), entries
+    from the timeline, colors per theme, limit of 10 types, edition, renaming and deletion of entries, deletion
+    of a type with its entries, backups, PDF report; restart in the dark theme, several types sharing entry
+    names, English quantities, 12 hour format, length limits, entries of a missing type, incomplete types in a
+    backup, identical entries of the same minute, quantities hidden by their type
+  - versions of the interface: the V2 for new users only, the users of a former version (`app.startAsFormerUser`,
+    settings written in the database before the app starts) keep the V1 and get a popup once; what differs in V1
+    (see `GlobalService.uiVersion`); when the app starts, only the chosen version is ever drawn (no flash)
+- `visual/`: main screens in light and dark themes, the V1 screens and the popup of the V2, compared pixel by pixel to
+  `visual/__screenshots__`
 
 Every test fails on any JavaScript error, console error or failed request of the page, even when the screen
 looks fine. The clock is frozen on 2026-03-18 10:30 (`support/app.ts`), so dates and times are deterministic.

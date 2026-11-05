@@ -32,7 +32,8 @@ const SCENE_HEIGHTS: { [scene: string]: number } = {
 	'backup-why': 362,
 	'backup-save': 330,
 	'backup-restore': 372,
-	'pdf-report': 372
+	'pdf-report': 372,
+	'new-ui': 214
 };
 // The classic day takes more room
 const CLASSIC_SCENE_HEIGHTS: { [scene: string]: number } = {
@@ -109,13 +110,15 @@ const SIDE_NORMALS: { [side: string]: number[] } = {
 export class TutorialSceneComponent implements AfterViewInit, OnDestroy {
 
 	@Input() public scene: string;
+	// Version of the interface of the scenes showing a day, the one of the settings when not given
+	@Input() public uiVersion: string;
 	@ViewChild('root') private root: ElementRef<HTMLElement>;
 
 	public arrows: IArrow[] = [];
 
-	// Scenes showing a day follow the timeline style (classic design kept in the settings)
+	// Scenes showing a day in the V1 design
 	public get classic(): boolean {
-		return this.globalService.timelineStyle === 'classic';
+		return (this.uiVersion || this.globalService.uiVersion) === 'v1';
 	}
 
 	public get height(): number {

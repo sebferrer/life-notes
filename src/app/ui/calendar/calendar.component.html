@@ -1,55 +1,127 @@
 <div id="calendar" *ngIf="overviews$ | async as overviews; else loading">
 	<div *ngIf="symptoms$ | async as symptoms; else loading">
-		<div id="calendar-container">
-			<div class="calendar-card">
-				<div class="calendar-header">
-					<button mat-icon-button class="month-nav" aria-label="Previous" (click)="previous()">
+		<!-- V1: original calendar (see GlobalService.uiVersion) -->
+		<div *ngIf="globalService.isUiV1; else modernCalendar" id="calendar-container"
+			class="classic-calendar">
+			<div class="calendar-header" [style.border-bottom]="globalService.calendarBlockView ? 'none' : ''">
+				<div class="previous-button">
+					<button mat-icon-button color="primary" aria-label="Previous" (click)="previous()">
 						<mat-icon>chevron_left</mat-icon>
 					</button>
-					<div class="calendar-header-label">
-						<ng-template transloco let-t>
-							{{ t('CALENDAR_HEADER_DATE', { month: t('MONTH-'+month), year: year }) }}
-						</ng-template>
-					</div>
-					<button mat-icon-button class="month-nav" aria-label="Next" (click)="next()">
+				</div>
+				<div class="calender-header-label">
+					<ng-template transloco let-t>
+						<p>{{ t('CALENDAR_HEADER_DATE', { month: t('MONTH-'+month), year: year }) }}</p>
+					</ng-template>
+				</div>
+				<div class="next-button">
+					<button mat-icon-button color="primary" aria-label="Next" (click)="next()">
 						<mat-icon>chevron_right</mat-icon>
 					</button>
 				</div>
-				<div class="calendar-grid">
+			</div>
+			<div class="content">
+				<div class="grid-list">
 					<ng-container *ngIf="!globalService.calendarBlockView">
-						<div class="weekday" *ngFor="let day of weekDays">
+						<div class="grid-tile-header" *ngFor="let day of weekDays">
 							<ng-template transloco let-t>
 								{{ t('DAY-OF-WEEK-VERY-SHORT-' + day) }}
 							</ng-template>
 						</div>
 					</ng-container>
-					<div *ngFor="let slot of emptySlots" class="day-cell empty"></div>
+					<div *ngFor="let slot of emptySlots" class="grid-tile empty-tile"></div>
 					<div *ngFor="let overview of overviews"
-						class="day-cell color-{{ getPainColor(overview.getSymptomPain(globalService.targetSymptomKey)) }}"
-						[class.today]="isToday(overview)" [class.future]="isFuture(overview)"
+						class="grid-tile color-{{ getPainColor(overview, globalService.targetSymptomKey) }}"
 						routerLink="/{{ overview.date }}">
-						<span class="day-number">{{ overview.detailedDate.day }}</span>
+						<div class="header">
+							<div *ngIf="!isToday(overview); else todayDiv" class="day-label">
+								{{ overview.detailedDate.day }}</div>
+							<ng-template #todayDiv>
+								<div class="day-label day-label-today">{{ overview.detailedDate.day }}</div>
+							</ng-template>
+						</div>
 					</div>
 				</div>
-			</div>
-			<!--button routerLink="/monthlyreport/{{ year }}-{{ month }}">Export</button-->
-			<div class="charts">
-				<div class="chart-card" *ngIf="symptoms.length > 0">
-					<div class="help-container">
+				<div class="year-in-pixels-container">
+					<button mat-stroked-button color="primary" class="year-in-pixels-button"
+						routerLink="/yearinpixels/{{ year }}">
+						<mat-icon>grid_on</mat-icon>
+						<span transloco="YEAR_IN_PIXELS"></span>
+					</button>
+				</div>
+				<div class="charts">
+					<div class="help-container" *ngIf="symptoms.length > 0">
 						<button mat-icon-button (click)="openHelpDialog()">
-							<mat-icon>help_outline</mat-icon>
+							<mat-icon>help</mat-icon>
 						</button>
 					</div>
 					<div [ngClass]="symptoms.length > 1 ? 'pie-charts' : 'pie-chart'">
 						<app-pie-chart *ngFor="let symptom of organizeSymptoms(symptoms)" [title]="symptom.label"
 							[chart]="pieCharts.get(symptom.key)"></app-pie-chart>
 					</div>
+					<app-line-chart [title]="'MONTHLY_WAKEUPTIME'" [chart]="wakeUpChart" [timeFormat]="globalService.timeFormat"></app-line-chart>
+					<app-line-chart [title]="'MONTHLY_BEDTIME'" [chart]="bedTimeChart" [timeFormat]="globalService.timeFormat"></app-line-chart>
+					<app-line-chart [title]="'MONTHLY_SLEEP'" [chart]="sleepChart" [timeFormat]="globalService.timeFormat"></app-line-chart>
 				</div>
-				<app-line-chart [title]="'MONTHLY_WAKEUPTIME'" [chart]="wakeUpChart" [timeFormat]="globalService.timeFormat"></app-line-chart>
-				<app-line-chart [title]="'MONTHLY_BEDTIME'" [chart]="bedTimeChart" [timeFormat]="globalService.timeFormat"></app-line-chart>
-				<app-line-chart [title]="'MONTHLY_SLEEP'" [chart]="sleepChart" [timeFormat]="globalService.timeFormat"></app-line-chart>
 			</div>
 		</div>
+
+		<ng-template #modernCalendar>
+			<div id="calendar-container" class="modern-calendar">
+				<div class="calendar-card">
+					<div class="calendar-header">
+						<button mat-icon-button class="month-nav" aria-label="Previous" (click)="previous()">
+							<mat-icon>chevron_left</mat-icon>
+						</button>
+						<div class="calendar-header-label">
+							<ng-template transloco let-t>
+								{{ t('CALENDAR_HEADER_DATE', { month: t('MONTH-'+month), year: year }) }}
+							</ng-template>
+						</div>
+						<button mat-icon-button class="month-nav" aria-label="Next" (click)="next()">
+							<mat-icon>chevron_right</mat-icon>
+						</button>
+					</div>
+					<div class="calendar-grid">
+						<ng-container *ngIf="!globalService.calendarBlockView">
+							<div class="weekday" *ngFor="let day of weekDays">
+								<ng-template transloco let-t>
+									{{ t('DAY-OF-WEEK-VERY-SHORT-' + day) }}
+								</ng-template>
+							</div>
+						</ng-container>
+						<div *ngFor="let slot of emptySlots" class="day-cell empty"></div>
+						<div *ngFor="let overview of overviews"
+							class="day-cell color-{{ getPainColor(overview, globalService.targetSymptomKey) }}"
+							[class.today]="isToday(overview)" [class.future]="isFuture(overview)"
+							routerLink="/{{ overview.date }}">
+							<span class="day-number">{{ overview.detailedDate.day }}</span>
+						</div>
+					</div>
+					<button mat-button class="year-in-pixels-button" routerLink="/yearinpixels/{{ year }}">
+						<mat-icon>grid_on</mat-icon>
+						<span transloco="YEAR_IN_PIXELS"></span>
+					</button>
+				</div>
+				<!--button routerLink="/monthlyreport/{{ year }}-{{ month }}">Export</button-->
+				<div class="charts">
+					<div class="chart-card" *ngIf="symptoms.length > 0">
+						<div class="help-container">
+							<button mat-icon-button (click)="openHelpDialog()">
+								<mat-icon>help_outline</mat-icon>
+							</button>
+						</div>
+						<div [ngClass]="symptoms.length > 1 ? 'pie-charts' : 'pie-chart'">
+							<app-pie-chart *ngFor="let symptom of organizeSymptoms(symptoms)" [title]="symptom.label"
+								[chart]="pieCharts.get(symptom.key)"></app-pie-chart>
+						</div>
+					</div>
+					<app-line-chart [title]="'MONTHLY_WAKEUPTIME'" [chart]="wakeUpChart" [timeFormat]="globalService.timeFormat"></app-line-chart>
+					<app-line-chart [title]="'MONTHLY_BEDTIME'" [chart]="bedTimeChart" [timeFormat]="globalService.timeFormat"></app-line-chart>
+					<app-line-chart [title]="'MONTHLY_SLEEP'" [chart]="sleepChart" [timeFormat]="globalService.timeFormat"></app-line-chart>
+				</div>
+			</div>
+		</ng-template>
 	</div>
 </div>
 

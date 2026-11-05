@@ -11,6 +11,7 @@ import { IMeal } from '../models/meal.model';
 import { ISymptom } from '../models/symptom.model';
 import { map, switchMap, catchError, tap } from 'rxjs/operators';
 import { ICustomEvent } from '../models/customEvent.model';
+import { ICustomEntry } from '../models/custom-type.model';
 import { getDaysInMonth, subDays } from 'date-fns';
 import * as moment from 'moment';
 import { GlobalService } from './global.service';
@@ -42,6 +43,18 @@ export class DaysService {
 		);
 	}
 
+	// The days of each month of the year (index 0 for January), the days without data included
+	public getYearDaysOverviews(year: number): Observable<IDayOverview[][]> {
+		return this.dbContext.asArrayObservable<IDayOverview>(
+			this.dbContext.daysCollection.allDocs({ include_docs: true, descending: true })
+		).pipe(
+			map(days => {
+				const yearDays = days.filter(d => d.detailedDate.year === year);
+				return Array.from({ length: 12 }, (_, i) => this.getFilledMonthDays(yearDays, i + 1, year));
+			})
+		);
+	}
+
 	public getFilledMonthDays(days: IDayOverview[], month: number, year: number): IDayOverview[] {
 		const monthDays = [...days].filter(d => d.detailedDate.month === month
 			&& d.detailedDate.year === year);
@@ -60,6 +73,7 @@ export class DaysService {
 					'meds': [],
 					'meals': [],
 					'sports': [],
+					'customs': [],
 					'wakeUp': '',
 					'goToBed': ''
 				};
@@ -197,6 +211,13 @@ export class DaysService {
 		day.sports.push({ type: 'sport', time, key, detail });
 	}
 
+	public addCustom(day: IDay, customType: string, time: string, key: string, detail: string, quantity: number): void {
+		if (day.customs == null) {
+			day.customs = [];
+		}
+		day.customs.push({ type: 'custom', customType, time, key, detail, quantity });
+	}
+
 	public setStartEnd(day: IDay, time: string, type: string): void {
 		switch (type) {
 			case 'wakeUp':
@@ -257,6 +278,10 @@ export class DaysService {
 						case 'sport':
 							this.addSport(d, customEvent.time, customEvent.key, customEvent.detail);
 							break;
+						case 'custom':
+							this.addCustom(d, customEvent.customType, customEvent.time, customEvent.key, customEvent.detail,
+								customEvent.quantity);
+							break;
 						case 'wakeUp':
 						case 'goToBed':
 							this.setStartEnd(d, customEvent.time, customEvent.type);
@@ -310,6 +335,9 @@ export class DaysService {
 					case 'sport':
 						d.sports = this.filterEvent(d.sports || [], customEvent.time, customEvent.key);
 						break;
+					case 'custom':
+						d.customs = this.removeCustomEntry(d.customs || [], customEvent);
+						break;
 				}
 				return this.dbContext.asObservable(this.dbContext.daysCollection.put(d)).pipe(
 					map(() => d)
@@ -334,7 +362,21 @@ export class DaysService {
 			day.meds.length === 0 &&
 			day.meals.length === 0 &&
 			(day.sports == null || day.sports.length === 0) &&
+			(day.customs == null || day.customs.length === 0) &&
 			day.wakeUp === '' && day.goToBed === '';
+	}
+
+	// Entries have no id and the name is optional: two entries of the same minute are often identical.
+	// Only one of them is removed, the one with the same details and quantity if they differ.
+	private removeCustomEntry(entries: ICustomEntry[], removed: ICustomEvent): ICustomEntry[] {
+		const sameEvent = (entry: ICustomEntry) => entry.customType === removed.customType
+			&& entry.time === removed.time && (entry.key || '') === (removed.key || '');
+		let index = entries.findIndex(entry => sameEvent(entry) && (entry.detail || '') === (removed.detail || '')
+			&& (entry.quantity ?? null) === (removed.quantity ?? null));
+		if (index < 0) {
+			index = entries.findIndex(sameEvent);
+		}
+		return entries.filter((_, i) => i !== index);
 	}
 
 	public filterEvent(events: any[], time: string, key: string) {
@@ -353,6 +395,7 @@ export class DaysService {
 			'meds': [],
 			'meals': [],
 			'sports': [],
+			'customs': [],
 			'wakeUp': '',
 			'goToBed': ''
 		};
@@ -376,6 +419,7 @@ export class DaysService {
 			'meds': [],
 			'meals': [],
 			'sports': [],
+			'customs': [],
 			'wakeUp': '',
 			'goToBed': ''
 		};

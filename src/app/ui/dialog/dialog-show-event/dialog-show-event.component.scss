@@ -7,11 +7,12 @@
     box-sizing: border-box;
     font-family: 'Inter', sans-serif; // Ensure modern font if available
 
-    @each $type in symptomLog, med, meal, log, sport {
+    @each $type in symptomLog, med, meal, log, sport, custom {
         &.#{$type} {
             --event-color: var(--color-event-#{$type});
             --event-soft: var(--color-event-#{$type}-soft);
             --event-icon: var(--color-event-#{$type}-icon);
+            --event-badge-text: var(--color-event-#{$type}-badge-text);
         }
     }
 
@@ -158,6 +159,17 @@
                 }
             }
 
+            // Type of a custom event, e.g. "Hydration" for the entry "Water"
+            .custom-type-name {
+                align-self: flex-start;
+                padding: 0.2rem 0.75rem;
+                border-radius: 999px;
+                background-color: var(--event-soft);
+                color: var(--event-badge-text);
+                font-size: 0.9rem;
+                font-weight: 600;
+            }
+
             .med-quantity {
                 display: flex;
                 flex-direction: column;
@@ -178,7 +190,8 @@
                      .qty {
                         font-size: 1.5rem;
                         font-weight: 700;
-                        color: var(--event-color);
+                        // Readable shade of the event color: any color can be chosen for the custom types
+                        color: var(--event-badge-text);
                     }
                     .unit {
                         font-size: 1.1rem;

@@ -6,7 +6,7 @@
     height: 100%;
     box-sizing: border-box;
 
-    @each $type in symptomLog, med, meal, log, sport, wakeUp, goToBed {
+    @each $type in symptomLog, med, meal, log, sport, custom, wakeUp, goToBed {
         &.#{$type} {
             --event-color: var(--color-event-#{$type});
             --event-soft: var(--color-event-#{$type}-soft);

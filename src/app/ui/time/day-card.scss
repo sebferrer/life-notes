@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------------
-// Modern design of a day (timeline and day view), see the "timelineStyle" setting.
+// V2 design of a day (timeline and day view), see GlobalService.uiVersion.
 // The classic design stays in each component stylesheet.
 // ---------------------------------------------------------------------------
 ::ng-deep .ampm-suffix {
@@ -123,7 +123,7 @@
     --row-soft-text-muted: var(--color-event-log-soft-text-muted);
     --row-badge-text: var(--color-event-log-badge-text);
 
-    @each $type in symptomLog, med, meal, log, sport, wakeUp, goToBed {
+    @each $type in symptomLog, med, meal, log, sport, custom, wakeUp, goToBed {
         &.#{$type} {
             --row-color: var(--color-event-#{$type});
             --row-icon: var(--color-event-#{$type}-icon);

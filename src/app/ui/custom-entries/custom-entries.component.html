@@ -1,0 +1,68 @@
+<div class="manage-list-page custom {{ globalService.customTypeClass(typeKey) }}">
+    <header class="manage-list-header">
+        <button mat-icon-button routerLink="/manage">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+        <span class="manage-item-bubble custom-type-bubble"><mat-icon>{{ customType.icon }}</mat-icon></span>
+        <h1 class="manage-list-title">{{ customType.label }}</h1>
+        <ng-template transloco let-t>
+            <div class="custom-type-actions">
+                <button mat-icon-button class="edit-type-button" (click)="openEditTypeDialog()"
+                    [attr.aria-label]="t('CUSTOM_TYPE_EDIT_TITLE')">
+                    <mat-icon fontSet="material-icons-outlined">edit</mat-icon>
+                </button>
+                <button mat-icon-button class="delete-type-button" (click)="openDeleteTypeDialog()"
+                    [attr.aria-label]="t('DELETE_CUSTOM_TYPE_TITLE')">
+                    <mat-icon fontSet="material-icons-outlined">delete</mat-icon>
+                </button>
+            </div>
+        </ng-template>
+    </header>
+
+    <div *ngIf="entries$ | async as entries; else loading" class="manage-list">
+        <div *ngFor="let entry of entries" class="manage-item">
+            <div class="manage-item-bubble">
+                <mat-icon>{{ customType.icon }}</mat-icon>
+            </div>
+            <div class="manage-item-text">
+                <!-- Entries without a name are shown with the type name -->
+                <div class="manage-item-title" [class.unnamed]="!entry.key">{{ entry.key || customType.label }}</div>
+                <div class="manage-item-meta">
+                    <ng-container *ngIf="customType.quantity && entry.lastQuantity != null">
+                        <span class="manage-item-dose">{{ quantityLabel(entry) }}</span>&nbsp;·&nbsp;</ng-container>
+                    {{ (entry.occurrences === 1 ? 'OCCURRENCE_COUNT_ONE' : 'OCCURRENCE_COUNT_MANY') |
+                    transloco: { count: entry.occurrences } }}
+                </div>
+                <ng-template transloco let-t>
+                    <div *ngIf="entry.lastEntryDate" class="manage-item-meta">
+                        {{ t('LAST_ENTRY_DATE', { day: entry.lastEntryDate.day,
+                        month: t('MONTH-SHORT-' + entry.lastEntryDate.month), year: entry.lastEntryDate.year }) }}
+                    </div>
+                </ng-template>
+            </div>
+            <div class="manage-item-actions">
+                <button mat-icon-button (click)="openOccurrenceHistory(entry)">
+                    <mat-icon class="v2-only">insights</mat-icon><mat-icon class="v1-only"
+                        fontSet="material-icons-outlined">calendar_month</mat-icon>
+                </button>
+                <button mat-icon-button (click)="openRenameDialog(entry)">
+                    <mat-icon fontSet="material-icons-outlined">edit</mat-icon>
+                </button>
+                <button mat-icon-button (click)="openDeleteDialog(entry)">
+                    <mat-icon fontSet="material-icons-outlined">delete</mat-icon>
+                </button>
+            </div>
+        </div>
+
+        <div *ngIf="entries.length === 0" class="manage-list-empty">
+            <div class="manage-item-bubble">
+                <mat-icon>{{ customType.icon }}</mat-icon>
+            </div>
+            <p>{{ 'EMPTY_CUSTOM_ENTRIES' | transloco: { type: customType.label } }}&nbsp;<mat-icon>view_day</mat-icon></p>
+        </div>
+    </div>
+</div>
+
+<ng-template #loading>
+    <mat-spinner></mat-spinner>
+</ng-template>

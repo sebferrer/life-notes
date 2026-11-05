@@ -12,6 +12,7 @@ import { SymptomsService } from './symptoms.service';
 import { SettingsService } from './settings.service';
 import { IBackup } from '../models/backup.model';
 import { GlobalService } from './global.service';
+import { CustomTypesService } from './custom-types.service';
 import { TranslocoService } from '@ngneat/transloco';
 import * as moment from 'moment';
 import { saveAs } from 'file-saver';
@@ -35,6 +36,7 @@ export class ImporterExporterService {
 		private symptomsService: SymptomsService,
 		private settingsService: SettingsService,
 		private backupService: BackupService,
+		private customTypesService: CustomTypesService,
 		private translocoService: TranslocoService
 	) { }
 
@@ -56,12 +58,14 @@ export class ImporterExporterService {
 		this.symptomsService.addSymptoms(symptomsJsonArr).subscribe(() => {
 			this.globalService.loadSymptoms().subscribe(() => { });
 		});
+		// The types of the backup replace the current ones (none in the backups made before them)
+		this.customTypesService.replaceCustomTypes(backupJsonObj.customTypes || []).subscribe(() => { });
 		this.settingsService.editSettings(settingsJsonOnj).subscribe(settings => {
 			this.globalService.language = settingsJsonOnj.language;
 			this.globalService.targetSymptomKey = settingsJsonOnj.targetSymptomKey;
 			this.globalService.darkMode = settings.darkMode;
 			this.globalService.landscapeMode = settings.landscapeMode;
-			this.globalService.timelineStyle = settings.timelineStyle;
+			this.globalService.uiVersion = settings.uiVersion;
 			this.globalService.eventPalettes = settings.eventColors;
 			this.translocoService.setActiveLang(settingsJsonOnj.language);
 		});
@@ -137,6 +141,10 @@ export class ImporterExporterService {
 			delete symptom['_rev'];
 		});
 		delete backup.settings['_rev'];
+		(backup.customTypes || []).map(customType => {
+			delete customType['_id'];
+			delete customType['_rev'];
+		});
 
 		return backup;
 	}
@@ -418,12 +426,24 @@ export class ImporterExporterService {
 			!Array.isArray(parsed.symptoms) ||
 			parsed.settings == null ||
 			typeof parsed.settings !== 'object' ||
-			Array.isArray(parsed.settings)
+			Array.isArray(parsed.settings) ||
+			// Optional, but a list of complete types when there is one: the current types are replaced by it
+			(parsed.customTypes != null && (!Array.isArray(parsed.customTypes)
+				|| !parsed.customTypes.every(customType => this.isValidCustomType(customType))))
 		) {
 			return { valid: false, errorKey: 'IMPORT_ERROR_INVALID_SCHEMA' };
 		}
 
 		return { valid: true, errorKey: '' };
+	}
+
+	// What the screens need to show a type
+	private isValidCustomType(customType: any): boolean {
+		return customType != null && typeof customType === 'object'
+			&& typeof customType.key === 'string' && customType.key !== ''
+			&& typeof customType.label === 'string' && typeof customType.icon === 'string'
+			&& customType.colors != null && typeof customType.colors.light === 'string'
+			&& typeof customType.colors.dark === 'string';
 	}
 
 	public exportHtml(): void {

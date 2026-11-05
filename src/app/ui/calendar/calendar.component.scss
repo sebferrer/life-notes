@@ -1,158 +1,330 @@
 #calendar-container {
     position: relative;
     width: 100%;
+}
+
+// Modern design
+.modern-calendar {
     padding-bottom: 1rem;
-}
 
-.calendar-card,
-.chart-card {
-    margin: 0.75rem;
-    background-color: var(--surface);
-    border: 1px solid var(--border-subtle);
-    border-radius: 16px;
-    box-shadow: 0 1px 3px var(--shadow);
-}
-
-.calendar-card {
-    padding: 0.5rem 0.75rem 0.75rem 0.75rem;
-}
-
-.calendar-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-bottom: 0.5rem;
-
-    .calendar-header-label {
-        flex: 1;
-        text-align: center;
-        font-size: 1.15rem;
-        font-weight: 600;
-        color: var(--text-strong);
-
-        &::first-letter {
-            text-transform: uppercase;
-        }
-    }
-
-    .month-nav {
-        color: var(--text-medium);
-        background-color: var(--surface-variant);
-    }
-}
-
-.calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 6px;
-}
-
-.weekday {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 1.75rem;
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--text-weak);
-}
-
-.day-cell {
-    position: relative;
-    height: 3rem;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-    transition: transform 0.1s ease;
-
-    &:active {
-        transform: scale(0.94);
-    }
-
-    &.empty {
-        background-color: transparent;
-        cursor: default;
-    }
-
-    // Days to come without data: neutral instead of the "no pain" color
-    &.future.color-default {
-        background-color: var(--surface-variant);
-
-        .day-number {
-            color: var(--text-weak);
-        }
-    }
-
-    &.today {
-        // Ring detached from the cell by a gap of the card color
-        box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--primary);
-        z-index: 1;
-
-        .day-number {
-            font-weight: 800;
-        }
-    }
-
-    .day-number {
-        font-size: 0.95rem;
-        font-weight: 600;
-        // The pain colors are light in both themes
-        color: rgba(0, 0, 0, 0.75);
-    }
-
-    // Darkest pain color
-    &.color-pain-5 .day-number {
-        color: #ffffff;
-    }
-}
-
-.charts {
-    position: relative;
-    width: 100%;
-
+    .calendar-card,
     .chart-card {
-        position: relative;
-        padding-top: 1rem;
-    }
-
-    .pie-chart {
-        padding-bottom: 0.75rem;
-    }
-
-    .pie-charts {
-        max-height: 65vh;
-        overflow-y: auto;
-        padding-bottom: 0.75rem;
-    }
-
-    // Same card look for the line charts (their component renders nothing without data)
-    ::ng-deep app-line-chart .chart-container {
         margin: 0.75rem;
-        padding: 1rem 0.5rem 0.5rem 0.5rem;
         background-color: var(--surface);
         border: 1px solid var(--border-subtle);
         border-radius: 16px;
         box-shadow: 0 1px 3px var(--shadow);
-        overflow: hidden;
+    }
 
-        .chart-title {
-            margin-left: 1rem;
+    .calendar-card {
+        padding: 0.5rem 0.75rem 0.75rem 0.75rem;
+    }
+
+    .calendar-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-bottom: 0.5rem;
+
+        .calendar-header-label {
+            flex: 1;
+            text-align: center;
+            font-size: 1.15rem;
             font-weight: 600;
+            color: var(--text-strong);
+
+            &::first-letter {
+                text-transform: uppercase;
+            }
+        }
+
+        .month-nav {
+            color: var(--text-medium);
+            background-color: var(--surface-variant);
+        }
+    }
+
+    .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 6px;
+    }
+
+    .weekday {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 1.75rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--text-weak);
+    }
+
+    .day-cell {
+        position: relative;
+        height: 3rem;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+        transition: transform 0.1s ease;
+
+        &:active {
+            transform: scale(0.94);
+        }
+
+        &.empty {
+            background-color: transparent;
+            cursor: default;
+        }
+
+        // Days to come without data: neutral instead of the "no pain" color
+        &.future.color-default,
+        &.color-none {
+            background-color: var(--surface-variant);
+
+            .day-number {
+                color: var(--text-weak);
+            }
+        }
+
+        &.today {
+            // Ring detached from the cell by a gap of the card color
+            box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--primary);
+            z-index: 1;
+
+            .day-number {
+                font-weight: 800;
+            }
+        }
+
+        .day-number {
+            font-size: 0.95rem;
+            font-weight: 600;
+            // The pain colors are light in both themes
+            color: rgba(0, 0, 0, 0.75);
+        }
+
+        // Darkest pain color
+        &.color-pain-5 .day-number {
+            color: #ffffff;
+        }
+    }
+
+    .charts {
+        position: relative;
+        width: 100%;
+
+        .chart-card {
+            position: relative;
+            padding-top: 1rem;
+        }
+
+        .pie-chart {
+            padding-bottom: 0.75rem;
+        }
+
+        .pie-charts {
+            max-height: 65vh;
+            overflow-y: auto;
+            padding-bottom: 0.75rem;
+        }
+
+        // Same card look for the line charts (their component renders nothing without data)
+        ::ng-deep app-line-chart .chart-container {
+            margin: 0.75rem;
+            padding: 1rem 0.5rem 0.5rem 0.5rem;
+            background-color: var(--surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            box-shadow: 0 1px 3px var(--shadow);
+            overflow: hidden;
+
+            .chart-title {
+                margin-left: 1rem;
+                font-weight: 600;
+            }
+        }
+    }
+
+    .help-container {
+        position: absolute;
+        top: 0.25rem;
+        right: 0.25rem;
+        z-index: 2;
+
+        button {
+            color: var(--highlight);
+        }
+    }
+
+    .year-in-pixels-button {
+        width: 100%;
+        margin-top: 0.75rem;
+        border-radius: 12px;
+        color: var(--primary);
+        background-color: var(--surface-variant);
+
+        .mat-icon {
+            margin-right: 0.4rem;
         }
     }
 }
 
-.help-container {
-    position: absolute;
-    top: 0.25rem;
-    right: 0.25rem;
-    z-index: 2;
+// V1: the original calendar (see GlobalService.uiVersion)
+.classic-calendar {
+    .calendar-header {
+        position: relative;
+        top: auto; // Reset
+        width: 100%;
+        height: 3.5rem;
+        background-color: #9E9E9E;
+        border-bottom: 1px solid white;
+        text-align: center;
+        color: white;
+        z-index: 3;
 
-    button {
-        color: var(--highlight);
+        .calender-header-label {
+            display: table;
+            width: 50%;
+            height: 100%;
+            font-size: 1.2rem;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            float: left;
+            p {
+                display: table-cell;
+                vertical-align: middle;
+                height: 100%;
+            }
+        }
+
+        .previous-button {
+            display: table;
+            height: 100%;
+            float: left;
+            width: 25%;
+            .mat-icon-button {
+                display: table-cell;
+                vertical-align: middle;
+                height: 3.5rem;
+                width: 3.5rem;
+                color: white;
+                .mat-icon {
+                    font-size: 2.5rem;
+                    color: white;
+                    margin-right: 25%;
+                }
+            }
+        }
+
+        .next-button {
+            display: table;
+            height: 100%;
+            float: left;
+            width: 25%;
+            .mat-icon-button {
+                display: table-cell;
+                vertical-align: middle;
+                height: 3.5rem;
+                width: 3.5rem;
+                color: white;
+                .mat-icon {
+                    font-size: 2.5rem;
+                    color: white;
+                    margin-right: 25%;
+                }
+            }
+        }
+    }
+
+    .content {
+        position: relative;
+        top: auto;
+        width: 100%;
+        height: auto; // Let content determine height
+        overflow-y: visible; // Let body scroll
+    }
+
+    .grid-tile {
+        display: block;
+        float: left;
+        width: 14.28%;
+        height: 5rem;
+    }
+
+    .grid-tile-header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        float: left;
+        width: 14.28%;
+        height: 2rem;
+        font-weight: bold;
+        background-color: #9E9E9E;
+        color: white;
+    }
+
+    .empty-tile {
+        background-color: transparent;
+    }
+
+    .day-label {
+        margin-top: 0.3rem;
+        // The pain colors are light in both themes (the dark theme came later)
+        color: rgba(0, 0, 0, 0.87);
+        width: 3vh;
+        height: 3vh;
+        width: 100%;
+        text-align: center;
+    }
+
+    .day-label-today {
+        background-color: rgb(0, 174, 255);
+        margin-left: 25%;
+        color: white;
+        font-size: 1rem;
+        width: 3vh;
+        height: 3vh;
+        border-radius: 100%;
+        padding: 0.2rem;
+    }
+
+    .charts {
+        position: relative;
+        clear: both;
+        width: 100%;
+        padding-top: 1rem;
+
+        .pie-chart {
+            height: 33vh;
+            overflow-y: auto;
+        }
+
+        .pie-charts {
+            height: 65vh;
+            overflow-y: auto;
+        }
+    }
+
+    .help-container {
+        color: #0070C0;
+        position: absolute;
+        top: 0;
+        right: 1rem;
+        z-index: 2;
+    }
+
+    .year-in-pixels-container {
+        clear: both;
+        display: flex;
+        justify-content: center;
+        padding-top: 1rem;
+
+        .mat-icon {
+            margin-right: 0.4rem;
+        }
     }
 }
 
@@ -180,15 +352,20 @@
     background-color: var(--color-pain-5);
 }
 
+// No intensity on an inverted scale (see GlobalService.getPainColorClass)
+.color-none {
+    background-color: var(--surface-variant);
+}
+
 // Landscape phones: keep the month visible without scrolling too much
 @media (orientation: landscape) and (max-height: 600px) {
-    .calendar-card {
+    .modern-calendar .calendar-card {
         max-width: 40rem;
         margin-left: auto;
         margin-right: auto;
     }
 
-    .day-cell {
+    .modern-calendar .day-cell {
         height: 2.25rem;
     }
 }

@@ -97,12 +97,14 @@ export class LogsComponent implements OnInit {
 		});
 	}
 
-	public openOccurrenceHistory(log: LogHistoryViewModel): void {
+	// The history after a deletion, else the default tab of the version of the interface
+	public openOccurrenceHistory(log: LogHistoryViewModel, tab?: 'stats' | 'history'): void {
 		this.logsService.getLogOccurrences(log.key).subscribe(occurrences => {
 			const ref = this.bottomSheet.open(DialogOccurrenceHistoryComponent, {
-				panelClass: 'event-bottom-sheet',
+				panelClass: ['event-bottom-sheet', 'occurrence-history-panel'],
 				disableClose: true,
 				data: {
+					tab,
 					title: log.key,
 					type: 'log',
 					key: log.key,
@@ -118,7 +120,7 @@ export class LogsComponent implements OnInit {
 					this.refreshLogsList();
 				}
 				if (result?.reopen) {
-					this.openOccurrenceHistory(log);
+					this.openOccurrenceHistory(log, 'history');
 				}
 			});
 		});

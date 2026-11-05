@@ -30,9 +30,9 @@ export class TutorialComponent {
 
 	public slides: ISlide[];
 
-	// The tutorial follows the timeline style chosen in the settings
+	// The tutorial shows the screens of the version of the interface
 	public get classic(): boolean {
-		return this.globalService.timelineStyle === 'classic';
+		return this.globalService.isUiV1;
 	}
 
 	constructor(

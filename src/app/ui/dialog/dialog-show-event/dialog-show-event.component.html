@@ -1,5 +1,9 @@
 <ng-template transloco let-t>
-    <div class="bottom-sheet-container {{ data.customEvent.type }}">
+    <div class="bottom-sheet-container closable-sheet {{ data.customEvent.type }} {{ globalService.customTypeClass(data.customEvent.customType) }}">
+        <button mat-icon-button class="sheet-close-button v2-only" (click)="onNoClick()"
+            [attr.aria-label]="'CLOSE' | transloco">
+            <mat-icon>close</mat-icon>
+        </button>
 
         <div class="header-section">
             <div class="title-row">
@@ -7,11 +11,14 @@
                     <mat-icon *ngIf="data.customEvent.type === 'symptomLog'">spa</mat-icon>
                     <mat-icon *ngIf="data.customEvent.type === 'log'">event_note</mat-icon>
                     <mat-icon *ngIf="data.customEvent.type === 'sport'">fitness_center</mat-icon>
+                    <mat-icon *ngIf="data.customEvent.type === 'custom'">{{
+                        globalService.getCustomType(data.customEvent.customType).icon }}</mat-icon>
                     <span *ngIf="data.customEvent.type === 'med'" class="svg-icon pill custom-svg"></span>
                     <span *ngIf="data.customEvent.type === 'meal'" class="svg-icon meal custom-svg"></span>
                 </div>
                 <div class="main-title" [ngSwitch]="data.customEvent.type">
                     <span *ngSwitchCase="'symptomLog'">{{ globalService.symptomMap.get(data.customEvent.key) }}</span>
+                    <span *ngSwitchCase="'custom'">{{ globalService.customEntryLabel(data.customEvent) }}</span>
                     <span *ngSwitchDefault>{{ data.customEvent.key }}</span>
                 </div>
             </div>
@@ -70,6 +77,18 @@
                 </div>
 
                 <div *ngSwitchCase="'sport'" class="info-content">
+                </div>
+
+                <!-- Type of the event (the title is the name of the entry), and its quantity -->
+                <div *ngSwitchCase="'custom'" class="info-content">
+                    <div class="custom-type-name">{{ globalService.getCustomType(data.customEvent.customType).label }}</div>
+                    <div *ngIf="globalService.customQuantityLabel(data.customEvent)" class="med-quantity">
+                        <span class="label">{{ t('CUSTOM_ENTRY_QUANTITY') }}</span>
+                        <div class="qty-group">
+                            <span class="qty">{{ globalService.formatQuantity(data.customEvent.quantity) }}</span>
+                            <span class="unit">{{ globalService.getCustomType(data.customEvent.customType).unit }}</span>
+                        </div>
+                    </div>
                 </div>
 
             </div>

@@ -1,0 +1,23 @@
+// The preview takes the width of the dialog (22rem at most, minus the 24px paddings, see newUiOpenDialog)
+// and shrinks on short screens so that the texts and buttons still fit (the scene is 300 x 214 units)
+.new-ui-preview app-tutorial-scene {
+    --u: min(calc((min(22rem, 92vw) - 48px) / 300), max(calc((100vh - 400px) / 214), 0.6px));
+}
+
+.new-ui-preview {
+    margin-bottom: 0.75rem;
+}
+
+// Scrolls on short screens (the dialogs of the app don't, see .custom-modalbox)
+.mat-dialog-content.new-ui-content {
+    overflow-y: auto;
+}
+
+.new-ui-content p {
+    margin: 0 0 0.6rem 0;
+    line-height: 1.4;
+}
+
+.new-ui-actions {
+    justify-content: flex-end;
+}

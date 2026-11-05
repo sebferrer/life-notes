@@ -31,7 +31,6 @@ export class CalendarComponent implements OnInit {
 	public month: number;
 	public year: number;
 	public symptomMap: Map<string, string>;
-	public symptomPainColorMap: Map<number, string>;
 	public monthMap: Map<number, string>;
 	public today: IDetailedDate;
 	private readonly todayDate = moment().format('YYYY-MM-DD');
@@ -70,8 +69,6 @@ export class CalendarComponent implements OnInit {
 		this.today = getDetailedDate(moment().format('YYYY-MM-DD'));
 		this.updateCalendar(this.today.month, this.today.year);
 		this.symptomMap = this.globalService.symptomMap;
-		this.symptomPainColorMap =
-			new Map([[0, 'default'], [1, 'pain-1'], [2, 'pain-2'], [3, 'pain-3'], [4, 'pain-4'], [5, 'pain-5']]);
 	}
 
 	public htmltoPDF() {
@@ -99,7 +96,8 @@ export class CalendarComponent implements OnInit {
 	public updateCharts(): void {
 		this.symptoms$.subscribe(symptoms => {
 			symptoms.forEach(symptom => {
-				this.pieCharts.set(symptom.key, new CalendarPieChartViewModel('doughnut', symptom.key, this.globalService.getPainColors()));
+				this.pieCharts.set(symptom.key, new CalendarPieChartViewModel('doughnut', symptom.key,
+					this.globalService.getPainColors(), !!symptom.invertedScale));
 				this.pieCharts.get(symptom.key).update(this.overviews, this.globalService.painScale);
 			});
 		});
@@ -191,8 +189,8 @@ export class CalendarComponent implements OnInit {
 		});
 	}
 
-	public getPainColor(pain: number): string {
-		return this.symptomPainColorMap.get(Math.ceil(pain));
+	public getPainColor(day: DayOverviewViewModel, symptomKey: string): string {
+		return this.globalService.getPainColorClass(symptomKey, day.findSymptomPain(symptomKey));
 	}
 
 	public isToday(overview: DayOverviewViewModel): boolean {

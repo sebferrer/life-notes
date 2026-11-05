@@ -172,3 +172,18 @@ export function getEventTonalIconColor(color: string, darkTheme: boolean): strin
 export function getEventBadgeTextColor(color: string, darkTheme: boolean): string {
 	return getReadableShade(color, darkTheme ? DARK_SURFACE : LIGHT_SURFACE, darkTheme, MIN_TEXT_CONTRAST);
 }
+
+// Every CSS variable of an event color, by suffix: --color-event-<type><suffix>
+export function getEventColorVariables(color: string, darkTheme: boolean): { [suffix: string]: string } {
+	const onColor = getEventOnColor(color, darkTheme);
+	return {
+		'': color,
+		'-on': onColor,
+		'-on-filter': getEventOnFilter(onColor),
+		'-soft': getEventSoftColor(color, darkTheme),
+		'-soft-text': getEventSoftTextColor(color, darkTheme, false),
+		'-soft-text-muted': getEventSoftTextColor(color, darkTheme, true),
+		'-icon': getEventTonalIconColor(color, darkTheme),
+		'-badge-text': getEventBadgeTextColor(color, darkTheme)
+	};
+}

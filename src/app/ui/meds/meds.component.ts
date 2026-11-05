@@ -98,13 +98,15 @@ export class MedsComponent implements OnInit {
 		});
 	}
 
-	public openOccurrenceHistory(med: MedHistoryViewModel): void {
+	// The history after a deletion, else the default tab of the version of the interface
+	public openOccurrenceHistory(med: MedHistoryViewModel, tab?: 'stats' | 'history'): void {
 		this.medsService.getMedOccurrences(med.key, med.quantity).subscribe(occurrences => {
 			const title = med.key + (med.quantity ? ' ' + med.quantity + ' mg' : '');
 			const ref = this.bottomSheet.open(DialogOccurrenceHistoryComponent, {
-				panelClass: 'event-bottom-sheet',
+				panelClass: ['event-bottom-sheet', 'occurrence-history-panel'],
 				disableClose: true,
 				data: {
+					tab,
 					title,
 					type: 'med',
 					key: med.key,
@@ -121,7 +123,7 @@ export class MedsComponent implements OnInit {
 					this.refreshMedsList();
 				}
 				if (result?.reopen) {
-					this.openOccurrenceHistory(med);
+					this.openOccurrenceHistory(med, 'history');
 				}
 			});
 		});

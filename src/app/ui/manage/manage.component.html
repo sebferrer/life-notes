@@ -9,5 +9,18 @@
             <img *ngIf="tile.svg" [src]="tile.svg" class="manage-tile-icon manage-tile-svg" />
             <span class="manage-tile-label">{{ tile.label | transloco }}</span>
         </button>
+        <!-- Event types created by the user -->
+        <button *ngFor="let customType of globalService.customTypes"
+            class="manage-tile custom {{ globalService.customTypeClass(customType.key) }}"
+            [routerLink]="['/custom', customType.key]" matRipple>
+            <mat-icon class="manage-tile-icon">{{ customType.icon }}</mat-icon>
+            <span class="manage-tile-label">{{ customType.label }}</span>
+        </button>
+        <button *ngIf="canAddCustomType" class="manage-tile add-tile" (click)="openCreateDialog()" matRipple>
+            <mat-icon class="manage-tile-icon">add</mat-icon>
+            <span class="manage-tile-label">{{ 'MANAGE_ADD_CUSTOM_TYPE' | transloco }}</span>
+        </button>
     </div>
+    <p *ngIf="!canAddCustomType" class="manage-limit">
+        {{ 'CUSTOM_TYPES_LIMIT_REACHED' | transloco: { max: maxEventTypes } }}</p>
 </div>

@@ -19,6 +19,25 @@
                 </mat-form-field>
             </div>
         </div>
+
+        <div class="inverted-scale">
+            <div class="inverted-scale-row">
+                <div class="inverted-scale-text">
+                    <span class="inverted-scale-label">{{ 'SYMPTOM_INVERTED_SCALE' | transloco }}</span>
+                    <span class="inverted-scale-hint">{{ 'SYMPTOM_INVERTED_SCALE_HINT' | transloco }}</span>
+                </div>
+                <mat-slide-toggle [(ngModel)]="data.symptom.invertedScale" color="primary"
+                    class="inverted-scale-toggle"></mat-slide-toggle>
+            </div>
+            <!-- Colors of the intensities, from 0 to the maximum -->
+            <div class="scale-preview">
+                <span class="scale-end">0</span>
+                <span class="scale-colors">
+                    <span *ngFor="let color of scaleColors" class="scale-color" [style.background-color]="color"></span>
+                </span>
+                <span class="scale-end">{{ painScale }}</span>
+            </div>
+        </div>
     </div>
 
     <div class="actions">

@@ -5,4 +5,6 @@ export interface ICustomEvent {
 	detail: string;
 	pain: number;
 	quantity: number;
+	// Type definition of the 'custom' events (see custom-type.model.ts)
+	customType?: string;
 }

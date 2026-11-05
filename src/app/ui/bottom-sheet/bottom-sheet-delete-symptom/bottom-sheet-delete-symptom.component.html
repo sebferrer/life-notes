@@ -1,4 +1,8 @@
-<div class="bottom-sheet-container delete-symptom">
+<div class="bottom-sheet-container closable-sheet delete-symptom">
+    <button mat-icon-button class="sheet-close-button v2-only" (click)="onNoClick()"
+        [attr.aria-label]="'CLOSE' | transloco">
+        <mat-icon>close</mat-icon>
+    </button>
 
     <div class="header-section">
         <h1 class="title">{{ 'DELETE_SYMPTOM_DIALOG_TITLE' | transloco: { symptom: data.label } }}</h1>

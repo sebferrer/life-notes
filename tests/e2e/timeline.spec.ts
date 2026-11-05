@@ -86,17 +86,15 @@ test.describe('Timeline', () => {
 		await expect(dot).toHaveClass(/color-pain-[1-5]/);
 	});
 
-	test('the classic design can be chosen again in the settings', async ({ app, page }) => {
+	test('the timeline of the V1 can be chosen again in the settings', async ({ app, page }) => {
 		await app.addEvent('log', { key: 'Note' });
-		await app.goToSettings('Apparence');
-		await app.chooseRadio('Classique');
+		await app.setUiVersion('V1');
 		await app.goToTimeline();
 		await expect(page.locator('.timeline-tile').first()).toBeVisible();
 		await expect(page.locator('.day-card')).toHaveCount(0);
 		await expect(page.locator('#day-' + TODAY + ' .timeline-day-item-log')).toContainText('Note');
 
-		await app.goToSettings('Apparence');
-		await app.chooseRadio('Moderne');
+		await app.setUiVersion('V2');
 		await app.goToTimeline();
 		await expect(app.dayCard()).toBeVisible();
 		await expect(page.locator('.timeline-tile')).toHaveCount(0);

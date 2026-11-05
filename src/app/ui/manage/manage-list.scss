@@ -1,9 +1,13 @@
 // Entries of the manage menu (medicines, notes, sports): one card per entry, in the colors of the event type
 .manage-list-page {
-    // Bottom room so the refresh button never hides the last entry
-    padding: 0.5rem 0.75rem 6rem 0.75rem;
+    padding: 0.5rem 0.75rem 1.5rem 0.75rem;
 
-    @each $type in symptomLog, med, log, sport {
+    // V1: bottom room so the floating refresh button never hides the last entry
+    :host-context(.ui-v1) & {
+        padding-bottom: 6rem;
+    }
+
+    @each $type in symptomLog, med, log, sport, custom {
         &.#{$type} {
             --type-soft: var(--color-event-#{$type}-soft);
             --type-icon: var(--color-event-#{$type}-icon);
@@ -21,6 +25,11 @@
     button {
         flex-shrink: 0;
         color: var(--text-medium);
+    }
+
+    // Action of the page, at the end of the header
+    .manage-list-refresh {
+        margin-left: auto;
     }
 
     .manage-list-title {
@@ -194,7 +203,8 @@
     }
 }
 
-.manage-list-refresh {
+// V1 (see GlobalService.uiVersion)
+.manage-list-refresh-fab {
     position: fixed;
     right: 1.5rem;
     bottom: calc(1.5rem + env(safe-area-inset-bottom));

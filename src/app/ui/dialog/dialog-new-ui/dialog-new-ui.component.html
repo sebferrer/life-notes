@@ -1,0 +1,12 @@
+<h1 mat-dialog-title transloco="NEW_UI_TITLE"></h1>
+<div mat-dialog-content class="new-ui-content">
+    <div class="new-ui-preview">
+        <app-tutorial-scene scene="new-ui" uiVersion="v2"></app-tutorial-scene>
+    </div>
+    <p transloco="NEW_UI_CONTENT_1"></p>
+    <p transloco="NEW_UI_CONTENT_2"></p>
+</div>
+<div mat-dialog-actions class="new-ui-actions">
+    <button mat-button mat-dialog-close transloco="LATER"></button>
+    <button mat-flat-button color="primary" class="try-new-ui" (click)="tryNewUi()" transloco="NEW_UI_TRY"></button>
+</div>

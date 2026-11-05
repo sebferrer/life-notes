@@ -46,11 +46,16 @@ export class SettingsComponent implements OnInit {
 	public selectedTimePicker: string;
 	public darkMode: boolean;
 	public landscapeMode: boolean;
-	public timelineStyle: string;
+	public uiVersion: string;
 	public eventPalettes: IEventPalettes;
 	// The palette edited is the one of the theme currently displayed
 	public get currentTheme(): 'light' | 'dark' {
 		return this.darkMode ? 'dark' : 'light';
+	}
+
+	// Their colors are set with the types themselves, in the manage menu
+	public get hasCustomTypes(): boolean {
+		return this.globalService.customTypes.length > 0;
 	}
 	public painPalettes: { key: string, colors: string[] }[];
 	public readonly eventColorItems = [
@@ -87,7 +92,7 @@ export class SettingsComponent implements OnInit {
 		this.selectedPainScale = this.globalService.painScale;
 		this.darkMode = this.globalService.darkMode;
 		this.landscapeMode = this.globalService.landscapeMode;
-		this.timelineStyle = this.globalService.timelineStyle;
+		this.uiVersion = this.globalService.uiVersion;
 		this.eventPalettes = {
 			light: { ...this.globalService.eventPalettes.light },
 			dark: { ...this.globalService.eventPalettes.dark }
@@ -109,7 +114,7 @@ export class SettingsComponent implements OnInit {
 			// GlobalService may not be initialized yet when the app is opened on this page
 			this.darkMode = !!settings.darkMode;
 			this.landscapeMode = !!settings.landscapeMode;
-			this.timelineStyle = settings.timelineStyle || 'modern';
+			this.uiVersion = settings.uiVersion || 'v2';
 			this.eventPalettes = completeEventPalettes(settings.eventColors);
 		});
 	}
@@ -172,8 +177,8 @@ export class SettingsComponent implements OnInit {
 		this.settingsService.setDarkMode(this.darkMode).subscribe();
 	}
 
-	public setTimelineStyle(): void {
-		this.settingsService.setTimelineStyle(this.timelineStyle).subscribe();
+	public setUiVersion(): void {
+		this.settingsService.setUiVersion(this.uiVersion).subscribe();
 	}
 
 	public setLandscapeMode(): void {

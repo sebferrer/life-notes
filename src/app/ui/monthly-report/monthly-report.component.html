@@ -14,7 +14,7 @@
 					<label>{{ symptom.label }}</label>
 					<div class="grid-list">
 						<div *ngFor="let overview of overviews"
-							class="grid-tile color-{{ getPainColor(overview.getSymptomPain(symptom.key)) }}">
+							class="grid-tile color-{{ getPainColor(overview, symptom.key) }}">
 							<div class="header">
 								<div class="day-label">
 									{{ overview.detailedDate.day }}</div>
@@ -70,6 +70,23 @@
 								style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--border-subtle);">
 								<span style="font-weight: 500;">{{ item.name }}</span>
 								<span style="color: var(--text-weak);">{{ item.count }}</span>
+							</div>
+						</div>
+					</div>
+
+					<!-- Top entries of the custom event types -->
+					<div *ngFor="let group of topCustoms" class="top-custom" style="margin-bottom: 3rem;">
+						<h3 *transloco="let t"
+							style="margin-bottom: 1rem; color: var(--text-medium); text-transform: uppercase; font-size: 0.9rem; font-weight: bold;">
+							{{ t('TOP_CUSTOM_ENTRIES', { type: group.customType.label }) }}
+						</h3>
+						<div style="background: var(--surface-variant); border-radius: 8px; padding: 1rem;">
+							<div *ngFor="let item of group.items"
+								style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--border-subtle);">
+								<span style="font-weight: 500;">{{ item.name }}</span>
+								<span style="color: var(--text-weak);">{{ item.count }}<ng-container
+										*ngIf="group.customType.quantity && item.total != null"> · {{
+										globalService.formatQuantity(item.total) }} {{ group.customType.unit }}</ng-container></span>
 							</div>
 						</div>
 					</div>

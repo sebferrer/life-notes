@@ -23,7 +23,7 @@ function usedKeys(): Map<string, string> {
 		/transloco="([A-Z][\w-]*)"/g,
 		/\bt\('([A-Za-z][\w-]*)'\s*[,)]/g,
 		/'([A-Z][\w-]*)'\s*\|\s*transloco/g,
-		/translate\('([A-Z][\w-]*)'/g,
+		/translate\('([A-Z][\w-]*)'\s*[,)]/g,
 		/(?:title|subtitle|label|titleKey|text): '([A-Z][A-Z0-9_]+)'/g
 	];
 	for (const file of [...files('src/app', '.html'), ...files('src/app', '.ts')]) {

@@ -1,0 +1,55 @@
+<div class="year-in-pixels">
+	<div class="page-header">
+		<button mat-icon-button class="back-button" routerLink="/calendar" aria-label="Back">
+			<mat-icon>arrow_back</mat-icon>
+		</button>
+		<h3 class="title" transloco="YEAR_IN_PIXELS"></h3>
+	</div>
+	<div class="pixels-card">
+		<div class="year-header">
+			<button mat-icon-button class="year-nav" aria-label="Previous" (click)="previous()">
+				<mat-icon>chevron_left</mat-icon>
+			</button>
+			<div class="year-label">
+				<div class="year">{{ year }}</div>
+				<div class="symptom">{{ globalService.symptomMap.get(globalService.targetSymptomKey) }}</div>
+			</div>
+			<button mat-icon-button class="year-nav" aria-label="Next" (click)="next()">
+				<mat-icon>chevron_right</mat-icon>
+			</button>
+		</div>
+		<div *ngIf="monthDays; else loading" class="pixels-grid">
+			<div></div>
+			<ng-template transloco let-t>
+				<div *ngFor="let month of months" class="month-label">{{ t('MONTH-SHORT-' + month) | slice:0:1 }}</div>
+			</ng-template>
+			<ng-container *ngFor="let dayNumber of dayNumbers">
+				<div class="day-label">{{ dayNumber }}</div>
+				<ng-container *ngFor="let month of months">
+					<div *ngIf="getDay(month, dayNumber) as day; else missingDay" id="pixel-{{ day.date }}"
+						class="pixel {{ pixelClass(day) }}" [class.today]="day.date === todayDate"
+						routerLink="/{{ day.date }}"></div>
+				</ng-container>
+			</ng-container>
+		</div>
+		<div class="legend">
+			<div class="legend-item">
+				<span class="swatch no-data"></span>
+				<span transloco="YEAR_IN_PIXELS_NO_DATA"></span>
+			</div>
+			<div *ngFor="let level of painLevels" class="legend-item">
+				<span class="swatch {{ levelClass(level) }}"></span>
+				<span>{{ levelLabel(level) }}</span>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- 30th of February... -->
+<ng-template #missingDay>
+	<div class="pixel missing"></div>
+</ng-template>
+
+<ng-template #loading>
+	<mat-spinner></mat-spinner>
+</ng-template>

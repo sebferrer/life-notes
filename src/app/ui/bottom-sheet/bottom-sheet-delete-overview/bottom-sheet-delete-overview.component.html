@@ -1,11 +1,15 @@
 <ng-template transloco let-t>
-    <div class="bottom-sheet-container delete-overview">
+    <div class="bottom-sheet-container closable-sheet delete-overview">
+        <button mat-icon-button class="sheet-close-button v2-only" (click)="onCancel()"
+            [attr.aria-label]="'CLOSE' | transloco">
+            <mat-icon>close</mat-icon>
+        </button>
         <div class="header-section">
-            <h2 class="title">{{ t(data.title) }}</h2>
+            <h2 class="title">{{ t(data.title, data.params) }}</h2>
         </div>
 
         <div class="content-section">
-            <p class="message" *ngFor="let line of data.content">{{ t(line) }}</p>
+            <p class="message" *ngFor="let line of data.content">{{ t(line, data.params) }}</p>
         </div>
 
         <div class="actions">

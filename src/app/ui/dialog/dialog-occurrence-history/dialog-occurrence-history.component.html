@@ -1,12 +1,18 @@
 <ng-template transloco let-t>
-    <div class="bottom-sheet-container occurrence-history" *ngIf="view === 'list'">
+    <div class="bottom-sheet-container closable-sheet occurrence-history" *ngIf="view === 'list'">
+        <button mat-icon-button class="sheet-close-button v2-only" (click)="onClose()"
+            [attr.aria-label]="'CLOSE' | transloco">
+            <mat-icon>close</mat-icon>
+        </button>
 
         <div class="header-section">
             <div class="title-row">
-                <div class="icon-bubble" [ngClass]="data.type">
+                <div class="icon-bubble {{ data.type }} {{ globalService.customTypeClass(data.customType) }}">
+                    <mat-icon *ngIf="data.type === 'symptomLog'">spa</mat-icon>
                     <span *ngIf="data.type === 'med'" class="svg-icon pill custom-svg"></span>
                     <mat-icon *ngIf="data.type === 'log'">event_note</mat-icon>
                     <mat-icon *ngIf="data.type === 'sport'">fitness_center</mat-icon>
+                    <mat-icon *ngIf="data.type === 'custom'">{{ globalService.getCustomType(data.customType).icon }}</mat-icon>
                 </div>
                 <div class="main-title">{{ data.title }}</div>
             </div>
@@ -15,12 +21,25 @@
             </div>
         </div>
 
-        <div class="occurrences-list">
+        <div class="history-tabs">
+            <button class="history-tab stats-tab" [class.active]="tab === 'stats'" (click)="tab = 'stats'">
+                <mat-icon>insights</mat-icon>{{ t('STATS_TAB') }}</button>
+            <button class="history-tab list-tab" [class.active]="tab === 'history'" (click)="tab = 'history'">
+                <mat-icon>history</mat-icon>{{ t('HISTORY_TAB') }}</button>
+        </div>
+
+        <app-occurrence-stats *ngIf="tab === 'stats'" [occurrences]="data.occurrences"
+            [intensities]="data.intensities" [color]="eventColor" [quantities]="hasQuantities" [unit]="unit">
+        </app-occurrence-stats>
+
+        <div *ngIf="tab === 'history'" class="occurrences-list">
             <div *ngFor="let occ of data.occurrences; let i = index" class="occurrence-item">
                 <div class="occurrence-index">{{ data.occurrences.length - i }}</div>
                 <div class="occurrence-info">
                     <div class="occurrence-date">{{ formatDate(occ.date) }}</div>
-                    <div class="occurrence-time" *ngIf="occ.time">{{ formatTime(occ.time) }}</div>
+                    <div class="occurrence-time" *ngIf="occ.time">{{ formatTime(occ.time) }}
+                        <span *ngIf="quantityLabel(occ)" class="occurrence-quantity">· {{ quantityLabel(occ) }}</span>
+                    </div>
                 </div>
                 <div class="occurrence-detail" *ngIf="occ.detail">{{ occ.detail }}</div>
                 <button mat-icon-button class="occurrence-delete" (click)="deleteOccurrence(occ, i)">

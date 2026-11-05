@@ -1,4 +1,8 @@
-<div class="bottom-sheet-container export-pdf">
+<div class="bottom-sheet-container closable-sheet export-pdf">
+    <button mat-icon-button class="sheet-close-button v2-only" (click)="onCloseClick()"
+        [attr.aria-label]="'CLOSE' | transloco">
+        <mat-icon>close</mat-icon>
+    </button>
     <div class="header-section">
         <h2 class="title">{{ 'EXPORT_PDF_DIALOG_TITLE' | transloco }}</h2>
     </div>

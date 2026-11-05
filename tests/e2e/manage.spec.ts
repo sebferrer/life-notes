@@ -1,11 +1,12 @@
-import { test, expect, TODAY, YESTERDAY } from '../support/app';
+import { test, expect, TODAY, YESTERDAY, shiftDate } from '../support/app';
 
 test.describe('Manage menu', () => {
 
 	test('opens the four lists', async ({ app, page }) => {
 		await app.start();
 		await app.goToManage();
-		await expect(page.locator('.manage-tile')).toHaveText([/Symptômes/, /Médicaments/, /Notes/, /Sport/]);
+		// Then the creation of a new event type
+		await expect(page.locator('.manage-tile')).toHaveText([/Symptômes/, /Médicaments/, /Notes/, /Sport/, /Nouveau type/]);
 		for (const [tile, route] of [['symptomLog', 'symptoms'], ['med', 'meds'], ['log', 'logs'], ['sport', 'sports']]) {
 			await app.goToManage(tile as any);
 			await expect(page).toHaveURL(new RegExp(`#/${route}$`));
@@ -44,6 +45,7 @@ test.describe('Manage menu', () => {
 		test('the history lists every entry', async ({ app, page }) => {
 			await app.goToManage('med');
 			await page.locator('.manage-item-actions button').nth(0).click();
+			await page.locator('.occurrence-history .list-tab').click();
 			await expect(page.locator('.occurrence-history .occurrence-item')).toHaveCount(2);
 		});
 
@@ -78,8 +80,139 @@ test.describe('Manage menu', () => {
 
 		test('the back arrow of a list returns to the manage menu', async ({ app, page }) => {
 			await app.goToManage('sport');
-			await page.locator('.manage-list-header button').click();
+			await page.locator('.manage-list-header button[routerlink="/manage"]').click();
 			await expect(page).toHaveURL(/#\/manage$/);
 		});
 	});
+});
+
+// The sheet of an event opens on its statistics, its history is the other tab
+test.describe('Statistics of an event', () => {
+
+	test.beforeEach(async ({ app }) => {
+		await app.start();
+		await app.goToTimeline();
+	});
+
+	test('a medication: key figures, evolution by week or month, hours of the day', async ({ app, page }) => {
+		const med = { key: 'Doliprane', quantity: '1000' };
+		await page.clock.setFixedTime(new Date(`${TODAY}T08:00:00`));
+		await app.addEvent('med', med);
+		await app.addEvent('med', med, YESTERDAY);
+		await page.clock.setFixedTime(new Date(`${TODAY}T20:00:00`));
+		await app.addEvent('med', med);
+		await app.addEvent('med', med, shiftDate(TODAY, -40));
+
+		await app.goToManage('med');
+		await page.locator('.manage-item-actions button').nth(0).click();
+		const sheet = page.locator('.occurrence-history');
+		await expect(sheet.locator('.stats-tab')).toHaveClass(/active/);
+		const stats = sheet.locator('app-occurrence-stats');
+		// Total, last 30 days, per week since the first one (7 weeks, starting on sunday)
+		await expect(stats.locator('.stats-figure .stats-value')).toHaveText(['4', '3', '0,6']);
+		// From the week of the first one
+		const evolution = stats.locator('.evolution canvas');
+		await expect(evolution).toHaveAttribute('aria-label', 'Occurrences: 1 fév. 1, 15 mars 3');
+		await stats.locator('.period-button.month').click();
+		await expect(stats.locator('.period-button.month')).toHaveClass(/active/);
+		await expect(evolution).toHaveAttribute('aria-label', 'Occurrences: fév. 1, mars 3');
+		await expect(stats.locator('.hours canvas')).toHaveAttribute('aria-label', 'Occurrences: 8h 2, 20h 2');
+
+		// History, and back to the statistics after a deletion
+		await sheet.locator('.list-tab').click();
+		await expect(stats).toHaveCount(0);
+		await expect(sheet.locator('.occurrence-item')).toHaveCount(4);
+		await sheet.locator('.occurrence-item').last().locator('.occurrence-delete').click();
+		await page.locator('app-bottom-sheet-delete-event .confirm-button').click();
+		// Reopened on the history
+		await expect(sheet.locator('.occurrence-item')).toHaveCount(3);
+		await sheet.locator('.stats-tab').click();
+		await expect(stats.locator('.stats-figure .stats-value')).toHaveText(['3', '3', '3']);
+		await expect(stats.locator('.evolution canvas')).toHaveAttribute('aria-label', 'Occurrences: 15 mars 3');
+	});
+
+	test('a type with a quantity: evolution of the quantities', async ({ app, page }) => {
+		await app.createCustomType('Eau', { quantity: true, unit: 'L' });
+		await app.goToTimeline();
+		await app.addCustomEvent('Eau', { quantity: '0,5' });
+		await app.addCustomEvent('Eau', { quantity: '1,5' }, YESTERDAY);
+		await app.goToManage();
+		await page.locator('.manage-tile.custom', { hasText: 'Eau' }).click();
+		await page.locator('.manage-item').first().locator('.manage-item-actions button').nth(0).click();
+		const stats = page.locator('.occurrence-history app-occurrence-stats');
+		await expect(stats.locator('.stats-figure .stats-value')).toHaveText(['2', '2', '2', '2 L']);
+		await expect(stats.locator('.stats-chart-subtitle')).toHaveText('Quantité (L)');
+		await expect(stats.locator('.evolution canvas')).toHaveAttribute('aria-label', 'Quantité: 15 mars 2');
+	});
+
+	test('a symptom: its entries and the intensities of the days', async ({ app, page }) => {
+		await app.addSymptom('Tête');
+		await app.targetSymptom('Tête');
+		await app.goToTimeline();
+		await app.addEvent('symptomLog');
+		await app.addEvent('symptomLog', {}, YESTERDAY);
+		await app.setDayIntensity(6);
+		await app.setDayIntensity(2, YESTERDAY);
+		await app.goToManage('symptomLog');
+		await page.locator('.symptom-card', { hasText: 'Tête' }).locator('.stats-btn').click();
+		const sheet = page.locator('.occurrence-history');
+		await expect(sheet.locator('.main-title')).toHaveText('Tête');
+		const stats = sheet.locator('app-occurrence-stats');
+		await expect(stats.locator('.stats-figure .stats-value')).toHaveText(['2', '2', '2', '4/10']);
+		await expect(stats.locator('.evolution canvas'))
+			.toHaveAttribute('aria-label', 'Occurrences: 15 mars 2; Intensité moyenne: 15 mars 4');
+
+		// Its entries can be deleted from the history
+		await sheet.locator('.list-tab').click();
+		await expect(sheet.locator('.occurrence-item')).toHaveCount(2);
+		await sheet.locator('.occurrence-item').first().locator('.occurrence-delete').click();
+		await page.locator('app-bottom-sheet-delete-event .confirm-button').click();
+		await expect(sheet.locator('.occurrence-item')).toHaveCount(1);
+		await sheet.locator('.close-button').click();
+		await expect(page.locator('.symptom-card', { hasText: 'Tête' }).locator('.manage-item-meta').first())
+			.toHaveText('1 fois');
+	});
+});
+
+test('the statistics in English, with the 12 hour format', async ({ app, page }) => {
+	await app.start();
+	await app.goToTimeline();
+	// The helpers add the events in French
+	await app.addEvent('log', { key: 'Note' });
+	await app.goToSettings('Heure');
+	await app.settingsPanel('Heure').locator('mat-select').click();
+	await page.locator('mat-option', { hasText: '12' }).click();
+	await app.goToSettings('Langue');
+	await app.settingsPanel('Langue').locator('mat-select').click();
+	await page.locator('mat-option', { hasText: 'Anglais' }).click();
+	await expect(page.locator('#settings-container .title')).toHaveText('Settings');
+	await app.goToManage('log');
+	await page.locator('.manage-item-actions button').nth(0).click();
+	const sheet = page.locator('.occurrence-history');
+	await expect(sheet.locator('.stats-tab')).toHaveText(/Statistics/);
+	await expect(sheet.locator('.stats-figure .stats-label')).toHaveText(['In total', 'Last 30 days', 'Per week']);
+	await expect(sheet.locator('.hours canvas')).toHaveAttribute('aria-label', 'Occurrences: 10am 1');
+});
+
+// The lists of medications, notes and sports are kept apart from the days: they are rebuilt from the header
+test('a list is refreshed from its header, e.g. after an import', async ({ app, page }) => {
+	await app.start();
+	await app.goToTimeline();
+	await app.addEvent('med', { key: 'Doliprane', quantity: '1000' });
+	const { content } = await app.exportBackup();
+	const yesterday = { ...content.days[0], _id: YESTERDAY, date: YESTERDAY,
+		detailedDate: { ...content.days[0].detailedDate, day: Number(YESTERDAY.slice(8)) } };
+	await app.importBackup({ name: 'backup.json', mimeType: 'application/json',
+		buffer: Buffer.from(JSON.stringify({ ...content, days: [...content.days, yesterday] })) });
+	await page.locator('.import-confirm .confirm-button').click();
+	await app.afterImport(async () => {
+		await expect(app.eventRows(YESTERDAY, 'med')).toHaveCount(1);
+	});
+
+	await app.goToManage('med');
+	const meta = page.locator('.manage-item .manage-item-meta').first();
+	await expect(meta).toContainText('1 fois');
+	await page.locator('.manage-list-header .manage-list-refresh').click();
+	await page.locator('mat-dialog-container button', { hasText: 'Oui' }).click();
+	await expect(meta).toContainText('2 fois');
 });

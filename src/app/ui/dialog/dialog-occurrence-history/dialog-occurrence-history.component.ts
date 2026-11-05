@@ -3,20 +3,30 @@ import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bott
 import { DaysService } from 'src/app/infra';
 import { ICustomEvent } from 'src/app/models/customEvent.model';
 import { IDeleteConfirmationDetails } from '../../bottom-sheet/bottom-sheet-delete-event';
+import { GlobalService } from 'src/app/infra/global.service';
+import { IStatsIntensity } from 'src/app/models/occurrence-stats.model';
 
 export interface IOccurrence {
     date: string;
     time: string;
     detail?: string;
     quantity?: number;
+    // Symptoms
+    pain?: number;
 }
 
 export interface IOccurrenceHistoryData {
     title: string;
-    type: 'med' | 'log' | 'sport';
+    type: 'symptomLog' | 'med' | 'log' | 'sport' | 'custom';
+    // Type definition of the 'custom' entries
+    customType?: string;
     key: string;
     quantity?: number;
     occurrences: IOccurrence[];
+    // Intensities of the days, for a symptom
+    intensities?: IStatsIntensity[];
+    // The history after a deletion. By default, the statistics in V2 and the history in V1.
+    tab?: 'stats' | 'history';
 }
 
 @Component({
@@ -28,6 +38,7 @@ export interface IOccurrenceHistoryData {
 export class DialogOccurrenceHistoryComponent {
     public hasChanges = false;
     public view: 'list' | 'confirm' = 'list';
+    public tab: 'stats' | 'history';
     public eventToDelete: { occ: IOccurrence, index: number } | null = null;
 
     // Confirmation context
@@ -40,8 +51,10 @@ export class DialogOccurrenceHistoryComponent {
         public bottomSheetRef: MatBottomSheetRef<DialogOccurrenceHistoryComponent>,
         @Inject(MAT_BOTTOM_SHEET_DATA) public data: IOccurrenceHistoryData,
         private daysService: DaysService,
+        public globalService: GlobalService,
         private zone: NgZone
     ) {
+        this.tab = data.tab || (globalService.isUiV1 ? 'history' : 'stats');
         // Sort descending: most recent first
         this.data.occurrences.sort((a, b) => b.date.localeCompare(a.date) || (b.time || '').localeCompare(a.time || ''));
     }
@@ -61,6 +74,33 @@ export class DialogOccurrenceHistoryComponent {
 
     public formatTime(time: string): string {
         return time || '';
+    }
+
+    public quantityLabel(occ: IOccurrence): string {
+        if (this.data.type === 'symptomLog') {
+            const painScale = this.globalService.painScale;
+            return occ.pain == null ? '' : (painScale === 10 ? occ.pain * 2 : Math.ceil(occ.pain)) + '/' + painScale;
+        }
+        return this.data.type === 'custom'
+            ? this.globalService.customQuantityLabel({ customType: this.data.customType, quantity: occ.quantity }) : '';
+    }
+
+    // Bars of the charts in the color of the event type
+    public get eventColor(): string {
+        if (this.data.type === 'custom') {
+            const colors = this.globalService.getCustomType(this.data.customType).colors;
+            return this.globalService.darkMode ? colors.dark : colors.light;
+        }
+        return this.globalService.eventColors[this.data.type];
+    }
+
+    // The custom types with a quantity show its evolution
+    public get hasQuantities(): boolean {
+        return this.data.type === 'custom' && this.globalService.getCustomType(this.data.customType).quantity;
+    }
+
+    public get unit(): string {
+        return this.data.type === 'custom' ? this.globalService.getCustomType(this.data.customType).unit : '';
     }
 
     public deleteOccurrence(occ: IOccurrence, index: number): void {
@@ -87,6 +127,13 @@ export class DialogOccurrenceHistoryComponent {
             this.itemDetails.quantityLabel = undefined; // Already in title
         } else if (this.data.type === 'med' && occ.quantity) {
             this.itemDetails.quantityLabel = `${occ.quantity} mg`;
+        } else if (this.data.type === 'symptomLog') {
+            this.itemDetails.quantityLabel = this.quantityLabel(occ) || undefined;
+        } else if (this.data.type === 'custom') {
+            this.itemDetails.customType = this.data.customType;
+            this.itemDetails.quantityLabel = this.globalService.customQuantityLabel({
+                customType: this.data.customType, quantity: occ.quantity
+            }) || undefined;
         }
 
         this.view = 'confirm';
@@ -102,7 +149,8 @@ export class DialogOccurrenceHistoryComponent {
             key: this.data.key,
             detail: occ.detail,
             pain: null,
-            quantity: occ.quantity
+            quantity: occ.quantity,
+            customType: this.data.customType
         };
 
         this.daysService.deleteDeepEvent(occ.date, customEvent).subscribe(() => {

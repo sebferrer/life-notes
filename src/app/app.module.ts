@@ -51,6 +51,7 @@ import { DialogSelectSymptomComponent } from './ui/dialog/dialog-select-symptom'
 import { DialogSelectBackupComponent } from './ui/dialog/dialog-select-backup';
 import { PieChartComponent } from './ui/chart/pie-chart';
 import { LineChartComponent } from './ui/chart/line-chart';
+import { OccurrenceStatsComponent } from './ui/occurrence-stats';
 import { DialogNoTargetSymptomWarningComponent } from './ui/dialog/dialog-no-target-symptom-warning';
 import { DialogExportConfirmComponent } from './ui/dialog/dialog-export-confirm';
 import { DialogInfoComponent } from './ui/dialog/dialog-info';
@@ -66,13 +67,18 @@ import { LogsService } from './infra/logs.service';
 import { LogsComponent } from './ui/logs/logs.component';
 import { SportsService } from './infra/sports.service';
 import { SportsComponent } from './ui/sports';
+import { CustomTypesService } from './infra/custom-types.service';
+import { CustomEntriesComponent } from './ui/custom-entries';
+import { BottomSheetEditCustomTypeComponent } from './ui/bottom-sheet/bottom-sheet-edit-custom-type';
 import { ManageComponent } from './ui/manage';
 import { DialogSelectLanguageComponent } from './ui/dialog/dialog-select-language';
 import { MonthlyReportComponent } from './ui/monthly-report';
+import { YearInPixelsComponent } from './ui/year-in-pixels';
 import { DialogUpdatesComponent } from './ui/dialog/dialog-updates';
 import { AboutComponent } from './ui/about';
 
 import { DialogTutorialNoticeComponent } from './ui/dialog/dialog-tutorial-notice';
+import { DialogNewUiComponent } from './ui/dialog/dialog-new-ui';
 
 
 import { DialogOccurrenceHistoryComponent } from './ui/dialog/dialog-occurrence-history';
@@ -105,14 +111,17 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 		MedsComponent,
 		LogsComponent,
 		SportsComponent,
+		CustomEntriesComponent,
 		ManageComponent,
 		SettingsComponent,
 		TutorialComponent,
 		TutorialSceneComponent,
 		AboutComponent,
 		MonthlyReportComponent,
+		YearInPixelsComponent,
 		PieChartComponent,
 		LineChartComponent,
+		OccurrenceStatsComponent,
 		SwipingFingerComponent,
 		DialogAddEventComponent,
 		DialogShowEventComponent,
@@ -130,6 +139,7 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 		DialogEditLogComponent,
 		DialogUpdatesComponent,
 		DialogTutorialNoticeComponent,
+		DialogNewUiComponent,
 		DialogOccurrenceHistoryComponent,
 		BottomSheetDeleteEventComponent,
 		BottomSheetEditMedComponent,
@@ -148,6 +158,7 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 		BottomSheetForceLoadWarningComponent,
 		BottomSheetInfoComponent,
 		BottomSheetDeleteTimelineEventComponent,
+		BottomSheetEditCustomTypeComponent,
 		SpacerItemComponent
 	],
 	imports: [
@@ -195,6 +206,7 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 		MedsService,
 		LogsService,
 		SportsService,
+		CustomTypesService,
 		SettingsService,
 		BackupService,
 		MedsService,
@@ -225,6 +237,7 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 		DialogEditMedComponent,
 		DialogUpdatesComponent,
 		DialogTutorialNoticeComponent,
+		DialogNewUiComponent,
 		BottomSheetEditMedComponent,
 		BottomSheetEditLogComponent,
 		BottomSheetDeleteOverviewComponent,

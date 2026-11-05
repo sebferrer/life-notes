@@ -53,8 +53,8 @@ export class SettingsService {
 				if (newSettings.darkMode != null) {
 					s.darkMode = newSettings.darkMode;
 				}
-				if (newSettings.timelineStyle != null) {
-					s.timelineStyle = newSettings.timelineStyle;
+				if (newSettings.uiVersion != null) {
+					s.uiVersion = newSettings.uiVersion;
 				}
 				if (newSettings.landscapeMode != null) {
 					s.landscapeMode = newSettings.landscapeMode;
@@ -348,11 +348,22 @@ export class SettingsService {
 		));
 	}
 
-	public setTimelineStyle(timelineStyle: string): Observable<ISettings> {
+	public setUiVersion(uiVersion: string): Observable<ISettings> {
 		return this.queueWrite(() => this.getSettings().pipe(
 			switchMap(s => {
-				s.timelineStyle = timelineStyle;
-				this.globalService.timelineStyle = timelineStyle;
+				s.uiVersion = uiVersion;
+				this.globalService.uiVersion = uiVersion;
+				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
+					map(() => s)
+				);
+			})
+		));
+	}
+
+	public setNewUiPopupSeen(seen: boolean): Observable<ISettings> {
+		return this.queueWrite(() => this.getSettings().pipe(
+			switchMap(s => {
+				s.newUiPopupSeen = seen;
 				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
 					map(() => s)
 				);
@@ -414,7 +425,8 @@ export class SettingsService {
 						'timePicker': 'material',
 						'darkMode': false,
 						'landscapeMode': false,
-						'timelineStyle': 'modern',
+						'uiVersion': 'v2', // The V1 is for the users of the former versions
+						'newUiPopupSeen': true,
 						'eventColors': getDefaultEventPalettes()
 					};
 					return this.dbContext.asObservable(this.dbContext.settingsCollection.put(settings)).pipe(
@@ -425,7 +437,7 @@ export class SettingsService {
 							this.globalService.timePicker = settings.timePicker;
 							this.globalService.darkMode = settings.darkMode;
 							this.globalService.landscapeMode = settings.landscapeMode;
-							this.globalService.timelineStyle = settings.timelineStyle;
+							this.globalService.uiVersion = settings.uiVersion;
 							this.globalService.eventPalettes = settings.eventColors;
 						}),
 						map(() => settings)
@@ -501,8 +513,23 @@ export class SettingsService {
 						changed = true;
 					}
 
-					if (s.timelineStyle == null) {
-						s.timelineStyle = 'modern';
+					// Existing users keep the interface they know (V1), a popup tells them about the V2.
+					// The first builds of the V2 had a style per screen instead: the one of the timeline gives the version.
+					if (s.uiVersion == null) {
+						const styles = s as any;
+						if (styles.timelineStyle == null) {
+							s.uiVersion = 'v1';
+							s.newUiPopupSeen = false;
+						} else {
+							s.uiVersion = styles.timelineStyle === 'modern' ? 'v2' : 'v1';
+						}
+						delete styles.timelineStyle;
+						delete styles.calendarStyle;
+						changed = true;
+					}
+
+					if (s.newUiPopupSeen == null) {
+						s.newUiPopupSeen = true;
 						changed = true;
 					}
 
@@ -523,7 +550,7 @@ export class SettingsService {
 					this.globalService.timePicker = s.timePicker;
 					this.globalService.darkMode = s.darkMode;
 					this.globalService.landscapeMode = s.landscapeMode;
-					this.globalService.timelineStyle = s.timelineStyle;
+					this.globalService.uiVersion = s.uiVersion;
 					this.globalService.eventPalettes = s.eventColors;
 
 					if (!changed) {

@@ -1,0 +1,29 @@
+// Header of the page: the type with its icon, and the edition of the type
+.manage-list-header {
+    .custom-type-bubble {
+        flex: 0 0 2.25rem;
+        height: 2.25rem;
+        margin-right: 0.4rem;
+
+        mat-icon {
+            font-size: 1.25rem;
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+    }
+
+    .manage-list-title {
+        flex: 1;
+        min-width: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .custom-type-actions {
+        display: flex;
+        flex-shrink: 0;
+    }
+}
+
+.manage-item-title.unnamed {
+    font-style: italic;
+}

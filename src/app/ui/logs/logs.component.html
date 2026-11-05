@@ -4,6 +4,10 @@
             <mat-icon>arrow_back</mat-icon>
         </button>
         <h1 class="manage-list-title" transloco="LOGS_TITLE"></h1>
+        <button mat-icon-button class="manage-list-refresh v2-only" (click)="openRefreshDialog()"
+            [attr.aria-label]="'REFRESH_LIST' | transloco">
+            <mat-icon>sync</mat-icon>
+        </button>
     </header>
 
     <div *ngIf="logs$ | async as logs; else loading" class="manage-list">
@@ -26,7 +30,8 @@
             </div>
             <div class="manage-item-actions">
                 <button mat-icon-button (click)="openOccurrenceHistory(log)">
-                    <mat-icon fontSet="material-icons-outlined">calendar_month</mat-icon>
+                    <mat-icon class="v2-only">insights</mat-icon><mat-icon class="v1-only"
+                        fontSet="material-icons-outlined">calendar_month</mat-icon>
                 </button>
                 <button mat-icon-button (click)="openEditDialog(log)">
                     <mat-icon fontSet="material-icons-outlined">edit</mat-icon>
@@ -42,12 +47,14 @@
                 <mat-icon>event_note</mat-icon>
             </div>
             <p>{{ 'EMPTY_NOTES_1' | transloco }}&nbsp;<mat-icon>view_day</mat-icon></p>
-            <p>{{ 'EMPTY_NOTES_2' | transloco }}&nbsp;<mat-icon>refresh</mat-icon></p>
+            <p>{{ 'EMPTY_NOTES_2' | transloco }}&nbsp;<mat-icon class="v1-only">refresh</mat-icon><mat-icon
+                    class="v2-only">sync</mat-icon></p>
         </div>
     </div>
 </div>
 
-<button mat-fab color="primary" class="manage-list-refresh" (click)="openRefreshDialog()">
+<!-- V1: floating refresh button (see GlobalService.uiVersion) -->
+<button mat-fab color="primary" class="manage-list-refresh-fab v1-only" (click)="openRefreshDialog()">
     <mat-icon>refresh</mat-icon>
 </button>
 

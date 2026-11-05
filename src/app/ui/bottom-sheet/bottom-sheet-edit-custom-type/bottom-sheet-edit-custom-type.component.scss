@@ -1,0 +1,296 @@
+// Taller than the event sheets: the icons and colors need room. The header and the button stay visible,
+// the fields scroll between them. (The panel class is set on the sheet container itself.)
+.mat-bottom-sheet-container.custom-type-sheet {
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    padding: 0;
+    max-height: 90vh;
+    height: 90vh;
+    box-sizing: border-box;
+}
+
+// Uses the --color-event-custom-* variables of the chosen color, set on the container
+.bottom-sheet-container.edit-custom-type {
+    display: flex;
+    flex-direction: column;
+    padding: 0 1rem 1.5rem 1rem;
+    gap: 1.2rem;
+    height: 100%;
+    box-sizing: border-box;
+
+    .header-section {
+        padding-top: 1rem;
+
+        .title-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .icon-bubble {
+            width: 3rem;
+            height: 3rem;
+            flex-shrink: 0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--color-event-custom-soft);
+            color: var(--color-event-custom-icon);
+
+            mat-icon {
+                font-size: 1.8rem;
+                width: 1.8rem;
+                height: 1.8rem;
+            }
+        }
+
+        .main-title {
+            min-width: 0;
+            font-size: 1.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+            color: var(--text-strong);
+        }
+    }
+
+    .content-body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+        overflow-y: auto;
+        // Room for the focus rings of the first and last choices
+        padding: 0.15rem;
+    }
+
+    .form-field {
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+
+        .field-label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-medium);
+        }
+
+        .field-hint {
+            font-size: 0.78rem;
+            line-height: 1.35;
+            color: var(--text-weak);
+        }
+
+        .field-error {
+            font-size: 0.8rem;
+            color: var(--danger);
+        }
+
+        .field-input-box {
+            background-color: var(--surface-variant);
+            border-radius: 12px;
+            padding: 0.4rem 0.8rem;
+
+            .clean-input {
+                width: 100%;
+
+                .mat-form-field-wrapper {
+                    padding-bottom: 0;
+                    margin: 0;
+                }
+
+                .mat-form-field-infix {
+                    border-top: 0;
+                    padding: 0.25em 0;
+                }
+
+                .mat-form-field-underline {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    .icon-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(2.75rem, 1fr));
+        gap: 0.35rem;
+
+        .icon-choice {
+            aspect-ratio: 1 / 1;
+            min-height: 2.75rem;
+            border: none;
+            border-radius: 12px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--surface-variant);
+            color: var(--text-medium);
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+
+            &.selected {
+                background-color: var(--color-event-custom-soft);
+                color: var(--color-event-custom-icon);
+                box-shadow: inset 0 0 0 2px var(--color-event-custom-icon);
+            }
+
+            &:focus-visible {
+                outline: 2px solid var(--primary);
+                outline-offset: 1px;
+            }
+        }
+    }
+
+    .color-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6rem;
+
+        .color-choice {
+            position: relative;
+            width: 2.5rem;
+            height: 2.5rem;
+            flex-shrink: 0;
+            border: none;
+            border-radius: 50%;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 1px 3px var(--shadow);
+            -webkit-tap-highlight-color: transparent;
+
+            &.selected {
+                box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--text-strong);
+            }
+
+            &:focus-visible {
+                outline: 2px solid var(--primary);
+                outline-offset: 3px;
+            }
+
+            mat-icon {
+                font-size: 1.3rem;
+                width: 1.3rem;
+                height: 1.3rem;
+            }
+        }
+
+        // Any other color, with the native color picker (hidden but opened by the label)
+        .custom-color {
+            background-color: var(--surface-variant);
+            color: var(--text-medium);
+
+            &.selected mat-icon {
+                color: var(--color-event-custom-on);
+            }
+
+            input[type="color"] {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                opacity: 0;
+                border: none;
+                padding: 0;
+                cursor: pointer;
+            }
+        }
+    }
+
+    .toggle-row {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+
+        .toggle-text {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .toggle-title {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-strong);
+        }
+    }
+
+    .unit-box {
+        margin-top: 0.25rem;
+    }
+
+    // Same look as a row of the modern timeline
+    .preview-row {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+
+        .preview-marker {
+            flex: 0 0 2.25rem;
+            height: 2.25rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--color-event-custom-soft);
+            color: var(--color-event-custom-icon);
+
+            mat-icon {
+                font-size: 1.3rem;
+                width: 1.3rem;
+                height: 1.3rem;
+            }
+        }
+
+        .preview-card {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 0.75rem;
+            border-radius: 12px;
+            background-color: var(--color-event-custom-soft);
+        }
+
+        .preview-title {
+            flex: 1;
+            min-width: 0;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--color-event-custom-soft-text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .preview-badge {
+            flex-shrink: 0;
+            padding: 0.1rem 0.5rem;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            white-space: nowrap;
+            color: var(--color-event-custom-badge-text);
+            background-color: var(--surface);
+        }
+    }
+
+    .actions {
+        display: flex;
+        padding-top: 0.5rem;
+
+        .confirm-button {
+            flex: 1;
+            height: 3.5rem;
+            border-radius: 14px !important;
+            font-size: 1rem;
+            font-weight: 600;
+            box-shadow: none;
+        }
+    }
+}

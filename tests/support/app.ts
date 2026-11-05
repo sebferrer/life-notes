@@ -1,4 +1,5 @@
 import { test as base, expect, Locator, Page } from '@playwright/test';
+import { readFileSync } from 'fs';
 
 // Day used as "today" by every test (frozen clock): the dates and times shown by the app are deterministic
 export const TODAY = '2026-03-18';
@@ -12,6 +13,13 @@ export function shiftDate(date: string, days: number): string {
 
 export const YESTERDAY = shiftDate(TODAY, -1);
 
+// Version of the app (an older one in the settings opens the update dialog)
+export const CURRENT_VERSION = /CURRENT_VERSION = "([^"]+)"/
+	.exec(readFileSync('src/app/infra/settings.service.ts', 'utf-8'))[1];
+
+// Label of the setting of the version of the interface
+export const UI_VERSION = 'Version de l\'interface';
+
 export type EventType = 'symptomLog' | 'med' | 'log' | 'sport' | 'meal';
 
 // Entries of the "add an event" sheet (French)
@@ -21,6 +29,29 @@ const ADD_MENU: { [type in EventType]: string } = {
 	log: 'Ajouter une note',
 	sport: 'Ajouter un sport',
 	meal: 'Ajouter un repas'
+};
+
+// Settings saved by the former versions (0.3.x), before the appearance settings existed
+export const FORMER_VERSION_SETTINGS = {
+	_id: 'settings',
+	targetSymptomKey: '',
+	language: 'fr',
+	timeFormat: 'eu',
+	painScale: 10,
+	firstStart: false,
+	lastInstall: '0.3.6',
+	lastUpdate: 0,
+	showDeveloperMode: false,
+	showAdvancedSettings: false,
+	calendarStartOnSunday: true,
+	calendarBlockView: false,
+	painPalette: '2',
+	weeklyReminder: true,
+	// No backup reminder
+	lastWeeklyReminder: NOW.getTime(),
+	autoCalculateOverview: true,
+	autoOverviewPopupSeen: false,
+	timePicker: 'material'
 };
 
 // Console errors that don't come from the app
@@ -59,6 +90,16 @@ export class App {
 		}
 	}
 
+	// Launch of the app by a user of a former version: their settings are written before the app starts
+	public async startAsFormerUser(settings: object = {}): Promise<void> {
+		// A page of the app server that doesn't run the app, to reach its database
+		await this.page.goto('/assets/i18n/fr.json');
+		await this.page.addScriptTag({ path: 'node_modules/pouchdb/dist/pouchdb.min.js' });
+		await this.page.evaluate(doc => new (window as any).PouchDB('settings').put(doc),
+			{ ...FORMER_VERSION_SETTINGS, ...settings });
+		await this.page.goto('/');
+	}
+
 	public async reload(): Promise<void> {
 		await this.page.reload();
 		await this.closeDialogs();
@@ -71,7 +112,7 @@ export class App {
 
 	public async goToCalendar(): Promise<void> {
 		await this.page.locator('#menu-icon-calendar').click();
-		await expect(this.page.locator('.calendar-card')).toBeVisible();
+		await expect(this.page.locator('.calendar-card, .classic-calendar')).toBeVisible();
 	}
 
 	public async goToManage(tile?: 'symptomLog' | 'med' | 'log' | 'sport'): Promise<void> {
@@ -107,16 +148,32 @@ export class App {
 		await expect(toggle.locator('input')).toBeChecked({ checked });
 	}
 
-	public async chooseRadio(label: string): Promise<void> {
-		await this.page.locator('mat-radio-button', { hasText: label }).locator('label').click();
+	// Radio button of the settings, found by its label and the label of its group
+	public radio(label: string, group: string): Locator {
+		return this.page.locator('.toggle-container', { has: this.page.locator('.toggle-label', { hasText: group }) })
+			.locator('mat-radio-button', { hasText: label });
+	}
+
+	public async chooseRadio(label: string, group: string): Promise<void> {
+		await this.radio(label, group).locator('label').click();
+	}
+
+	// Settings > Appearance > Interface version
+	public async setUiVersion(version: 'V1' | 'V2'): Promise<void> {
+		await this.goToSettings('Apparence');
+		await this.chooseRadio(version, UI_VERSION);
+		await expect(this.radio(version, UI_VERSION)).toHaveClass(/mat-radio-checked/);
 	}
 
 	// Manage > Symptoms > Add
-	public async addSymptom(label: string): Promise<void> {
+	public async addSymptom(label: string, options: { invertedScale?: boolean } = {}): Promise<void> {
 		await this.goToManage('symptomLog');
 		await this.page.locator('.add-card').click();
 		const sheet = this.page.locator('.add-symptom');
-		await sheet.locator('input').fill(label);
+		await sheet.locator('input[matinput]').fill(label);
+		if (options.invertedScale) {
+			await sheet.locator('.inverted-scale-toggle label').click();
+		}
 		await sheet.locator('.actions button').click();
 		await expect(this.page.locator('.symptom-card .symptom-label', { hasText: label })).toBeVisible();
 	}
@@ -132,7 +189,7 @@ export class App {
 		return this.page.locator(`#day-${date}`);
 	}
 
-	public eventRows(date: string = TODAY, type?: EventType): Locator {
+	public eventRows(date: string = TODAY, type?: EventType | 'custom'): Locator {
 		return this.dayCard(date).locator(type ? `.event-row.${type}` : '.event-row');
 	}
 
@@ -160,6 +217,53 @@ export class App {
 		await expect(sheet).toBeHidden();
 		// One-time information dialogs (e.g. after the first symptom)
 		await this.closeDialogs();
+		await expect(this.eventRows(date)).toHaveCount(rowsBefore + 1);
+	}
+
+	// Manage > "New type": an event type created by the user. color: index of a ready-made color.
+	public async createCustomType(label: string,
+		options: { icon?: string, color?: number, quantity?: boolean, unit?: string } = {}): Promise<void> {
+		await this.goToManage();
+		await this.page.locator('.manage-tile.add-tile').click();
+		const sheet = this.page.locator('.edit-custom-type');
+		await sheet.locator('.custom-type-label-input').fill(label);
+		if (options.icon) {
+			await sheet.locator(`.icon-choice[data-icon="${options.icon}"]`).click();
+		}
+		if (options.color != null) {
+			await sheet.locator('button.color-choice').nth(options.color).click();
+		}
+		if (options.quantity) {
+			await sheet.locator('.quantity-toggle label').click();
+			if (options.unit) {
+				await sheet.locator('.custom-type-unit-input').fill(options.unit);
+			}
+		}
+		await sheet.locator('.confirm-button').click();
+		await expect(sheet).toBeHidden();
+		await expect(this.page.locator('.manage-tile.custom', { hasText: label })).toBeVisible();
+	}
+
+	// Adds an entry of an event type created by the user, as addEvent
+	public async addCustomEvent(typeLabel: string, options: { key?: string, quantity?: string, detail?: string } = {},
+		date: string = TODAY): Promise<void> {
+		const rowsBefore = await this.eventRows(date).count();
+		await this.dayCard(date).locator('.add-event').click();
+		await this.page.locator('mat-nav-list a', { hasText: `Ajouter : ${typeLabel}` }).click();
+		const sheet = this.page.locator('.bottom-sheet-container.custom');
+		await expect(sheet.locator('.main-title')).toContainText(typeLabel);
+		if (options.key != null) {
+			await sheet.locator('.form-fields-group input').first().fill(options.key);
+		}
+		if (options.quantity != null) {
+			await sheet.locator('.quantity-input').fill(options.quantity);
+		}
+		if (options.detail != null) {
+			await sheet.locator('ion-textarea textarea').fill(options.detail);
+		}
+		await this.page.keyboard.press('Escape');
+		await sheet.locator('.confirm-button').click();
+		await expect(sheet).toBeHidden();
 		await expect(this.eventRows(date)).toHaveCount(rowsBefore + 1);
 	}
 

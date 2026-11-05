@@ -21,6 +21,8 @@
                     <span class="manage-item-title symptom-label">{{ symptom.label }}</span>
                     <span *ngIf="symptom.key === trackedSymptomKey" class="manage-item-tag">
                         {{ 'SYMPTOM_TRACKED' | transloco }}</span>
+                    <span *ngIf="symptom.invertedScale" class="manage-item-tag inverted-scale-tag">
+                        {{ 'SYMPTOM_INVERTED_SCALE_TAG' | transloco }}</span>
                 </div>
                 <ng-container *ngIf="stats.get(symptom.key) as stat; else noEntry">
                     <div *ngIf="stat.count > 0" class="manage-item-meta">
@@ -39,6 +41,9 @@
                 </ng-template>
             </div>
             <div class="manage-item-actions">
+                <button mat-icon-button class="stats-btn" (click)="openOccurrenceHistory(symptom)">
+                    <mat-icon>insights</mat-icon>
+                </button>
                 <button mat-icon-button class="edit-btn" (click)="openAddDialog(symptom)">
                     <mat-icon fontSet="material-icons-outlined">edit</mat-icon>
                 </button>

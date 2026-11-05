@@ -35,7 +35,7 @@
             flex-shrink: 0;
             background-color: var(--event-soft);
 
-            @each $type in med, log, sport {
+            @each $type in symptomLog, med, log, sport, custom {
                 &.#{$type} {
                     --event-color: var(--color-event-#{$type});
                     --event-soft: var(--color-event-#{$type}-soft);

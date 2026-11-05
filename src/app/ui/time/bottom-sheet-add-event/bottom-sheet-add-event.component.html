@@ -1,40 +1,58 @@
-<mat-nav-list>
-    <a mat-list-item (click)="select('symptomLog')">
-        <span mat-line>
-            <div class="list-icon-container"><mat-icon class="list-icon">spa</mat-icon></div>
-            <span transloco="ADD_SYMPTOM_BOTTOMSHEET"></span>
-        </span>
-    </a>
+<div class="add-event-menu closable-sheet">
+    <div class="header-section v2-only">
+        <h2 class="title" transloco="ADD"></h2>
+    </div>
+    <button mat-icon-button class="sheet-close-button v2-only" (click)="close()"
+        [attr.aria-label]="'CLOSE' | transloco">
+        <mat-icon>close</mat-icon>
+    </button>
 
-    <a mat-list-item (click)="select('meal')">
-        <span mat-line>
-            <div class="list-icon-container"><img src="/assets/svg/curry-chronicles.svg"
-                    class="list-icon-svg curry-chronicles-logo" /></div>
-            <span transloco="ADD_MEAL_BOTTOMSHEET"></span>
-        </span>
-    </a>
+    <mat-nav-list>
+        <a mat-list-item (click)="select('symptomLog')">
+            <span mat-line>
+                <div class="list-icon-container"><mat-icon class="list-icon">spa</mat-icon></div>
+                <span transloco="ADD_SYMPTOM_BOTTOMSHEET"></span>
+            </span>
+        </a>
 
-    <a mat-list-item (click)="select('med')">
-        <span mat-line>
-            <div class="list-icon-container"><img src="/assets/svg/pill-capsule.svg" class="list-icon-svg" /></div>
-            <span transloco="ADD_DRUG_BOTTOMSHEET"></span>
-        </span>
-    </a>
+        <a mat-list-item (click)="select('meal')">
+            <span mat-line>
+                <div class="list-icon-container"><img src="/assets/svg/curry-chronicles.svg"
+                        class="list-icon-svg curry-chronicles-logo" /></div>
+                <span transloco="ADD_MEAL_BOTTOMSHEET"></span>
+            </span>
+        </a>
 
-    <a mat-list-item (click)="select('log')">
-        <span mat-line>
-            <div class="list-icon-container"><mat-icon class="list-icon">event_note</mat-icon></div>
-            <span transloco="ADD_NOTE_BOTTOMSHEET"></span>
-        </span>
-    </a>
+        <a mat-list-item (click)="select('med')">
+            <span mat-line>
+                <div class="list-icon-container"><img src="/assets/svg/pill-capsule.svg" class="list-icon-svg" /></div>
+                <span transloco="ADD_DRUG_BOTTOMSHEET"></span>
+            </span>
+        </a>
 
-    <a mat-list-item (click)="select('sport')">
-        <span mat-line>
-            <div class="list-icon-container"><mat-icon class="list-icon">fitness_center</mat-icon></div>
-            <span transloco="ADD_SPORT_BOTTOMSHEET"></span>
-        </span>
-    </a>
+        <a mat-list-item (click)="select('log')">
+            <span mat-line>
+                <div class="list-icon-container"><mat-icon class="list-icon">event_note</mat-icon></div>
+                <span transloco="ADD_NOTE_BOTTOMSHEET"></span>
+            </span>
+        </a>
 
-    <app-spacer-item></app-spacer-item>
+        <a mat-list-item (click)="select('sport')">
+            <span mat-line>
+                <div class="list-icon-container"><mat-icon class="list-icon">fitness_center</mat-icon></div>
+                <span transloco="ADD_SPORT_BOTTOMSHEET"></span>
+            </span>
+        </a>
 
-</mat-nav-list>
+        <a *ngFor="let customType of globalService.customTypes" mat-list-item class="custom-type-entry"
+            (click)="select('custom', customType.key)">
+            <span mat-line>
+                <div class="list-icon-container"><mat-icon class="list-icon">{{ customType.icon }}</mat-icon></div>
+                <span>{{ 'ADD_CUSTOM_BOTTOMSHEET' | transloco: { type: customType.label } }}</span>
+            </span>
+        </a>
+
+        <app-spacer-item></app-spacer-item>
+
+    </mat-nav-list>
+</div>

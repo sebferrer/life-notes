@@ -29,7 +29,7 @@
                 background-color: var(--event-soft);
                 /*box-shadow: 0 4px 10px rgba(0,0,0,0.15);*/
 
-                @each $type in med, log, sport {
+                @each $type in symptomLog, med, log, sport, custom {
                     &.#{$type} {
                         --event-color: var(--color-event-#{$type});
                         --event-soft: var(--color-event-#{$type}-soft);
@@ -66,6 +66,44 @@
             color: var(--text-weak);
             font-weight: 500;
             margin-left: 4.1rem;
+        }
+    }
+
+    .history-tabs {
+        display: flex;
+        gap: 0.25rem;
+        padding: 3px;
+        border-radius: 12px;
+        background-color: var(--surface-variant);
+
+        .history-tab {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            height: 2.4rem;
+            border: none;
+            border-radius: 10px;
+            font: inherit;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-medium);
+            background: transparent;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+
+            mat-icon {
+                font-size: 1.2rem;
+                width: 1.2rem;
+                height: 1.2rem;
+            }
+
+            &.active {
+                color: var(--text-strong);
+                background-color: var(--surface);
+                box-shadow: 0 1px 2px var(--shadow);
+            }
         }
     }
 

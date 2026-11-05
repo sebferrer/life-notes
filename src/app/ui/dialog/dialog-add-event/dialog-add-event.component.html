@@ -1,5 +1,5 @@
 <ng-template transloco let-t>
-    <div class="bottom-sheet-container closable-sheet {{ data.type }}">
+    <div class="bottom-sheet-container closable-sheet {{ data.type }} {{ globalService.customTypeClass(data.customType) }}">
         <button mat-icon-button class="sheet-close-button" (click)="onNoClick()" [attr.aria-label]="t('CLOSE')">
             <mat-icon>close</mat-icon>
         </button>
@@ -10,6 +10,7 @@
                     <mat-icon *ngIf="data.type === 'symptomLog'">spa</mat-icon>
                     <mat-icon *ngIf="data.type === 'log'">event_note</mat-icon>
                     <mat-icon *ngIf="data.type === 'sport'">fitness_center</mat-icon>
+                    <mat-icon *ngIf="data.type === 'custom'">{{ customType.icon }}</mat-icon>
                     <span *ngIf="data.type === 'med'" class="svg-icon pill custom-svg"></span>
                     <span *ngIf="data.type === 'meal'" class="svg-icon meal custom-svg"></span>
                     <mat-icon *ngIf="data.type === 'wakeUp'">alarm</mat-icon>
@@ -18,7 +19,7 @@
                 <div class="main-title">
                     <span *ngIf="data.edit">{{ t('EDIT') }}</span>
                     <span *ngIf="!data.edit && data.type !== 'wakeUp' && data.type !== 'goToBed'">{{ t('ADD') }}</span>
-                    {{ t(data.type) | titlecase }}
+                    {{ data.type === 'custom' ? customType.label : (t(data.type) | titlecase) }}
                 </div>
             </div>
 
@@ -127,6 +128,42 @@
                                     <mat-option *ngFor="let option of filteredSportsOptions | async"
                                         [value]="option">{{option}}</mat-option>
                                 </mat-autocomplete>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <div class="field-label">{{ t('DETAIL') }}</div>
+                        <div class="field-input-box">
+                            <ion-item lines="none" class="ion-no-padding">
+                                <ion-textarea [(ngModel)]="data.detail" rows="1" autoGrow="true"></ion-textarea>
+                            </ion-item>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event type created by the user -->
+                <div *ngSwitchCase="'custom'" class="form-fields-group">
+                    <div class="form-field">
+                        <div class="field-label">{{ t('CUSTOM_ENTRY_NAME') }}</div>
+                        <div class="field-input-box">
+                            <mat-form-field appearance="none" class="clean-input">
+                                <input type="text" matInput [formControl]="myControl" [(ngModel)]="data.key"
+                                    [placeholder]="customType.label" [matAutocomplete]="autocustom">
+                                <mat-autocomplete #autocustom="matAutocomplete"
+                                    (optionSelected)="setCustom($event.option.value)">
+                                    <mat-option *ngFor="let option of filteredCustomOptions | async"
+                                        [value]="option">{{option}}</mat-option>
+                                </mat-autocomplete>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div *ngIf="customType.quantity" class="form-field">
+                        <div class="field-label">{{ t('CUSTOM_ENTRY_QUANTITY') }}<ng-container *ngIf="customType.unit">
+                                ({{ customType.unit }})</ng-container>
+                        </div>
+                        <div class="field-input-box">
+                            <mat-form-field appearance="none" class="clean-input">
+                                <input matInput inputmode="decimal" class="quantity-input" [(ngModel)]="data.quantity">
                             </mat-form-field>
                         </div>
                     </div>

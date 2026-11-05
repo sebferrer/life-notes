@@ -379,11 +379,25 @@ ion-range {
     }
 }
 
-// Add/edit sheets can only be dismissed with this button (see disableClose)
+// Differences between the versions of the interface (see GlobalService.uiVersion)
+body.ui-v1 .v2-only,
+body:not(.ui-v1) .v1-only {
+    display: none !important;
+}
+
+// Every sheet has a close button at the top right (in V1, only the add/edit ones). The add/edit ones can only be
+// dismissed with it (see disableClose).
 .closable-sheet {
     position: relative;
 
-    .header-section {
+    // Room for the button next to a title at the top of the sheet (not below an icon): on both sides of a
+    // centered title, on the right of a title next to an icon
+    .header-section > .title:first-child {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+
+    .header-section > .title-row {
         padding-right: 2.5rem;
     }
 
@@ -407,6 +421,12 @@ ion-range {
         max-height: 50vh!important;
         height: 50vh!important;
     }
+}
+
+// Statistics and history of an event: charts and a list
+.event-bottom-sheet.occurrence-history-panel .mat-bottom-sheet-container {
+    max-height: 85vh !important;
+    height: auto !important;
 }
 
 // Landscape phones: half of the screen height is too small for the add/edit sheets

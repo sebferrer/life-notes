@@ -3,8 +3,8 @@
 		<div class="tiles-container">
 			<app-infinite-scroll (scrolled)="loadBatch()" [isLoading]="isLoading">
 				<ng-container *ngFor="let dayContent of daysContents">
-					<!-- Classic design (original timeline), still available in settings -->
-					<div *ngIf="globalService.timelineStyle === 'classic'; else modernTile" #dayRefs
+					<!-- V1: original timeline (see GlobalService.uiVersion) -->
+					<div *ngIf="globalService.isUiV1; else modernTile" #dayRefs
 						class="timeline-tile" id="day-{{ dayContent.date }}">
 						<div class="timeline-tile-header">
 							<ng-template transloco let-t>
@@ -41,7 +41,7 @@
 								<mat-chip-list class="mat-chip-list-stacked">
 									<div class="timeline-chips-padding"></div>
 									<mat-chip *ngFor="let content of dayContent.content" [ngSwitch]="content.type"
-										class="mat-chip mat-standard-chip timeline-day-item-{{ content.type }} event-chips">
+										class="mat-chip mat-standard-chip timeline-day-item-{{ content.type }} event-chips {{ globalService.customTypeClass(content.customType) }}">
 										<div class="event-container"
 											(click)="openShowDialog(dayContent.date, content, symptoms)">
 											<div *ngSwitchCase="'symptomLog'" class="event">
@@ -76,6 +76,13 @@
 													[innerHTML]="displayTimeHtml(content.time)"></div>
 												<div class="event-content">{{ content.key }}</div>
 											</div>
+											<div *ngSwitchCase="'custom'" class="event">
+												<div class="event-time"
+													[ngClass]="globalService.timeFormat === 'us' ? 'event-time-us' : 'event-time-eu'"
+													[innerHTML]="displayTimeHtml(content.time)"></div>
+												<div class="event-content">{{ globalService.customEntryLabel(content) }}
+													{{ globalService.customQuantityLabel(content) }}</div>
+											</div>
 
 										</div>
 									</mat-chip>
@@ -85,7 +92,7 @@
 							<div class="symptom-overview-container"
 								(click)="openEditSymptomOverviewDialog(dayContent.date)">
 								<mat-icon
-									class="symptom-overview-icon color-{{ getPainColor(dayContent.getSymptomPain(globalService.targetSymptomKey)) }}">
+									class="symptom-overview-icon color-{{ getPainColor(dayContent, globalService.targetSymptomKey) }}">
 									fiber_manual_record</mat-icon>
 							</div>
 						</div>
@@ -106,7 +113,7 @@
 										(click)="openEditSymptomOverviewDialog(dayContent.date)"
 										[attr.aria-label]="t('TIMELINE_DAY_INTENSITY')">
 										<mat-icon
-											class="color-{{ getPainColor(dayContent.getSymptomPain(globalService.targetSymptomKey)) }}">
+											class="color-{{ getPainColor(dayContent, globalService.targetSymptomKey) }}">
 											fiber_manual_record</mat-icon>
 									</button>
 								</ng-template>
@@ -129,7 +136,8 @@
 									<div class="sleep-label">{{ 'TIMELINE_WAKE_UP' | transloco }}</div>
 								</div>
 
-								<div *ngFor="let content of dayContent.content" class="rail-row event-row {{ content.type }}"
+								<div *ngFor="let content of dayContent.content"
+									class="rail-row event-row {{ content.type }} {{ globalService.customTypeClass(content.customType) }}"
 									(click)="openShowDialog(dayContent.date, content, symptoms)">
 									<div class="rail-time" [innerHTML]="displayTimeHtml(content.time)"></div>
 									<div class="rail-marker" [ngSwitch]="content.type">
@@ -137,12 +145,15 @@
 										<span *ngSwitchCase="'med'" class="svg-icon pill rail-marker-svg"></span>
 										<span *ngSwitchCase="'meal'" class="svg-icon meal rail-marker-svg"></span>
 										<mat-icon *ngSwitchCase="'sport'">fitness_center</mat-icon>
+										<mat-icon *ngSwitchCase="'custom'">{{ globalService.getCustomType(content.customType).icon }}</mat-icon>
 										<mat-icon *ngSwitchDefault>event_note</mat-icon>
 									</div>
 									<div class="event-card" [ngSwitch]="content.type">
 										<div class="event-card-text">
 											<div *ngSwitchCase="'symptomLog'" class="event-card-title">
 												{{ symptomMap.get(content.key) }}</div>
+											<div *ngSwitchCase="'custom'" class="event-card-title">
+												{{ globalService.customEntryLabel(content) }}</div>
 											<div *ngSwitchDefault class="event-card-title">{{ content.key }}</div>
 											<div *ngIf="content.detail" class="event-card-detail">{{ content.detail }}</div>
 										</div>
@@ -150,6 +161,8 @@
 											{{ getPainValue(content.pain) }}/{{ painScale }}</span>
 										<span *ngIf="content.type === 'med' && content.quantity" class="event-card-badge">
 											{{ content.quantity }} mg</span>
+										<span *ngIf="content.type === 'custom' && globalService.customQuantityLabel(content)" class="event-card-badge">
+											{{ globalService.customQuantityLabel(content) }}</span>
 									</div>
 								</div>
 

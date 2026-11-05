@@ -731,6 +731,11 @@
             color: var(--color-event-#{$type}-on);
         }
     }
+
+    &.add-demo {
+        border: u(1.2) dashed var(--border-medium);
+        color: var(--text-medium);
+    }
 }
 
 .m-add-card {
@@ -1527,8 +1532,8 @@
 }
 
 .scene-manage {
-    .s1 { @include box(6, 6, 206, 160); }
-    .s2 { @include box(64, 184, 230, 118); }
+    .s1 { @include box(6, 6, 206, 212); }
+    .s2 { @include box(64, 234, 230, 118); }
 }
 
 .scene-settings {
@@ -1558,6 +1563,10 @@
     .s1 { @include box(6, 6, 200, 64); }
     .s2 { @include box(94, 88, 200, 110); }
     .s3 { @include box(6, 214, 214, 152); }
+}
+
+.scene-new-ui {
+    .s1 { @include box(6, 6, 288, 202); }
 }
 
 // Classic design: the day takes more room

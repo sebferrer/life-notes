@@ -1,5 +1,5 @@
 import { test, expect, Page, BrowserContext } from '@playwright/test';
-import { App, NOW, YESTERDAY } from '../support/app';
+import { App, CURRENT_VERSION, NOW, TODAY, YESTERDAY } from '../support/app';
 
 // Main screens compared to their approved screenshots (__screenshots__). After a wanted UI change, approve
 // the new screenshots with: npm run test:visual:update
@@ -45,6 +45,9 @@ test.beforeAll(async ({ browser }) => {
 	await app.addEvent('med', { key: 'Doliprane', quantity: '1000' });
 	await app.addEvent('log', { key: 'Mauvaise nuit', detail: 'Réveillé deux fois' });
 	await app.addEvent('sport', { key: 'Course à pied', detail: '5 km' });
+	await app.createCustomType('Hydratation', { icon: 'water_drop', quantity: true, unit: 'L' });
+	await app.goToTimeline();
+	await app.addCustomEvent('Hydratation', { key: 'Eau', quantity: '1,5' });
 	await app.setDayIntensity(6);
 	await app.addEvent('log', { key: 'Rendez-vous médecin' }, YESTERDAY);
 	await app.setDayIntensity(2, YESTERDAY);
@@ -79,9 +82,22 @@ for (const theme of ['light', 'dark']) {
 			await screen(`${theme}-calendar`, { fullPage: true });
 		});
 
+		test('year in pixels', async () => {
+			await app.goToCalendar();
+			await page.locator('.year-in-pixels-button').click();
+			await expect(page.locator(`#pixel-${TODAY}`)).toBeVisible();
+			await screen(`${theme}-year-in-pixels`, { fullPage: true });
+		});
+
 		test('manage menu and medications', async () => {
 			await app.goToManage();
 			await screen(`${theme}-manage`);
+			await page.locator('.manage-tile.add-tile').click();
+			await expect(page.locator('.edit-custom-type')).toBeVisible();
+			await page.waitForTimeout(500);
+			await screen(`${theme}-custom-type-editor`);
+			await page.locator('.edit-custom-type .sheet-close-button').click();
+			await expect(page.locator('.edit-custom-type')).toBeHidden();
 			await app.goToManage('med');
 			await expect(page.locator('.manage-item')).toHaveCount(1);
 			await screen(`${theme}-medications`);
@@ -89,6 +105,29 @@ for (const theme of ['light', 'dark']) {
 			await expect(page.locator('.symptom-card:not(.add-card)')).toHaveCount(2);
 			await expect(page.locator('.manage-item-tag')).toBeVisible();
 			await screen(`${theme}-symptoms`);
+		});
+
+		test('statistics of an event', async () => {
+			await app.goToManage('med');
+			await page.locator('.manage-item-actions button').nth(0).click();
+			const sheet = page.locator('.occurrence-history');
+			await expect(sheet.locator('app-occurrence-stats .hours canvas')).toBeVisible();
+			await page.waitForTimeout(500);
+			await screen(`${theme}-event-statistics`);
+			await sheet.locator('.close-button').click();
+			await expect(sheet).toBeHidden();
+		});
+
+		test('symptom editor', async () => {
+			await app.goToManage('symptomLog');
+			await page.locator('.symptom-card', { hasText: 'Tête' }).locator('.edit-btn').click();
+			const sheet = page.locator('.add-symptom');
+			// Inverted scale, not saved
+			await sheet.locator('.inverted-scale-toggle label').click();
+			await page.waitForTimeout(500);
+			await screen(`${theme}-symptom-editor`);
+			await sheet.locator('.sheet-close-button').click();
+			await expect(sheet).toBeHidden();
 		});
 
 		test('settings', async () => {
@@ -131,18 +170,50 @@ for (const theme of ['light', 'dark']) {
 	});
 }
 
-test('classic timeline', async () => {
+test('V1 timeline', async () => {
 	await setDarkMode(false);
-	await app.goToSettings('Apparence');
-	await app.chooseRadio('Classique');
+	await app.setUiVersion('V1');
 	await app.goToTimeline();
 	await page.evaluate(() => window.scrollTo(0, 0));
 	await screen('light-timeline-classic');
-	// The tutorial follows the timeline style
+	// The tutorial follows the version of the interface
 	await page.goto('/#/tutorial');
 	await page.locator('ion-slides').evaluate((slides: any) => slides.slideTo(3, 0));
 	await page.waitForTimeout(500);
 	await screen('light-tutorial-day-overview-classic');
-	await app.goToSettings('Apparence');
-	await app.chooseRadio('Moderne');
+	await app.setUiVersion('V2');
+});
+
+test('V1 calendar', async () => {
+	await app.setUiVersion('V1');
+	// The dark theme came after the V1
+	for (const theme of ['light', 'dark']) {
+		await setDarkMode(theme === 'dark');
+		await app.goToCalendar();
+		await screen(`${theme}-calendar-classic`, { fullPage: true });
+	}
+	await setDarkMode(false);
+	await app.setUiVersion('V2');
+});
+
+test('new design popup', async ({ browser }) => {
+	// Shown to the users of the former versions only: a database of its own
+	const formerContext = await browser.newContext({
+		viewport: { width: 390, height: 844 },
+		deviceScaleFactor: 2,
+		isMobile: true,
+		hasTouch: true,
+		locale: 'fr-FR',
+		timezoneId: 'Europe/Paris',
+		baseURL: 'http://localhost:4300'
+	});
+	const formerPage = await formerContext.newPage();
+	await formerPage.clock.setFixedTime(NOW);
+	const formerApp = new App(formerPage);
+	await formerApp.startAsFormerUser({ lastInstall: CURRENT_VERSION });
+	await expect(formerPage.locator('app-dialog-new-ui .scene-new-ui')).toBeVisible();
+	await formerPage.waitForTimeout(500);
+	await formerApp.fontsReady();
+	await expect(formerPage).toHaveScreenshot('light-new-ui-popup.png');
+	await formerContext.close();
 });

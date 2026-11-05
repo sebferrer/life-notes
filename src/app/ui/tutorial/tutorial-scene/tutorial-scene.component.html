@@ -423,6 +423,8 @@
                     </span>
                     <span class="m-tile log"><mat-icon>event_note</mat-icon>{{ t('MANAGE_LOGS') }}</span>
                     <span class="m-tile sport"><mat-icon>fitness_center</mat-icon>{{ t('MANAGE_SPORTS') }}</span>
+                    <!-- Creation of an event type (left column: away from the arrow) -->
+                    <span class="m-tile add-demo"><mat-icon>add</mat-icon>{{ t('MANAGE_ADD_CUSTOM_TYPE') }}</span>
                 </div>
             </div>
             <div class="screen page s2 med" data-anchor="list">
@@ -619,6 +621,33 @@
                     <span class="m-fab"><mat-icon>share</mat-icon></span>
                     <span class="m-fab"><mat-icon>save_alt</mat-icon></span>
                     <span class="step">3</span>
+                </div>
+            </div>
+        </ng-container>
+
+        <!-- New timeline design, shown to the users who kept the classic one (see DialogNewUiComponent) -->
+        <ng-container *ngSwitchCase="'new-ui'">
+            <div class="screen page s1">
+                <div class="m-day-card">
+                    <ng-container *ngTemplateOutlet="dayHeader; context: { tag: 'a', level: '3' }"></ng-container>
+                    <div class="m-rail">
+                        <ng-container *ngTemplateOutlet="sleepRow; context: { type: 'wakeUp', time: '07:30' }">
+                        </ng-container>
+                        <ng-container
+                            *ngTemplateOutlet="eventRow; context: { type: 'symptomLog', time: '10:15', title: 'TUTORIAL_MOCK_SYMPTOM_1', badge: '6/10' }">
+                        </ng-container>
+                        <ng-container
+                            *ngTemplateOutlet="eventRow; context: { type: 'med', time: '12:00', title: 'TUTORIAL_MOCK_MED_1', badge: '1000 mg' }">
+                        </ng-container>
+                        <ng-container
+                            *ngTemplateOutlet="eventRow; context: { type: 'sport', time: '18:00', title: 'TUTORIAL_MOCK_SPORT_1', detail: 'TUTORIAL_MOCK_SPORT_1_DETAIL' }">
+                        </ng-container>
+                        <ng-container
+                            *ngTemplateOutlet="eventRow; context: { type: 'log', time: '21:00', title: 'TUTORIAL_MOCK_LOG_1' }">
+                        </ng-container>
+                        <ng-container *ngTemplateOutlet="sleepRow; context: { type: 'goToBed', time: '23:00' }">
+                        </ng-container>
+                    </div>
                 </div>
             </div>
         </ng-container>

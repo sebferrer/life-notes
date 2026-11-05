@@ -80,12 +80,14 @@ export class SportsComponent implements OnInit {
 		});
 	}
 
-	public openOccurrenceHistory(sport: SportHistoryViewModel): void {
+	// The history after a deletion, else the default tab of the version of the interface
+	public openOccurrenceHistory(sport: SportHistoryViewModel, tab?: 'stats' | 'history'): void {
 		this.sportsService.getSportOccurrences(sport.key).subscribe(occurrences => {
 			const ref = this.bottomSheet.open(DialogOccurrenceHistoryComponent, {
-				panelClass: 'event-bottom-sheet',
+				panelClass: ['event-bottom-sheet', 'occurrence-history-panel'],
 				disableClose: true,
 				data: {
+					tab,
 					title: sport.key,
 					type: 'sport',
 					key: sport.key,
@@ -101,7 +103,7 @@ export class SportsComponent implements OnInit {
 					this.refreshSportsList();
 				}
 				if (result?.reopen) {
-					this.openOccurrenceHistory(sport);
+					this.openOccurrenceHistory(sport, 'history');
 				}
 			});
 		});

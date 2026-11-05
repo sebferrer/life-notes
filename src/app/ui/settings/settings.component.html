@@ -201,18 +201,19 @@
                     <mat-slide-toggle [(ngModel)]="darkMode" (change)="setDarkMode()" color="primary">
                     </mat-slide-toggle>
                 </div>
-                <div class="toggle-container">
+                <!-- LANDSCAPE MODE SETTING DISABLED (see LANDSCAPE_MODE_ENABLED in global.service.ts) -->
+                <!-- <div class="toggle-container">
                     <span class="toggle-label" transloco="SETTINGS_LANDSCAPE_MODE_LABEL"></span>
                     <mat-slide-toggle [(ngModel)]="landscapeMode" (change)="setLandscapeMode()" color="primary">
                     </mat-slide-toggle>
-                </div>
+                </div> -->
                 <div class="toggle-container stacked">
-                    <span class="toggle-label" transloco="SETTINGS_TIMELINE_STYLE_LABEL"></span>
-                    <mat-radio-group [(ngModel)]="timelineStyle" (change)="setTimelineStyle()" color="primary"
+                    <span class="toggle-label" transloco="SETTINGS_UI_VERSION_LABEL"></span>
+                    <mat-radio-group [(ngModel)]="uiVersion" (change)="setUiVersion()" color="primary"
                         class="radio-group">
-                        <mat-radio-button value="modern" class="radio-button">{{ 'TIMELINE_STYLE_MODERN' | transloco
+                        <mat-radio-button value="v2" class="radio-button">{{ 'UI_VERSION_V2' | transloco
                             }}</mat-radio-button>
-                        <mat-radio-button value="classic" class="radio-button">{{ 'TIMELINE_STYLE_CLASSIC' | transloco
+                        <mat-radio-button value="v1" class="radio-button">{{ 'UI_VERSION_V1' | transloco
                             }}</mat-radio-button>
                     </mat-radio-group>
                 </div>
@@ -280,6 +281,10 @@
                             <span class="swatch-label">{{ item.label | transloco }}</span>
                         </label>
                     </div>
+                </div>
+                <div *ngIf="hasCustomTypes" class="palette-hint">
+                    <mat-icon fontSet="material-icons-outlined">info</mat-icon>
+                    <span>{{ 'SETTINGS_CUSTOM_TYPE_COLORS_HINT' | transloco }}</span>
                 </div>
             </div>
         </mat-expansion-panel>

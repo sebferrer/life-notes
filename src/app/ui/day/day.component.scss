@@ -90,7 +90,7 @@
 }
 
 // Must beat the Material chip theme selector (.dark-theme .mat-chip.mat-standard-chip)
-@each $type in symptomLog, log, med, meal, sport {
+@each $type in symptomLog, log, med, meal, sport, custom {
     .mat-chip.mat-standard-chip.day-day-item-#{$type} {
         background-color: var(--color-event-#{$type});
         color: var(--color-event-#{$type}-on);
@@ -219,6 +219,11 @@
 
 .color-pain-5 {
     color: var(--color-pain-5);
+}
+
+// No intensity on an inverted scale (see GlobalService.getPainColorClass)
+.color-none {
+    color: var(--text-weak);
 }
 
 .wakeup-container {

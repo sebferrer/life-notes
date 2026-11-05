@@ -24,6 +24,9 @@ export interface ISettings {
 	timePicker: string;
 	darkMode: boolean;
 	landscapeMode: boolean;
-	timelineStyle: string;
+	// 'v2', or 'v1' (the original interface) for the users of the former versions, see GlobalService.uiVersion
+	uiVersion: string;
+	// Users of the former versions are told once about the V2
+	newUiPopupSeen: boolean;
 	eventColors: IEventPalettes;
 }

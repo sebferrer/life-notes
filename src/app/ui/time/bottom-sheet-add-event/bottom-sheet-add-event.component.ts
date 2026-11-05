@@ -1,5 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
+import { GlobalService } from 'src/app/infra/global.service';
 
 @Component({
 	selector: 'app-bottom-sheet-add-event',
@@ -8,11 +9,17 @@ import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bott
 })
 export class BottomSheetAddEventComponent {
 	constructor(
-		private bottomSheetRef: MatBottomSheetRef<BottomSheetAddEventComponent>
+		private bottomSheetRef: MatBottomSheetRef<BottomSheetAddEventComponent>,
+		public globalService: GlobalService
 	) { }
 
-	select(type: string): void {
-		this.bottomSheetRef.dismiss({ type });
+	public close(): void {
+		this.bottomSheetRef.dismiss();
+	}
+
+	// customType: type definition of the 'custom' events
+	select(type: string, customType?: string): void {
+		this.bottomSheetRef.dismiss({ type, customType });
 		event.preventDefault();
 	}
 }

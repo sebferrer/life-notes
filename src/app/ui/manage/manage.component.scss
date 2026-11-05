@@ -50,7 +50,7 @@
         box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
     }
 
-    @each $type in symptomLog, med, log, sport {
+    @each $type in symptomLog, med, log, sport, custom {
         &.#{$type} {
             --event-color: var(--color-event-#{$type});
             --event-on-color: var(--color-event-#{$type}-on);
@@ -70,8 +70,35 @@
     }
 
     .manage-tile-label {
+        max-width: 100%;
         font-size: 1.1rem;
         font-weight: 500;
         text-align: center;
+        overflow-wrap: anywhere;
     }
+
+    // Creation of a new event type
+    &.add-tile {
+        background-color: transparent;
+        color: var(--text-medium);
+        border: 2px dashed var(--border-medium);
+        box-shadow: none;
+
+        &:active {
+            box-shadow: none;
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+    }
+}
+
+.manage-limit {
+    max-width: 32rem;
+    margin: 1rem auto 0 auto;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-medium);
 }

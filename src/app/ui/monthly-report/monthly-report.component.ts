@@ -6,6 +6,7 @@ import { DayOverviewViewModel } from 'src/app/models/day.overview.view.model';
 import { IDetailedDate } from 'src/app/models/detailed.date';
 import { GlobalService } from 'src/app/infra/global.service';
 import { ISymptom } from 'src/app/models/symptom.model';
+import { ICustomType } from 'src/app/models/custom-type.model';
 import { TranslocoService } from '@ngneat/transloco';
 import { CalendarPieChartViewModel } from 'src/app/models/chartjs/calendar.pie.chart.view.model';
 import { BedTimeChartViewModel } from 'src/app/models/chartjs/bedtime.chart.view.model';
@@ -36,7 +37,6 @@ export class MonthlyReportComponent implements OnInit {
 	public month: number;
 	public year: number;
 	public symptomMap: Map<string, string>;
-	public symptomPainColorMap: Map<number, string>;
 	public monthMap: Map<number, string>;
 	public today: IDetailedDate;
 	public pieCharts: Map<string, CalendarPieChartViewModel>;
@@ -49,6 +49,8 @@ export class MonthlyReportComponent implements OnInit {
 	public topMeds: { name: string, count: number }[];
 	public topLogs: { name: string, count: number }[];
 	public topSports: { name: string, count: number }[];
+	// For each event type created by the user, its most frequent entries and the total of their quantities
+	public topCustoms: { customType: ICustomType, items: { name: string, count: number, total: number }[] }[];
 
 	constructor(
 		public globalService: GlobalService,
@@ -72,6 +74,7 @@ export class MonthlyReportComponent implements OnInit {
 		this.topMeds = [];
 		this.topLogs = [];
 		this.topSports = [];
+		this.topCustoms = [];
 	}
 
 	public ngOnInit(): void {
@@ -81,8 +84,6 @@ export class MonthlyReportComponent implements OnInit {
 		this.today = getDetailedDate(moment().format('YYYY-MM-DD'));
 		this.updateCalendar(this.month, this.year);
 		this.symptomMap = this.globalService.symptomMap;
-		this.symptomPainColorMap =
-			new Map([[0, 'default'], [1, 'pain-1'], [2, 'pain-2'], [3, 'pain-3'], [4, 'pain-4'], [5, 'pain-5']]);
 	}
 
 	public async exportPdf(action: 'save' | 'share' = 'save'): Promise<void> {
@@ -133,8 +134,10 @@ export class MonthlyReportComponent implements OnInit {
 	}
 
 	private hasDataInMonth(symptomKey: string): boolean {
-		return this.overviews.some(day =>
-			day.getSymptomPain(symptomKey) > 0 || day.loggedSymptomKeys.includes(symptomKey));
+		// 0 is a value like the others on an inverted scale (the worst one)
+		const invertedScale = this.globalService.isScaleInverted(symptomKey);
+		return this.overviews.some(day => (invertedScale ? day.findSymptomPain(symptomKey) != null
+			: day.getSymptomPain(symptomKey) > 0) || day.loggedSymptomKeys.includes(symptomKey));
 	}
 
 	private padSymptoms(symptoms: ISymptom[]): ISymptom[] {
@@ -195,6 +198,24 @@ export class MonthlyReportComponent implements OnInit {
 			.map(([name, count]) => ({ name, count }))
 			.sort((a, b) => b.count - a.count)
 			.slice(0, 10);
+
+		// Top entries of the custom types
+		this.topCustoms = this.globalService.customTypes.map(customType => {
+			const entryMap = new Map<string, { name: string, count: number, total: number }>();
+			this.overviews.forEach(day => {
+				day.customs.filter(entry => entry.customType === customType.key).forEach(entry => {
+					const name = entry.key || customType.label;
+					const item = entryMap.get(name) || { name, count: 0, total: null };
+					item.count++;
+					if (entry.quantity != null) {
+						item.total = (item.total || 0) + entry.quantity;
+					}
+					entryMap.set(name, item);
+				});
+			});
+			const items = Array.from(entryMap.values()).sort((a, b) => b.count - a.count).slice(0, 10);
+			return { customType, items };
+		}).filter(group => group.items.length > 0);
 	}
 
 	public loadSymptoms(): void {
@@ -208,7 +229,8 @@ export class MonthlyReportComponent implements OnInit {
 	public updateCharts(): void {
 		this.symptoms$.subscribe(symptoms => {
 			symptoms.forEach(symptom => {
-				this.pieCharts.set(symptom.key, new CalendarPieChartViewModel('doughnut', symptom.key, this.globalService.getPainColors()));
+				this.pieCharts.set(symptom.key, new CalendarPieChartViewModel('doughnut', symptom.key,
+					this.globalService.getPainColors(), !!symptom.invertedScale));
 				this.pieCharts.get(symptom.key).update(this.overviews, this.globalService.painScale);
 			});
 		})
@@ -277,7 +299,7 @@ export class MonthlyReportComponent implements OnInit {
 		});
 	}
 
-	public getPainColor(pain: number): string {
-		return this.symptomPainColorMap.get(Math.ceil(pain));
+	public getPainColor(day: DayOverviewViewModel, symptomKey: string): string {
+		return this.globalService.getPainColorClass(symptomKey, day.findSymptomPain(symptomKey));
 	}
 }

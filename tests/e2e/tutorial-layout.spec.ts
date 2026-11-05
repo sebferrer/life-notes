@@ -12,7 +12,7 @@ const UNTRANSLATED = /\b[A-Z][A-Z0-9]+(_[A-Z0-9]+)+\b/;
 const VARIANTS = [
 	{ language: 'fr', classic: false },
 	{ language: 'en', classic: false },
-	// The tutorial follows the timeline style: the scenes showing a day have a classic design too
+	// The tutorial follows the version of the interface: the scenes showing a day have a V1 design too
 	{ language: 'fr', classic: true }
 ] as const;
 
@@ -21,8 +21,7 @@ for (const { language, classic } of VARIANTS) {
 		async ({ app, page }) => {
 		await app.start(language);
 		if (classic) {
-			await app.goToSettings('Apparence');
-			await app.chooseRadio('Classique');
+			await app.setUiVersion('V1');
 		}
 		await page.goto('/#/tutorial');
 		await expect(page.locator('.scene.classic')).toHaveCount(classic ? Object.keys(SCENE_ARROWS).length : 0);

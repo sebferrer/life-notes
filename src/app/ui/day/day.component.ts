@@ -26,7 +26,6 @@ export class DayComponent extends ATimeComponent implements OnInit {
 	public dayContent: DayViewModel;
 	public dayContent$: Subject<DayViewModel>;
 	public symptomMap: Map<string, string>;
-	public symptomPainColorMap: Map<number, string>;
 	public displayCharts = false;
 
 	constructor(

@@ -14,6 +14,8 @@ import { DialogInfoComponent } from './ui/dialog/dialog-info';
 import { UpdatesService } from './infra/updates.service';
 import { DialogUpdatesComponent } from './ui/dialog/dialog-updates';
 import { DialogTutorialNoticeComponent } from './ui/dialog/dialog-tutorial-notice';
+import { DialogNewUiComponent } from './ui/dialog/dialog-new-ui';
+import { CustomTypesService } from './infra/custom-types.service';
 
 @Component({
 	selector: 'app-root',
@@ -26,6 +28,9 @@ export class AppComponent implements OnInit {
 	public symptoms$: Subject<ISymptom[]>;
 	// Toolbar entry of the current page, highlighted in the toolbar
 	public activeSection: string;
+	// The pages are drawn once the settings are known: nothing is shown with the default ones
+	// (e.g. the other timeline design) before
+	public settingsLoaded = false;
 	// DEVELOPER UPDATES NOTIFICATION FEATURE DISABLED
 	// public updatesCount: number = 0;
 	// private lastUpdate: number = 0;
@@ -37,6 +42,7 @@ export class AppComponent implements OnInit {
 		private importerExporterService: ImporterExporterService,
 		private dialog: MatDialog,
 		private updatesService: UpdatesService,
+		private customTypesService: CustomTypesService,
 		private router: Router
 	) {
 		/*this.symptoms = new Array<ISymptom>();
@@ -48,6 +54,7 @@ export class AppComponent implements OnInit {
 			this.activeSection = this.getSection(event.urlAfterRedirects);
 		});
 		// this.updateSymptoms();
+		this.customTypesService.loadCustomTypes().subscribe();
 		this.settingsService.initSettings().subscribe(settings => {
 			this.initSettings(settings);
 			// DEVELOPER UPDATES NOTIFICATION FEATURE DISABLED
@@ -64,10 +71,10 @@ export class AppComponent implements OnInit {
 		if (page === '' || page === 'timeline') {
 			return 'timeline';
 		}
-		if (page === 'calendar' || page === 'monthlyreport') {
+		if (page === 'calendar' || page === 'monthlyreport' || page === 'yearinpixels') {
 			return 'calendar';
 		}
-		if (['manage', 'symptoms', 'meds', 'logs', 'sports'].includes(page)) {
+		if (['manage', 'symptoms', 'meds', 'logs', 'sports', 'custom'].includes(page)) {
 			return 'manage';
 		}
 		if (['settings', 'about', 'tutorial'].includes(page)) {
@@ -168,16 +175,22 @@ export class AppComponent implements OnInit {
 		} else {
 			this.initLanguage(settings.language);
 		}
+		this.settingsLoaded = true;
 
+		// Users of the former versions kept the V1: they are told once about the V2
+		const newUiNotice = settings != null && !settings.firstStart && !settings.newUiPopupSeen
+			&& settings.uiVersion === 'v1' ? () => this.newUiOpenDialog() : null;
 		this.settingsService.getSettingsCurrentVersion().subscribe(settingsVersion => {
 			this.settingsService.getCurrentVersion().subscribe(currentVersion => {
 				if (typeof settingsVersion === 'string' && settingsVersion.startsWith('0.')) {
 					if (settingsVersion < currentVersion) {
-						this.updateInfoOpenDialog();
+						this.updateInfoOpenDialog(newUiNotice);
 						this.settingsService.setCurrentVersion().subscribe();
+					} else if (newUiNotice) {
+						newUiNotice();
 					}
 				} else {
-					this.updateInfoOpenDialog();
+					this.updateInfoOpenDialog(newUiNotice);
 					this.settingsService.setCurrentVersion().subscribe();
 				}
 			});
@@ -217,6 +230,16 @@ export class AppComponent implements OnInit {
 			this.settingsService.setFirstStart(false).subscribe(() => {
 				this.updateInfoOpenDialog(() => this.tutorialNoticeOpenDialog());
 			});
+		});
+	}
+
+	public newUiOpenDialog() {
+		this.settingsService.setNewUiPopupSeen(true).subscribe();
+		this.dialog.open(DialogNewUiComponent, {
+			autoFocus: false,
+			width: '22rem',
+			maxWidth: '92vw',
+			panelClass: ['custom-modalbox', 'new-ui-dialog']
 		});
 	}
 

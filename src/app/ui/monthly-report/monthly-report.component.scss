@@ -116,6 +116,11 @@
     background-color: var(--color-pain-5);
 }
 
+// No intensity on an inverted scale (see GlobalService.getPainColorClass). The report is always light.
+.color-none {
+    background-color: #eeeeee;
+}
+
 // Landscape phones: 3vh is too small for the day bubbles
 @media (orientation: landscape) and (max-height: 600px) {
     .day-label-today {

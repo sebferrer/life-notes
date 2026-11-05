@@ -1,0 +1,94 @@
+<ng-template transloco let-t>
+    <div class="bottom-sheet-container closable-sheet edit-custom-type" [style]="colorVariables">
+        <button mat-icon-button class="sheet-close-button" (click)="onCancel()" [attr.aria-label]="t('CLOSE')">
+            <mat-icon>close</mat-icon>
+        </button>
+
+        <div class="header-section">
+            <div class="title-row">
+                <div class="icon-bubble"><mat-icon>{{ icon }}</mat-icon></div>
+                <div class="main-title">{{ t(edit ? 'CUSTOM_TYPE_EDIT_TITLE' : 'CUSTOM_TYPE_NEW_TITLE') }}</div>
+            </div>
+        </div>
+
+        <div class="content-body">
+            <div class="form-field">
+                <div class="field-label">{{ t('CUSTOM_TYPE_NAME') }}</div>
+                <div class="field-input-box">
+                    <mat-form-field appearance="none" class="clean-input">
+                        <input matInput class="custom-type-label-input" [(ngModel)]="label" [maxlength]="maxLabelLength"
+                            [placeholder]="t('CUSTOM_TYPE_NAME_PLACEHOLDER')" required>
+                    </mat-form-field>
+                </div>
+                <div *ngIf="labelTaken" class="field-error">{{ t('CUSTOM_TYPE_NAME_TAKEN') }}</div>
+            </div>
+
+            <div class="form-field">
+                <div class="field-label">{{ t('CUSTOM_TYPE_ICON') }}</div>
+                <div class="icon-grid" role="radiogroup">
+                    <button *ngFor="let item of icons" type="button" class="icon-choice" [class.selected]="item === icon"
+                        role="radio" [attr.aria-checked]="item === icon" [attr.data-icon]="item" (click)="icon = item">
+                        <mat-icon>{{ item }}</mat-icon>
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-field">
+                <div class="field-label">{{ t('CUSTOM_TYPE_COLOR') }}</div>
+                <div class="color-row" role="radiogroup">
+                    <button *ngFor="let preset of presetColors" type="button" class="color-choice"
+                        [class.selected]="isPresetSelected(preset)" role="radio" [attr.aria-checked]="isPresetSelected(preset)"
+                        [style.background-color]="presetColor(preset)" (click)="selectPreset(preset)">
+                        <mat-icon *ngIf="isPresetSelected(preset)" [style.color]="onColor(presetColor(preset))">check</mat-icon>
+                    </button>
+                    <!-- The label opens the hidden native color picker -->
+                    <label class="color-choice custom-color" [class.selected]="customColorSelected"
+                        [style.background-color]="customColorSelected ? currentColor : null"
+                        [attr.aria-label]="t('CUSTOM_TYPE_OTHER_COLOR')">
+                        <mat-icon>{{ customColorSelected ? 'check' : 'palette' }}</mat-icon>
+                        <input #colorInput type="color" [value]="currentColor" (change)="selectCustomColor(colorInput.value)">
+                    </label>
+                </div>
+                <div class="field-hint">{{ t(dark ? 'CUSTOM_TYPE_COLOR_HINT_DARK' : 'CUSTOM_TYPE_COLOR_HINT_LIGHT') }}</div>
+            </div>
+
+            <div class="form-field">
+                <div class="toggle-row">
+                    <div class="toggle-text">
+                        <div class="toggle-title">{{ t('CUSTOM_TYPE_QUANTITY') }}</div>
+                        <div class="field-hint">{{ t('CUSTOM_TYPE_QUANTITY_HINT') }}</div>
+                    </div>
+                    <mat-slide-toggle class="quantity-toggle" [(ngModel)]="quantity"></mat-slide-toggle>
+                </div>
+                <div *ngIf="quantity" class="field-input-box unit-box">
+                    <mat-form-field appearance="none" class="clean-input">
+                        <input matInput class="custom-type-unit-input" [(ngModel)]="unit" [maxlength]="maxUnitLength"
+                            [placeholder]="t('CUSTOM_TYPE_UNIT_PLACEHOLDER')">
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <!-- How the entries will look in the timeline -->
+            <div class="form-field">
+                <div class="field-label">{{ t('CUSTOM_TYPE_PREVIEW') }}</div>
+                <div class="preview-row">
+                    <div class="preview-marker"><mat-icon>{{ icon }}</mat-icon></div>
+                    <div class="preview-card">
+                        <span class="preview-title">{{ trimmedLabel || t('CUSTOM_TYPE_NAME_PLACEHOLDER') }}</span>
+                        <span *ngIf="quantity" class="preview-badge">{{ globalService.formatQuantity(1.5) }}
+                            {{ unit }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button mat-flat-button color="primary" (click)="onConfirm()" [disabled]="!isValid()" class="confirm-button">
+                {{ t(edit ? 'CUSTOM_TYPE_SAVE' : 'CUSTOM_TYPE_CREATE') }}
+            </button>
+        </div>
+
+        <app-spacer-item></app-spacer-item>
+
+    </div>
+</ng-template>

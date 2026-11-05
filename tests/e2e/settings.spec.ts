@@ -78,9 +78,14 @@ test.describe('Settings', () => {
 		await expect.poll(color).not.toBe(before);
 	});
 
+	test('the landscape mode is not offered for now', async ({ app }) => {
+		await app.goToSettings('Apparence');
+		await expect(app.settingsToggle('Mode sombre')).toBeVisible();
+		await expect(app.settingsToggle('Mode paysage')).toHaveCount(0);
+	});
+
 	test('appearance, calendar and reminder settings are remembered', async ({ app }) => {
 		await app.goToSettings('Apparence');
-		await app.setToggle('Mode paysage', true);
 		await app.setToggle('Affichage compact', true);
 		await app.goToSettings('Personnalisation');
 		await app.setToggle('Rappel quotidien', true);
@@ -88,7 +93,6 @@ test.describe('Settings', () => {
 
 		await app.reload();
 		await app.goToSettings('Apparence');
-		await expect(app.settingsToggle('Mode paysage').locator('input')).toBeChecked();
 		await expect(app.settingsToggle('Affichage compact').locator('input')).toBeChecked();
 		await app.goToSettings('Personnalisation');
 		await expect(app.settingsToggle('Rappel quotidien').locator('input')).toBeChecked();

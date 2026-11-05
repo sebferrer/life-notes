@@ -13,6 +13,8 @@ import { GlobalService } from 'src/app/infra/global.service';
 import { TranslocoService } from '@ngneat/transloco';
 import { IDetailedDate } from 'src/app/models/detailed.date';
 import { getDetailedDate } from 'src/app/util/date.utils';
+import { DialogOccurrenceHistoryComponent, IOccurrence } from '../dialog/dialog-occurrence-history/dialog-occurrence-history.component';
+import { IStatsIntensity } from 'src/app/models/occurrence-stats.model';
 
 @Component({
 	selector: 'app-symptoms',
@@ -68,7 +70,9 @@ export class SymptomsComponent implements OnInit {
 						keys.add(symptom.key);
 					}
 				});
-				(day.symptomOverviews || []).filter(overview => overview.pain > 0).forEach(overview => keys.add(overview.key));
+				// 0 is a value like the others on an inverted scale (the worst one)
+				(day.symptomOverviews || []).filter(overview => overview.pain > 0
+					|| this.globalService.isScaleInverted(overview.key)).forEach(overview => keys.add(overview.key));
 				keys.forEach(key => {
 					if (!lastDates.has(key) || day.date > lastDates.get(key)) {
 						lastDates.set(key, day.date);
@@ -92,14 +96,44 @@ export class SymptomsComponent implements OnInit {
 				return;
 			}
 			if (response.edit) {
-				this.editSymptom(response.key, response.label);
+				this.editSymptom(response.key, response.label, response.invertedScale);
 			} else {
-				this.addSymptom(response.label);
+				this.addSymptom(response.label, response.invertedScale);
 			}
 			const action = response.edit ? 'UPDATED' : 'ADDED';
 			this.snackBar.open(this.translocoService.translate('ADD_SYMPTOM_SNACKBAR',
 				{ action: this.translocoService.translate(action) }), this.translocoService.translate('CLOSE'),
 				{ duration: 2000 });
+		});
+	}
+
+	// The history after a deletion, else the default tab of the version of the interface
+	public openOccurrenceHistory(symptom: SymptomViewModel, tab?: 'stats' | 'history'): void {
+		this.daysService.getDays().subscribe(days => {
+			const occurrences: IOccurrence[] = [];
+			const intensities: IStatsIntensity[] = [];
+			days.forEach(day => {
+				const daySymptom = (day.symptoms || []).find(s => s.key === symptom.key);
+				(daySymptom?.logs || []).forEach(log =>
+					occurrences.push({ date: day.date, time: log.time, detail: log.detail, pain: log.pain }));
+				const overview = (day.symptomOverviews || []).find(o => o.key === symptom.key);
+				if (overview) {
+					intensities.push({ date: day.date, pain: overview.pain });
+				}
+			});
+			const ref = this.bottomSheet.open(DialogOccurrenceHistoryComponent, {
+				panelClass: ['event-bottom-sheet', 'occurrence-history-panel'],
+				disableClose: true,
+				data: { tab, title: symptom.label, type: 'symptomLog', key: symptom.key, occurrences, intensities }
+			});
+			ref.afterDismissed().subscribe(result => {
+				if (result?.hasChanges) {
+					this.loadStats();
+				}
+				if (result?.reopen) {
+					this.openOccurrenceHistory(symptom, 'history');
+				}
+			});
 		});
 	}
 
@@ -128,10 +162,10 @@ export class SymptomsComponent implements OnInit {
 		});
 	}
 
-	public addSymptom(label: string): void {
+	public addSymptom(label: string, invertedScale: boolean): void {
 		const key: string = simplifyString(label);
-		this.symptomsService.createNewSymptom(key, label).subscribe(() => {
-			this.symptoms.push(new SymptomViewModel({ type: null, key, label }));
+		this.symptomsService.createNewSymptom(key, label, invertedScale).subscribe(() => {
+			this.symptoms.push(new SymptomViewModel({ type: null, key, label, invertedScale }));
 			this.sortSymptoms();
 			this.symptoms$.next(this.symptoms);
 			this.globalService.loadSymptoms().subscribe(() => { });
@@ -144,8 +178,8 @@ export class SymptomsComponent implements OnInit {
 		});
 	}
 
-	public editSymptom(key: string, label: string): void {
-		this.symptomsService.editSymptom(key, label).subscribe(symptom => {
+	public editSymptom(key: string, label: string, invertedScale: boolean): void {
+		this.symptomsService.editSymptom(key, label, invertedScale).subscribe(symptom => {
 			this.symptoms = this.symptoms.filter(s => s.key !== key);
 			this.symptoms.push(new SymptomViewModel(symptom));
 			this.sortSymptoms();
