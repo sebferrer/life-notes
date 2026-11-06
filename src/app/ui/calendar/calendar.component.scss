@@ -117,46 +117,132 @@
         position: relative;
         width: 100%;
 
-        .chart-card {
-            position: relative;
-            padding-top: 1rem;
+        // Intensities of the month: header and spacing of the sleep card
+        .intensities-card {
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
+            padding: 1rem 0.75rem 0.75rem 0.75rem;
         }
 
-        .pie-chart {
-            padding-bottom: 0.75rem;
-        }
+        .intensities-header {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
 
-        .pie-charts {
-            max-height: 65vh;
-            overflow-y: auto;
-            padding-bottom: 0.75rem;
-        }
+            .intensities-icon {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 2.25rem;
+                height: 2.25rem;
+                border-radius: 11px;
+                color: #ffffff;
+                background-color: #ef6c57;
 
-        // Same card look for the line charts (their component renders nothing without data)
-        ::ng-deep app-line-chart .chart-container {
-            margin: 0.75rem;
-            padding: 1rem 0.5rem 0.5rem 0.5rem;
-            background-color: var(--surface);
-            border: 1px solid var(--border-subtle);
-            border-radius: 16px;
-            box-shadow: 0 1px 3px var(--shadow);
-            overflow: hidden;
+                mat-icon {
+                    font-size: 1.25rem;
+                    width: 1.25rem;
+                    height: 1.25rem;
+                }
+            }
 
-            .chart-title {
-                margin-left: 1rem;
+            .intensities-title {
+                font-size: 1.1rem;
                 font-weight: 600;
+                color: var(--text-strong);
+            }
+
+            .help-button {
+                margin: -0.5rem -0.5rem -0.5rem auto;
+                color: var(--text-weak);
             }
         }
-    }
 
-    .help-container {
-        position: absolute;
-        top: 0.25rem;
-        right: 0.25rem;
-        z-index: 2;
+        // One group per scale of intensity
+        .pie-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
 
-        button {
-            color: var(--highlight);
+            & + .pie-group {
+                padding-top: 0.9rem;
+                border-top: 1px solid var(--border-subtle);
+            }
+        }
+
+        .pie-group-title {
+            margin-bottom: -0.3rem;
+            padding: 0 2px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-medium);
+        }
+
+        // Two by two, a ring alone on its row centered and as large as the others
+        .intensity-rings {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.9rem 0.6rem;
+
+            .intensity-ring:last-child:nth-child(odd) {
+                grid-column: 1 / -1;
+                justify-self: center;
+                width: calc(50% - 0.3rem);
+            }
+        }
+
+        .pie-legend {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.3rem 0.8rem;
+            font-size: 0.75rem;
+            color: var(--text-medium);
+
+            .legend-item {
+                display: flex;
+                align-items: center;
+                gap: 0.3rem;
+            }
+
+            .swatch {
+                width: 0.75rem;
+                height: 0.75rem;
+                border-radius: 3px;
+                box-shadow: inset 0 0 0 1px rgba(128, 128, 128, 0.2);
+            }
+        }
+
+        .no-symptom-entry {
+            padding: 0.5rem 1.5rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-medium);
+        }
+
+        .show-all-symptoms {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            border-radius: 12px;
+            color: var(--primary);
+            background-color: var(--surface-variant);
+
+            .mat-icon {
+                margin-right: 0.3rem;
+            }
+
+            .hidden-count {
+                margin-left: 0.4rem;
+                padding: 0 0.45rem;
+                border-radius: 10px;
+                font-size: 0.75rem;
+                line-height: 1.25rem;
+                color: var(--surface);
+                background-color: var(--primary);
+            }
         }
     }
 

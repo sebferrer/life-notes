@@ -1,0 +1,182 @@
+// Same card as the other ones of the calendar
+.sleep-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    margin: 0.75rem;
+    padding: 1rem 0.75rem 0.75rem 0.75rem;
+    background-color: var(--surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 16px;
+    box-shadow: 0 1px 3px var(--shadow);
+}
+
+.sleep-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+
+    .sleep-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.25rem;
+        height: 2.25rem;
+        border-radius: 11px;
+        color: #ffffff;
+        background-color: #5c6bc0;
+
+        mat-icon {
+            font-size: 1.25rem;
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+    }
+
+    .sleep-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text-strong);
+    }
+}
+
+// Bars or curves
+.mode-toggle {
+    display: flex;
+    margin-left: auto;
+    padding: 2px;
+    border-radius: 10px;
+    background-color: var(--surface-variant);
+
+    .mode-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.25rem;
+        height: 1.9rem;
+        border: none;
+        border-radius: 8px;
+        color: var(--text-medium);
+        background: transparent;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+
+        mat-icon {
+            font-size: 1.2rem;
+            width: 1.2rem;
+            height: 1.2rem;
+        }
+
+        &.active {
+            color: var(--primary);
+            background-color: var(--surface);
+            box-shadow: 0 1px 2px var(--shadow);
+        }
+    }
+}
+
+.sleep-figures {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.4rem;
+}
+
+.sleep-figure {
+    padding: 0.6rem 0.25rem;
+    border-radius: 12px;
+    background-color: var(--surface-variant);
+    text-align: center;
+
+    .sleep-value {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--text-strong);
+        white-space: nowrap;
+    }
+
+    .sleep-label {
+        margin-top: 0.1rem;
+        font-size: 0.72rem;
+        line-height: 1.2;
+        color: var(--text-medium);
+    }
+
+    .sleep-range {
+        margin-top: 0.2rem;
+        font-size: 0.68rem;
+        color: var(--text-weak);
+        white-space: nowrap;
+    }
+}
+
+.sleep-chart-block {
+    .sleep-chart-title {
+        padding: 0 0.25rem;
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--text-strong);
+    }
+
+    .sleep-chart {
+        position: relative;
+        height: 10rem;
+        margin-top: 0.35rem;
+    }
+
+    &.schedule .sleep-chart {
+        height: 12rem;
+    }
+
+    // The legend of the durations on one line: about 300 px of 310 at 360 px. On a narrower screen, the text, the
+    // swatches and the gaps get smaller with the room left (the screen minus 50 px of margins).
+    &.durations .sleep-legend {
+        flex-wrap: nowrap;
+        gap: 0.3rem 1.04em;
+        white-space: nowrap;
+        font-size: unquote('min(0.72rem, calc(3.8vw - 2.1px))');
+
+        .legend-item {
+            gap: 0.42em;
+        }
+
+        .swatch {
+            width: 1.04em;
+            height: 1.04em;
+        }
+    }
+}
+
+.sleep-legend {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.3rem 0.9rem;
+    margin-top: 0.35rem;
+    font-size: 0.72rem;
+    color: var(--text-medium);
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+
+    .swatch {
+        width: 0.75rem;
+        height: 0.75rem;
+        border-radius: 3px;
+        box-shadow: inset 0 0 0 1px rgba(128, 128, 128, 0.2);
+    }
+
+    .dot {
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 50%;
+    }
+
+    .line {
+        width: 0.9rem;
+        height: 3px;
+        border-radius: 2px;
+    }
+}

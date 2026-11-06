@@ -16,6 +16,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
@@ -52,6 +53,8 @@ import { DialogSelectBackupComponent } from './ui/dialog/dialog-select-backup';
 import { PieChartComponent } from './ui/chart/pie-chart';
 import { LineChartComponent } from './ui/chart/line-chart';
 import { OccurrenceStatsComponent } from './ui/occurrence-stats';
+import { SleepStatsComponent } from './ui/sleep-stats';
+import { IntensityRingComponent } from './ui/intensity-ring';
 import { DialogNoTargetSymptomWarningComponent } from './ui/dialog/dialog-no-target-symptom-warning';
 import { DialogExportConfirmComponent } from './ui/dialog/dialog-export-confirm';
 import { DialogInfoComponent } from './ui/dialog/dialog-info';
@@ -122,6 +125,8 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 		PieChartComponent,
 		LineChartComponent,
 		OccurrenceStatsComponent,
+		SleepStatsComponent,
+		IntensityRingComponent,
 		SwipingFingerComponent,
 		DialogAddEventComponent,
 		DialogShowEventComponent,
@@ -183,6 +188,7 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 		MatFormFieldModule,
 		MatInputModule,
 		MatSnackBarModule,
+		MatTooltipModule,
 		MatSelectModule,
 		MatSliderModule,
 		MatBottomSheetModule,

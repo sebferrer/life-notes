@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { SymptomsService, SettingsService, DaysService } from '../../infra';
 import { Subject } from 'rxjs';
 import { SymptomViewModel } from 'src/app/models/symptom.view.model';
 // import { MatDialog } from '@angular/material/dialog';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { TapTooltip } from 'src/app/util/tap-tooltip';
 import { BottomSheetAddSymptomComponent } from '../bottom-sheet/bottom-sheet-add-symptom';
 import * as simplifyString from 'simplify-string';
 import { BottomSheetDeleteSymptomComponent } from '../bottom-sheet/bottom-sheet-delete-symptom';
@@ -21,17 +22,13 @@ import { IStatsIntensity } from 'src/app/models/occurrence-stats.model';
 	templateUrl: './symptoms.component.html',
 	styleUrls: ['../manage/manage-list.scss']
 })
-export class SymptomsComponent implements OnInit {
+export class SymptomsComponent implements OnInit, OnDestroy {
 
 	public symptoms: SymptomViewModel[];
 	public symptoms$: Subject<SymptomViewModel[]>;
 	// Number of entries and last day with data of each symptom
 	public stats = new Map<string, { count: number, lastDate: IDetailedDate }>();
-
-	// Symptom shown in the toolbar
-	public get trackedSymptomKey(): string {
-		return this.globalService.targetSymptomKey;
-	}
+	public tapTooltip = new TapTooltip();
 
 	constructor(
 		private translocoService: TranslocoService,
@@ -54,6 +51,10 @@ export class SymptomsComponent implements OnInit {
 				this.symptoms$.next(this.symptoms);
 			});
 		this.loadStats();
+	}
+
+	public ngOnDestroy(): void {
+		this.tapTooltip.destroy();
 	}
 
 	// Entries are the symptoms added to the days; an intensity of the day also counts for the last day

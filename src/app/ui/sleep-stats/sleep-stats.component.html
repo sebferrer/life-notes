@@ -1,0 +1,92 @@
+<ng-template transloco let-t>
+	<div *ngIf="hasData" class="sleep-stats">
+		<div class="sleep-header">
+			<span class="sleep-icon"><mat-icon>bedtime</mat-icon></span>
+			<span class="sleep-title">{{ t('SLEEP_TITLE') }}</span>
+			<div *ngIf="!report" class="mode-toggle">
+				<button class="mode-button bars" [class.active]="mode === 'bars'" (click)="setMode('bars')"
+					[attr.aria-label]="t('SLEEP_CHART_BARS')" [attr.aria-pressed]="mode === 'bars'">
+					<mat-icon>bar_chart</mat-icon>
+				</button>
+				<button class="mode-button curves" [class.active]="mode === 'curves'" (click)="setMode('curves')"
+					[attr.aria-label]="t('SLEEP_CHART_CURVES')" [attr.aria-pressed]="mode === 'curves'">
+					<mat-icon>show_chart</mat-icon>
+				</button>
+			</div>
+		</div>
+
+		<div class="sleep-figures">
+			<div class="sleep-figure duration">
+				<div class="sleep-value">{{ summary.duration ? formatDuration(summary.duration.average) : '–' }}</div>
+				<div class="sleep-label">{{ t('SLEEP_AVERAGE_DURATION') }}</div>
+				<div *ngIf="summary.duration" class="sleep-range">
+					{{ formatDuration(summary.duration.min) }} – {{ formatDuration(summary.duration.max) }}</div>
+			</div>
+			<div class="sleep-figure bedtime">
+				<div class="sleep-value">{{ summary.bedTime ? formatTime(summary.bedTime.average) : '–' }}</div>
+				<div class="sleep-label">{{ t('SLEEP_AVERAGE_BEDTIME') }}</div>
+				<div *ngIf="summary.bedTime" class="sleep-range">
+					{{ formatTime(summary.bedTime.min) }} – {{ formatTime(summary.bedTime.max) }}</div>
+			</div>
+			<div class="sleep-figure wake-up">
+				<div class="sleep-value">{{ summary.wakeUp ? formatTime(summary.wakeUp.average) : '–' }}</div>
+				<div class="sleep-label">{{ t('SLEEP_AVERAGE_WAKE_UP') }}</div>
+				<div *ngIf="summary.wakeUp" class="sleep-range">
+					{{ formatTime(summary.wakeUp.min) }} – {{ formatTime(summary.wakeUp.max) }}</div>
+			</div>
+		</div>
+
+		<div *ngIf="summary.duration" class="sleep-chart-block durations">
+			<div class="sleep-chart-title">{{ t('SLEEP_DURATIONS') }}</div>
+			<div class="sleep-chart">
+				<canvas baseChart [chartType]="mode === 'bars' ? 'bar' : 'line'" [datasets]="durationDatasets"
+					[labels]="labels" [options]="durationOptions" [plugins]="durationPlugins" [legend]="false"
+					role="img" [attr.aria-label]="durationDescription"></canvas>
+			</div>
+			<div class="sleep-legend">
+				<ng-container *ngIf="mode === 'bars'; else durationCurveLegend">
+					<span class="legend-item in-target">
+						<span class="swatch" [style.background-color]="colors.bar"></span>{{ t('SLEEP_IN_TARGET') }}</span>
+					<span class="legend-item out-of-target">
+						<span class="swatch" [style.background-color]="colors.barOutside"></span>{{ t('SLEEP_OUT_OF_TARGET') }}</span>
+				</ng-container>
+				<ng-template #durationCurveLegend>
+					<span class="legend-item duration">
+						<span class="line" [style.background-color]="colors.bar"></span>{{ t('SLEEP_DURATION') }}</span>
+				</ng-template>
+				<span class="legend-item target">
+					<span class="swatch" [style.background-color]="colors.band"></span>{{ t('SLEEP_TARGET') }}</span>
+			</div>
+		</div>
+
+		<div class="sleep-chart-block schedule">
+			<div class="sleep-chart-title">{{ t('SLEEP_SCHEDULE') }}</div>
+			<div class="sleep-chart">
+				<canvas baseChart [chartType]="mode === 'bars' ? 'bar' : 'line'" [datasets]="scheduleDatasets"
+					[labels]="labels" [options]="scheduleOptions" [legend]="false" role="img"
+					[attr.aria-label]="scheduleDescription"></canvas>
+			</div>
+			<div class="sleep-legend">
+				<ng-container *ngIf="mode === 'bars'; else scheduleCurveLegend">
+					<span class="legend-item night">
+						<span class="swatch" [style.background-color]="colors.bar"></span>{{ t('SLEEP_NIGHT_LEGEND') }}</span>
+					<ng-container *ngIf="hasAloneTimes">
+						<span class="legend-item bedtime-alone">
+							<span class="dot" [style.background-color]="colors.bedTime"></span>{{ t('SLEEP_BEDTIME_ALONE') }}</span>
+						<span class="legend-item wake-up-alone">
+							<span class="dot" [style.background-color]="colors.wakeUp"></span>{{ t('SLEEP_WAKE_UP_ALONE') }}</span>
+					</ng-container>
+				</ng-container>
+				<ng-template #scheduleCurveLegend>
+					<span class="legend-item bedtime">
+						<span class="line" [style.background-color]="colors.bedTime"></span>{{ t('TIMELINE_GO_TO_BED') }}</span>
+					<span class="legend-item wake-up">
+						<span class="line" [style.background-color]="colors.wakeUp"></span>{{ t('TIMELINE_WAKE_UP') }}</span>
+					<span class="legend-item night">
+						<span class="swatch" [style.background-color]="'rgba(' + colors.area + ', 0.3)'"></span>{{
+						t('SLEEP_NIGHT') }}</span>
+				</ng-template>
+			</div>
+		</div>
+	</div>
+</ng-template>

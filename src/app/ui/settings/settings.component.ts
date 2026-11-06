@@ -47,6 +47,7 @@ export class SettingsComponent implements OnInit {
 	public darkMode: boolean;
 	public landscapeMode: boolean;
 	public uiVersion: string;
+	public sleepChartMode: string;
 	public eventPalettes: IEventPalettes;
 	// The palette edited is the one of the theme currently displayed
 	public get currentTheme(): 'light' | 'dark' {
@@ -93,6 +94,7 @@ export class SettingsComponent implements OnInit {
 		this.darkMode = this.globalService.darkMode;
 		this.landscapeMode = this.globalService.landscapeMode;
 		this.uiVersion = this.globalService.uiVersion;
+		this.sleepChartMode = this.globalService.sleepChartMode;
 		this.eventPalettes = {
 			light: { ...this.globalService.eventPalettes.light },
 			dark: { ...this.globalService.eventPalettes.dark }
@@ -115,6 +117,7 @@ export class SettingsComponent implements OnInit {
 			this.darkMode = !!settings.darkMode;
 			this.landscapeMode = !!settings.landscapeMode;
 			this.uiVersion = settings.uiVersion || 'v2';
+			this.sleepChartMode = settings.sleepChartMode || 'bars';
 			this.eventPalettes = completeEventPalettes(settings.eventColors);
 		});
 	}
@@ -179,6 +182,10 @@ export class SettingsComponent implements OnInit {
 
 	public setUiVersion(): void {
 		this.settingsService.setUiVersion(this.uiVersion).subscribe();
+	}
+
+	public setSleepChartMode(): void {
+		this.settingsService.setSleepChartMode(this.sleepChartMode).subscribe();
 	}
 
 	public setLandscapeMode(): void {

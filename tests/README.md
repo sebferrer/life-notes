@@ -14,6 +14,7 @@ against the production build (`www`) served locally.
 | `npm run test:visual:update` | Approves the current screens as the new reference screenshots |
 | `npm run test:run` | Runs every test on the current build, without building again |
 | `npm run test:report` | Opens the HTML report of the last run |
+| `npm run screenshots:store` | Builds the app, then takes the Google Play screenshots (not a test, see `store/README.md`) |
 
 The tests use the installed Google Chrome. Without it, run `npx playwright install chromium` once and set
 `PW_CHANNEL=chromium`.
@@ -29,11 +30,12 @@ Add `--headed` to watch it, or `--ui` for the interactive mode.
   - translations: same keys and parameters in French and English, every key used by the app exists
   - custom event types: limit of 10 types, icons, ready-made colors, light and dark variants, type keys
   - inverted intensity scale of a symptom (colors, doughnut charts), statistics of an event (periods, key
-    figures, hours of the day)
+    figures, hours of the day), sleep of the nights of a month
 - `e2e/`: user flows, in French, each test starting from a fresh app (empty database)
   - first launch, symptoms (inverted intensity scale too), timeline (every event type, edit, delete, wake-up/bedtime, intensity, V1),
-    day view, calendar (V1 too), Year in Pixels, manage lists (refreshed from their header), statistics of an event, settings, backups (export, import, another phone, invalid files),
-    PDF report, tutorial, small screens, the cross of every bottom sheet
+    day view, calendar (V1 too, V2: intensities of the symptoms entered as rings, V1: pie charts, sleep of the month as bars or curves), Year in Pixels, manage lists (refreshed from their header), statistics of an event, settings, backups (export, import, another phone, invalid files),
+    PDF report (V2: each symptom as in the calendar, V1: the classic report, both saved as a PDF), tutorial, small
+    screens, the cross of every bottom sheet
   - event types created by the user: creation (the icons must all exist in the Material Icons font), entries
     from the timeline, colors per theme, limit of 10 types, edition, renaming and deletion of entries, deletion
     of a type with its entries, backups, PDF report; restart in the dark theme, several types sharing entry

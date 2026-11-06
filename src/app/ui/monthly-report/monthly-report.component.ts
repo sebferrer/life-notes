@@ -1,6 +1,7 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subject, BehaviorSubject } from 'rxjs';
-import { DaysService, ImporterExporterService } from 'src/app/infra';
+import { DaysService, ImporterExporterService, PDF_REPORT_WIDTH } from 'src/app/infra';
+import { ALineChartViewModel } from 'src/app/models/chartjs/line.chart.view.model';
 import { getDetailedDate } from 'src/app/util/date.utils';
 import { DayOverviewViewModel } from 'src/app/models/day.overview.view.model';
 import { IDetailedDate } from 'src/app/models/detailed.date';
@@ -18,15 +19,36 @@ import * as moment from 'moment';
 import { ActivatedRoute } from '@angular/router';
 import { endOfToday } from 'date-fns';
 
+// Card of the most frequent entries of an event type, in the modern report
+interface IReportStatCard {
+	titleKey: string;
+	titleParams?: object;
+	color: string;
+	// Event type created by the user
+	custom: boolean;
+	items: { name: string, count: number, value: string }[];
+	maxCount: number;
+}
+
 @Component({
 	selector: 'app-monthly-report',
 	templateUrl: './monthly-report.component.html',
 	styleUrls: ['./monthly-report.component.scss']
 })
-export class MonthlyReportComponent implements OnInit {
+export class MonthlyReportComponent implements OnInit, OnDestroy {
 
 	@ViewChild('exportContainer') exportContainer: ElementRef;
 	public isExporting = false;
+
+	// Modern report (V2): the cards go two by two, in rows that a page break never cuts
+	public weekDays: number[];
+	public emptySlots: any[] = [];
+	public symptomRows: ISymptom[][] = [];
+	public statRows: IReportStatCard[][] = [];
+	public sleepRows: { title: string, chart: ALineChartViewModel }[][] = [];
+	private readonly todayDate = moment().format('YYYY-MM-DD');
+	private resizeObserver: any;
+	private fitFrame: number;
 
 	public overviews: DayOverviewViewModel[];
 	public overviews$: Subject<DayOverviewViewModel[]>;
@@ -82,8 +104,73 @@ export class MonthlyReportComponent implements OnInit {
 		this.month = parseInt(monthYear[1]);
 		this.year = parseInt(monthYear[0]);
 		this.today = getDetailedDate(moment().format('YYYY-MM-DD'));
+		this.weekDays = this.globalService.calendarStartOnSunday ? [7, 1, 2, 3, 4, 5, 6] : [1, 2, 3, 4, 5, 6, 7];
+		this.emptySlots = new Array(this.getEmptySlotCount());
 		this.updateCalendar(this.month, this.year);
 		this.symptomMap = this.globalService.symptomMap;
+	}
+
+	public ngOnDestroy(): void {
+		this.resizeObserver?.disconnect();
+		cancelAnimationFrame(this.fitFrame);
+	}
+
+	// The modern report is laid out at the width of the PDF, and scaled down to the width of the screen
+	@ViewChild('reportViewport')
+	set reportViewport(viewport: ElementRef) {
+		this.resizeObserver?.disconnect();
+		const ResizeObserverClass = (window as any).ResizeObserver;
+		if (viewport == null || ResizeObserverClass == null) {
+			return;
+		}
+		const element: HTMLElement = viewport.nativeElement;
+		// Applied on the next frame: resizing in the callback would notify the observer again in the same frame
+		this.resizeObserver = new ResizeObserverClass(() => {
+			cancelAnimationFrame(this.fitFrame);
+			this.fitFrame = requestAnimationFrame(() => this.fitReport(element));
+		});
+		this.resizeObserver.observe(element);
+		this.resizeObserver.observe(element.querySelector('.modern-report'));
+	}
+
+	private fitReport(viewport: HTMLElement): void {
+		const report = viewport.querySelector('.modern-report') as HTMLElement;
+		if (report == null) {
+			return;
+		}
+		const scale = Math.min(1, viewport.clientWidth / PDF_REPORT_WIDTH);
+		const height = `${Math.ceil(report.offsetHeight * scale)}px`;
+		report.parentElement.style.transform = `scale(${scale})`;
+		if (viewport.style.height !== height) {
+			viewport.style.height = height;
+		}
+	}
+
+	// Days of the previous month in the first week, as in the calendar
+	private getEmptySlotCount(): number {
+		if (this.globalService.calendarBlockView) {
+			return 0;
+		}
+		const dayOfWeek = moment([this.year, this.month - 1]).day(); // 0 = Sunday
+		return this.globalService.calendarStartOnSunday ? dayOfWeek : (dayOfWeek + 6) % 7;
+	}
+
+	public isFuture(overview: DayOverviewViewModel): boolean {
+		// ISO dates (YYYY-MM-DD) compare as strings
+		return overview.date > this.todayDate;
+	}
+
+	// Color of a level of the doughnut chart of a symptom (reversed on an inverted scale)
+	public legendColor(symptomKey: string, level: number): string {
+		return this.pieCharts.get(symptomKey).colors[0].backgroundColor[level];
+	}
+
+	private rows<T>(items: T[]): T[][] {
+		const rows: T[][] = [];
+		for (let i = 0; i < items.length; i += 2) {
+			rows.push(items.slice(i, i + 2));
+		}
+		return rows;
 	}
 
 	public async exportPdf(action: 'save' | 'share' = 'save'): Promise<void> {
@@ -130,7 +217,8 @@ export class MonthlyReportComponent implements OnInit {
 			});
 		}
 
-		return this.padSymptoms(result);
+		// The classic report shows the symptoms four by four
+		return this.globalService.isUiV1 ? this.padSymptoms(result) : result;
 	}
 
 	private hasDataInMonth(symptomKey: string): boolean {
@@ -216,12 +304,43 @@ export class MonthlyReportComponent implements OnInit {
 			const items = Array.from(entryMap.values()).sort((a, b) => b.count - a.count).slice(0, 10);
 			return { customType, items };
 		}).filter(group => group.items.length > 0);
+
+		this.statRows = this.rows(this.getStatCards());
+	}
+
+	// The report is always drawn in the light theme: the colors of the light palette
+	private getStatCards(): IReportStatCard[] {
+		const palette = this.globalService.eventPalettes.light;
+		const card = (titleKey: string, color: string, items: { name: string, count: number }[]): IReportStatCard => ({
+			titleKey, color, custom: false, maxCount: Math.max(...items.map(item => item.count)),
+			items: items.map(item => ({ ...item, value: String(item.count) }))
+		});
+		return [
+			card('TOP_MEDS', palette.med, this.topMeds),
+			card('TOP_LOGS', palette.log, this.topLogs),
+			card('TOP_SPORTS', palette.sport, this.topSports),
+			...this.topCustoms.map(group => ({
+				titleKey: 'TOP_CUSTOM_ENTRIES',
+				titleParams: { type: group.customType.label },
+				color: group.customType.colors.light,
+				custom: true,
+				maxCount: Math.max(...group.items.map(item => item.count)),
+				items: group.items.map(item => ({
+					name: item.name,
+					count: item.count,
+					value: group.customType.quantity && item.total != null
+						? `${item.count} · ${this.globalService.formatQuantity(item.total)} ${group.customType.unit}`.trim()
+						: String(item.count)
+				}))
+			}))
+		].filter(statCard => statCard.items.length > 0);
 	}
 
 	public loadSymptoms(): void {
 		this.globalService.symptoms$.subscribe(symptoms => {
 			this.symptoms = [...symptoms];
 			this.symptoms = this.organizeSymptoms(this.symptoms);
+			this.symptomRows = this.rows(this.symptoms);
 			this.symptoms$.next(this.symptoms);
 		});
 	}
@@ -234,9 +353,17 @@ export class MonthlyReportComponent implements OnInit {
 				this.pieCharts.get(symptom.key).update(this.overviews, this.globalService.painScale);
 			});
 		})
+		this.bedTimeChart.timeFormat = this.globalService.timeFormat;
 		this.bedTimeChart.update(this.overviews);
+		this.wakeUpChart.timeFormat = this.globalService.timeFormat;
 		this.wakeUpChart.update(this.overviews);
 		this.sleepChart.update(this.overviews, this.previousOverviews);
+		// Only the charts with data
+		this.sleepRows = this.rows([
+			{ title: 'MONTHLY_WAKEUPTIME', chart: this.wakeUpChart },
+			{ title: 'MONTHLY_BEDTIME', chart: this.bedTimeChart },
+			{ title: 'MONTHLY_SLEEP', chart: this.sleepChart }
+		].filter(item => item.chart.nbData > 0));
 	}
 
 	public updateCalendar(month: number, year: number): void {

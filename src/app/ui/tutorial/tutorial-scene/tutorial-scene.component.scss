@@ -611,9 +611,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid var(--color-event-symptomLog);
-    background-color: var(--surface);
-    color: var(--color-event-symptomLog-badge-text);
+    background-color: var(--color-event-symptomLog);
+    color: var(--color-event-symptomLog-on);
     font-size: u(8);
     font-weight: 600;
 }

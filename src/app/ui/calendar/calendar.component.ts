@@ -8,12 +8,21 @@ import { GlobalService } from 'src/app/infra/global.service';
 import { ISymptom } from 'src/app/models/symptom.model';
 import { TranslocoService } from '@ngneat/transloco';
 import { CalendarPieChartViewModel } from 'src/app/models/chartjs/calendar.pie.chart.view.model';
+import { IIntensitySummary, getIntensitySummary } from 'src/app/models/intensity-summary.model';
 import { BedTimeChartViewModel } from 'src/app/models/chartjs/bedtime.chart.view.model';
 import { WakeUpChartViewModel } from 'src/app/models/chartjs/wakeup.chart.view.model';
 import { SleepChartViewModel } from 'src/app/models/chartjs/sleep.chart.view.model';
 import { DialogInfoComponent } from '../dialog/dialog-info';
 import { MatDialog } from '@angular/material/dialog';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { BottomSheetInfoComponent } from '../bottom-sheet/bottom-sheet-info';
 import * as moment from 'moment';
+
+// Symptoms of one scale (V2): their rings share one legend
+export interface IPieGroup {
+	inverted: boolean;
+	symptoms: ISymptom[];
+}
 
 @Component({
 	selector: 'app-calendar',
@@ -35,10 +44,15 @@ export class CalendarComponent implements OnInit {
 	public today: IDetailedDate;
 	private readonly todayDate = moment().format('YYYY-MM-DD');
 	public pieCharts: Map<string, CalendarPieChartViewModel>;
+	// V2: the same days as the pie charts, summed up in rings
+	public intensitySummaries = new Map<string, IIntensitySummary>();
 	public bedTimeChart: BedTimeChartViewModel;
 	public wakeUpChart: WakeUpChartViewModel;
 	public sleepChart: SleepChartViewModel;
 	public emptySlots: any[] = [];
+	// V2: the pie charts of the symptoms without any entry (intensity or occurrence) in the month are hidden, unless all are asked for
+	public showAllSymptoms = false;
+	private symptomKeysWithEntry = new Set<string>();
 	public weekDays: number[];
 
 	public debug: string;
@@ -48,7 +62,8 @@ export class CalendarComponent implements OnInit {
 		private daysService: DaysService,
 		public translocoService: TranslocoService,
 		public importerExporterService: ImporterExporterService,
-		private dialog: MatDialog
+		private dialog: MatDialog,
+		private bottomSheet: MatBottomSheet
 	) {
 		this.pieCharts = new Map<string, CalendarPieChartViewModel>();
 		this.bedTimeChart = new BedTimeChartViewModel('line');
@@ -85,6 +100,42 @@ export class CalendarComponent implements OnInit {
 		return symptoms;
 	}
 
+	public pieSymptoms(symptoms: ISymptom[]): ISymptom[] {
+		const organized = this.organizeSymptoms(symptoms);
+		if (this.globalService.isUiV1 || this.showAllSymptoms) {
+			return organized;
+		}
+		return organized.filter(symptom => symptom != null && this.symptomKeysWithEntry.has(symptom.key));
+	}
+
+	// The symptoms of the normal scale and the ones of the inverted scale apart, the group of the target symptom first
+	public pieGroups(symptoms: ISymptom[]): IPieGroup[] {
+		const groups: IPieGroup[] = [];
+		symptoms.forEach(symptom => {
+			const inverted = !!symptom.invertedScale;
+			let group = groups.find(g => g.inverted === inverted);
+			if (group == null) {
+				group = { inverted, symptoms: [] };
+				groups.push(group);
+			}
+			group.symptoms.push(symptom);
+		});
+		return groups;
+	}
+
+	// The groups are computed again at each check: their charts must not be created again
+	public trackPieGroup(index: number, group: IPieGroup): boolean {
+		return group.inverted;
+	}
+
+	public legendColor(symptomKey: string, level: number): string {
+		return this.pieCharts.get(symptomKey).colors[0].backgroundColor[level];
+	}
+
+	public countSymptomsWithoutEntry(symptoms: ISymptom[]): number {
+		return symptoms.filter(symptom => symptom != null && !this.symptomKeysWithEntry.has(symptom.key)).length;
+	}
+
 	public loadSymptoms(): void {
 		this.globalService.symptoms$.subscribe(symptoms => {
 			this.symptoms = [...symptoms];
@@ -94,11 +145,18 @@ export class CalendarComponent implements OnInit {
 	}
 
 	public updateCharts(): void {
+		this.symptomKeysWithEntry = new Set<string>();
+		this.overviews.forEach(overview => {
+			overview.symptomOverviews.forEach(symptom => this.symptomKeysWithEntry.add(symptom.key));
+			overview.loggedSymptomKeys.forEach(key => this.symptomKeysWithEntry.add(key));
+		});
 		this.symptoms$.subscribe(symptoms => {
 			symptoms.forEach(symptom => {
 				this.pieCharts.set(symptom.key, new CalendarPieChartViewModel('doughnut', symptom.key,
 					this.globalService.getPainColors(), !!symptom.invertedScale));
 				this.pieCharts.get(symptom.key).update(this.overviews, this.globalService.painScale);
+				this.intensitySummaries.set(symptom.key, getIntensitySummary(this.pieCharts.get(symptom.key),
+					this.overviews, symptom.key, !!symptom.invertedScale, this.globalService.painScale));
 			});
 		});
 		this.bedTimeChart.timeFormat = this.globalService.timeFormat;
@@ -185,6 +243,17 @@ export class CalendarComponent implements OnInit {
 		}).afterClosed().subscribe(response => {
 			if (response == null || response.answer !== 'close') {
 				return;
+			}
+		});
+	}
+
+	// V2: the same help in a sheet
+	public openHelpSheet(): void {
+		this.bottomSheet.open(BottomSheetInfoComponent, {
+			panelClass: 'bottom-sheet-container',
+			data: {
+				titleKey: 'CALENDAR_HELP_DIALOG_TITLE',
+				contentKeys: ['CALENDAR_HELP_DIALOG_CONTENT_1', 'CALENDAR_HELP_DIALOG_CONTENT_2']
 			}
 		});
 	}

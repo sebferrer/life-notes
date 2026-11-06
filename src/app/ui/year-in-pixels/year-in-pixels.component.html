@@ -33,7 +33,7 @@
 			</ng-container>
 		</div>
 		<div class="legend">
-			<div class="legend-item">
+			<div *ngIf="showsNoData" class="legend-item">
 				<span class="swatch no-data"></span>
 				<span transloco="YEAR_IN_PIXELS_NO_DATA"></span>
 			</div>

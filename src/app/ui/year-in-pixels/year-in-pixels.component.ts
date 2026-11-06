@@ -61,8 +61,17 @@ export class YearInPixelsComponent implements OnInit {
 			return 'future';
 		}
 		const pain = day.findSymptomPain(this.globalService.targetSymptomKey);
-		// Unlike the calendar, a day without data isn't shown as a day without pain: the year would look all green
-		return pain == null ? 'no-data' : this.levelClass(pain);
+		if (pain == null) {
+			// As in the calendar: no pain on a normal scale, neutral on an inverted one (e.g. a mood) where 0 is the worst
+			return this.showsNoData ? 'no-data' : this.levelClass(0);
+		}
+		return this.levelClass(pain);
+	}
+
+	// Days without data in a color of their own (see pixelClass), and so in the legend
+	public get showsNoData(): boolean {
+		const key = this.globalService.targetSymptomKey;
+		return key == null || key === '' || this.globalService.isScaleInverted(key);
 	}
 
 	// Reversed with the scale of the symptom

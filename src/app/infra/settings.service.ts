@@ -56,6 +56,9 @@ export class SettingsService {
 				if (newSettings.uiVersion != null) {
 					s.uiVersion = newSettings.uiVersion;
 				}
+				if (newSettings.sleepChartMode != null) {
+					s.sleepChartMode = newSettings.sleepChartMode;
+				}
 				if (newSettings.landscapeMode != null) {
 					s.landscapeMode = newSettings.landscapeMode;
 				}
@@ -348,6 +351,18 @@ export class SettingsService {
 		));
 	}
 
+	public setSleepChartMode(sleepChartMode: string): Observable<ISettings> {
+		return this.queueWrite(() => this.getSettings().pipe(
+			switchMap(s => {
+				s.sleepChartMode = sleepChartMode;
+				this.globalService.sleepChartMode = sleepChartMode;
+				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
+					map(() => s)
+				);
+			})
+		));
+	}
+
 	public setUiVersion(uiVersion: string): Observable<ISettings> {
 		return this.queueWrite(() => this.getSettings().pipe(
 			switchMap(s => {
@@ -426,6 +441,7 @@ export class SettingsService {
 						'darkMode': false,
 						'landscapeMode': false,
 						'uiVersion': 'v2', // The V1 is for the users of the former versions
+						'sleepChartMode': 'bars',
 						'newUiPopupSeen': true,
 						'eventColors': getDefaultEventPalettes()
 					};
@@ -438,6 +454,7 @@ export class SettingsService {
 							this.globalService.darkMode = settings.darkMode;
 							this.globalService.landscapeMode = settings.landscapeMode;
 							this.globalService.uiVersion = settings.uiVersion;
+							this.globalService.sleepChartMode = settings.sleepChartMode;
 							this.globalService.eventPalettes = settings.eventColors;
 						}),
 						map(() => settings)
@@ -533,6 +550,11 @@ export class SettingsService {
 						changed = true;
 					}
 
+					if (s.sleepChartMode == null) {
+						s.sleepChartMode = 'bars';
+						changed = true;
+					}
+
 					if (s.landscapeMode == null) {
 						s.landscapeMode = false;
 						changed = true;
@@ -551,6 +573,7 @@ export class SettingsService {
 					this.globalService.darkMode = s.darkMode;
 					this.globalService.landscapeMode = s.landscapeMode;
 					this.globalService.uiVersion = s.uiVersion;
+					this.globalService.sleepChartMode = s.sleepChartMode;
 					this.globalService.eventPalettes = s.eventColors;
 
 					if (!changed) {

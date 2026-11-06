@@ -176,6 +176,10 @@ export class GlobalService {
 	// - refresh button of the manage lists floating at the bottom of the page instead of in the header
 	// - history of an event opened on its list rather than on its statistics
 	// - no cross on the sheets that had none before the V2
+	// - sleep of the month as three line charts (calendar and report) instead of one card with bars or curves
+	// - pie charts of the calendar one under the other, each with its legend, for every symptom even without any
+	//   entry in the month (V2: rings, one per symptom with its days and its average, two by two with one legend
+	//   per scale, symptoms without entry on demand), their help in a dialog instead of a sheet
 	private _uiVersion: string = 'v2';
 	public get uiVersion(): string { return this._uiVersion; }
 	public set uiVersion(value: string) {
@@ -185,6 +189,13 @@ export class GlobalService {
 
 	public get isUiV1(): boolean {
 		return this._uiVersion === 'v1';
+	}
+
+	// 'bars' or 'curves': charts of the sleep shown first (V2)
+	private _sleepChartMode: string = 'bars';
+	public get sleepChartMode(): string { return this._sleepChartMode; }
+	public set sleepChartMode(value: string) {
+		this._sleepChartMode = value;
 	}
 
 	private _landscapeMode: boolean = false;

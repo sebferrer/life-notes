@@ -9,7 +9,6 @@
 
     --event-color: var(--color-event-symptomLog);
     --event-on-color: var(--color-event-symptomLog-on);
-    --event-badge-text: var(--color-event-symptomLog-badge-text);
 
     .header-section {
         padding-top: 1rem;
@@ -57,10 +56,10 @@
                     --knob-size: 24px;
                 }
 
+                // White on the color of the symptoms (dark text on the pastel one of the dark theme)
                 .pain-badge {
-                    background-color: var(--surface);
-                    border: 1.5px solid var(--event-color);
-                    color: var(--event-badge-text);
+                    background-color: var(--event-color);
+                    color: var(--event-on-color);
                     width: 30px;
                     height: 30px;
                     border-radius: 50%;

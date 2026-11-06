@@ -105,20 +105,55 @@
 				</div>
 				<!--button routerLink="/monthlyreport/{{ year }}-{{ month }}">Export</button-->
 				<div class="charts">
-					<div class="chart-card" *ngIf="symptoms.length > 0">
-						<div class="help-container">
-							<button mat-icon-button (click)="openHelpDialog()">
+					<!-- Intensities of the month: one ring per symptom, its days level by level -->
+					<div class="chart-card intensities-card" *ngIf="symptoms.length > 0">
+						<div class="intensities-header">
+							<span class="intensities-icon"><mat-icon>donut_large</mat-icon></span>
+							<span class="intensities-title" transloco="CALENDAR_INTENSITIES_TITLE"></span>
+							<button mat-icon-button class="help-button" (click)="openHelpSheet()">
 								<mat-icon>help_outline</mat-icon>
 							</button>
 						</div>
-						<div [ngClass]="symptoms.length > 1 ? 'pie-charts' : 'pie-chart'">
-							<app-pie-chart *ngFor="let symptom of organizeSymptoms(symptoms)" [title]="symptom.label"
-								[chart]="pieCharts.get(symptom.key)"></app-pie-chart>
-						</div>
+						<ng-container *ngIf="pieSymptoms(symptoms) as shownSymptoms">
+							<ng-container *ngIf="shownSymptoms.length > 0; else noSymptomEntry">
+								<!-- One group per scale: the colors of an inverted scale are reversed, its legend too -->
+								<div *ngFor="let group of pieGroups(shownSymptoms); trackBy: trackPieGroup" class="pie-group"
+									[class.inverted]="group.inverted">
+									<div *ngIf="group.inverted" class="pie-group-title" transloco="SYMPTOM_INVERTED_SCALE_TAG"></div>
+									<div class="intensity-rings">
+										<app-intensity-ring *ngFor="let symptom of group.symptoms" class="intensity-ring"
+											[label]="symptom.label" [chart]="pieCharts.get(symptom.key)"
+											[summary]="intensitySummaries.get(symptom.key)" [invertedScale]="group.inverted">
+										</app-intensity-ring>
+									</div>
+									<div class="pie-legend">
+										<span *ngFor="let label of pieCharts.get(group.symptoms[0].key).labels; let level = index"
+											class="legend-item"><span class="swatch"
+												[style.background-color]="legendColor(group.symptoms[0].key, level)"></span>{{
+											label }}</span>
+									</div>
+								</div>
+							</ng-container>
+						</ng-container>
+						<ng-template #noSymptomEntry>
+							<div class="no-symptom-entry" transloco="CALENDAR_NO_SYMPTOM_ENTRY"></div>
+						</ng-template>
+						<!-- Symptoms without any entry this month: hidden unless asked for -->
+						<button *ngIf="countSymptomsWithoutEntry(symptoms) > 0" mat-button class="show-all-symptoms"
+							[class.expanded]="showAllSymptoms" (click)="showAllSymptoms = !showAllSymptoms">
+							<ng-container *ngIf="!showAllSymptoms; else hideSymptoms">
+								<mat-icon>expand_more</mat-icon>
+								<span transloco="CALENDAR_SHOW_ALL_SYMPTOMS"></span>
+								<span class="hidden-count">+{{ countSymptomsWithoutEntry(symptoms) }}</span>
+							</ng-container>
+							<ng-template #hideSymptoms>
+								<mat-icon>expand_less</mat-icon>
+								<span transloco="CALENDAR_HIDE_SYMPTOMS_WITHOUT_ENTRY"></span>
+							</ng-template>
+						</button>
 					</div>
-					<app-line-chart [title]="'MONTHLY_WAKEUPTIME'" [chart]="wakeUpChart" [timeFormat]="globalService.timeFormat"></app-line-chart>
-					<app-line-chart [title]="'MONTHLY_BEDTIME'" [chart]="bedTimeChart" [timeFormat]="globalService.timeFormat"></app-line-chart>
-					<app-line-chart [title]="'MONTHLY_SLEEP'" [chart]="sleepChart" [timeFormat]="globalService.timeFormat"></app-line-chart>
+					<app-sleep-stats [overviews]="overviews" [previousOverviews]="previousOverviews"
+						[timeFormat]="globalService.timeFormat"></app-sleep-stats>
 				</div>
 			</div>
 		</ng-template>

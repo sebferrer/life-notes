@@ -255,6 +255,17 @@
                         </mat-radio-button>
                     </mat-radio-group>
                 </div>
+                <!-- The sleep card of the V2 only (see GlobalService.uiVersion) -->
+                <div *ngIf="uiVersion === 'v2'" class="toggle-container stacked">
+                    <span class="toggle-label" transloco="SETTINGS_SLEEP_CHART_LABEL"></span>
+                    <mat-radio-group [(ngModel)]="sleepChartMode" (change)="setSleepChartMode()" color="primary"
+                        class="radio-group">
+                        <mat-radio-button value="bars" class="radio-button">{{ 'SLEEP_CHART_BARS' | transloco
+                            }}</mat-radio-button>
+                        <mat-radio-button value="curves" class="radio-button">{{ 'SLEEP_CHART_CURVES' | transloco
+                            }}</mat-radio-button>
+                    </mat-radio-group>
+                </div>
 
                 <div class="settings-section-title" transloco="SETTINGS_EVENT_COLORS_TITLE"></div>
                 <!-- Palette of the current theme only: each theme has its own one -->

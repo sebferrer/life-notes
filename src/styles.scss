@@ -436,3 +436,18 @@ body:not(.ui-v1) .v1-only {
         height: 85vh !important;
     }
 }
+
+// Tooltips (e.g. the meaning of an icon): opaque, so that they stay readable above the content
+.mat-tooltip.app-tooltip {
+    padding: 0.45rem 0.65rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    line-height: 1.35;
+    background-color: #323232;
+    color: #ffffff;
+}
+
+.dark-theme .mat-tooltip.app-tooltip {
+    background-color: #e6e6e6;
+    color: rgba(0, 0, 0, 0.87);
+}

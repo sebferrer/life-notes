@@ -33,7 +33,7 @@ test.describe('Symptoms', () => {
 			await expect(chip).toHaveText('Ventre');
 		});
 
-	test('show their entries, and which one is tracked', async ({ app, page }) => {
+	test('show their entries', async ({ app, page }) => {
 		await app.addSymptom('Tête');
 		await app.addSymptom('Ventre');
 		await app.targetSymptom('Tête');
@@ -42,10 +42,10 @@ test.describe('Symptoms', () => {
 		await app.goToManage('symptomLog');
 
 		const head = page.locator('.symptom-card', { hasText: 'Tête' });
-		await expect(head.locator('.manage-item-tag')).toHaveText('Suivi');
 		await expect(head.locator('.manage-item-meta')).toHaveText(['1 fois', 'Dernière fois le 18 mars 2026']);
+		// No tag for the symptom shown in the toolbar
+		await expect(head.locator('.manage-item-tag')).toHaveCount(0);
 		const stomach = page.locator('.symptom-card', { hasText: 'Ventre' });
-		await expect(stomach.locator('.manage-item-tag')).toHaveCount(0);
 		await expect(stomach.locator('.manage-item-meta')).toHaveText('Pas encore de saisie');
 
 		await page.locator('.manage-list-header button[routerlink="/manage"]').click();
@@ -103,8 +103,16 @@ test.describe('Inverted intensity scale', () => {
 
 	test('is chosen in the symptom sheet, and shown in the list', async ({ app, page }) => {
 		const card = (label: string) => page.locator('.symptom-card', { hasText: label });
-		await expect(card('Humeur').locator('.inverted-scale-tag')).toHaveText('Échelle inversée');
+		// An icon, explained on tap
+		const tag = card('Humeur').locator('.inverted-scale-tag');
+		await expect(tag).toHaveAttribute('aria-label', 'Échelle inversée');
+		await expect(tag.locator('mat-icon')).toHaveText('swap_vert');
 		await expect(card('Tête').locator('.inverted-scale-tag')).toHaveCount(0);
+		await tag.click();
+		await expect(page.locator('.mat-tooltip')).toHaveText(
+			'Échelle inversée : les valeurs hautes sont les bonnes, comme pour l\'humeur');
+		await page.mouse.move(0, 0);
+		await expect(page.locator('.mat-tooltip')).toHaveCount(0, { timeout: 6000 });
 
 		// The preview of the colors follows the toggle
 		await card('Humeur').locator('.edit-btn').click();
@@ -161,11 +169,12 @@ test.describe('Inverted intensity scale', () => {
 		await expect(cell(YESTERDAY)).toHaveClass(/color-pain-5/);
 		await expect(cell(twoDaysAgo)).toHaveClass(/color-none/);
 
-		// Year in Pixels, its legend reversed
+		// Year in Pixels, its legend reversed: a day without value is neutral, not the worst mood
 		await page.locator('.year-in-pixels-button').click();
 		await expect(page.locator(`#pixel-${TODAY}`)).toHaveClass(/color-default/);
 		await expect(page.locator(`#pixel-${YESTERDAY}`)).toHaveClass(/color-pain-5/);
 		await expect(page.locator(`#pixel-${twoDaysAgo}`)).toHaveClass(/no-data/);
+		await expect(page.locator('.legend-item').first()).toHaveText('Pas de donnée');
 		const swatches = page.locator('.legend-item .swatch');
 		await expect(swatches.nth(1)).toHaveClass(/color-pain-5/);
 		await expect(swatches.last()).toHaveClass(/color-default/);

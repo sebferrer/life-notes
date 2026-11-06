@@ -1,5 +1,5 @@
 import { test, expect, Page, BrowserContext } from '@playwright/test';
-import { App, CURRENT_VERSION, NOW, TODAY, YESTERDAY } from '../support/app';
+import { App, CURRENT_VERSION, NOW, TODAY, YESTERDAY, shiftDate } from '../support/app';
 
 // Main screens compared to their approved screenshots (__screenshots__). After a wanted UI change, approve
 // the new screenshots with: npm run test:visual:update
@@ -80,6 +80,11 @@ for (const theme of ['light', 'dark']) {
 		test('calendar', async () => {
 			await app.goToCalendar();
 			await screen(`${theme}-calendar`, { fullPage: true });
+			// The symptoms without entry too: one ring each, one legend
+			await page.locator('.show-all-symptoms').click();
+			await expect(page.locator('app-intensity-ring')).toHaveCount(2);
+			await page.locator('.intensities-card').scrollIntoViewIfNeeded();
+			await screen(`${theme}-calendar-all-symptoms`);
 		});
 
 		test('year in pixels', async () => {
@@ -103,7 +108,6 @@ for (const theme of ['light', 'dark']) {
 			await screen(`${theme}-medications`);
 			await app.goToManage('symptomLog');
 			await expect(page.locator('.symptom-card:not(.add-card)')).toHaveCount(2);
-			await expect(page.locator('.manage-item-tag')).toBeVisible();
 			await screen(`${theme}-symptoms`);
 		});
 
@@ -157,6 +161,15 @@ for (const theme of ['light', 'dark']) {
 			await screen(`${theme}-add-medication`);
 			await page.locator('.bottom-sheet-container.med .sheet-close-button').click();
 			await expect(page.locator('.bottom-sheet-container.med')).toBeHidden();
+
+			// Intensity of the day: the value of the slider, white on the color of the symptoms
+			await app.dayCard().locator('.day-card-overview').click();
+			const intensity = page.locator('.edit-symptom-overview');
+			await expect(intensity.locator('.pain-badge')).toHaveText('6');
+			await page.waitForTimeout(500);
+			await screen(`${theme}-symptom-intensity`);
+			await intensity.locator('.sheet-close-button').click();
+			await expect(intensity).toBeHidden();
 		});
 
 		test('tutorial', async () => {
@@ -216,4 +229,41 @@ test('new design popup', async ({ browser }) => {
 	await formerApp.fontsReady();
 	await expect(formerPage).toHaveScreenshot('light-new-ui-popup.png');
 	await formerContext.close();
+});
+
+test('sleep of the month', async ({ browser }) => {
+	// Nights of a month: a database of its own, so that the other screens keep their data
+	const sleepContext = await browser.newContext({
+		viewport: { width: 390, height: 844 },
+		deviceScaleFactor: 2,
+		isMobile: true,
+		hasTouch: true,
+		locale: 'fr-FR',
+		timezoneId: 'Europe/Paris',
+		baseURL: 'http://localhost:4300'
+	});
+	const sleepPage = await sleepContext.newPage();
+	await sleepPage.clock.setFixedTime(NOW);
+	const sleepApp = new App(sleepPage);
+	await sleepApp.start();
+	await sleepApp.goToTimeline();
+	const nights = [['22:45', '06:50'], ['23:30', '07:40'], ['00:40', '07:10'], ['23:10', '08:20'], ['22:30', '06:30']];
+	for (let i = 0; i < nights.length; i++) {
+		await sleepApp.setSleepTime('goToBed', nights[i][0], shiftDate(TODAY, i - nights.length));
+		await sleepApp.setSleepTime('wakeUp', nights[i][1], shiftDate(TODAY, i - nights.length + 1));
+	}
+	const card = sleepPage.locator('app-sleep-stats .sleep-stats');
+	for (const theme of ['light', 'dark']) {
+		if (theme === 'dark') {
+			await sleepApp.goToSettings('Apparence');
+			await sleepApp.setToggle('Mode sombre', true);
+		}
+		await sleepApp.goToCalendar();
+		await expect(card).toBeVisible();
+		await sleepApp.fontsReady();
+		await expect(card).toHaveScreenshot(`${theme}-sleep.png`);
+		await card.locator('.mode-button.curves').click();
+		await expect(card).toHaveScreenshot(`${theme}-sleep-curves.png`);
+	}
+	await sleepContext.close();
 });

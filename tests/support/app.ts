@@ -267,6 +267,16 @@ export class App {
 		await expect(this.eventRows(date)).toHaveCount(rowsBefore + 1);
 	}
 
+	// Wake-up time or bedtime of a day, through its row in the day card (the sheet starts at the time of the clock)
+	public async setSleepTime(row: 'wakeUp' | 'goToBed', time: string, date: string = TODAY): Promise<void> {
+		await this.page.clock.setFixedTime(new Date(`${TODAY}T${time}:00`));
+		const sleepRow = this.dayCard(date).locator(`.sleep-row.${row}`);
+		await sleepRow.click();
+		await this.page.locator(`.bottom-sheet-container.${row} .confirm-button`).click();
+		await expect(sleepRow.locator('.rail-time')).toHaveText(time);
+		await this.page.clock.setFixedTime(NOW);
+	}
+
 	// Intensity of the day for the target symptom, through the dot of the day card
 	public async setDayIntensity(value: number, date: string = TODAY): Promise<void> {
 		await this.dayCard(date).locator('.day-card-overview').click();

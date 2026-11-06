@@ -116,7 +116,7 @@
         }
     }
 
-    // e.g. the symptom currently tracked
+    // e.g. the inverted scale of a symptom
     .manage-item-tag {
         flex-shrink: 0;
         padding: 0.05rem 0.45rem;
@@ -125,6 +125,23 @@
         color: var(--type-badge-text);
         font-size: 0.72rem;
         font-weight: 600;
+
+        // Only an icon, its meaning in a tooltip
+        &.icon-tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.1rem 0.4rem;
+            border: none;
+            font-family: inherit;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+
+            mat-icon {
+                font-size: 0.95rem;
+                width: 0.95rem;
+                height: 0.95rem;
+            }
+        }
     }
 }
 

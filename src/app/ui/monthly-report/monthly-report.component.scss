@@ -5,90 +5,362 @@
     width: 100%;
 }
 
-.calendar-header {
-    position: absolute;
-    top: 3.5rem;
-    width: 100%;
-    height: 3.5rem;
-    background-color: var(--tile-header);
-    text-align: center;
-    color: white;
-    z-index: 3;
-
-    .calender-header-label {
-        display: table;
+// V1: the classic report (see GlobalService.uiVersion)
+.classic-report {
+    .calendar-header {
+        position: absolute;
+        top: 3.5rem;
         width: 100%;
-        height: 100%;
-        font-size: 1.2rem;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        float: left;
-        p {
-            display: table-cell;
-            vertical-align: middle;
+        height: 3.5rem;
+        background-color: var(--tile-header);
+        text-align: center;
+        color: white;
+        z-index: 3;
+
+        .calender-header-label {
+            display: table;
+            width: 100%;
             height: 100%;
+            font-size: 1.2rem;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            float: left;
+            p {
+                display: table-cell;
+                vertical-align: middle;
+                height: 100%;
+            }
         }
+    }
+
+    .content {
+        position: absolute;
+        top: 7rem;
+        width: 100%;
+        height: calc(100vh - 7rem);
+        overflow-y: auto;
+    }
+
+    .grid-list {
+        width: 50%;
+        height: 14rem;
+        margin-top: 2rem;
+        float: left;
+        /*clear: both;*/
+    }
+
+    .sympmtom-container {
+        display: block;
+        height: 16rem;
+    }
+
+    .grid-tile {
+        display: block;
+        float: left;
+        width: 14.28%;
+        height: 2.5rem;
+    }
+
+    .day-label {
+        margin-top: 0.3rem;
+        font-size: 0.8rem;
+        width: 3vh;
+        height: 3vh;
+        width: 100%;
+        text-align: center;
+    }
+
+    .day-label-today {
+        background-color: var(--selection);
+        margin-left: 25%;
+        color: white;
+        font-size: 1rem;
+        width: 3vh;
+        height: 3vh;
+        border-radius: 100%;
+        padding: 0.2rem;
+    }
+
+    .pie-chart {
+        display: inline;
+        float: left;
+    }
+
+    .help-container {
+        color: var(--highlight);
+        position: absolute;
+        top: 27rem;
+        right: 1rem;
+        z-index: 2;
     }
 }
 
-.content {
-    position: absolute;
-    top: 7rem;
-    width: 100%;
-    height: calc(100vh - 7rem);
-    overflow-y: auto;
+// V2: the modern report, the cards of the calendar. It is laid out at the width of the PDF (800px, see
+// PDF_REPORT_WIDTH) and scaled down to the width of the screen (see MonthlyReportComponent.fitReport).
+// Always drawn in the light theme, as the PDF.
+.report-page {
+    // Room for the share and save buttons
+    padding: 0.75rem 0.75rem 10rem 0.75rem;
 }
 
-.grid-list {
-    width: 50%;
-    height: 14rem;
-    margin-top: 2rem;
-    float: left;
-    /*clear: both;*/
+.report-viewport {
+    overflow: hidden;
+    border-radius: 6px;
+    box-shadow: 0 2px 12px var(--shadow);
 }
 
-.sympmtom-container {
-    display: block;
-    height: 16rem;
+.report-scaler {
+    width: 800px;
+    transform-origin: top left;
 }
 
-.grid-tile {
-    display: block;
-    float: left;
-    width: 14.28%;
-    height: 2.5rem;
-}
+.modern-report {
+    box-sizing: border-box;
+    width: 800px;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    background-color: #ffffff;
+    color: var(--text-strong);
+    font-family: Roboto, "Helvetica Neue", sans-serif;
 
-.day-label {
-    margin-top: 0.3rem;
-    font-size: 0.8rem;
-    width: 3vh;
-    height: 3vh;
-    width: 100%;
-    text-align: center;
-}
+    .report-header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        padding-bottom: 18px;
+        border-bottom: 3px solid var(--primary);
 
-.day-label-today {
-    background-color: var(--selection);
-    margin-left: 25%;
-    color: white;
-    font-size: 1rem;
-    width: 3vh;
-    height: 3vh;
-    border-radius: 100%;
-    padding: 0.2rem;
-}
+        .report-title {
+            font-size: 34px;
+            font-weight: 700;
+            line-height: 1.15;
+            // "octobre 2026" in French
+            text-transform: capitalize;
+        }
 
-.pie-chart {
-    display: inline;
-    float: left;
-}
+        .report-subtitle {
+            margin-top: 4px;
+            font-size: 16px;
+            color: var(--text-medium);
+        }
 
-.help-container {
-    color: var(--highlight);
-    position: absolute;
-    top: 27rem;
-    right: 1rem;
-    z-index: 2;
+        .report-brand {
+            padding-bottom: 4px;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--primary);
+        }
+    }
+
+    .report-section {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .section-title {
+        margin: 0 0 12px 4px;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
+        color: var(--text-medium);
+    }
+
+    // Two cards side by side, a single one keeps half of the width
+    .report-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .report-card {
+        box-sizing: border-box;
+        flex: 0 0 calc(50% - 8px);
+        min-width: 0;
+        padding: 16px;
+        border: 1px solid #e3e5ec;
+        border-radius: 16px;
+        background-color: #ffffff;
+    }
+
+    .card-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 24px;
+        margin-bottom: 12px;
+    }
+
+    .card-title {
+        margin: 0;
+        font-size: 17px;
+        font-weight: 700;
+        line-height: 1.3;
+        color: var(--text-strong);
+    }
+
+    .card-tag {
+        padding: 3px 8px;
+        border-radius: 10px;
+        font-size: 11px;
+        font-weight: 600;
+        background-color: var(--surface-variant);
+        color: var(--text-medium);
+    }
+
+    // Month of a symptom, as in the calendar
+    .month-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 4px;
+    }
+
+    .weekday {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 18px;
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--text-weak);
+    }
+
+    .day-cell {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 30px;
+        border-radius: 8px;
+
+        .day-number {
+            font-size: 12px;
+            font-weight: 600;
+            // The pain colors are light
+            color: rgba(0, 0, 0, 0.75);
+        }
+
+        // Darkest pain color
+        &.color-pain-5 .day-number {
+            color: #ffffff;
+        }
+
+        &.empty {
+            background-color: transparent;
+        }
+
+        // Days to come without data, and no intensity on an inverted scale: neutral
+        &.future.color-default,
+        &.color-none {
+            background-color: #f1f2f5;
+
+            .day-number {
+                color: var(--text-weak);
+            }
+        }
+    }
+
+    .card-footer {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin-top: 14px;
+    }
+
+    // Doughnut of the levels of the month, without its title
+    .donut {
+        flex: 0 0 96px;
+
+        ::ng-deep .chart-label {
+            display: none;
+        }
+    }
+
+    .legend {
+        flex: 1;
+        display: grid;
+        grid-template-rows: repeat(3, auto);
+        grid-auto-flow: column;
+        column-gap: 18px;
+        row-gap: 8px;
+    }
+
+    .legend-row {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+    }
+
+    .swatch {
+        width: 10px;
+        height: 10px;
+        border-radius: 3px;
+    }
+
+    .legend-label {
+        color: var(--text-medium);
+    }
+
+    .legend-count {
+        margin-left: auto;
+        font-weight: 600;
+    }
+
+    // Most frequent entries of an event type
+    .type-dot {
+        flex: 0 0 auto;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+    }
+
+    .stat-card .card-title {
+        font-size: 15px;
+    }
+
+    .stat-item + .stat-item {
+        margin-top: 10px;
+    }
+
+    .stat-line {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        font-size: 13px;
+    }
+
+    .stat-name {
+        font-weight: 500;
+    }
+
+    .stat-value {
+        flex: 0 0 auto;
+        color: var(--text-medium);
+    }
+
+    .stat-bar {
+        height: 4px;
+        margin-top: 4px;
+        border-radius: 2px;
+        background-color: #f1f2f5;
+
+        span {
+            display: block;
+            height: 100%;
+            border-radius: 2px;
+        }
+    }
+
+    .report-empty {
+        padding: 48px 0;
+        text-align: center;
+        font-size: 16px;
+        color: var(--text-medium);
+    }
 }
 
 .color-default {
@@ -123,7 +395,7 @@
 
 // Landscape phones: 3vh is too small for the day bubbles
 @media (orientation: landscape) and (max-height: 600px) {
-    .day-label-today {
+    .classic-report .day-label-today {
         width: 1.6rem;
         height: 1.6rem;
     }

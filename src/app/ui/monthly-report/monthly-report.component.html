@@ -1,6 +1,8 @@
 <div id="calendar" *ngIf="overviews$ | async as overviews; else loading">
 	<div *ngIf="symptoms$ | async as symptoms; else loading">
-		<div id="calendar-container" #exportContainer>
+		<!-- V1: the classic report (see GlobalService.uiVersion) -->
+		<div *ngIf="globalService.isUiV1; else modernReport" id="calendar-container" class="classic-report"
+			#exportContainer>
 			<div class="calendar-header">
 				<div class="calender-header-label">
 					<ng-template transloco let-t>
@@ -110,6 +112,104 @@
 				</div>
 			</div>
 		</div>
+
+		<!-- V2: the cards of the calendar. Laid out at the width of the PDF, scaled down to the screen. -->
+		<ng-template #modernReport>
+			<div class="report-page" *transloco="let t">
+				<div class="report-viewport" #reportViewport>
+					<div class="report-scaler">
+						<div class="modern-report force-light-theme" #exportContainer>
+							<div class="report-header pdf-block">
+								<div>
+									<div class="report-title">
+										{{ t('CALENDAR_HEADER_DATE', { month: t('MONTH-' + month), year: year }) }}</div>
+									<div class="report-subtitle">{{ t('MONTHLY_REPORT_TITLE') }}</div>
+								</div>
+								<div class="report-brand">Life Notes</div>
+							</div>
+
+							<!-- Symptoms: the month of each one, as in the calendar -->
+							<div class="report-section" *ngIf="symptomRows.length > 0">
+								<div class="report-row-block pdf-block" *ngFor="let row of symptomRows; let first = first">
+									<div *ngIf="first" class="section-title">{{ t('REPORT_SYMPTOMS') }}</div>
+									<div class="report-row">
+										<div class="report-card sympmtom-container" *ngFor="let symptom of row">
+											<div class="card-header">
+												<label class="card-title">{{ symptom.label }}</label>
+												<span *ngIf="symptom.invertedScale" class="card-tag">
+													{{ t('SYMPTOM_INVERTED_SCALE_TAG') }}</span>
+											</div>
+											<div class="month-grid">
+												<ng-container *ngIf="!globalService.calendarBlockView">
+													<div class="weekday" *ngFor="let day of weekDays">
+														{{ t('DAY-OF-WEEK-VERY-SHORT-' + day) }}</div>
+												</ng-container>
+												<div *ngFor="let slot of emptySlots" class="day-cell empty"></div>
+												<div *ngFor="let overview of overviews"
+													class="day-cell color-{{ getPainColor(overview, symptom.key) }}"
+													[class.future]="isFuture(overview)">
+													<span class="day-number">{{ overview.detailedDate.day }}</span>
+												</div>
+											</div>
+											<div class="card-footer">
+												<app-pie-chart class="donut" [chart]="pieCharts.get(symptom.key)" [width]="6"
+													[legend]="false" [aspectRatio]="1"></app-pie-chart>
+												<div class="legend">
+													<div class="legend-row"
+														*ngFor="let label of pieCharts.get(symptom.key).labels; let level = index">
+														<span class="swatch"
+															[style.background-color]="legendColor(symptom.key, level)"></span>
+														<span class="legend-label">{{ label }}</span>
+														<span class="legend-count">{{ pieCharts.get(symptom.key).data[level] }}</span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- Most frequent entries of each event type -->
+							<div class="report-section stats-container" *ngIf="statRows.length > 0">
+								<div class="report-row-block pdf-block" *ngFor="let row of statRows; let first = first">
+									<div *ngIf="first" class="section-title">{{ t('REPORT_ENTRIES') }}</div>
+									<div class="report-row">
+										<div class="report-card stat-card" [class.top-custom]="card.custom" *ngFor="let card of row">
+											<div class="card-header">
+												<span class="type-dot" [style.background-color]="card.color"></span>
+												<h3 class="card-title">{{ t(card.titleKey, card.titleParams) }}</h3>
+											</div>
+											<div class="stat-item" *ngFor="let item of card.items">
+												<div class="stat-line">
+													<span class="stat-name">{{ item.name }}</span>
+													<span class="stat-value">{{ item.value }}</span>
+												</div>
+												<div class="stat-bar">
+													<span [style.width.%]="item.count / card.maxCount * 100"
+														[style.background-color]="card.color"></span>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- Sleep -->
+							<div class="report-section" *ngIf="sleepRows.length > 0">
+								<div class="report-row-block pdf-block">
+									<div class="section-title">{{ t('REPORT_SLEEP') }}</div>
+									<app-sleep-stats [overviews]="overviews" [previousOverviews]="previousOverviews"
+										[timeFormat]="globalService.timeFormat" [report]="true"></app-sleep-stats>
+								</div>
+							</div>
+
+							<div *ngIf="symptomRows.length === 0 && statRows.length === 0 && sleepRows.length === 0"
+								class="report-empty pdf-block">{{ t('REPORT_EMPTY') }}</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</ng-template>
 	</div>
 </div>
 <div class="fab-container"

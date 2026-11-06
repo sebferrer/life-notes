@@ -19,10 +19,14 @@
             <div class="manage-item-text">
                 <div class="manage-item-title-row">
                     <span class="manage-item-title symptom-label">{{ symptom.label }}</span>
-                    <span *ngIf="symptom.key === trackedSymptomKey" class="manage-item-tag">
-                        {{ 'SYMPTOM_TRACKED' | transloco }}</span>
-                    <span *ngIf="symptom.invertedScale" class="manage-item-tag inverted-scale-tag">
-                        {{ 'SYMPTOM_INVERTED_SCALE_TAG' | transloco }}</span>
+                    <!-- Only an icon: its meaning on tap, or on hover -->
+                    <button *ngIf="symptom.invertedScale" type="button" class="manage-item-tag icon-tag inverted-scale-tag"
+                        [matTooltip]="'SYMPTOM_INVERTED_SCALE_EXPLAINED' | transloco" matTooltipPosition="above"
+                        matTooltipClass="app-tooltip"
+                        #scaleTooltip="matTooltip" (click)="tapTooltip.show(scaleTooltip)"
+                        [attr.aria-label]="'SYMPTOM_INVERTED_SCALE_TAG' | transloco">
+                        <mat-icon>swap_vert</mat-icon>
+                    </button>
                 </div>
                 <ng-container *ngIf="stats.get(symptom.key) as stat; else noEntry">
                     <div *ngIf="stat.count > 0" class="manage-item-meta">
