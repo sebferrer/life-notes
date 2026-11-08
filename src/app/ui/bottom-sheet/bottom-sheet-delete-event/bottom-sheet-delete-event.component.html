@@ -11,6 +11,7 @@
         <div class="item-details-card" *ngIf="itemDetails">
             <div class="icon-bubble {{ itemDetails.type }} {{ globalService.customTypeClass(itemDetails.customType) }}">
                 <mat-icon *ngIf="itemDetails.type === 'symptomLog'">spa</mat-icon>
+                <span *ngIf="itemDetails.type === 'meal'" class="svg-icon meal custom-svg"></span>
                 <span *ngIf="itemDetails.type === 'med'" class="svg-icon pill custom-svg"></span>
                 <mat-icon *ngIf="itemDetails.type === 'log'">event_note</mat-icon>
                 <mat-icon *ngIf="itemDetails.type === 'sport'">fitness_center</mat-icon>

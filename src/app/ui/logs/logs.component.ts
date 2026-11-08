@@ -9,6 +9,7 @@ import { GlobalService } from 'src/app/infra/global.service';
 import { TranslocoService } from '@ngneat/transloco';
 import { LogsService } from 'src/app/infra/logs.service';
 import { DialogConfirmComponent } from '../dialog/dialog-confirm';
+import { BottomSheetConfirmComponent } from '../bottom-sheet/bottom-sheet-confirm';
 
 import { getSortOrder } from 'src/app/util/array.utils';
 import { LogHistoryViewModel } from 'src/app/models/log-history.view.model';
@@ -126,6 +127,7 @@ export class LogsComponent implements OnInit {
 		});
 	}
 
+	// V1: floating button, confirmation in a dialog (see GlobalService.uiVersion)
 	public openRefreshDialog(): void {
 		this.dialog.open(DialogConfirmComponent, {
 			autoFocus: false,
@@ -136,6 +138,23 @@ export class LogsComponent implements OnInit {
 				content: ['LOGS_REFRESH_DIALOG_CONTENT_1', 'LOGS_REFRESH_DIALOG_CONTENT_2']
 			}
 		}).afterClosed().subscribe(response => {
+			if (response == null || response.answer !== 'yes') {
+				return;
+			}
+			this.refreshLogsList();
+		});
+	}
+
+	// V2: button of the header, confirmation in a sheet
+	public openRefreshSheet(): void {
+		this.bottomSheet.open(BottomSheetConfirmComponent, {
+			panelClass: 'event-bottom-sheet',
+			data: {
+				icon: 'sync',
+				title: 'LOGS_REFRESH_DIALOG_TITLE',
+				content: ['LOGS_REFRESH_DIALOG_CONTENT_1', 'LOGS_REFRESH_DIALOG_CONTENT_2']
+			}
+		}).afterDismissed().subscribe(response => {
 			if (response == null || response.answer !== 'yes') {
 				return;
 			}

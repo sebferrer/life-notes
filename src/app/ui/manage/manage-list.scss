@@ -1,4 +1,4 @@
-// Entries of the manage menu (medicines, notes, sports): one card per entry, in the colors of the event type
+// Entries of the manage menu (meals, medicines, notes, sports): one card per entry, in the colors of the event type
 .manage-list-page {
     padding: 0.5rem 0.75rem 1.5rem 0.75rem;
 
@@ -7,7 +7,7 @@
         padding-bottom: 6rem;
     }
 
-    @each $type in symptomLog, med, log, sport, custom {
+    @each $type in symptomLog, meal, med, log, sport, custom {
         &.#{$type} {
             --type-soft: var(--color-event-#{$type}-soft);
             --type-icon: var(--color-event-#{$type}-icon);

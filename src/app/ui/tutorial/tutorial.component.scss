@@ -37,30 +37,27 @@ p b {
     color: var(--ion-text-color, #000000);
 }
 
+// First and last slides: in the flow, not absolute. The slideshow is as tall as its tallest slide and cuts the rest,
+// so a long text (small screen, large font, English) must make its slide taller, the page then scrolls.
 .slide {
     app-swiping-finger {
-        position: absolute;
-        width: 100%;
-        top: 70vh;
-        left: 20vw;
+        display: block;
+        margin-left: 20vw;
     }
     .rate-stars {
         width: 80%;
-        position: absolute;
-        top: 15vh;
-        left: 10%;
+        margin: 0 auto;
+        padding-top: 15vh;
     }
     .slide-text-header {
         width: 80%;
-        position: absolute;
-        top: 25vh;
-        left: 10%;
+        margin: 0 auto;
+        padding-top: 25vh;
     }
     .slide-text-rateit {
         width: 80%;
-        position: absolute;
-        top: 20vh;
-        left: 10%;
+        margin: 0 auto;
+        padding-bottom: 2rem;
     }
 }
 

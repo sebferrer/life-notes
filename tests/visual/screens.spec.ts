@@ -29,7 +29,7 @@ test.beforeAll(async ({ browser }) => {
 		hasTouch: true,
 		locale: 'fr-FR',
 		timezoneId: 'Europe/Paris',
-		baseURL: 'http://localhost:4300'
+		baseURL: test.info().project.use.baseURL
 	});
 	page = await context.newPage();
 	await page.clock.setFixedTime(NOW);
@@ -155,7 +155,7 @@ for (const theme of ['light', 'dark']) {
 			await expect(page.locator('.edit-button')).toBeHidden();
 
 			await app.dayCard().locator('.add-event').click();
-			await page.locator('mat-nav-list a', { hasText: 'Ajouter un médicament' }).click();
+			await app.addMenuEntry('Médicament').click();
 			await expect(page.locator('.bottom-sheet-container.med')).toBeVisible();
 			await page.waitForTimeout(500);
 			await screen(`${theme}-add-medication`);
@@ -218,7 +218,7 @@ test('new design popup', async ({ browser }) => {
 		hasTouch: true,
 		locale: 'fr-FR',
 		timezoneId: 'Europe/Paris',
-		baseURL: 'http://localhost:4300'
+		baseURL: test.info().project.use.baseURL
 	});
 	const formerPage = await formerContext.newPage();
 	await formerPage.clock.setFixedTime(NOW);
@@ -240,7 +240,7 @@ test('sleep of the month', async ({ browser }) => {
 		hasTouch: true,
 		locale: 'fr-FR',
 		timezoneId: 'Europe/Paris',
-		baseURL: 'http://localhost:4300'
+		baseURL: test.info().project.use.baseURL
 	});
 	const sleepPage = await sleepContext.newPage();
 	await sleepPage.clock.setFixedTime(NOW);

@@ -28,7 +28,11 @@
                     </mat-select>
                 </mat-form-field>
                 <div class="toggle-container">
-                    <span class="toggle-label" transloco="SETTINGS_AUTO_CALCULATE_OVERVIEW"></span>
+                    <span class="toggle-label">
+                        {{ 'SETTINGS_AUTO_CALCULATE_OVERVIEW' | transloco }}
+                        <mat-icon class="help-icon-inline auto-overview-help-button" role="button"
+                            [attr.aria-label]="'HELP' | transloco" (click)="openAutoOverviewHelp()">help_outline</mat-icon>
+                    </span>
                     <mat-slide-toggle [(ngModel)]="autoCalculateOverview" (change)="setAutoCalculateOverview()"
                         color="primary">
                     </mat-slide-toggle>

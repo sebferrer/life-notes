@@ -14,6 +14,7 @@ import { AboutComponent } from './ui/about';
 import { MedsComponent } from './ui/meds';
 import { LogsComponent } from './ui/logs';
 import { SportsComponent } from './ui/sports';
+import { MealsComponent } from './ui/meals';
 import { CustomEntriesComponent } from './ui/custom-entries';
 import { ManageComponent } from './ui/manage';
 import { MonthlyReportComponent } from './ui/monthly-report';
@@ -62,6 +63,10 @@ const routes: Routes = [
 	{
 		path: 'symptoms',
 		component: SymptomsComponent
+	},
+	{
+		path: 'meals',
+		component: MealsComponent
 	},
 	{
 		path: 'meds',

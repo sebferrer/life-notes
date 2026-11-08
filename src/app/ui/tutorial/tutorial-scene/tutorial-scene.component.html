@@ -169,25 +169,43 @@
                     <span class="m-tile symptomLog tap" data-anchor="tile">
                         <mat-icon>spa</mat-icon>{{ t('MANAGE_SYMPTOMS') }}<span class="step">2</span>
                     </span>
-                    <span class="m-tile med"><span class="svg-icon pill"></span>{{ t('MANAGE_MEDS') }}</span>
-                    <span class="m-tile log"><mat-icon>event_note</mat-icon>{{ t('MANAGE_LOGS') }}</span>
-                    <span class="m-tile sport"><mat-icon>fitness_center</mat-icon>{{ t('MANAGE_SPORTS') }}</span>
+                    <!-- The first tiles, in the order of the version of the interface -->
+                    <ng-container *ngIf="!classic; else classicFirstTiles">
+                        <span class="m-tile meal"><span class="svg-icon meal"></span>{{ t('MANAGE_MEALS') }}</span>
+                        <span class="m-tile med"><span class="svg-icon pill"></span>{{ t('MANAGE_MEDS') }}</span>
+                        <span class="m-tile sport"><mat-icon>fitness_center</mat-icon>{{ t('MANAGE_SPORTS') }}</span>
+                    </ng-container>
+                    <ng-template #classicFirstTiles>
+                        <span class="m-tile med"><span class="svg-icon pill"></span>{{ t('MANAGE_MEDS') }}</span>
+                        <span class="m-tile log"><mat-icon>event_note</mat-icon>{{ t('MANAGE_LOGS') }}</span>
+                        <span class="m-tile sport"><mat-icon>fitness_center</mat-icon>{{ t('MANAGE_SPORTS') }}</span>
+                    </ng-template>
                 </div>
             </div>
+            <!-- The list of the symptoms and its sheet are the same in both versions -->
             <div class="screen page s2" data-anchor="list">
-                <div class="m-page-title">{{ t('SYMPTOMS_TITLE') }}</div>
+                <div class="m-list-header">
+                    <mat-icon>arrow_back</mat-icon><span>{{ t('SYMPTOMS_TITLE') }}</span>
+                </div>
                 <div class="m-add-card tap" data-anchor="add-card">
+                    <span class="m-add-bubble"><mat-icon>add</mat-icon></span>
                     <span>{{ t('ADD_NEW_SYMPTOM_LABEL') }}</span>
-                    <mat-icon>add_circle_outline</mat-icon>
                     <span class="step">3</span>
                 </div>
             </div>
             <div class="screen sheet s3" data-anchor="sheet">
                 <mat-icon class="m-close">close</mat-icon>
-                <div class="m-sheet-title">{{ t('ADD_SYMPTOM') }}</div>
+                <div class="m-sheet-title centered">{{ t('ADD_SYMPTOM') }}</div>
                 <div class="m-field-label">{{ t('SYMPTOM') | titlecase }}</div>
                 <div class="m-input">{{ t('TUTORIAL_MOCK_SYMPTOM_1') }}<span class="m-caret"></span></div>
-                <div class="m-button">{{ t('ADD') }}</div>
+                <div class="m-option-box">
+                    <span>{{ t('SYMPTOM_INVERTED_SCALE') }}</span>
+                    <span class="m-toggle"></span>
+                </div>
+                <div class="m-actions">
+                    <span class="m-button stroked">{{ t('CANCEL') }}</span>
+                    <span class="m-button">{{ t('ADD') }}</span>
+                </div>
             </div>
         </ng-container>
 
@@ -253,12 +271,57 @@
                     <span class="m-slider"><span class="m-slider-fill"></span><span class="m-slider-knob"></span></span>
                     <span class="m-pain-badge">6</span>
                 </div>
-                <div class="m-button tap" data-anchor="set">{{ t('SET') }}<span class="step">2</span></div>
+                <div class="m-actions wide-confirm">
+                    <span class="m-button stroked">{{ t('CANCEL') }}</span>
+                    <span class="m-button tap" data-anchor="set">{{ t('SET') }}<span class="step">2</span></span>
+                </div>
             </div>
             <div class="screen page s3">
                 <ng-container *ngIf="classic">
                     <ng-container
                         *ngTemplateOutlet="classicBody; context: { tag: 'c', level: '3', glow: 'dot', wakeUp: '07:30', events: [{ type: 'symptomLog', time: '10:15', title: 'TUTORIAL_MOCK_SYMPTOM_1', badge: '[6/10]' }] }">
+                    </ng-container>
+                </ng-container>
+                <div *ngIf="!classic" class="m-day-card">
+                    <ng-container *ngTemplateOutlet="dayHeader; context: { tag: 'c', level: '3', glow: 'dot' }">
+                    </ng-container>
+                </div>
+            </div>
+        </ng-container>
+
+        <!-- Overview of the day calculated from the entries of the symptom: entries > average > dot colored
+             (help of the setting, not a tutorial slide) -->
+        <ng-container *ngSwitchCase="'auto-overview'">
+            <div class="screen page s1">
+                <ng-container *ngIf="classic">
+                    <ng-container *ngTemplateOutlet="classicHeader; context: { tag: 'h' }"></ng-container>
+                    <div data-anchor="logs">
+                        <ng-container
+                            *ngTemplateOutlet="classicBody; context: { tag: 'a', level: 'default', wakeUp: '07:30', events: [{ type: 'symptomLog', time: '10:15', title: 'TUTORIAL_MOCK_SYMPTOM_1', badge: '[4/10]' }, { type: 'symptomLog', time: '18:30', title: 'TUTORIAL_MOCK_SYMPTOM_1', badge: '[7/10]' }] }">
+                        </ng-container>
+                    </div>
+                </ng-container>
+                <div *ngIf="!classic" class="m-day-card">
+                    <ng-container *ngTemplateOutlet="dayHeader; context: { tag: 'a', level: 'default' }">
+                    </ng-container>
+                    <div class="m-rail" data-anchor="logs">
+                        <ng-container
+                            *ngTemplateOutlet="eventRow; context: { type: 'symptomLog', time: '10:15', title: 'TUTORIAL_MOCK_SYMPTOM_1', badge: '4/10' }">
+                        </ng-container>
+                        <ng-container
+                            *ngTemplateOutlet="eventRow; context: { type: 'symptomLog', time: '18:30', title: 'TUTORIAL_MOCK_SYMPTOM_1', badge: '7/10' }">
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+            <div class="screen sheet s2 m-calc" data-anchor="calc">
+                <span class="m-calc-label">{{ t('AUTO_OVERVIEW_HELP_AVERAGE') }}</span>
+                <span class="m-calc-formula">{{ t('AUTO_OVERVIEW_HELP_FORMULA') }}</span>
+            </div>
+            <div class="screen page s3">
+                <ng-container *ngIf="classic">
+                    <ng-container
+                        *ngTemplateOutlet="classicBody; context: { tag: 'c', level: '3', glow: 'dot', wakeUp: '07:30', events: [{ type: 'symptomLog', time: '10:15', title: 'TUTORIAL_MOCK_SYMPTOM_1', badge: '[4/10]' }, { type: 'symptomLog', time: '18:30', title: 'TUTORIAL_MOCK_SYMPTOM_1', badge: '[7/10]' }] }">
                     </ng-container>
                 </ng-container>
                 <div *ngIf="!classic" class="m-day-card">
@@ -291,7 +354,25 @@
                         </span>
                     </div>
                 </div>
-                <div class="m-card m-stats">
+                <!-- V2: intensities of the month, one ring per symptom with its days. V1: a pie chart and its legend -->
+                <div *ngIf="!classic" class="m-card m-intensities">
+                    <div class="m-card-heading">
+                        <span class="m-heading-icon intensities"><mat-icon>donut_large</mat-icon></span>
+                        <span class="m-card-heading-title">{{ t('CALENDAR_INTENSITIES_TITLE') }}</span>
+                        <mat-icon class="m-heading-help">help_outline</mat-icon>
+                    </div>
+                    <div class="m-rings">
+                        <span class="m-ring-tile">
+                            <span class="m-ring-name">{{ t('TUTORIAL_MOCK_SYMPTOM_1') }}</span>
+                            <span class="m-ring ring-1"><b>8</b>{{ t('CALENDAR_INTENSITY_DAY_UNIT') }}</span>
+                        </span>
+                        <span class="m-ring-tile">
+                            <span class="m-ring-name">{{ t('TUTORIAL_MOCK_SYMPTOM_2') }}</span>
+                            <span class="m-ring ring-2"><b>3</b>{{ t('CALENDAR_INTENSITY_DAY_UNIT') }}</span>
+                        </span>
+                    </div>
+                </div>
+                <div *ngIf="classic" class="m-card m-stats">
                     <span class="m-donut"></span>
                     <span class="m-legend">
                         <span class="level-default"></span><span class="level-1"></span><span class="level-2"></span>
@@ -336,7 +417,30 @@
                     </ng-container>
                 </div>
             </div>
-            <div class="screen sheet s2" data-anchor="menu">
+            <!-- V2: the types in their colors, the sport before the note. V1: the former list, the note before the sport -->
+            <div *ngIf="!classic" class="screen sheet s2" data-anchor="menu">
+                <mat-icon class="m-close">close</mat-icon>
+                <div class="m-sheet-title centered">{{ t('ADD') }}</div>
+                <div class="m-add-grid">
+                    <span class="m-add-option symptomLog">
+                        <span class="m-add-option-bubble"><mat-icon>spa</mat-icon></span>{{ t('ADD_MENU_SYMPTOM') }}
+                    </span>
+                    <span class="m-add-option meal">
+                        <span class="m-add-option-bubble"><span class="svg-icon meal"></span></span>{{ t('ADD_MENU_MEAL') }}
+                    </span>
+                    <span class="m-add-option med" data-anchor="menu-med">
+                        <span class="m-add-option-bubble tap"><span class="svg-icon pill"></span><span
+                                class="step">2</span></span>{{ t('ADD_MENU_MED') }}
+                    </span>
+                    <span class="m-add-option sport">
+                        <span class="m-add-option-bubble"><mat-icon>fitness_center</mat-icon></span>{{ t('ADD_MENU_SPORT') }}
+                    </span>
+                    <span class="m-add-option log">
+                        <span class="m-add-option-bubble"><mat-icon>event_note</mat-icon></span>{{ t('ADD_MENU_NOTE') }}
+                    </span>
+                </div>
+            </div>
+            <div *ngIf="classic" class="screen sheet s2" data-anchor="menu">
                 <div class="m-menu-row"><mat-icon>spa</mat-icon>{{ t('ADD_SYMPTOM_BOTTOMSHEET') }}</div>
                 <div class="m-menu-row"><span class="svg-icon meal"></span>{{ t('ADD_MEAL_BOTTOMSHEET') }}</div>
                 <div class="m-menu-row tap" data-anchor="menu-med">
@@ -349,7 +453,7 @@
                 <mat-icon class="m-close">close</mat-icon>
                 <div class="m-sheet-heading">
                     <span class="m-bubble"><span class="svg-icon pill"></span></span>
-                    <span class="m-sheet-title">{{ t('ADD') }}</span>
+                    <span class="m-sheet-title">{{ t('ADD') }} {{ t('med') | titlecase }}</span>
                 </div>
                 <div class="m-fields">
                     <span>
@@ -361,7 +465,10 @@
                         <span class="m-input">1000</span>
                     </span>
                 </div>
-                <div class="m-button tap" data-anchor="add-button">{{ t('ADD') }}<span class="step">3</span></div>
+                <div class="m-actions wide-confirm">
+                    <span class="m-button stroked">{{ t('CANCEL') }}</span>
+                    <span class="m-button tap" data-anchor="add-button">{{ t('ADD') }}<span class="step">3</span></span>
+                </div>
             </div>
         </ng-container>
 
@@ -418,29 +525,39 @@
                 <div class="m-page-title">{{ t('MANAGE_TITLE') }}</div>
                 <div class="m-tiles">
                     <span class="m-tile symptomLog"><mat-icon>spa</mat-icon>{{ t('MANAGE_SYMPTOMS') }}</span>
+                    <!-- In the order of the version of the interface, then the creation of an event type -->
+                    <ng-container *ngIf="!classic"><span class="m-tile meal"><span class="svg-icon meal"></span>{{ t('MANAGE_MEALS') }}</span></ng-container>
                     <span class="m-tile med tap" data-anchor="tile">
                         <span class="svg-icon pill"></span>{{ t('MANAGE_MEDS') }}<span class="step">2</span>
                     </span>
-                    <span class="m-tile log"><mat-icon>event_note</mat-icon>{{ t('MANAGE_LOGS') }}</span>
-                    <span class="m-tile sport"><mat-icon>fitness_center</mat-icon>{{ t('MANAGE_SPORTS') }}</span>
-                    <!-- Creation of an event type (left column: away from the arrow) -->
+                    <ng-container *ngIf="!classic; else classicTiles">
+                        <span class="m-tile sport"><mat-icon>fitness_center</mat-icon>{{ t('MANAGE_SPORTS') }}</span>
+                        <span class="m-tile log"><mat-icon>event_note</mat-icon>{{ t('MANAGE_LOGS') }}</span>
+                    </ng-container>
+                    <ng-template #classicTiles>
+                        <span class="m-tile log"><mat-icon>event_note</mat-icon>{{ t('MANAGE_LOGS') }}</span>
+                        <span class="m-tile sport"><mat-icon>fitness_center</mat-icon>{{ t('MANAGE_SPORTS') }}</span>
+                        <span class="m-tile meal"><span class="svg-icon meal"></span>{{ t('MANAGE_MEALS') }}</span>
+                    </ng-template>
                     <span class="m-tile add-demo"><mat-icon>add</mat-icon>{{ t('MANAGE_ADD_CUSTOM_TYPE') }}</span>
                 </div>
             </div>
+            <!-- V2: refresh button in the header, statistics of each entry. V1: floating refresh button, history -->
             <div class="screen page s2 med" data-anchor="list">
                 <div class="m-list-header">
                     <mat-icon>arrow_back</mat-icon><span>{{ t('MEDS_TITLE') }}</span>
+                    <mat-icon *ngIf="!classic" class="m-list-refresh">sync</mat-icon>
                 </div>
                 <div class="m-card m-entry">
                     <span class="m-bubble"><span class="svg-icon pill"></span></span>
                     <span class="m-entry-text">
                         <span class="m-entry-title">{{ t('TUTORIAL_MOCK_MED_1') }}</span>
                         <span class="m-entry-meta"><b>1000 mg</b> · {{ t('OCCURRENCE_COUNT_MANY', { count: 12 }) }}</span>
+                        <span class="m-entry-meta">{{ t('LAST_ENTRY_DATE', { day: today.day, month: t('MONTH-SHORT-' +
+                            today.month), year: today.year }) }}</span>
                     </span>
                     <span class="m-entry-actions tap">
-                        <mat-icon fontSet="material-icons-outlined">calendar_month</mat-icon>
-                        <mat-icon fontSet="material-icons-outlined">edit</mat-icon>
-                        <mat-icon fontSet="material-icons-outlined">delete</mat-icon>
+                        <ng-container *ngTemplateOutlet="entryActions"></ng-container>
                         <span class="step">3</span>
                     </span>
                 </div>
@@ -449,14 +566,21 @@
                     <span class="m-entry-text">
                         <span class="m-entry-title">{{ t('TUTORIAL_MOCK_MED_2') }}</span>
                         <span class="m-entry-meta"><b>400 mg</b> · {{ t('OCCURRENCE_COUNT_MANY', { count: 3 }) }}</span>
+                        <span class="m-entry-meta">{{ t('LAST_ENTRY_DATE', { day: olderEntry.day, month: t('MONTH-SHORT-' +
+                            olderEntry.month), year: olderEntry.year }) }}</span>
                     </span>
                     <span class="m-entry-actions">
-                        <mat-icon fontSet="material-icons-outlined">calendar_month</mat-icon>
-                        <mat-icon fontSet="material-icons-outlined">edit</mat-icon>
-                        <mat-icon fontSet="material-icons-outlined">delete</mat-icon>
+                        <ng-container *ngTemplateOutlet="entryActions"></ng-container>
                     </span>
                 </div>
+                <span *ngIf="classic" class="m-fab m-list-fab"><mat-icon>refresh</mat-icon></span>
             </div>
+            <ng-template #entryActions>
+                <mat-icon *ngIf="!classic">insights</mat-icon>
+                <mat-icon *ngIf="classic" fontSet="material-icons-outlined">calendar_month</mat-icon>
+                <mat-icon fontSet="material-icons-outlined">edit</mat-icon>
+                <mat-icon fontSet="material-icons-outlined">delete</mat-icon>
+            </ng-template>
         </ng-container>
 
         <!-- Settings: gear > sections -->
@@ -601,7 +725,44 @@
                     <span class="m-button tap" data-anchor="month-set">{{ t('SET') }}<span class="step">2</span></span>
                 </div>
             </div>
-            <div class="screen page s3" data-anchor="report">
+            <!-- V2: each symptom as in the calendar, then the most frequent entries; always light, as the PDF -->
+            <div *ngIf="!classic" class="screen page s3 m-report-v2 force-light-theme" data-anchor="report">
+                <div class="m-report-head">
+                    <span>
+                        <span class="m-report-title">{{ t('CALENDAR_HEADER_DATE', { month: t('MONTH-' +
+                            reportMonth.month), year: reportMonth.year }) }}</span>
+                        <span class="m-report-subtitle">{{ t('MONTHLY_REPORT_TITLE') }}</span>
+                    </span>
+                    <span class="m-report-brand">Life Notes</span>
+                </div>
+                <div class="m-report-section">{{ t('REPORT_SYMPTOMS') }}</div>
+                <div class="m-report-symptoms">
+                    <span *ngFor="let symptom of reportSymptoms" class="m-report-symptom">
+                        <span class="m-report-symptom-name">{{ t(symptom.label) }}</span>
+                        <span class="m-report-symptom-body">
+                            <span class="m-report-grid small">
+                                <span *ngFor="let level of symptom.cells" class="level-{{ level }}"></span>
+                            </span>
+                            <span class="m-donut small {{ symptom.ring }}"></span>
+                        </span>
+                    </span>
+                </div>
+                <div class="m-report-section">{{ t('REPORT_ENTRIES') }}</div>
+                <div class="m-report-frequent med">
+                    <span class="m-report-frequent-title">{{ t('TOP_MEDS') }}</span>
+                    <span class="m-report-frequent-row"><span>{{ t('TUTORIAL_MOCK_MED_1') }}</span><b>12</b></span>
+                    <span class="m-report-bar"><span style="width: 100%"></span></span>
+                    <span class="m-report-frequent-row"><span>{{ t('TUTORIAL_MOCK_MED_2') }}</span><b>3</b></span>
+                    <span class="m-report-bar"><span style="width: 25%"></span></span>
+                </div>
+                <div class="m-fabs tap">
+                    <span class="m-fab"><mat-icon>share</mat-icon></span>
+                    <span class="m-fab"><mat-icon>save_alt</mat-icon></span>
+                    <span class="step">3</span>
+                </div>
+            </div>
+            <!-- V1: the classic report -->
+            <div *ngIf="classic" class="screen page s3" data-anchor="report">
                 <div class="m-report-title">{{ t('CALENDAR_HEADER_DATE', { month: t('MONTH-' + reportMonth.month),
                     year: reportMonth.year }) }}</div>
                 <div class="m-report-body">

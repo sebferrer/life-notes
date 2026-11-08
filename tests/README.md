@@ -33,9 +33,10 @@ Add `--headed` to watch it, or `--ui` for the interactive mode.
     figures, hours of the day), sleep of the nights of a month
 - `e2e/`: user flows, in French, each test starting from a fresh app (empty database)
   - first launch, symptoms (inverted intensity scale too), timeline (every event type, edit, delete, wake-up/bedtime, intensity, V1),
-    day view, calendar (V1 too, V2: intensities of the symptoms entered as rings, V1: pie charts, sleep of the month as bars or curves), Year in Pixels, manage lists (refreshed from their header), statistics of an event, settings, backups (export, import, another phone, invalid files),
-    PDF report (V2: each symptom as in the calendar, V1: the classic report, both saved as a PDF), tutorial, small
-    screens, the cross of every bottom sheet
+    day view, calendar (V1 too, V2: intensities of the symptoms entered as rings, V1: pie charts, sleep of the month as bars or curves), Year in Pixels, manage lists (refreshed from their header, confirmed in a sheet), statistics of an event, settings (the help of the automatic overview, illustrated in V1 and V2), backups (export, import, another phone, invalid files),
+    PDF report (V2: each symptom as in the calendar, V1: the classic report, both saved as a PDF), tutorial (illustrated
+    with the screens of the version of the interface, no text cut on a small phone), small screens, the cross of every
+    bottom sheet
   - event types created by the user: creation (the icons must all exist in the Material Icons font), entries
     from the timeline, colors per theme, limit of 10 types, edition, renaming and deletion of entries, deletion
     of a type with its entries, backups, PDF report; restart in the dark theme, several types sharing entry
@@ -44,6 +45,10 @@ Add `--headed` to watch it, or `--ui` for the interactive mode.
   - versions of the interface: the V2 for new users only, the users of a former version (`app.startAsFormerUser`,
     settings written in the database before the app starts) keep the V1 and get a popup once; what differs in V1
     (see `GlobalService.uiVersion`); when the app starts, only the chosen version is ever drawn (no flash)
+  - data of the former versions: `fixtures/backup-0.3.7.json` is a real backup made by the version 0.3.7 (the one
+    published before the V2; September and October 2026, some of its entries typed in its own interface). Imported,
+    every day and symptom is found again as it was; a phone with the settings of a 2025 version (five fields) gets
+    the V1, the popup and the defaults of then
 - `visual/`: main screens in light and dark themes, the V1 screens and the popup of the V2, compared pixel by pixel to
   `visual/__screenshots__`
 

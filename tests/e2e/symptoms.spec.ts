@@ -57,7 +57,7 @@ test.describe('Symptoms', () => {
 		await page.locator('.symptom-card', { hasText: 'Tête' }).locator('.edit-btn').click();
 		const sheet = page.locator('.add-symptom');
 		await sheet.locator('input[matinput]').fill('Migraine');
-		await sheet.locator('.actions button').click();
+		await sheet.locator('.confirm-button').click();
 		await expect(page.locator('.symptom-card:not(.add-card) .symptom-label')).toHaveText(['Migraine']);
 	});
 
@@ -76,7 +76,7 @@ test.describe('Symptoms', () => {
 		await expect(page.locator('.symptom-card:not(.add-card) .symptom-label')).toHaveText(['Ventre']);
 	});
 
-	test('add and edit sheets only close with their close button', async ({ app, page }) => {
+	test('add and edit sheets only close with their close or Cancel button', async ({ app, page }) => {
 		await app.goToManage('symptomLog');
 		await page.locator('.add-card').click();
 		const sheet = page.locator('.add-symptom');
@@ -86,6 +86,14 @@ test.describe('Symptoms', () => {
 		await expect(sheet).toBeVisible();
 		await sheet.locator('.sheet-close-button').click();
 		await expect(sheet).toBeHidden();
+
+		// Cancel, next to Add: nothing is created
+		await page.locator('.add-card').click();
+		await sheet.locator('input[matinput]').fill('Dos');
+		await expect(sheet.locator('.cancel-button')).toHaveText('Annuler');
+		await sheet.locator('.cancel-button').click();
+		await expect(sheet).toBeHidden();
+		await expect(page.locator('.symptom-card', { hasText: 'Dos' })).toHaveCount(0);
 	});
 });
 
@@ -137,7 +145,7 @@ test.describe('Inverted intensity scale', () => {
 		await card('Tête').locator('.edit-btn').click();
 		await expect(toggle).not.toHaveClass(/mat-checked/);
 		await toggle.locator('label').click();
-		await sheet.locator('.actions button').click();
+		await sheet.locator('.confirm-button').click();
 		await expect(card('Tête').locator('.inverted-scale-tag')).toBeVisible();
 		await app.reload();
 		await app.goToManage('symptomLog');
@@ -145,7 +153,7 @@ test.describe('Inverted intensity scale', () => {
 		await card('Tête').locator('.edit-btn').click();
 		await expect(toggle).toHaveClass(/mat-checked/);
 		await toggle.locator('label').click();
-		await sheet.locator('.actions button').click();
+		await sheet.locator('.confirm-button').click();
 		await expect(card('Tête').locator('.inverted-scale-tag')).toHaveCount(0);
 		await expect(card('Humeur').locator('.inverted-scale-tag')).toBeVisible();
 	});

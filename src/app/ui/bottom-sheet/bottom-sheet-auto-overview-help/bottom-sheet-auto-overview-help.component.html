@@ -1,0 +1,43 @@
+<div class="bottom-sheet-container closable-sheet auto-overview-help">
+    <button mat-icon-button class="sheet-close-button" (click)="onCloseClick()"
+        [attr.aria-label]="'CLOSE' | transloco">
+        <mat-icon>close</mat-icon>
+    </button>
+    <div class="header-section">
+        <mat-icon class="info-icon">help_outline</mat-icon>
+        <h2 class="title">{{ 'SETTINGS_AUTO_CALCULATE_OVERVIEW' | transloco }}</h2>
+    </div>
+
+    <div class="content-body">
+        <p class="intro">{{ (globalService.isUiV1 ? 'AUTO_OVERVIEW_HELP_INTRO_CLASSIC' : 'AUTO_OVERVIEW_HELP_INTRO') |
+            transloco }}</p>
+
+        <section class="help-case on">
+            <div class="case-title">
+                <mat-icon>toggle_on</mat-icon>
+                <span>{{ 'AUTO_OVERVIEW_HELP_ON_TITLE' | transloco }}</span>
+            </div>
+            <app-tutorial-scene scene="auto-overview"></app-tutorial-scene>
+            <p>{{ 'AUTO_OVERVIEW_HELP_ON_1' | transloco }}</p>
+            <p>{{ 'AUTO_OVERVIEW_HELP_ON_2' | transloco }}</p>
+        </section>
+
+        <section class="help-case off">
+            <div class="case-title">
+                <mat-icon>toggle_off</mat-icon>
+                <span>{{ 'AUTO_OVERVIEW_HELP_OFF_TITLE' | transloco }}</span>
+            </div>
+            <app-tutorial-scene scene="day-overview"></app-tutorial-scene>
+            <p>{{ 'AUTO_OVERVIEW_HELP_OFF_1' | transloco }}</p>
+        </section>
+    </div>
+
+    <div class="actions">
+        <button mat-flat-button color="primary" (click)="onCloseClick()" class="confirm-button">
+            {{ 'CLOSE' | transloco }}
+        </button>
+    </div>
+
+    <app-spacer-item></app-spacer-item>
+
+</div>

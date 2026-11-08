@@ -1,4 +1,4 @@
-<div class="add-event-menu closable-sheet">
+<div class="add-event-menu closable-sheet" [class.modern]="!globalService.isUiV1">
     <div class="header-section v2-only">
         <h2 class="title" transloco="ADD"></h2>
     </div>
@@ -7,6 +7,30 @@
         <mat-icon>close</mat-icon>
     </button>
 
+    <!-- V2: the event types in their colors, in the order of the manage menu, then the types created by the user -->
+    <ng-container *ngIf="!globalService.isUiV1; else classicList">
+        <div class="add-event-grid">
+            <button *ngFor="let option of options" type="button" class="add-option {{ option.type }}" matRipple
+                (click)="select(option.type)">
+                <span class="add-option-bubble">
+                    <mat-icon *ngIf="option.icon">{{ option.icon }}</mat-icon>
+                    <span *ngIf="option.svg" class="svg-icon {{ option.svg }}"></span>
+                </span>
+                <span class="add-option-label">{{ option.label | transloco }}</span>
+            </button>
+            <button *ngFor="let customType of globalService.customTypes" type="button"
+                class="add-option custom custom-type-entry {{ globalService.customTypeClass(customType.key) }}"
+                matRipple (click)="select('custom', customType.key)">
+                <span class="add-option-bubble"><mat-icon>{{ customType.icon }}</mat-icon></span>
+                <span class="add-option-label">{{ customType.label }}</span>
+            </button>
+        </div>
+        <app-spacer-item></app-spacer-item>
+    </ng-container>
+</div>
+
+<!-- V1: the former list, the note before the sport (see GlobalService.uiVersion) -->
+<ng-template #classicList>
     <mat-nav-list>
         <a mat-list-item (click)="select('symptomLog')">
             <span mat-line>
@@ -55,4 +79,4 @@
         <app-spacer-item></app-spacer-item>
 
     </mat-nav-list>
-</div>
+</ng-template>

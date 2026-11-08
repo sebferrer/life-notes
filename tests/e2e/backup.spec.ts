@@ -34,6 +34,7 @@ test.describe('Backups', () => {
 		// Declined: nothing changes
 		await app.importBackup(jsonFile('backup.json', content));
 		await page.locator('.import-confirm .cancel-button').click();
+		await expect(page.locator('.import-confirm')).toHaveCount(0);
 		await app.goToTimeline();
 		await expect(app.eventRows(TODAY, 'log')).toHaveCount(1);
 

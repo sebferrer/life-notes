@@ -9,6 +9,7 @@
             <div class="title-row">
                 <div class="icon-bubble {{ data.type }} {{ globalService.customTypeClass(data.customType) }}">
                     <mat-icon *ngIf="data.type === 'symptomLog'">spa</mat-icon>
+                    <span *ngIf="data.type === 'meal'" class="svg-icon meal custom-svg"></span>
                     <span *ngIf="data.type === 'med'" class="svg-icon pill custom-svg"></span>
                     <mat-icon *ngIf="data.type === 'log'">event_note</mat-icon>
                     <mat-icon *ngIf="data.type === 'sport'">fitness_center</mat-icon>

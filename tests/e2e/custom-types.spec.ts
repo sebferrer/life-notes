@@ -1,5 +1,5 @@
 import { test, expect, Locator, TODAY, YESTERDAY } from '../support/app';
-import { CUSTOM_TYPE_COLORS, CUSTOM_TYPE_ICONS, MAX_EVENT_TYPES, getCustomTypeColors } from '../../src/app/models/custom-type.model';
+import { CUSTOM_TYPE_COLORS, CUSTOM_TYPE_ICONS, MAX_CUSTOM_TYPES, MAX_EVENT_TYPES, getCustomTypeColors } from '../../src/app/models/custom-type.model';
 import { getEventSoftColor } from '../../src/app/models/event-colors.model';
 
 function jsonFile(name: string, content: any) {
@@ -71,7 +71,7 @@ test.describe('Event types created by the user', () => {
 
 			// A known name is suggested, with its last quantity
 			await app.dayCard(YESTERDAY).locator('.add-event').click();
-			await page.locator('mat-nav-list a', { hasText: 'Ajouter : Hydratation' }).click();
+			await app.addMenuEntry('Hydratation').click();
 			await sheet.locator('.form-fields-group input').first().fill('E');
 			await page.locator('mat-option', { hasText: 'Eau' }).click();
 			await expect(sheet.locator('.quantity-input')).toHaveValue('2');
@@ -132,7 +132,7 @@ test.describe('Event types created by the user', () => {
 		await expect(row.locator('.rail-marker mat-icon')).toHaveText('emoji_food_beverage');
 		expect(await cssValue(row, '--row-color')).toBe(CUSTOM_TYPE_COLORS[1].light);
 		await app.dayCard().locator('.add-event').click();
-		await expect(page.locator('mat-nav-list a.custom-type-entry')).toHaveText([/Ajouter : Thé/]);
+		await expect(page.locator('.add-event-menu .custom-type-entry .add-option-label')).toHaveText(['Thé']);
 		await page.keyboard.press('Escape');
 
 		// Without quantity, the quantities typed before are hidden
@@ -182,8 +182,8 @@ test.describe('Event types created by the user', () => {
 		await expect(sheet.locator('.confirm-button')).toBeEnabled();
 	});
 
-	test(`there are ${MAX_EVENT_TYPES} event types at most, the 4 built-in ones included`, async ({ app, page }) => {
-		for (let i = 1; i <= MAX_EVENT_TYPES - 4; i++) {
+	test(`there are ${MAX_EVENT_TYPES} event types at most, the 5 built-in ones included`, async ({ app, page }) => {
+		for (let i = 1; i <= MAX_CUSTOM_TYPES; i++) {
 			await app.createCustomType(`Type ${i}`);
 		}
 		await expect(page.locator('.manage-tile')).toHaveCount(MAX_EVENT_TYPES);
@@ -191,10 +191,10 @@ test.describe('Event types created by the user', () => {
 		await expect(page.locator('.manage-limit')).toContainText(`${MAX_EVENT_TYPES} types`);
 		// Each one has its own icon and color, as long as there are unused ones
 		const icons = await page.locator('.manage-tile.custom mat-icon').allTextContents();
-		expect(new Set(icons).size).toBe(MAX_EVENT_TYPES - 4);
+		expect(new Set(icons).size).toBe(MAX_CUSTOM_TYPES);
 		await app.goToTimeline();
 		await app.dayCard().locator('.add-event').click();
-		await expect(page.locator('mat-nav-list a.custom-type-entry')).toHaveCount(MAX_EVENT_TYPES - 4);
+		await expect(page.locator('.add-event-menu .custom-type-entry')).toHaveCount(MAX_CUSTOM_TYPES);
 	});
 
 	test('a deleted type takes its entries along, after a confirmation telling how many', async ({ app, page }) => {
@@ -418,7 +418,7 @@ test.describe('Event types created by the user: other cases', () => {
 
 		await app.goToTimeline();
 		await app.dayCard().locator('.add-event').click();
-		await page.locator('mat-nav-list a', { hasText: 'Add: Water' }).click();
+		await app.addMenuEntry('Water').click();
 		const sheet = page.locator('.bottom-sheet-container.custom');
 		await sheet.locator('.quantity-input').fill('1.5');
 		await sheet.locator('.confirm-button').click();
@@ -633,7 +633,7 @@ test.describe('Event types created by the user: edition of the entries', () => {
 		// A new entry of this name gets the latest quantity
 		await app.goToTimeline();
 		await app.dayCard(YESTERDAY).locator('.add-event').click();
-		await page.locator('mat-nav-list a', { hasText: 'Ajouter : Eau' }).click();
+		await app.addMenuEntry('Eau').click();
 		const add = page.locator('.bottom-sheet-container.custom');
 		await add.locator('.form-fields-group input').first().fill('E');
 		await page.locator('mat-option', { hasText: 'Eau' }).click();

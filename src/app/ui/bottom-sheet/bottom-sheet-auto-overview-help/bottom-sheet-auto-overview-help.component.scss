@@ -1,0 +1,97 @@
+.bottom-sheet-container.auto-overview-help {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 1rem 1.5rem 1rem;
+    gap: 1.25rem;
+    box-sizing: border-box;
+    width: 100%;
+
+    .header-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+
+        .info-icon {
+            font-size: 2.5rem;
+            width: 2.5rem;
+            height: 2.5rem;
+            color: var(--primary);
+        }
+
+        .title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-strong);
+            margin: 0;
+            text-align: center;
+        }
+    }
+
+    .content-body {
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+
+        p {
+            margin: 0;
+            line-height: 1.5;
+            color: var(--text-medium);
+        }
+
+        .intro {
+            text-align: center;
+        }
+    }
+
+    .help-case {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        padding: 0.75rem;
+        border: 1px solid var(--border-subtle);
+        border-radius: 14px;
+        background-color: var(--app-background);
+
+        .case-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-strong);
+
+            mat-icon {
+                font-size: 1.75rem;
+                width: 1.75rem;
+                height: 1.75rem;
+            }
+        }
+
+        &.on .case-title mat-icon {
+            color: var(--primary);
+        }
+
+        &.off .case-title mat-icon {
+            color: var(--text-medium);
+        }
+
+        // The scenes take the width of the case (sheet paddings: 2 x 16px, its own: 2 x 16px, the case: 2 x 13px)
+        app-tutorial-scene {
+            --u: min(calc((100vw - 90px) / 300), 1.1px);
+        }
+    }
+
+    .actions {
+        display: flex;
+
+        button {
+            flex: 1;
+            height: 3.5rem;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+    }
+}

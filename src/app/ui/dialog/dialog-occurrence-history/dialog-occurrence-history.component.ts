@@ -17,7 +17,7 @@ export interface IOccurrence {
 
 export interface IOccurrenceHistoryData {
     title: string;
-    type: 'symptomLog' | 'med' | 'log' | 'sport' | 'custom';
+    type: 'symptomLog' | 'meal' | 'med' | 'log' | 'sport' | 'custom';
     // Type definition of the 'custom' entries
     customType?: string;
     key: string;
@@ -91,7 +91,9 @@ export class DialogOccurrenceHistoryComponent {
             const colors = this.globalService.getCustomType(this.data.customType).colors;
             return this.globalService.darkMode ? colors.dark : colors.light;
         }
-        return this.globalService.eventColors[this.data.type];
+        // The meals have a fixed color, not in the palettes of the settings
+        return this.globalService.eventColors[this.data.type]
+            || getComputedStyle(document.body).getPropertyValue(`--color-event-${this.data.type}`).trim();
     }
 
     // The custom types with a quantity show its evolution

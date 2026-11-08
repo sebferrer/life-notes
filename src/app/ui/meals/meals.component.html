@@ -1,0 +1,63 @@
+<div class="manage-list-page meal">
+    <header class="manage-list-header">
+        <button mat-icon-button routerLink="/manage">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+        <h1 class="manage-list-title" transloco="MEALS_TITLE"></h1>
+        <button mat-icon-button class="manage-list-refresh v2-only" (click)="openRefreshSheet()"
+            [attr.aria-label]="'REFRESH_LIST' | transloco">
+            <mat-icon>sync</mat-icon>
+        </button>
+    </header>
+
+    <div *ngIf="meals$ | async as meals; else loading" class="manage-list">
+        <div *ngFor="let meal of meals" class="manage-item">
+            <div class="manage-item-bubble">
+                <span class="svg-icon meal"></span>
+            </div>
+            <div class="manage-item-text">
+                <div class="manage-item-title">{{ meal.key }}</div>
+                <div class="manage-item-meta">
+                    {{ (meal.occurrences === 1 ? 'OCCURRENCE_COUNT_ONE' : 'OCCURRENCE_COUNT_MANY') |
+                    transloco: { count: meal.occurrences } }}
+                </div>
+                <ng-template transloco let-t>
+                    <div *ngIf="meal.lastEntryDate" class="manage-item-meta">
+                        {{ t('LAST_ENTRY_DATE', { day: meal.lastEntryDate.day,
+                        month: t('MONTH-SHORT-' + meal.lastEntryDate.month), year: meal.lastEntryDate.year }) }}
+                    </div>
+                </ng-template>
+            </div>
+            <div class="manage-item-actions">
+                <button mat-icon-button (click)="openOccurrenceHistory(meal)">
+                    <mat-icon class="v2-only">insights</mat-icon><mat-icon class="v1-only"
+                        fontSet="material-icons-outlined">calendar_month</mat-icon>
+                </button>
+                <button mat-icon-button (click)="openEditDialog(meal)">
+                    <mat-icon fontSet="material-icons-outlined">edit</mat-icon>
+                </button>
+                <button mat-icon-button (click)="openDeleteDialog(meal)">
+                    <mat-icon fontSet="material-icons-outlined">delete</mat-icon>
+                </button>
+            </div>
+        </div>
+
+        <div *ngIf="meals.length === 0" class="manage-list-empty">
+            <div class="manage-item-bubble">
+                <span class="svg-icon meal"></span>
+            </div>
+            <p>{{ 'EMPTY_MEALS_1' | transloco }}&nbsp;<mat-icon>view_day</mat-icon></p>
+            <p>{{ 'EMPTY_MEALS_2' | transloco }}&nbsp;<mat-icon class="v1-only">refresh</mat-icon><mat-icon
+                    class="v2-only">sync</mat-icon></p>
+        </div>
+    </div>
+</div>
+
+<!-- V1: floating refresh button (see GlobalService.uiVersion) -->
+<button mat-fab color="primary" class="manage-list-refresh-fab v1-only" (click)="openRefreshDialog()">
+    <mat-icon>refresh</mat-icon>
+</button>
+
+<ng-template #loading>
+    <mat-spinner></mat-spinner>
+</ng-template>

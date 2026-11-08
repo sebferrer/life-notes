@@ -1,6 +1,6 @@
-import { CUSTOMIZABLE_EVENT_TYPES, mixColors } from './event-colors.model';
+import { mixColors } from './event-colors.model';
 
-// Event types created by the user, next to the built-in ones (symptoms, medications, notes, sports).
+// Event types created by the user, next to the built-in ones (symptoms, meals, medications, sports, notes).
 // Their entries all have the generic 'custom' event type, and point to their type definition.
 export const CUSTOM_EVENT_TYPE = 'custom';
 
@@ -35,9 +35,12 @@ export interface ICustomEntryHistory {
 	lastQuantity: number;
 }
 
+// The built-in event types, in the order of the manage menu
+export const BUILT_IN_EVENT_TYPES = ['symptomLog', 'meal', 'med', 'sport', 'log'];
+
 // 10 event types at most, the built-in ones included
 export const MAX_EVENT_TYPES = 10;
-export const MAX_CUSTOM_TYPES = MAX_EVENT_TYPES - CUSTOMIZABLE_EVENT_TYPES.length;
+export const MAX_CUSTOM_TYPES = MAX_EVENT_TYPES - BUILT_IN_EVENT_TYPES.length;
 export const MAX_CUSTOM_TYPE_LABEL_LENGTH = 30;
 export const MAX_CUSTOM_TYPE_UNIT_LENGTH = 12;
 

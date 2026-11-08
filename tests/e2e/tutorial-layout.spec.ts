@@ -51,6 +51,32 @@ for (const { language, classic } of VARIANTS) {
 	});
 }
 
+// The slideshow is as tall as its tallest slide and cuts what goes beyond: every text must stay inside it
+for (const language of ['fr', 'en'] as const) {
+	test(`tutorial (${language}): no slide cuts its text, even on a small phone`, async ({ app, page }) => {
+		await page.setViewportSize({ width: 320, height: 568 });
+		await app.start(language);
+		await page.goto('/#/tutorial');
+		await expect(page.locator('app-tutorial-scene')).toHaveCount(Object.keys(SCENE_ARROWS).length);
+		const count = await page.locator('ion-slide').count();
+		for (let i = 0; i < count; i++) {
+			const cut = await page.evaluate(index => {
+				const bottom = document.querySelector('ion-slides').getBoundingClientRect().bottom;
+				const slide = document.querySelectorAll('ion-slide')[index];
+				return Array.from(slide.querySelectorAll('h2, p, button'))
+					.filter(element => element.getBoundingClientRect().bottom > bottom + 1)
+					.map(element => element.textContent.trim().slice(0, 40));
+			}, i);
+			expect(cut, `slide ${i + 1}`).toEqual([]);
+		}
+		// The button rating the app, at the end of the last slide, can be reached
+		await page.locator('ion-slides').evaluate((slides: any, index) => slides.slideTo(index, 0), count - 1);
+		const rate = page.locator('.slide-text-rateit button');
+		await rate.scrollIntoViewIfNeeded();
+		await expect(rate).toBeInViewport();
+	});
+}
+
 test('no screen is wider than a small phone', async ({ app, page }) => {
 	await page.setViewportSize({ width: 320, height: 640 });
 	await app.start();

@@ -22,13 +22,13 @@ export const UI_VERSION = 'Version de l\'interface';
 
 export type EventType = 'symptomLog' | 'med' | 'log' | 'sport' | 'meal';
 
-// Entries of the "add an event" sheet (French)
-const ADD_MENU: { [type in EventType]: string } = {
-	symptomLog: 'Ajouter un symptôme',
-	med: 'Ajouter un médicament',
-	log: 'Ajouter une note',
-	sport: 'Ajouter un sport',
-	meal: 'Ajouter un repas'
+// Entries of the "add an event" sheet (French): the label of the V2 grid, the sentence of the V1 list
+const ADD_MENU: { [type in EventType]: { label: string, classic: string } } = {
+	symptomLog: { label: 'Symptôme', classic: 'Ajouter un symptôme' },
+	med: { label: 'Médicament', classic: 'Ajouter un médicament' },
+	log: { label: 'Note', classic: 'Ajouter une note' },
+	sport: { label: 'Sport', classic: 'Ajouter un sport' },
+	meal: { label: 'Repas', classic: 'Ajouter un repas' }
 };
 
 // Settings saved by the former versions (0.3.x), before the appearance settings existed
@@ -115,7 +115,7 @@ export class App {
 		await expect(this.page.locator('.calendar-card, .classic-calendar')).toBeVisible();
 	}
 
-	public async goToManage(tile?: 'symptomLog' | 'med' | 'log' | 'sport'): Promise<void> {
+	public async goToManage(tile?: 'symptomLog' | 'meal' | 'med' | 'log' | 'sport'): Promise<void> {
 		await this.page.locator('#menu-icon-manage').click();
 		if (tile) {
 			await this.page.locator(`.manage-tile.${tile}`).click();
@@ -127,6 +127,17 @@ export class App {
 		if (panel) {
 			await this.settingsPanel(panel).locator('mat-expansion-panel-header').click();
 		}
+	}
+
+	// Entry of the open "add an event" sheet: by its exact label in the V2 grid (the icon is text too), or by its
+	// sentence in the V1 list when given
+	public addMenuEntry(label: string, classicLabel?: string): Locator {
+		const exact = new RegExp(`^\\s*${label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*$`);
+		const entry = this.page.locator('.add-event-menu .add-option', {
+			has: this.page.locator('.add-option-label', { hasText: exact })
+		});
+		return classicLabel == null ? entry
+			: entry.or(this.page.locator('.add-event-menu mat-nav-list a', { hasText: classicLabel }));
 	}
 
 	public settingsPanel(title: string): Locator {
@@ -174,7 +185,7 @@ export class App {
 		if (options.invertedScale) {
 			await sheet.locator('.inverted-scale-toggle label').click();
 		}
-		await sheet.locator('.actions button').click();
+		await sheet.locator('.confirm-button').click();
 		await expect(this.page.locator('.symptom-card .symptom-label', { hasText: label })).toBeVisible();
 	}
 
@@ -198,7 +209,7 @@ export class App {
 		date: string = TODAY): Promise<void> {
 		const rowsBefore = await this.eventRows(date).count();
 		await this.dayCard(date).locator('.add-event').click();
-		await this.page.locator('mat-nav-list a', { hasText: ADD_MENU[type] }).click();
+		await this.addMenuEntry(ADD_MENU[type].label, ADD_MENU[type].classic).click();
 		const sheet = this.page.locator(`.bottom-sheet-container.${type}`);
 		await expect(sheet).toBeVisible();
 		const inputs = sheet.locator('.form-fields-group input');
@@ -249,7 +260,7 @@ export class App {
 		date: string = TODAY): Promise<void> {
 		const rowsBefore = await this.eventRows(date).count();
 		await this.dayCard(date).locator('.add-event').click();
-		await this.page.locator('mat-nav-list a', { hasText: `Ajouter : ${typeLabel}` }).click();
+		await this.addMenuEntry(typeLabel, `Ajouter : ${typeLabel}`).click();
 		const sheet = this.page.locator('.bottom-sheet-container.custom');
 		await expect(sheet.locator('.main-title')).toContainText(typeLabel);
 		if (options.key != null) {

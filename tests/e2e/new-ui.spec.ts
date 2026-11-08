@@ -137,20 +137,39 @@ test.describe('Versions of the interface', () => {
 		await app.addEvent('med', { key: 'Doliprane', quantity: '1000' });
 		await app.setUiVersion('V1');
 
-		// The cross and the title of the menu of the event types came with the V2
+		// The menu of the event types: the original list, without the cross nor the title nor the grid of the V2
 		await app.goToTimeline();
 		await page.locator(`#day-${TODAY} .add-event`).click();
 		const menu = page.locator('.add-event-menu');
 		await expect(menu.locator('mat-nav-list a').first()).toBeVisible();
+		// The note before the sport
+		await expect(menu.locator('mat-nav-list a')).toHaveText([/symptôme/, /repas/, /médicament/, /note/, /sport/]);
+		await expect(menu.locator('.add-option')).toHaveCount(0);
 		await expect(menu.locator('.title')).toBeHidden();
 		await expect(menu.locator('.sheet-close-button')).toBeHidden();
 		await page.locator('.cdk-overlay-backdrop').click({ position: { x: 10, y: 10 } });
 		await expect(menu).toHaveCount(0);
 
-		// Manage lists: floating refresh button, history of an event opened on its list
+		// The suggested names: the text alone, in the original list
+		await page.locator(`#day-${TODAY} .add-event`).click();
+		await menu.locator('mat-nav-list a', { hasText: 'Ajouter un médicament' }).click();
+		await page.locator('.bottom-sheet-container.med .form-fields-group input').first().fill('d');
+		const option = page.locator('.mat-autocomplete-panel mat-option');
+		await expect(option).toHaveText(['Doliprane 1000 mg']);
+		await expect(option.locator('.suggestion')).toHaveCount(0);
+		await page.keyboard.press('Escape');
+		await page.locator('.bottom-sheet-container.med .sheet-close-button').click();
+		await expect(page.locator('mat-bottom-sheet-container')).toHaveCount(0);
+
+		// Manage lists: floating refresh button confirmed in a dialog, history of an event opened on its list
 		await app.goToManage('med');
 		await expect(page.locator('.manage-list-refresh-fab')).toBeVisible();
 		await expect(page.locator('.manage-list-header .manage-list-refresh')).toBeHidden();
+		await page.locator('.manage-list-refresh-fab').click();
+		await expect(page.locator('mat-dialog-container h1')).toHaveText('Actualiser vos médicaments');
+		await expect(page.locator('mat-bottom-sheet-container')).toHaveCount(0);
+		await page.locator('mat-dialog-container button', { hasText: 'Non' }).click();
+		await expect(page.locator('mat-dialog-container')).toHaveCount(0);
 		const historyButton = page.locator('.manage-item-actions button').nth(0);
 		await expect(historyButton.locator('mat-icon:visible')).toHaveText('calendar_month');
 		await historyButton.click();
@@ -170,6 +189,16 @@ test.describe('Versions of the interface', () => {
 		await historyButton.click();
 		await expect(history.locator('.stats-tab')).toHaveClass(/active/);
 		await expect(history.locator('.sheet-close-button')).toBeVisible();
+		await history.locator('.sheet-close-button').click();
+		await expect(history).toHaveCount(0);
+
+		// The grid of the event types, in their colors
+		await app.goToTimeline();
+		await page.locator(`#day-${TODAY} .add-event`).click();
+		await expect(menu.locator('mat-nav-list')).toHaveCount(0);
+		await expect(menu.locator('.add-option-label')).toHaveText(['Symptôme', 'Repas', 'Médicament', 'Sport', 'Note']);
+		await expect(menu.locator('.add-option.med .add-option-bubble')).not.toHaveCSS('background-color',
+			'rgba(0, 0, 0, 0)');
 	});
 });
 

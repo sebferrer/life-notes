@@ -142,4 +142,40 @@ test.describe('Settings', () => {
 		await app.goToSettings();
 		await expect(active).toHaveAttribute('id', 'menu-icon-settings');
 	});
+
+	// The "?" of the automatic overview: what it is, calculated (enabled) or entered by hand (disabled),
+	// illustrated with the day of the version of the interface
+	test('the help of the automatic overview', async ({ app, page }) => {
+		const label = 'Calcul automatique du ressenti global';
+		const openHelp = async () => {
+			await app.goToSettings('Symptômes');
+			await page.locator('.toggle-container', { hasText: label }).locator('.auto-overview-help-button').click();
+			return page.locator('.auto-overview-help');
+		};
+
+		let help = await openHelp();
+		await expect(help.locator('.title')).toHaveText(label);
+		await expect(help.locator('.intro')).toContainText('pastille de couleur');
+		const enabled = help.locator('.help-case.on');
+		await expect(enabled.locator('.case-title')).toHaveText(/Activé/);
+		await expect(enabled).toContainText('moyenne de leurs intensités');
+		await expect(enabled.locator('.m-calc-formula')).toHaveText('(4 + 7) / 2 = 5,5');
+		await expect(enabled.locator('.scene-auto-overview:not(.classic) .arrow-line')).toHaveCount(2);
+		const disabled = help.locator('.help-case.off');
+		await expect(disabled.locator('.case-title')).toHaveText(/Désactivé/);
+		await expect(disabled).toContainText('vous devez le saisir vous-même');
+		await expect(disabled.locator('.scene-day-overview')).toBeVisible();
+		await help.locator('.sheet-close-button').click();
+		await expect(page.locator('mat-bottom-sheet-container')).toHaveCount(0);
+		// The "?" is next to the toggle, it doesn't change it (on by default for new users)
+		await expect(app.settingsToggle(label).locator('input')).toBeChecked();
+
+		// V1: its own day
+		await app.setUiVersion('V1');
+		help = await openHelp();
+		await expect(help.locator('.intro')).toContainText('grand rond de couleur');
+		await expect(help.locator('.help-case.on .scene-auto-overview.classic .arrow-line')).toHaveCount(2);
+		await help.locator('.confirm-button').click();
+		await expect(page.locator('mat-bottom-sheet-container')).toHaveCount(0);
+	});
 });

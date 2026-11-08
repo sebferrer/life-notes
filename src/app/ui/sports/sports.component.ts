@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { SportsService } from 'src/app/infra/sports.service';
 import { DialogConfirmComponent } from '../dialog/dialog-confirm';
+import { BottomSheetConfirmComponent } from '../bottom-sheet/bottom-sheet-confirm';
 
 import { getSortOrder } from 'src/app/util/array.utils';
 import { SportHistoryViewModel } from 'src/app/models/sport-history.view.model';
@@ -109,6 +110,7 @@ export class SportsComponent implements OnInit {
 		});
 	}
 
+	// V1: floating button, confirmation in a dialog (see GlobalService.uiVersion)
 	public openRefreshDialog(): void {
 		this.dialog.open(DialogConfirmComponent, {
 			autoFocus: false,
@@ -119,6 +121,23 @@ export class SportsComponent implements OnInit {
 				content: ['SPORTS_REFRESH_DIALOG_CONTENT_1', 'SPORTS_REFRESH_DIALOG_CONTENT_2']
 			}
 		}).afterClosed().subscribe(response => {
+			if (response == null || response.answer !== 'yes') {
+				return;
+			}
+			this.refreshSportsList();
+		});
+	}
+
+	// V2: button of the header, confirmation in a sheet
+	public openRefreshSheet(): void {
+		this.bottomSheet.open(BottomSheetConfirmComponent, {
+			panelClass: 'event-bottom-sheet',
+			data: {
+				icon: 'sync',
+				title: 'SPORTS_REFRESH_DIALOG_TITLE',
+				content: ['SPORTS_REFRESH_DIALOG_CONTENT_1', 'SPORTS_REFRESH_DIALOG_CONTENT_2']
+			}
+		}).afterDismissed().subscribe(response => {
 			if (response == null || response.answer !== 'yes') {
 				return;
 			}

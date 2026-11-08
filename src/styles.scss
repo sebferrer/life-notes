@@ -386,7 +386,7 @@ body:not(.ui-v1) .v1-only {
 }
 
 // Every sheet has a close button at the top right (in V1, only the add/edit ones). The add/edit ones can only be
-// dismissed with it (see disableClose).
+// dismissed with it or with their Cancel button (see disableClose).
 .closable-sheet {
     position: relative;
 
@@ -435,6 +435,91 @@ body:not(.ui-v1) .v1-only {
         max-height: 85vh !important;
         height: 85vh !important;
     }
+}
+
+// Suggested names under a field (V2): a rounded card as wide as the box of the field, its options in the colors of
+// the event type, what was typed in bold, the dose of a medication in a badge (see DialogAddEventComponent)
+body:not(.ui-v1) .mat-autocomplete-panel.suggestions-panel {
+    --suggestion-soft: var(--surface-variant);
+    --suggestion-badge-text: var(--text-medium);
+
+    margin-top: 6px;
+    padding: 6px;
+    border-radius: 16px;
+    border: 1px solid var(--border-subtle);
+    background: var(--surface);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.14), 0 2px 6px rgba(0, 0, 0, 0.08);
+
+    &.mat-autocomplete-panel-above {
+        margin-top: 0;
+        margin-bottom: 6px;
+    }
+
+    @each $type in symptomLog, med, meal, log, sport, custom {
+        &.#{$type} {
+            --suggestion-soft: var(--color-event-#{$type}-soft);
+            --suggestion-badge-text: var(--color-event-#{$type}-badge-text);
+        }
+    }
+
+    .mat-option {
+        height: 44px;
+        line-height: 44px;
+        padding: 0 12px;
+        border-radius: 10px;
+        font-size: 0.95rem;
+        color: var(--text-strong);
+
+        &:hover:not(.mat-option-disabled), &:focus:not(.mat-option-disabled), &.mat-active {
+            background: var(--suggestion-soft);
+
+            .suggestion-badge {
+                background: var(--surface);
+            }
+        }
+    }
+
+    .suggestion {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .suggestion-name {
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: var(--text-strong);
+
+        // Something typed: the rest of the name lighter than what matches it
+        &.filtered {
+            color: var(--text-medium);
+        }
+
+        .match {
+            font-weight: 700;
+            color: var(--text-strong);
+        }
+    }
+
+    .suggestion-badge {
+        flex-shrink: 0;
+        padding: 0 0.55rem;
+        border-radius: 999px;
+        line-height: 1.6rem;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--suggestion-badge-text);
+        background: var(--suggestion-soft);
+    }
+}
+
+// Dark: a little lighter than the sheet under it, as the boxes of its fields
+body.dark-theme:not(.ui-v1) .mat-autocomplete-panel.suggestions-panel {
+    background: var(--surface-variant);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5), 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
 // Tooltips (e.g. the meaning of an icon): opaque, so that they stay readable above the content

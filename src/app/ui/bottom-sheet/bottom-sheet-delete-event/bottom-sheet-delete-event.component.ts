@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angu
 import { GlobalService } from 'src/app/infra/global.service';
 
 export interface IDeleteConfirmationDetails {
-    type: 'symptomLog' | 'med' | 'log' | 'sport' | 'custom';
+    type: 'symptomLog' | 'meal' | 'med' | 'log' | 'sport' | 'custom';
     customType?: string;
     name: string;
     dateLabel: string;

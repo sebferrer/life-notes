@@ -41,7 +41,11 @@
     </div>
 
     <div class="actions">
-        <button mat-flat-button color="primary" (click)="onYesClick()" [disabled]="!data.symptom.label">
+        <button mat-stroked-button (click)="onNoClick()" class="cancel-button">
+            {{ 'CANCEL' | transloco }}
+        </button>
+        <button mat-flat-button color="primary" (click)="onYesClick()" [disabled]="!data.symptom.label"
+            class="confirm-button">
             <span *ngIf="data.edit">{{ 'EDIT' | transloco }}</span>
             <span *ngIf="!data.edit">{{ 'ADD' | transloco }}</span>
         </button>

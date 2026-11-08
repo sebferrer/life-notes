@@ -29,7 +29,7 @@
                 background-color: var(--event-soft);
                 /*box-shadow: 0 4px 10px rgba(0,0,0,0.15);*/
 
-                @each $type in symptomLog, med, log, sport, custom {
+                @each $type in symptomLog, meal, med, log, sport, custom {
                     &.#{$type} {
                         --event-color: var(--color-event-#{$type});
                         --event-soft: var(--color-event-#{$type}-soft);

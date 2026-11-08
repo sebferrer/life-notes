@@ -7,6 +7,9 @@
   `store-screenshots.spec.ts`)
 - `selection-light/`: the same 8 screenshots, in the light theme only
 - `extras/`: every screen, in the light and dark themes, to choose other ones
+- `video/`: the screens of the presentation video (whole pages, the slider of the intensity at each value, a type of
+  event created in an app with the built-in types only), made by
+  `play-store/video-generator`
 
 Each image is 1080 x 1920 (9:16, the format recommended by Google Play): a 360 x 640 dp phone at 3x.
 

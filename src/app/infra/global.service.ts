@@ -173,9 +173,14 @@ export class GlobalService {
 	// the former versions so as not to confuse them. Every difference is behind this setting: the templates test
 	// isUiV1, the styles use the v1-only and v2-only classes (see styles.scss). In V1:
 	// - timeline, day view and calendar in their original design, and the tutorial illustrations with them
-	// - refresh button of the manage lists floating at the bottom of the page instead of in the header
+	// - refresh button of the manage lists floating at the bottom of the page instead of in the header, its
+	//   confirmation in a dialog instead of a sheet
 	// - history of an event opened on its list rather than on its statistics
 	// - no cross on the sheets that had none before the V2
+	// - tiles of the manage menu in their former order (symptoms, medications, notes, sports), the meals after them
+	//   (V2: symptoms, meals, medications, sports, notes); in the menu adding an event, the note before the sport
+	// - menu adding an event as a plain list of sentences ("Add a medication"), without title nor rounded corners
+	//   (V2: a grid of tonal bubbles in the colors of the types, with short labels)
 	// - sleep of the month as three line charts (calendar and report) instead of one card with bars or curves
 	// - pie charts of the calendar one under the other, each with its legend, for every symptom even without any
 	//   entry in the month (V2: rings, one per symptom with its days and its average, two by two with one legend

@@ -13,6 +13,7 @@ import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MedsService } from 'src/app/infra/meds.service';
 import { LogsService } from 'src/app/infra/logs.service';
 import { SportsService } from 'src/app/infra/sports.service';
+import { MealsService } from 'src/app/infra/meals.service';
 import { SettingsService } from 'src/app/infra/settings.service';
 
 @Component({
@@ -36,12 +37,13 @@ export class TimelineComponent extends ATimeComponent implements OnInit {
 		protected medsService: MedsService,
 		protected logsService: LogsService,
 		protected sportsService: SportsService,
+		protected mealsService: MealsService,
 		protected settingsService: SettingsService,
 		protected dialog: MatDialog,
 		protected snackBar: MatSnackBar,
 		protected bottomSheet: MatBottomSheet
 	) {
-		super(globalService, translocoService, daysService, medsService, logsService, sportsService, settingsService, dialog, snackBar, bottomSheet);
+		super(globalService, translocoService, daysService, medsService, logsService, sportsService, mealsService, settingsService, dialog, snackBar, bottomSheet);
 		this.updateCallback = (day: IDay): void => {
 			this.daysContents = this.daysContents.filter(dayContent => dayContent.date !== day.date);
 			this.daysContents.push(new DayViewModel(day));

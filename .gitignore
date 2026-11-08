@@ -43,3 +43,6 @@ play-store
 
 # Source logo files (local only)
 logo
+
+# Local Claude Code instructions (not committed)
+CLAUDE.md

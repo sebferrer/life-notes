@@ -11,6 +11,7 @@ import { BottomSheetImportConfirmComponent } from '../bottom-sheet/bottom-sheet-
 import { BottomSheetImportErrorComponent } from '../bottom-sheet/bottom-sheet-import-error';
 import { BottomSheetForceLoadWarningComponent } from '../bottom-sheet/bottom-sheet-force-load-warning';
 import { BottomSheetInfoComponent } from '../bottom-sheet/bottom-sheet-info';
+import { BottomSheetAutoOverviewHelpComponent } from '../bottom-sheet/bottom-sheet-auto-overview-help';
 import { BottomSheetExportPdfComponent } from '../bottom-sheet/bottom-sheet-export-pdf';
 import { DialogSelectBackupComponent } from '../dialog/dialog-select-backup';
 import { DialogInfoComponent } from '../dialog/dialog-info';
@@ -219,6 +220,13 @@ export class SettingsComponent implements OnInit {
 		this.bottomSheet.open(BottomSheetInfoComponent, {
 			panelClass: 'bottom-sheet-container',
 			data: { titleKey, contentKeys }
+		});
+	}
+
+	// What the overview of the day is, calculated or entered by hand, illustrated
+	public openAutoOverviewHelp(): void {
+		this.bottomSheet.open(BottomSheetAutoOverviewHelpComponent, {
+			panelClass: 'event-bottom-sheet'
 		});
 	}
 

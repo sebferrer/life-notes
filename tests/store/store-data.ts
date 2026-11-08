@@ -9,12 +9,12 @@ export const STORE_TODAY = '2026-10-28';
 export const STORE_NOW = new Date(`${STORE_TODAY}T20:30:00`);
 const FIRST_DAY = '2026-01-01';
 
-export const SYMPTOM_KEYS = { migraine: 'migraine', fatigue: 'fatigue', stomach: 'stomach', back: 'back', mood: 'mood' };
+export const SYMPTOM_KEYS = { migraine: 'migraine', fatigue: 'fatigue', stomach: 'stomach', back: 'back' };
 const CUSTOM_KEYS = { water: 'ctwater', coffee: 'ctcoffee', meditation: 'ctmeditation' };
 
 const TEXTS = {
 	fr: {
-		symptoms: { migraine: 'Migraine', fatigue: 'Fatigue', stomach: 'Maux de ventre', back: 'Mal de dos', mood: 'Humeur' },
+		symptoms: { migraine: 'Migraine', fatigue: 'Fatigue', stomach: 'Maux de ventre', back: 'Mal de dos' },
 		migraineDetails: ['Côté droit', 'Derrière l\'œil droit', 'Pulsatile', 'Avec nausées', 'Sensible à la lumière'],
 		fatigueDetails: ['Coup de barre', 'Difficile de se concentrer'],
 		stomachDetails: ['Ballonnements', 'Après le repas'],
@@ -49,7 +49,7 @@ const TEXTS = {
 		}
 	},
 	en: {
-		symptoms: { migraine: 'Migraine', fatigue: 'Fatigue', stomach: 'Stomach ache', back: 'Back pain', mood: 'Mood' },
+		symptoms: { migraine: 'Migraine', fatigue: 'Fatigue', stomach: 'Stomach ache', back: 'Back pain' },
 		migraineDetails: ['Right side', 'Behind the right eye', 'Throbbing', 'With nausea', 'Light sensitivity'],
 		fatigueDetails: ['Energy crash', 'Hard to focus'],
 		stomachDetails: ['Bloating', 'After the meal'],
@@ -119,7 +119,8 @@ function intensity(value: number): number {
 	return Math.max(0, Math.min(5, Math.round(value * 2) / 2));
 }
 
-export function storeBackup(lang: Lang): any {
+// customTypes false: only the built-in event types (the video shows a type being created)
+export function storeBackup(lang: Lang, options: { customTypes?: boolean } = {}): any {
 	const t = TEXTS[lang];
 	const rnd = random(42);
 	// Back pain, added later: numbers of its own, so that the other data stay the same
@@ -202,15 +203,15 @@ export function storeBackup(lang: Lang): any {
 			const details = t.backDetails;
 			symptomLog(SYMPTOM_KEYS.back, 17 * 60 + backRnd() * 120, back, details[Math.floor(backRnd() * details.length)]);
 		}
-		// Inverted scale: the high values are the good ones
-		const mood = intensity((migraine >= 3 ? 2 : 3.8) + rnd() * 1.4 - (badNight ? 0.8 : 0));
+		// No symptom of an inverted scale (a mood) in the screenshots: it weighs them down. Its number is still drawn,
+		// so that the next ones, and so the other data, stay the same.
+		rnd();
 
 		day.symptomOverviews = [
 			{ key: SYMPTOM_KEYS.migraine, pain: migraine },
 			{ key: SYMPTOM_KEYS.fatigue, pain: fatigue },
 			{ key: SYMPTOM_KEYS.stomach, pain: stomach },
-			{ key: SYMPTOM_KEYS.back, pain: back },
-			{ key: SYMPTOM_KEYS.mood, pain: mood }
+			{ key: SYMPTOM_KEYS.back, pain: back }
 		];
 
 		// Notes
@@ -281,8 +282,7 @@ export function storeBackup(lang: Lang): any {
 			{ key: SYMPTOM_KEYS.migraine, pain: 3 },
 			{ key: SYMPTOM_KEYS.fatigue, pain: 1.5 },
 			{ key: SYMPTOM_KEYS.stomach, pain: 0 },
-			{ key: SYMPTOM_KEYS.back, pain: 0 },
-			{ key: SYMPTOM_KEYS.mood, pain: 2.5 }
+			{ key: SYMPTOM_KEYS.back, pain: 0 }
 		],
 		symptoms: [{
 			type: 'symptom', key: SYMPTOM_KEYS.migraine, logs: [
@@ -302,6 +302,9 @@ export function storeBackup(lang: Lang): any {
 		]
 	});
 
+	if (options.customTypes === false) {
+		days.forEach(day => day.customs = []);
+	}
 	const customType = (key: string, [label, unit]: string[], icon: string, colors: { light: string, dark: string }) =>
 		({ key, label, icon, colors, quantity: unit !== '', unit, created: Date.parse('2026-01-01T09:00:00Z') });
 
@@ -311,10 +314,9 @@ export function storeBackup(lang: Lang): any {
 			{ key: SYMPTOM_KEYS.migraine, label: t.symptoms.migraine, invertedScale: false },
 			{ key: SYMPTOM_KEYS.fatigue, label: t.symptoms.fatigue, invertedScale: false },
 			{ key: SYMPTOM_KEYS.stomach, label: t.symptoms.stomach, invertedScale: false },
-			{ key: SYMPTOM_KEYS.back, label: t.symptoms.back, invertedScale: false },
-			{ key: SYMPTOM_KEYS.mood, label: t.symptoms.mood, invertedScale: true }
+			{ key: SYMPTOM_KEYS.back, label: t.symptoms.back, invertedScale: false }
 		].map(symptom => ({ ...symptom, _id: symptom.key })),
-		customTypes: [
+		customTypes: options.customTypes === false ? [] : [
 			customType(CUSTOM_KEYS.water, t.customTypes.water, 'water_drop', { light: '#00897B', dark: '#4DB6AC' }),
 			customType(CUSTOM_KEYS.coffee, t.customTypes.coffee, 'local_cafe', { light: '#6D4C41', dark: '#BCAAA4' }),
 			customType(CUSTOM_KEYS.meditation, t.customTypes.meditation, 'self_improvement', { light: '#8E24AA', dark: '#CE93D8' })

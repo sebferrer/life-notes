@@ -1,8 +1,9 @@
 import { test, expect } from '@playwright/test';
 import {
-	CUSTOM_TYPE_COLORS, CUSTOM_TYPE_ICONS, MAX_CUSTOM_TYPES, MAX_EVENT_TYPES, generateCustomTypeKey, getCustomTypeColors
+	BUILT_IN_EVENT_TYPES, CUSTOM_TYPE_COLORS, CUSTOM_TYPE_ICONS, MAX_CUSTOM_TYPES, MAX_EVENT_TYPES, generateCustomTypeKey,
+	getCustomTypeColors
 } from '../../src/app/models/custom-type.model';
-import { CUSTOMIZABLE_EVENT_TYPES, DEFAULT_EVENT_PALETTES } from '../../src/app/models/event-colors.model';
+import { DEFAULT_EVENT_PALETTES } from '../../src/app/models/event-colors.model';
 
 const HEX = /^#[0-9A-F]{6}$/;
 
@@ -15,7 +16,9 @@ test.describe('Custom event types', () => {
 
 	test('10 event types at most, the built-in ones included', () => {
 		expect(MAX_EVENT_TYPES).toBe(10);
-		expect(MAX_CUSTOM_TYPES).toBe(MAX_EVENT_TYPES - CUSTOMIZABLE_EVENT_TYPES.length);
+		// Symptoms, meals, medications, sports and notes
+		expect(BUILT_IN_EVENT_TYPES.length).toBe(5);
+		expect(MAX_CUSTOM_TYPES).toBe(5);
 	});
 
 	test('about fifty icons, each one once, written as Material icon names', () => {

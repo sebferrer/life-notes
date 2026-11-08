@@ -443,6 +443,25 @@
     color: var(--text-medium);
 }
 
+// Average of the entries of a day (help of the automatic overview)
+.m-calc {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: u(3);
+
+    .m-calc-label {
+        font-size: u(8);
+        color: var(--text-medium);
+    }
+
+    .m-calc-formula {
+        font-size: u(12);
+        font-weight: 700;
+    }
+}
+
 .m-sheet-title {
     padding-right: u(14);
     font-size: u(11);
@@ -564,6 +583,11 @@
 
     .m-button {
         flex: 1;
+    }
+
+    // Cancel, then the main action twice as wide (as in the sheets adding an event or setting an intensity)
+    &.wide-confirm .m-button:last-child {
+        flex: 2;
     }
 }
 
@@ -694,6 +718,56 @@
     }
 }
 
+// V2 "add an event" sheet: grid of tonal bubbles with short labels
+.m-add-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: u(4) u(2);
+    margin-top: u(8);
+}
+
+.m-add-option {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: u(3);
+    padding: u(2) 0;
+    font-size: u(7.5);
+    font-weight: 500;
+    white-space: nowrap;
+
+    @each $type in symptomLog, meal, med, log, sport {
+        &.#{$type} {
+            --type-soft: var(--color-event-#{$type}-soft);
+            --type-icon: var(--color-event-#{$type}-icon);
+        }
+    }
+}
+
+.m-add-option-bubble {
+    position: relative;
+    width: u(26);
+    height: u(26);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--type-soft);
+    color: var(--type-icon);
+
+    mat-icon {
+        font-size: u(13);
+        width: u(13);
+        height: u(13);
+    }
+
+    .svg-icon {
+        width: u(12);
+        height: u(12);
+    }
+}
+
 // ---------------------------------------------------------------------------------------------------------------
 // Manage menu and lists
 // ---------------------------------------------------------------------------------------------------------------
@@ -724,7 +798,7 @@
         font-size: u(15);
     }
 
-    @each $type in symptomLog, med, log, sport {
+    @each $type in symptomLog, meal, med, log, sport {
         &.#{$type} {
             background-color: var(--color-event-#{$type});
             color: var(--color-event-#{$type}-on);
@@ -737,24 +811,52 @@
     }
 }
 
+// First card of the list of the symptoms
 .m-add-card {
     position: relative;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: u(4);
+    gap: u(6);
     height: u(30);
-    margin: 0 u(8);
-    padding: 0 u(8);
+    margin: 0 u(6);
+    padding: 0 u(6);
     border-radius: u(9);
     border: 1px dashed var(--border-medium);
     background-color: var(--surface);
     font-size: u(8.5);
+    font-weight: 500;
     color: var(--text-medium);
+}
+
+.m-add-bubble {
+    flex: 0 0 u(18);
+    height: u(18);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(var(--primary-rgb), 0.12);
+    color: var(--primary);
 
     mat-icon {
-        color: var(--primary);
+        font-size: u(12);
+        width: u(12);
+        height: u(12);
     }
+}
+
+// Option of a form, in a box (inverted scale of a new symptom)
+.m-option-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: u(6);
+    margin-top: u(6);
+    padding: u(5) u(6);
+    border-radius: u(6);
+    background-color: var(--surface-variant);
+    font-size: u(7.5);
+    font-weight: 600;
 }
 
 .m-list-header {
@@ -768,6 +870,17 @@
     mat-icon {
         color: var(--text-medium);
     }
+
+    .m-list-refresh {
+        margin-left: auto;
+    }
+}
+
+// V1: floating refresh button at the bottom of a list
+.m-list-fab {
+    position: absolute;
+    right: u(8);
+    bottom: u(6);
 }
 
 .m-entry {
@@ -931,6 +1044,124 @@
     }
 }
 
+// Days of a symptom level by level, as the rings of the V2 (calendar, report)
+@mixin ring-gradient($green, $level-1, $level-2, $level-3, $level-4) {
+    background: conic-gradient(var(--color-pain-0) 0 $green, var(--color-pain-1) 0 $level-1,
+        var(--color-pain-2) 0 $level-2, var(--color-pain-3) 0 $level-3, var(--color-pain-4) 0 $level-4,
+        var(--color-pain-5) 0);
+}
+
+// V2 calendar: card of the intensities of the month, one ring per symptom
+.m-intensities {
+    margin: 0 u(6);
+    padding: u(6);
+}
+
+.m-card-heading {
+    display: flex;
+    align-items: center;
+    gap: u(5);
+    font-size: u(8.5);
+    font-weight: 600;
+
+    .m-card-heading-title {
+        flex: 1;
+        min-width: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .m-heading-help {
+        color: var(--text-medium);
+    }
+}
+
+.m-heading-icon {
+    flex: 0 0 u(16);
+    height: u(16);
+    border-radius: u(5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+
+    &.intensities {
+        background-color: #ef6c57;
+    }
+
+    mat-icon {
+        font-size: u(10);
+        width: u(10);
+        height: u(10);
+    }
+}
+
+.m-rings {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: u(5);
+    margin-top: u(5);
+}
+
+.m-ring-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: u(3);
+    padding: u(4) u(3);
+    border-radius: u(7);
+    background-color: var(--surface-variant);
+}
+
+.m-ring-name {
+    max-width: 100%;
+    font-size: u(7);
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.m-ring {
+    position: relative;
+    width: u(30);
+    height: u(30);
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    padding-top: u(9);
+    box-sizing: border-box;
+    font-size: u(6);
+    color: var(--text-medium);
+
+    b {
+        font-size: u(9.5);
+        color: var(--text-strong);
+    }
+
+    // The ring itself, under the number of days
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        border-radius: 50%;
+        -webkit-mask: radial-gradient(circle, transparent 52%, #000000 54%);
+        mask: radial-gradient(circle, transparent 52%, #000000 54%);
+    }
+
+    &.ring-1::before {
+        @include ring-gradient(62%, 78%, 88%, 95%, 99%);
+    }
+
+    &.ring-2::before {
+        @include ring-gradient(80%, 90%, 96%, 99%, 100%);
+    }
+}
+
 .m-day-page-header {
     display: flex;
     align-items: center;
@@ -1009,6 +1240,136 @@
         b {
             color: var(--type-badge-text);
         }
+    }
+}
+
+// V2 report: header, symptoms side by side, most frequent entries
+.m-report-v2 {
+    padding: 0 u(7);
+
+    .m-report-title {
+        padding: 0;
+        font-size: u(10);
+    }
+}
+
+.m-report-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: u(7) 0 u(4) 0;
+    border-bottom: u(1.2) solid var(--primary);
+
+    .m-report-subtitle {
+        display: block;
+        font-size: u(6.5);
+        color: var(--text-medium);
+    }
+
+    .m-report-brand {
+        margin-top: u(2);
+        font-size: u(6);
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--primary);
+    }
+}
+
+.m-report-section {
+    margin: u(5) 0 u(3) 0;
+    font-size: u(5.5);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-medium);
+}
+
+.m-report-symptoms {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: u(4);
+}
+
+.m-report-symptom,
+.m-report-frequent {
+    display: flex;
+    flex-direction: column;
+    gap: u(3);
+    padding: u(4);
+    border: 1px solid var(--border-subtle);
+    border-radius: u(6);
+    background-color: var(--surface);
+}
+
+.m-report-symptom-name {
+    font-size: u(6.5);
+    font-weight: 700;
+}
+
+.m-report-symptom-body {
+    display: flex;
+    align-items: center;
+    gap: u(4);
+}
+
+.m-report-grid.small {
+    grid-template-columns: repeat(7, u(7));
+    gap: u(1.2);
+
+    > span {
+        height: u(5);
+        border-radius: u(1.5);
+    }
+}
+
+.m-donut.small {
+    width: u(18);
+    height: u(18);
+
+    &.ring-1 {
+        @include ring-gradient(62%, 78%, 88%, 95%, 99%);
+    }
+
+    &.ring-2 {
+        @include ring-gradient(80%, 90%, 96%, 99%, 100%);
+    }
+}
+
+// Rows of a card of the most frequent entries, with the bar of their count
+.m-report-frequent {
+    // Room for the floating buttons
+    margin-right: u(36);
+    gap: u(1.5);
+    font-size: u(6.5);
+
+    .m-report-frequent-title {
+        font-weight: 700;
+    }
+
+    .m-report-frequent-row {
+        display: flex;
+        justify-content: space-between;
+        margin-top: u(1.5);
+
+        b {
+            font-weight: 600;
+            color: var(--text-medium);
+        }
+    }
+}
+
+.m-report-bar {
+    display: block;
+    height: u(2);
+    border-radius: u(1);
+    background-color: var(--surface-variant);
+
+    > span {
+        display: block;
+        height: 100%;
+        border-radius: u(1);
+        background-color: var(--type-icon);
     }
 }
 
@@ -1497,8 +1858,8 @@
 
 .scene-create-symptom {
     .s1 { @include box(6, 6, 206, 160); }
-    .s2 { @include box(108, 172, 186, 80); }
-    .s3 { @include box(6, 262, 204, 112); }
+    .s2 { @include box(108, 172, 186, 62); }
+    .s3 { @include box(6, 244, 210, 132); }
 }
 
 .scene-target-symptom {
@@ -1513,15 +1874,21 @@
     .s3 { @include box(6, 252, 228, 41); }
 }
 
+.scene-auto-overview {
+    .s1 { @include box(6, 6, 228, 96); }
+    .s2 { @include box(66, 120, 228, 50); }
+    .s3 { @include box(6, 196, 228, 41); }
+}
+
 .scene-calendar {
-    .s1 { @include box(6, 6, 214, 266); }
+    .s1 { @include box(6, 6, 214, 276); }
     .s2 { @include box(150, 286, 144, 88); }
 }
 
 .scene-add-event {
     .s1 { @include box(6, 6, 214, 41); }
-    .s2 { @include box(110, 62, 184, 132); }
-    .s3 { @include box(6, 232, 214, 128); }
+    .s2 { @include box(110, 62, 184, 134); }
+    .s3 { @include box(6, 234, 214, 128); }
 }
 
 .scene-edit-event {
@@ -1532,7 +1899,7 @@
 
 .scene-manage {
     .s1 { @include box(6, 6, 206, 212); }
-    .s2 { @include box(64, 234, 230, 118); }
+    .s2 { @include box(64, 234, 230, 124); }
 }
 
 .scene-settings {
@@ -1561,7 +1928,7 @@
 .scene-pdf-report {
     .s1 { @include box(6, 6, 200, 64); }
     .s2 { @include box(94, 88, 200, 110); }
-    .s3 { @include box(6, 214, 214, 152); }
+    .s3 { @include box(6, 210, 214, 164); }
 }
 
 .scene-new-ui {
@@ -1575,7 +1942,19 @@
     .s3 { top: u(262); height: u(95); }
 }
 
+.scene-auto-overview.classic {
+    .s1 { height: u(119); }
+    .s2 { top: u(143); }
+    .s3 { top: u(219); height: u(95); }
+}
+
+.scene-manage.classic {
+    .s2 { height: u(152); }
+}
+
 .scene-calendar.classic {
+    // No ring card in V1: the former height, the classic day starts higher
+    .s1 { height: u(266); }
     .s2 { top: u(280); height: u(119); }
 }
 

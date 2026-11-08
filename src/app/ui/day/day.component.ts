@@ -14,6 +14,7 @@ import { IDay } from 'src/app/models';
 import { MedsService } from 'src/app/infra/meds.service';
 import { LogsService } from 'src/app/infra/logs.service';
 import { SportsService } from 'src/app/infra/sports.service';
+import { MealsService } from 'src/app/infra/meals.service';
 import { SettingsService } from 'src/app/infra/settings.service';
 
 @Component({
@@ -35,6 +36,7 @@ export class DayComponent extends ATimeComponent implements OnInit {
 		protected medsService: MedsService,
 		protected logsService: LogsService,
 		protected sportsService: SportsService,
+		protected mealsService: MealsService,
 		protected settingsService: SettingsService,
 		protected dialog: MatDialog,
 		protected snackBar: MatSnackBar,
@@ -43,7 +45,7 @@ export class DayComponent extends ATimeComponent implements OnInit {
 		private router: Router,
 		private location: Location
 	) {
-		super(globalService, translocoService, daysService, medsService, logsService, sportsService, settingsService, dialog, snackBar, bottomSheet);
+		super(globalService, translocoService, daysService, medsService, logsService, sportsService, mealsService, settingsService, dialog, snackBar, bottomSheet);
 		this.updateCallback = (day: IDay): void => {
 			this.dayContent = new DayViewModel(day);
 			this.dayContent$.next(this.dayContent);

@@ -18,8 +18,8 @@ const SCENES = [
 	'pdf-report'
 ];
 
-// Slides whose text describes the day differently in the classic design
-const CLASSIC_TEXTS = ['day-overview', 'add-event'];
+// Slides whose text describes the screens differently in the V1 (the day, the history of the manage lists)
+const CLASSIC_TEXTS = ['day-overview', 'add-event', 'manage'];
 
 @Component({
 	selector: 'app-tutorial',

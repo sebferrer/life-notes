@@ -20,6 +20,7 @@ import { DialogNoTargetSymptomWarningComponent } from '../dialog/dialog-no-targe
 import { MedsService } from 'src/app/infra/meds.service';
 import { LogsService } from 'src/app/infra/logs.service';
 import { SportsService } from 'src/app/infra/sports.service';
+import { MealsService } from 'src/app/infra/meals.service';
 import { SettingsService } from 'src/app/infra/settings.service';
 import { DialogInfoComponent } from '../dialog/dialog-info';
 import { format24H, formatAMPM } from 'src/app/util/time.util';
@@ -45,6 +46,7 @@ export abstract class ATimeComponent {
 		protected medsService: MedsService,
 		protected logsService: LogsService,
 		protected sportsService: SportsService,
+		protected mealsService: MealsService,
 		protected settingsService: SettingsService,
 		protected dialog: MatDialog,
 		protected snackBar: MatSnackBar,
@@ -175,6 +177,9 @@ export abstract class ATimeComponent {
 		else if (response.type === 'sport') {
 			this.sportsService.addSport(date, response.key).subscribe(() => { });
 		}
+		else if (response.type === 'meal') {
+			this.mealsService.addMeal(date, response.key).subscribe(() => { });
+		}
 	}
 
 	public openDeleteDialog(date: string, customEvent: ICustomEvent): void {
@@ -198,6 +203,9 @@ export abstract class ATimeComponent {
 			}
 			else if (customEvent.type === 'sport') {
 				this.sportsService.removeSportByKey(customEvent.key).subscribe(() => { });
+			}
+			else if (customEvent.type === 'meal') {
+				this.mealsService.removeMealByKey(customEvent.key).subscribe(() => { });
 			}
 			/*this.snackBar.open(this.translocoService.translate('TIMELINE_DELETE_EVENT_SNACKBAR',
 				{ type: this.translocoService.translate(customEvent.type) }), 'Close',
@@ -243,8 +251,9 @@ export abstract class ATimeComponent {
 	}
 
 	public openBottomSheet(date: string): void {
+		// V2: rounded corners like the other sheets of an event
 		this.bottomSheet.open(BottomSheetAddEventComponent, {
-			panelClass: 'custom-bottom-sheet'
+			panelClass: this.globalService.isUiV1 ? 'custom-bottom-sheet' : ['custom-bottom-sheet', 'event-bottom-sheet']
 		})
 			.afterDismissed().subscribe(response => {
 				if (response == null) {

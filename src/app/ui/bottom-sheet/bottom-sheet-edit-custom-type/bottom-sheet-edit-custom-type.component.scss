@@ -282,14 +282,24 @@
 
     .actions {
         display: flex;
+        gap: 1rem;
         padding-top: 0.5rem;
 
-        .confirm-button {
-            flex: 1;
+        button {
             height: 3.5rem;
             border-radius: 14px !important;
             font-size: 1rem;
             font-weight: 600;
+        }
+
+        .cancel-button {
+            flex: 1;
+            border-color: var(--border-medium);
+            color: var(--text-weak);
+        }
+
+        .confirm-button {
+            flex: 2;
             box-shadow: none;
         }
     }

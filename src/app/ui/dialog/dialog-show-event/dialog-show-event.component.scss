@@ -1,4 +1,6 @@
-.bottom-sheet-container {
+// Under its own element: without view encapsulation, these styles would apply to every sheet of the app once
+// this one has been opened
+app-dialog-show-event .bottom-sheet-container {
     display: flex;
     flex-direction: column;
     padding: 0 0.7rem 1.5rem 0.7rem;

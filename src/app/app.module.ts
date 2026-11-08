@@ -70,6 +70,8 @@ import { LogsService } from './infra/logs.service';
 import { LogsComponent } from './ui/logs/logs.component';
 import { SportsService } from './infra/sports.service';
 import { SportsComponent } from './ui/sports';
+import { MealsService } from './infra/meals.service';
+import { MealsComponent } from './ui/meals';
 import { CustomTypesService } from './infra/custom-types.service';
 import { CustomEntriesComponent } from './ui/custom-entries';
 import { BottomSheetEditCustomTypeComponent } from './ui/bottom-sheet/bottom-sheet-edit-custom-type';
@@ -90,6 +92,8 @@ import { BottomSheetDeleteEventComponent } from './ui/bottom-sheet/bottom-sheet-
 import { BottomSheetEditMedComponent } from './ui/bottom-sheet/bottom-sheet-edit-med';
 import { BottomSheetEditLogComponent } from './ui/bottom-sheet/bottom-sheet-edit-log';
 import { BottomSheetDeleteOverviewComponent } from './ui/bottom-sheet/bottom-sheet-delete-overview';
+import { BottomSheetConfirmComponent } from './ui/bottom-sheet/bottom-sheet-confirm';
+import { BottomSheetAutoOverviewHelpComponent } from './ui/bottom-sheet/bottom-sheet-auto-overview-help';
 import { BottomSheetEditSymptomOverviewComponent } from './ui/bottom-sheet/bottom-sheet-edit-symptom-overview';
 import { BottomSheetImportConfirmComponent } from './ui/bottom-sheet/bottom-sheet-import-confirm';
 import { BottomSheetImportErrorComponent } from './ui/bottom-sheet/bottom-sheet-import-error';
@@ -114,6 +118,7 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 		MedsComponent,
 		LogsComponent,
 		SportsComponent,
+		MealsComponent,
 		CustomEntriesComponent,
 		ManageComponent,
 		SettingsComponent,
@@ -150,6 +155,8 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 		BottomSheetEditMedComponent,
 		BottomSheetEditLogComponent,
 		BottomSheetDeleteOverviewComponent,
+		BottomSheetConfirmComponent,
+		BottomSheetAutoOverviewHelpComponent,
 
 		// Helpers
 		InfiniteScrollComponent,
@@ -212,6 +219,7 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 		MedsService,
 		LogsService,
 		SportsService,
+		MealsService,
 		CustomTypesService,
 		SettingsService,
 		BackupService,
@@ -247,6 +255,8 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 		BottomSheetEditMedComponent,
 		BottomSheetEditLogComponent,
 		BottomSheetDeleteOverviewComponent,
+		BottomSheetConfirmComponent,
+		BottomSheetAutoOverviewHelpComponent,
 		BottomSheetEditSymptomOverviewComponent,
 		BottomSheetImportConfirmComponent,
 		BottomSheetImportErrorComponent,

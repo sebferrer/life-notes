@@ -13,6 +13,7 @@ import { map, startWith } from 'rxjs/operators';
 import { MedsService } from 'src/app/infra/meds.service';
 import { LogsService } from 'src/app/infra/logs.service';
 import { SportsService } from 'src/app/infra/sports.service';
+import { MealsService } from 'src/app/infra/meals.service';
 import { getSortOrder } from 'src/app/util/array.utils';
 import { NgxMaterialTimepickerTheme } from 'ngx-material-timepicker';
 import { CustomTypesService } from 'src/app/infra/custom-types.service';
@@ -67,6 +68,8 @@ export class DialogAddEventComponent {
 	public filteredLogsOptions: Observable<string[]>;
 	public sportsOptions: string[];
 	public filteredSportsOptions: Observable<string[]>;
+	public mealsOptions: string[];
+	public filteredMealsOptions: Observable<string[]>;
 	public customOptions: string[];
 	public filteredCustomOptions: Observable<string[]>;
 	// Last quantity of each name of the custom type, suggested with the name
@@ -80,6 +83,7 @@ export class DialogAddEventComponent {
 		public medsService: MedsService,
 		public logsService: LogsService,
 		public sportsService: SportsService,
+		public mealsService: MealsService,
 		private customTypesService: CustomTypesService,
 		private router: Router,
 		@Inject(MAT_BOTTOM_SHEET_DATA) public data: IDialogData
@@ -155,6 +159,18 @@ export class DialogAddEventComponent {
 					);
 			});
 		}
+		else if (data.type === 'meal') {
+			this.mealsService.getMeals().pipe(
+				map(meals => meals.sort(getSortOrder('lastEntry', true)))
+			).subscribe(meals => {
+				this.mealsOptions = meals.map(meal => meal.key);
+				this.filteredMealsOptions = this.myControl.valueChanges
+					.pipe(
+						startWith(this.myControl.value),
+						map(value => this._filter(this.mealsOptions, value))
+					);
+			});
+		}
 	}
 
 	public setMed(med: string) {
@@ -178,6 +194,13 @@ export class DialogAddEventComponent {
 			return;
 		}
 		this.data.key = sport;
+	}
+
+	public setMeal(meal: string) {
+		if (this.data.type !== 'meal') {
+			return;
+		}
+		this.data.key = meal;
 	}
 
 	public setCustom(key: string) {
@@ -208,6 +231,39 @@ export class DialogAddEventComponent {
 
 	public set painValue(val: number) {
 		this.data.pain = this.painScale === 10 ? (+val / 2) : +val;
+	}
+
+	// Panel of the suggestions, in the colors of the event type (styles.scss, V2)
+	public get suggestionsClass(): string {
+		return `suggestions-panel ${this.data.type} ${this.globalService.customTypeClass(this.data.customType)}`;
+	}
+
+	// A suggested name cut around what was typed (shown in bold), the dose of a medication apart
+	public suggestionParts(option: string): { name: { text: string, match: boolean }[], badge: string } {
+		let name = option;
+		let badge = '';
+		const dose = this.data.type === 'med' ? /^(.+) (\S+ mg)$/.exec(option) : null;
+		if (dose != null) {
+			name = dose[1];
+			badge = dose[2];
+		}
+		const typed = ('' + (this.myControl.value || '')).trim().toLowerCase();
+		const at = typed === '' ? -1 : name.toLowerCase().indexOf(typed);
+		if (at < 0) {
+			return { name: [{ text: name, match: false }], badge };
+		}
+		return {
+			name: [
+				{ text: name.slice(0, at), match: false },
+				{ text: name.slice(at, at + typed.length), match: true },
+				{ text: name.slice(at + typed.length), match: false }
+			].filter(part => part.text !== ''),
+			badge
+		};
+	}
+
+	public trackByIndex(index: number): number {
+		return index;
 	}
 
 	// The names load in the background: what was typed meanwhile filters them too

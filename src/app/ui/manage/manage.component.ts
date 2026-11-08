@@ -20,12 +20,26 @@ export interface IManageTile {
 })
 export class ManageComponent {
 
-	public readonly tiles: IManageTile[] = [
-		{ type: 'symptomLog', label: 'MANAGE_SYMPTOMS', route: '/symptoms', icon: 'spa' },
-		{ type: 'med', label: 'MANAGE_MEDS', route: '/meds', svg: '/assets/svg/pill-capsule.svg' },
-		{ type: 'log', label: 'MANAGE_LOGS', route: '/logs', icon: 'event_note' },
-		{ type: 'sport', label: 'MANAGE_SPORTS', route: '/sports', icon: 'fitness_center' }
-	];
+	private static readonly SYMPTOMS: IManageTile =
+		{ type: 'symptomLog', label: 'MANAGE_SYMPTOMS', route: '/symptoms', icon: 'spa' };
+	private static readonly MEALS: IManageTile =
+		{ type: 'meal', label: 'MANAGE_MEALS', route: '/meals', svg: '/assets/svg/curry-chronicles.svg' };
+	private static readonly MEDS: IManageTile =
+		{ type: 'med', label: 'MANAGE_MEDS', route: '/meds', svg: '/assets/svg/pill-capsule.svg' };
+	private static readonly LOGS: IManageTile =
+		{ type: 'log', label: 'MANAGE_LOGS', route: '/logs', icon: 'event_note' };
+	private static readonly SPORTS: IManageTile =
+		{ type: 'sport', label: 'MANAGE_SPORTS', route: '/sports', icon: 'fitness_center' };
+
+	// The custom types come after them. V1: the former tiles stay in place, the meals come after them.
+	private readonly v2Tiles = [ManageComponent.SYMPTOMS, ManageComponent.MEALS, ManageComponent.MEDS,
+		ManageComponent.SPORTS, ManageComponent.LOGS];
+	private readonly v1Tiles = [ManageComponent.SYMPTOMS, ManageComponent.MEDS, ManageComponent.LOGS,
+		ManageComponent.SPORTS, ManageComponent.MEALS];
+
+	public get tiles(): IManageTile[] {
+		return this.globalService.isUiV1 ? this.v1Tiles : this.v2Tiles;
+	}
 
 	public readonly maxEventTypes = MAX_EVENT_TYPES;
 

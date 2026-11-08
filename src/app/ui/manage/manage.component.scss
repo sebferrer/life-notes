@@ -50,7 +50,7 @@
         box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
     }
 
-    @each $type in symptomLog, med, log, sport, custom {
+    @each $type in symptomLog, meal, med, log, sport, custom {
         &.#{$type} {
             --event-color: var(--color-event-#{$type});
             --event-on-color: var(--color-event-#{$type}-on);
