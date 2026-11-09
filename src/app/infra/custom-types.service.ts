@@ -57,6 +57,20 @@ export class CustomTypesService {
 		);
 	}
 
+	// Types of an imported backup: they replace the current ones. A backup without types (made before them, or saved
+	// again by the 0.3.7, which doesn't know them: a V2 backup restored on a phone not updated yet) keeps the types of
+	// the phone used by its entries, whose definitions aren't in the file
+	public importCustomTypes(backupTypes: ICustomType[], days: IDay[]): Observable<ICustomType[]> {
+		if (backupTypes != null) {
+			return this.replaceCustomTypes(backupTypes);
+		}
+		const used = new Set<string>();
+		days.forEach(day => (day.customs || []).forEach(entry => used.add(entry.customType)));
+		return this.getCustomTypes().pipe(
+			switchMap(types => this.replaceCustomTypes(types.filter(type => used.has(type.key))))
+		);
+	}
+
 	// Replaces every type (backup import)
 	public replaceCustomTypes(types: ICustomType[]): Observable<ICustomType[]> {
 		return this.dbContext.customTypesCollection.reset().pipe(

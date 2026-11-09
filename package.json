@@ -14,6 +14,9 @@
     "test:visual": "npm run build && playwright test --config=playwright.config.ts --project=visual",
     "test:visual:update": "npm run build && playwright test --config=playwright.config.ts --project=visual --update-snapshots",
     "test:report": "playwright show-report tests/report",
+    "test:compat": "node tests/compat/build.mjs && playwright test --config=playwright.compat.config.ts",
+    "test:compat:prod": "node tests/compat/build.mjs --prod && set COMPAT_MODE=prod && playwright test --config=playwright.compat.config.ts",
+    "test:compat:report": "playwright show-report tests/compat/report",
     "screenshots:store": "npm run build && playwright test --config=playwright.store.config.ts",
     "lint": "ng lint"
   },

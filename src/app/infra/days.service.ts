@@ -20,6 +20,14 @@ import { GlobalService } from './global.service';
 // const CALENDAR_FROM_API = '/api/calendar-from';
 // const DAY_OVERVIEW_FIELDS = 'date, symptomOverviews';
 
+// The fields of a day known by this version
+const KNOWN_DAY_FIELDS = ['_id', '_rev', 'date', 'detailedDate', 'symptomOverviews', 'symptoms', 'logs', 'meds', 'meals',
+	'sports', 'customs', 'wakeUp', 'goToBed'];
+
+function isEmptyValue(value: any): boolean {
+	return value == null || value === '' || (Array.isArray(value) && value.length === 0);
+}
+
 @Injectable()
 export class DaysService {
 
@@ -363,7 +371,11 @@ export class DaysService {
 			day.meals.length === 0 &&
 			(day.sports == null || day.sports.length === 0) &&
 			(day.customs == null || day.customs.length === 0) &&
-			day.wakeUp === '' && day.goToBed === '';
+			day.wakeUp === '' && day.goToBed === '' &&
+			// The fields added by a later version, not shown here: a day holding something in them is never removed
+			// with its last entry (an app rolled back, or a backup of a later version). The 0.3.7 removed the sports
+			// and custom entries of the V2 this way
+			Object.keys(day).filter(key => !KNOWN_DAY_FIELDS.includes(key)).every(key => isEmptyValue((day as any)[key]));
 	}
 
 	// Entries have no id and the name is optional: two entries of the same minute are often identical.

@@ -15,6 +15,7 @@ against the production build (`www`) served locally.
 | `npm run test:run` | Runs every test on the current build, without building again |
 | `npm run test:report` | Opens the HTML report of the last run |
 | `npm run screenshots:store` | Builds the app, then takes the Google Play screenshots (not a test, see `store/README.md`) |
+| `npm run test:compat` | Builds the published version and the current one, then checks that the backups go from one to the other without any loss (see `compat/README.md`) |
 
 The tests use the installed Google Chrome. Without it, run `npx playwright install chromium` once and set
 `PW_CHANNEL=chromium`.

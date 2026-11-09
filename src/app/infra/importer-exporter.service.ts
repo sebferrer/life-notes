@@ -64,8 +64,8 @@ export class ImporterExporterService {
 		this.symptomsService.addSymptoms(symptomsJsonArr).subscribe(() => {
 			this.globalService.loadSymptoms().subscribe(() => { });
 		});
-		// The types of the backup replace the current ones (none in the backups made before them)
-		this.customTypesService.replaceCustomTypes(backupJsonObj.customTypes || []).subscribe(() => { });
+		// The types of the backup replace the current ones (see importCustomTypes for the backups without types)
+		this.customTypesService.importCustomTypes(backupJsonObj.customTypes, daysJsonArr).subscribe(() => { });
 		this.settingsService.editSettings(settingsJsonOnj).subscribe(settings => {
 			this.globalService.language = settingsJsonOnj.language;
 			this.globalService.targetSymptomKey = settingsJsonOnj.targetSymptomKey;
