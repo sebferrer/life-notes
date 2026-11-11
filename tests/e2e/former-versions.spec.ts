@@ -70,19 +70,20 @@ test.describe('Data of the former versions', () => {
 		});
 		await page.reload();
 
-		// Told about the update (and reminded of the backups, never done), then about the V2; the V1 kept
-		await expect(page.locator('app-dialog-info', { hasText: 'Life-Notes mis à jour' })).toBeVisible();
+		// Told about the update and the V2 in a single dialog (and reminded of the backups, never done); the V1 kept
 		const popup = page.locator('app-dialog-new-ui');
+		await expect(popup).toContainText('Life-Notes mis à jour');
+		await expect(popup).toContainText('propose une nouvelle interface');
+		await expect(page.locator('app-dialog-info', { hasText: 'Life-Notes mis à jour' })).toHaveCount(0);
 		await expect(async () => {
-			// The dialog on top, not one playing its closing animation
+			// The reminder of the backups may be on top: the dialog on top, not one playing its closing animation
 			const close = page.locator('app-dialog-info button[mat-dialog-close]').filter({ visible: true }).last();
 			if (await close.count() > 0) {
 				await close.click({ timeout: 1000 }).catch(() => undefined);
 			}
-			await expect(popup).toBeVisible({ timeout: 500 });
+			await popup.locator('button', { hasText: 'Plus tard' }).click({ timeout: 1000 });
+			await expect(popup).toHaveCount(0, { timeout: 1000 });
 		}).toPass({ timeout: 15_000 });
-		await expect(popup).toContainText('Nouvelle interface disponible');
-		await popup.locator('button', { hasText: 'Plus tard' }).click();
 		// The next one-time dialogs of a former user
 		await app.closeDialogs();
 		await page.locator('#menu-icon-timeline').click();

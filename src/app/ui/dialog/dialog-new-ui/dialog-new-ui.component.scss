@@ -1,7 +1,17 @@
 // The preview takes the width of the dialog (22rem at most, minus the 24px paddings, see newUiOpenDialog)
-// and shrinks on short screens so that the texts and buttons still fit (the scene is 300 x 214 units)
+// and shrinks on short screens so that the texts and buttons still fit (the scene is 300 x 214 units). The dialog
+// of the update has more to say: the preview leaves it more room.
 .new-ui-preview app-tutorial-scene {
     --u: min(calc((min(22rem, 92vw) - 48px) / 300), max(calc((100vh - 400px) / 214), 0.6px));
+}
+
+.new-ui-content.update .new-ui-preview app-tutorial-scene {
+    --u: min(calc((min(22rem, 92vw) - 48px) / 300), max(calc((100vh - 540px) / 214), 0.5px));
+}
+
+// Link to the update notes, aligned with the texts
+.update-notes {
+    margin: 0 0 0 -8px;
 }
 
 .new-ui-preview {

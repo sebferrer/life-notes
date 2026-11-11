@@ -75,6 +75,7 @@ async function shownRows(phone: Phone, date: string, mode: Mode): Promise<string
 	return rows.sort();
 }
 
+
 async function useInterface(phone: Phone, mode: Mode): Promise<void> {
 	const [settings] = (await phone.dump(['settings'])).settings;
 	await phone.writeDocs('settings', [{ ...settings, uiVersion: mode, newUiPopupSeen: true }]);

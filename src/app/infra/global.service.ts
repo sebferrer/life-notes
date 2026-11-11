@@ -185,6 +185,7 @@ export class GlobalService {
 	// - pie charts of the calendar one under the other, each with its legend, for every symptom even without any
 	//   entry in the month (V2: rings, one per symptom with its days and its average, two by two with one legend
 	//   per scale, symptoms without entry on demand), their help in a dialog instead of a sheet
+	// - spinner of a view being loaded at the top left instead of in the middle of the screen
 	private _uiVersion: string = 'v2';
 	public get uiVersion(): string { return this._uiVersion; }
 	public set uiVersion(value: string) {

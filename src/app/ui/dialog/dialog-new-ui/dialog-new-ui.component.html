@@ -1,10 +1,14 @@
-<h1 mat-dialog-title transloco="NEW_UI_TITLE"></h1>
-<div mat-dialog-content class="new-ui-content">
+<h1 *ngIf="update" mat-dialog-title transloco="UPDATE_NOTIFICATION_TITLE"></h1>
+<h1 *ngIf="!update" mat-dialog-title transloco="NEW_UI_TITLE"></h1>
+<div mat-dialog-content class="new-ui-content" [class.update]="update">
     <div class="new-ui-preview">
         <app-tutorial-scene scene="new-ui" uiVersion="v2"></app-tutorial-scene>
     </div>
-    <p transloco="NEW_UI_CONTENT_1"></p>
+    <p *ngIf="update" transloco="NEW_UI_UPDATE_CONTENT_1"></p>
+    <p *ngIf="!update" transloco="NEW_UI_CONTENT_1"></p>
     <p transloco="NEW_UI_CONTENT_2"></p>
+    <button *ngIf="update" mat-button color="primary" class="update-notes" (click)="openUpdateNotes()"
+        transloco="CHECK_UPDATE_NOTES"></button>
 </div>
 <div mat-dialog-actions class="new-ui-actions">
     <button mat-button mat-dialog-close transloco="LATER"></button>

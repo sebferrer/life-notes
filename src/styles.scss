@@ -348,6 +348,16 @@ mat-spinner {
     left: 20vw;
 }
 
+// V2: the spinner of a view being loaded, in the middle of the screen (its size is set by mat-spinner)
+body:not(.ui-v1) mat-spinner.view-spinner {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+}
+
 ion-range {
     --knob-background: var(--accent);
     --bar-background-active: var(--accent);

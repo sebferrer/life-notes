@@ -177,21 +177,23 @@ export class AppComponent implements OnInit {
 		}
 		this.settingsLoaded = true;
 
-		// Users of the former versions kept the V1: they are told once about the V2
+		// Users of the former versions kept the V1: they are told once about the V2, by the dialog of the update itself
 		const newUiNotice = settings != null && !settings.firstStart && !settings.newUiPopupSeen
-			&& settings.uiVersion === 'v1' ? () => this.newUiOpenDialog() : null;
+			&& settings.uiVersion === 'v1';
 		this.settingsService.getSettingsCurrentVersion().subscribe(settingsVersion => {
 			this.settingsService.getCurrentVersion().subscribe(currentVersion => {
-				if (typeof settingsVersion === 'string' && settingsVersion.startsWith('0.')) {
-					if (settingsVersion < currentVersion) {
-						this.updateInfoOpenDialog(newUiNotice);
-						this.settingsService.setCurrentVersion().subscribe();
-					} else if (newUiNotice) {
-						newUiNotice();
+				// An older version, or a date (the versions before the 0.x ones)
+				const updated = typeof settingsVersion !== 'string' || !settingsVersion.startsWith('0.')
+					|| settingsVersion < currentVersion;
+				if (updated) {
+					if (newUiNotice) {
+						this.newUiOpenDialog(true);
+					} else {
+						this.updateInfoOpenDialog();
 					}
-				} else {
-					this.updateInfoOpenDialog(newUiNotice);
 					this.settingsService.setCurrentVersion().subscribe();
+				} else if (newUiNotice) {
+					this.newUiOpenDialog();
 				}
 			});
 		});
@@ -233,13 +235,15 @@ export class AppComponent implements OnInit {
 		});
 	}
 
-	public newUiOpenDialog() {
+	// update: shown as the dialog of the update (see DialogNewUiComponent)
+	public newUiOpenDialog(update = false) {
 		this.settingsService.setNewUiPopupSeen(true).subscribe();
 		this.dialog.open(DialogNewUiComponent, {
 			autoFocus: false,
 			width: '22rem',
 			maxWidth: '92vw',
-			panelClass: ['custom-modalbox', 'new-ui-dialog']
+			panelClass: ['custom-modalbox', 'new-ui-dialog'],
+			data: { update }
 		});
 	}
 
@@ -258,7 +262,7 @@ export class AppComponent implements OnInit {
 			panelClass: 'custom-modalbox',
 			data: {
 				title: 'UPDATE_NOTIFICATION_TITLE',
-				content: ['UPDATE_NOTIFICATION_CONTENT_1', 'UPDATE_NOTIFICATION_CONTENT_2'],
+				content: ['UPDATE_NOTIFICATION_CONTENT_1'],
 				actionButton: {
 					label: 'CHECK_UPDATE_NOTES',
 					url: 'https://life-notes.fr/updates'

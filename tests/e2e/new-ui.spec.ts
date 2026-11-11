@@ -29,16 +29,16 @@ test.describe('Versions of the interface', () => {
 
 	test('a user of a former version keeps the V1 and is told once about the V2', async ({ app, page }) => {
 		await app.startAsFormerUser();
-		// The update dialog first, then the popup
-		const updateDialog = page.locator('app-dialog-info');
-		await expect(updateDialog).toContainText('Life-Notes mis à jour');
-		await expect(page.locator('app-dialog-new-ui')).toHaveCount(0);
-		await updateDialog.locator('button[mat-dialog-close]').click();
-
+		// A single dialog for the update: the V2, to try with a tap, and how to come back
 		const popup = page.locator('app-dialog-new-ui');
-		await expect(popup).toContainText('Nouvelle interface disponible');
-		await expect(popup).toContainText('La timeline et le calendrier font peau neuve');
-		await expect(popup).toContainText('Paramètres > Apparence > Version de l\'interface');
+		await expect(popup).toContainText('Life-Notes mis à jour');
+		await expect(popup).toContainText('Life-Notes a été mis à jour et propose une nouvelle interface');
+		await expect(popup).toContainText('la timeline et le calendrier font peau neuve');
+		await expect(popup).toContainText('Essayez la nouvelle interface d\'un simple appui');
+		await expect(popup).toContainText('revenir à l\'interface d\'origine à tout moment dans Paramètres > Apparence > '
+			+ 'Version de l\'interface');
+		await expect(popup.locator('.update-notes')).toHaveText('Voir les notes de mise à jour');
+		await expect(page.locator('app-dialog-info')).toHaveCount(0);
 		// The preview shows a day in the V2, whatever the version in use
 		const preview = popup.locator('.scene-new-ui');
 		await expect(preview).not.toHaveClass(/classic/);
@@ -77,6 +77,26 @@ test.describe('Versions of the interface', () => {
 		await expect(page.locator('.modern-calendar')).toBeVisible();
 	});
 
+	test('at the update, the V2 can be tried from the dialog of the update', async ({ app, page }) => {
+		await app.startAsFormerUser();
+		const popup = page.locator('app-dialog-new-ui');
+		await expect(popup).toContainText('Life-Notes mis à jour');
+		await expect(page.locator('.timeline-tile').first()).toBeVisible();
+
+		await popup.locator('.try-new-ui').click();
+		await expect(popup).toHaveCount(0);
+		await expect(app.dayCard()).toBeVisible();
+		await expect(page.locator('.timeline-tile')).toHaveCount(0);
+
+		// The update is known: no dialog after a restart, the V2 kept
+		await page.reload();
+		await expect(app.dayCard()).toBeVisible();
+		await page.waitForTimeout(1500);
+		await expect(page.locator('mat-dialog-container')).toHaveCount(0);
+		await app.goToSettings('Apparence');
+		await expect(app.radio('V2', UI_VERSION)).toHaveClass(/mat-radio-checked/);
+	});
+
 	test('the V2 can be tried from the popup', async ({ app, page }) => {
 		// Up to date version: no update dialog, the popup comes alone
 		await app.startAsFormerUser({ lastInstall: CURRENT_VERSION });
@@ -106,7 +126,10 @@ test.describe('Versions of the interface', () => {
 		const popup = page.locator('app-dialog-new-ui');
 		await expect(popup).toContainText('A new look is available');
 		await expect(popup).toContainText('The timeline and the calendar have a new look');
+		await expect(popup).toContainText('Try the new interface with a single tap');
 		await expect(popup).toContainText('Settings > Appearance > Interface version');
+		// Without the update: no link to its notes
+		await expect(popup.locator('.update-notes')).toHaveCount(0);
 		await expect(popup.locator('.scene-new-ui')).toContainText('Walk');
 		await expect(popup.locator('button', { hasText: 'Later' })).toBeVisible();
 	});
