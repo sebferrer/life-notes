@@ -104,6 +104,8 @@ import { BottomSheetForceLoadWarningComponent } from './ui/bottom-sheet/bottom-s
 import { BottomSheetInfoComponent } from './ui/bottom-sheet/bottom-sheet-info';
 import { BottomSheetDeleteTimelineEventComponent } from './ui/bottom-sheet/bottom-sheet-delete-timeline-event';
 import { SpacerItemComponent } from './ui/shared/spacer-item';
+import { ColorPickerComponent } from './ui/shared/color-picker';
+import { BottomSheetColorPickerComponent } from './ui/bottom-sheet/bottom-sheet-color-picker';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 
 
@@ -171,7 +173,9 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 		BottomSheetInfoComponent,
 		BottomSheetDeleteTimelineEventComponent,
 		BottomSheetEditCustomTypeComponent,
-		SpacerItemComponent
+		BottomSheetColorPickerComponent,
+		SpacerItemComponent,
+		ColorPickerComponent
 	],
 	imports: [
 		BrowserModule,
@@ -266,7 +270,8 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 		BottomSheetDeleteSymptomComponent,
 		BottomSheetForceLoadWarningComponent,
 		BottomSheetInfoComponent,
-		BottomSheetDeleteTimelineEventComponent
+		BottomSheetDeleteTimelineEventComponent,
+		BottomSheetColorPickerComponent
 	],
 	bootstrap: [AppComponent]
 })

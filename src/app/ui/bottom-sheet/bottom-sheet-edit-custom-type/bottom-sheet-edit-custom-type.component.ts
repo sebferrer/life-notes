@@ -1,4 +1,4 @@
-import { Component, Inject, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, Inject, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef } from '@angular/material/bottom-sheet';
 import { GlobalService } from 'src/app/infra/global.service';
 import {
@@ -34,6 +34,9 @@ export class BottomSheetEditCustomTypeComponent {
 	public unit: string;
 	// CSS variables of the chosen color (--color-event-custom-*), for the preview
 	public colorVariables: { [name: string]: string };
+	public showColorPicker = false;
+	@ViewChild('inlineColorPicker', { read: ElementRef })
+	private inlineColorPicker: ElementRef<HTMLElement>;
 
 	constructor(
 		private bottomSheetRef: MatBottomSheetRef<BottomSheetEditCustomTypeComponent>,
@@ -92,10 +95,24 @@ export class BottomSheetEditCustomTypeComponent {
 		this.updateColorVariables();
 	}
 
-	// Native color picker: the other theme gets a matching variant
+	// Color picker: the other theme gets a matching variant
 	public selectCustomColor(color: string): void {
 		this.colors = getCustomTypeColors(color, this.dark);
 		this.updateColorVariables();
+	}
+
+	// Below the colors, in the sheet: a second sheet would close this one
+	public toggleColorPicker(): void {
+		this.showColorPicker = !this.showColorPicker;
+		if (this.showColorPicker) {
+			// Once displayed, scrolled into view
+			setTimeout(() => {
+				const picker = this.inlineColorPicker && this.inlineColorPicker.nativeElement;
+				if (picker && picker.scrollIntoView) {
+					picker.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+				}
+			});
+		}
 	}
 
 	private updateColorVariables(): void {

@@ -22,10 +22,14 @@ test.describe('Settings', () => {
 
 	test('event colors are customized for the current theme only, remembered and reset', async ({ app, page }) => {
 		const card = page.locator('.palette-card');
-		const setSymptomColor = (color: string) => card.locator('input[type=color]').first().evaluate((input: HTMLInputElement, c) => {
-			input.value = c;
-			input.dispatchEvent(new Event('change'));
-		}, color);
+		const sheet = page.locator('.color-picker-sheet');
+		// The code typed in the color picker, applied
+		const setSymptomColor = async (color: string) => {
+			await card.locator('.palette-swatch').first().click();
+			await sheet.locator('.cp-hex-input').fill(color);
+			await sheet.locator('.confirm-button').click();
+			await expect(sheet).toBeHidden();
+		};
 
 		// Only the palette of the theme displayed is shown
 		await app.goToSettings('Apparence');
@@ -45,9 +49,9 @@ test.describe('Settings', () => {
 		await expect(card).toHaveCount(1);
 		await expect(card.locator('.palette-card-title')).toHaveText('Mode sombre');
 		expect(await app.cssVariable('--color-event-symptomLog')).toBe('#FF7A90');
-		// The native color picker gives lowercase colors
+		// Typed in lowercase, saved in uppercase as the default colors
 		await setSymptomColor('#abcdef');
-		await expect.poll(() => app.cssVariable('--color-event-symptomLog')).toBe('#abcdef');
+		await expect.poll(() => app.cssVariable('--color-event-symptomLog')).toBe('#ABCDEF');
 
 		await app.setToggle('Mode sombre', false);
 		expect(await app.cssVariable('--color-event-symptomLog')).toBe('#123456');
@@ -56,8 +60,67 @@ test.describe('Settings', () => {
 
 		// Resetting the light palette keeps the dark one
 		await app.setToggle('Mode sombre', true);
-		expect(await app.cssVariable('--color-event-symptomLog')).toBe('#abcdef');
+		expect(await app.cssVariable('--color-event-symptomLog')).toBe('#ABCDEF');
 	});
+
+	test('the color picker starts from the current color, keeps it at hand and saves only when applied',
+		async ({ app, page }) => {
+			const card = page.locator('.palette-card');
+			const sheet = page.locator('.color-picker-sheet');
+			const code = sheet.locator('.cp-hex-input');
+			// Drags from the middle of an element to a point given as fractions of its size
+			const drag = async (selector: string, x: number, y: number) => {
+				const box = await sheet.locator(selector).boundingBox();
+				await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+				await page.mouse.down();
+				await page.mouse.move(box.x + box.width * x, box.y + box.height * y, { steps: 5 });
+				await page.mouse.up();
+			};
+
+			await app.goToSettings('Apparence');
+			await card.locator('.palette-swatch').first().click();
+			await expect(code).toHaveValue('FF3154');
+			// The default color of the symptoms is the first suggestion
+			await expect(sheet.locator('.cp-swatch').first()).toHaveClass(/selected/);
+			await expect(sheet.locator('.compare-initial')).toBeDisabled();
+
+			// Saturation and brightness
+			await drag('.cp-area', 0.3, 0.6);
+			await expect(code).not.toHaveValue('FF3154');
+			await expect(sheet.locator('.cp-swatch.selected')).toHaveCount(0);
+			// The color the picker started from is one tap away
+			await sheet.locator('.compare-initial').click();
+			await expect(code).toHaveValue('FF3154');
+
+			// Hue: blue at two thirds of the slider, saturation and brightness kept
+			await drag('.cp-hue', 0.66, 0.5);
+			const [r, g, b] = (await code.inputValue()).match(/../g).map(channel => parseInt(channel, 16));
+			expect(b).toBe(255);
+			expect(Math.max(r, g)).toBeLessThan(120);
+
+			// Cancelled: nothing changes
+			await sheet.locator('.cancel-button').click();
+			await expect(sheet).toBeHidden();
+			expect(await app.cssVariable('--color-event-symptomLog')).toBe('#FF3154');
+
+			// A suggestion, applied: the picker then starts from it
+			await card.locator('.palette-swatch').first().click();
+			await expect(code).toHaveValue('FF3154');
+			await sheet.locator('.cp-swatch').nth(1).click();
+			await expect(code).toHaveValue('0096BF');
+			await sheet.locator('.confirm-button').click();
+			await expect.poll(() => app.cssVariable('--color-event-symptomLog')).toBe('#0096BF');
+			await card.locator('.palette-swatch').first().click();
+			await expect(code).toHaveValue('0096BF');
+
+			// An incomplete code is ignored, a short one is completed
+			await code.fill('12');
+			await code.press('Enter');
+			await expect(code).toHaveValue('0096BF');
+			await code.fill('#f80');
+			await code.press('Enter');
+			await expect(code).toHaveValue('FF8800');
+		});
 
 	test('the 12 hour format is used everywhere times are shown', async ({ app, page }) => {
 		await app.addSymptom('Tête');

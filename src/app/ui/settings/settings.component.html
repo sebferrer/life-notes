@@ -284,17 +284,16 @@
                         </button>
                     </div>
                     <div class="palette-swatches">
-                        <!-- The label opens the hidden native color picker -->
-                        <label *ngFor="let item of eventColorItems" class="palette-swatch">
+                        <!-- Opens the color picker of the app, starting from this color -->
+                        <button *ngFor="let item of eventColorItems" type="button" class="palette-swatch"
+                            (click)="openEventColorPicker(theme, item)">
                             <span class="swatch-circle" [style.background-color]="eventPalettes[theme][item.type]">
                                 <mat-icon *ngIf="item.icon" [style.color]="getOnColor(theme, item.type)">{{ item.icon
                                     }}</mat-icon>
                                 <img *ngIf="item.svg" [src]="item.svg" [style.filter]="getOnFilter(theme, item.type)" />
-                                <input #colorInput type="color" [value]="eventPalettes[theme][item.type]"
-                                    (change)="setEventColor(theme, item.type, colorInput.value)">
                             </span>
                             <span class="swatch-label">{{ item.label | transloco }}</span>
-                        </label>
+                        </button>
                     </div>
                 </div>
                 <div *ngIf="hasCustomTypes" class="palette-hint">

@@ -41,14 +41,17 @@
                         [style.background-color]="presetColor(preset)" (click)="selectPreset(preset)">
                         <mat-icon *ngIf="isPresetSelected(preset)" [style.color]="onColor(presetColor(preset))">check</mat-icon>
                     </button>
-                    <!-- The label opens the hidden native color picker -->
-                    <label class="color-choice custom-color" [class.selected]="customColorSelected"
-                        [style.background-color]="customColorSelected ? currentColor : null"
-                        [attr.aria-label]="t('CUSTOM_TYPE_OTHER_COLOR')">
-                        <mat-icon>{{ customColorSelected ? 'check' : 'palette' }}</mat-icon>
-                        <input #colorInput type="color" [value]="currentColor" (change)="selectCustomColor(colorInput.value)">
-                    </label>
+                    <!-- Shows the color picker below, starting from the current color (a preset one too) -->
+                    <button type="button" class="color-choice custom-color" [class.selected]="customColorSelected"
+                        [class.open]="showColorPicker" [style.background-color]="customColorSelected ? currentColor : null"
+                        [attr.aria-label]="t('CUSTOM_TYPE_OTHER_COLOR')" [attr.aria-expanded]="showColorPicker"
+                        (click)="toggleColorPicker()">
+                        <mat-icon [style.color]="customColorSelected ? onColor(currentColor) : null">{{
+                            customColorSelected ? 'check' : 'palette' }}</mat-icon>
+                    </button>
                 </div>
+                <app-color-picker #inlineColorPicker *ngIf="showColorPicker" class="inline-color-picker"
+                    [color]="currentColor" (colorChange)="selectCustomColor($event)"></app-color-picker>
                 <div class="field-hint">{{ t(dark ? 'CUSTOM_TYPE_COLOR_HINT_DARK' : 'CUSTOM_TYPE_COLOR_HINT_LIGHT') }}</div>
             </div>
 

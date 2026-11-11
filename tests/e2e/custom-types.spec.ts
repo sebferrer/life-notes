@@ -152,16 +152,30 @@ test.describe('Event types created by the user', () => {
 			await app.goToManage();
 			await page.locator('.manage-tile.add-tile').click();
 			const sheet = page.locator('.edit-custom-type');
+			const code = sheet.locator('.cp-hex-input');
 			await sheet.locator('.custom-type-label-input').fill('Eau');
-			await sheet.locator('.custom-color input[type=color]').evaluate((input: HTMLInputElement) => {
-				input.value = '#123456';
-				input.dispatchEvent(new Event('change'));
-			});
+			// The picker, shown in the sheet, starts from the color selected: the first ready-made one
+			await sheet.locator('.custom-color').click();
+			await expect(code).toHaveValue(CUSTOM_TYPE_COLORS[0].light.slice(1));
+			// It follows the ready-made color tapped, to adjust it
+			await sheet.locator('button.color-choice').nth(2).click();
+			await expect(code).toHaveValue(CUSTOM_TYPE_COLORS[2].light.slice(1));
+			await code.fill('123456');
+			await expect(sheet.locator('.custom-color')).toHaveClass(/selected/);
+			await expect(sheet.locator('button.color-choice.selected')).toHaveCount(1);
 			// The preview takes the color at once
 			expect(await cssValue(sheet, '--color-event-custom')).toBe('#123456');
 			await sheet.locator('.confirm-button').click();
 			const tile = page.locator('.manage-tile.custom', { hasText: 'Eau' });
 			expect(await cssValue(tile, '--color-event-custom')).toBe('#123456');
+
+			// Edited later, the picker starts from this color
+			await tile.click();
+			await page.locator('.edit-type-button').click();
+			await sheet.locator('.custom-color').click();
+			await expect(code).toHaveValue('123456');
+			await sheet.locator('.sheet-close-button').click();
+			await expect(sheet).toBeHidden();
 
 			await app.goToSettings('Apparence');
 			await app.setToggle('Mode sombre', true);

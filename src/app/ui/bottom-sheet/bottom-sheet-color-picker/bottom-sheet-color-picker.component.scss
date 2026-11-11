@@ -1,0 +1,125 @@
+// The panel class is set on the sheet container itself
+.mat-bottom-sheet-container.color-picker-panel {
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    padding: 0;
+    max-height: 92vh;
+    box-sizing: border-box;
+}
+
+.bottom-sheet-container.color-picker-sheet {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+    padding: 0 1rem 1.5rem 1rem;
+    box-sizing: border-box;
+
+    .header-section {
+        padding-top: 1rem;
+
+        .title-text {
+            min-width: 0;
+        }
+
+        .overline {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-medium);
+        }
+
+        .main-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            line-height: 1.2;
+            color: var(--text-strong);
+        }
+    }
+
+    // One pill split in two: the current color on the left, the new one on the right
+    .color-compare {
+        display: flex;
+        height: 3.25rem;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 1px 3px var(--shadow);
+
+        .compare-half {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            padding: 0 0.5rem;
+            border: none;
+            font: inherit;
+            font-size: 0.9rem;
+            font-weight: 600;
+            -webkit-tap-highlight-color: transparent;
+
+            mat-icon {
+                flex-shrink: 0;
+                font-size: 1.3rem;
+                width: 1.3rem;
+                height: 1.3rem;
+            }
+
+            img {
+                flex-shrink: 0;
+                width: 1.2rem;
+                height: 1.2rem;
+            }
+
+            .compare-label {
+                min-width: 0;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+
+        .compare-initial {
+            cursor: default;
+
+            &.changed {
+                cursor: pointer;
+            }
+
+            &:focus-visible {
+                outline: 2px solid var(--primary);
+                outline-offset: -4px;
+            }
+
+            .compare-undo {
+                font-size: 1.1rem;
+                width: 1.1rem;
+                height: 1.1rem;
+                opacity: 0.85;
+            }
+        }
+    }
+
+    .actions {
+        display: flex;
+        gap: 1rem;
+        padding-top: 0.25rem;
+
+        button {
+            height: 3.25rem;
+            border-radius: 14px !important;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .cancel-button {
+            flex: 1;
+            border-color: var(--border-medium);
+            color: var(--text-weak);
+        }
+
+        .confirm-button {
+            flex: 2;
+            box-shadow: none;
+        }
+    }
+}

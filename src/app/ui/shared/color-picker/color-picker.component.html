@@ -1,0 +1,33 @@
+<div class="color-picker">
+    <!-- Saturation from left to right, brightness from bottom to top -->
+    <div class="cp-area" [class.dragging]="dragging === 'area'" [style.background-color]="hueColor" role="slider"
+        tabindex="0" [attr.aria-label]="'COLOR_PICKER_SHADE' | transloco" [attr.aria-valuetext]="hex"
+        (pointerdown)="onPointerDown($event, 'area')" (pointermove)="onPointerMove($event, 'area')"
+        (pointerup)="onPointerUp()" (pointercancel)="onPointerUp()" (keydown)="onAreaKeydown($event)">
+        <span class="cp-thumb" [style.left]="thumbPosition(saturation, 'var(--cp-area-radius)')"
+            [style.top]="thumbPosition(1 - value, 'var(--cp-area-radius)')" [style.background-color]="hex"></span>
+    </div>
+
+    <div class="cp-hue" [class.dragging]="dragging === 'hue'" role="slider" tabindex="0" aria-valuemin="0"
+        aria-valuemax="360" [attr.aria-valuenow]="hue | number: '1.0-0'" [attr.aria-label]="'COLOR_PICKER_HUE' | transloco"
+        (pointerdown)="onPointerDown($event, 'hue')" (pointermove)="onPointerMove($event, 'hue')"
+        (pointerup)="onPointerUp()" (pointercancel)="onPointerUp()" (keydown)="onHueKeydown($event)">
+        <span class="cp-thumb" [style.left]="thumbPosition(hue / 360, 'var(--cp-hue-radius)')"
+            [style.background-color]="hueColor"></span>
+    </div>
+
+    <label class="cp-hex">
+        <span class="cp-hex-dot" [style.background-color]="hex"></span>
+        <span class="cp-hex-prefix">#</span>
+        <input class="cp-hex-input" type="text" maxlength="7" [ngModel]="hexText" (ngModelChange)="onHexInput($event)"
+            (blur)="onHexBlur()" (keydown.enter)="$any($event.target).blur()" autocomplete="off"
+            autocapitalize="characters" spellcheck="false" enterkeyhint="done"
+            [attr.aria-label]="'COLOR_PICKER_CODE' | transloco">
+    </label>
+
+    <div *ngIf="normalizedSwatches.length" class="cp-swatches">
+        <button *ngFor="let swatch of normalizedSwatches" type="button" class="cp-swatch"
+            [class.selected]="swatch === hex" [style.background-color]="swatch" [attr.aria-label]="swatch"
+            [attr.aria-pressed]="swatch === hex" (click)="selectSwatch(swatch)"></button>
+    </div>
+</div>

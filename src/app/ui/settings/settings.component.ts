@@ -19,8 +19,13 @@ import { BackupService } from 'src/app/infra/backup.service';
 import { DialogExportConfirmComponent } from '../dialog/dialog-export-confirm';
 import { Router } from '@angular/router';
 import {
-	IEventPalettes, completeEventPalettes, getDefaultEventPalettes, getEventOnColor, getEventOnFilter
+	CUSTOMIZABLE_EVENT_TYPES, IEventPalettes, completeEventPalettes, getDefaultEventPalettes, getEventOnColor,
+	getEventOnFilter
 } from 'src/app/models/event-colors.model';
+import { CUSTOM_TYPE_COLORS } from 'src/app/models/custom-type.model';
+import {
+	BottomSheetColorPickerComponent, IBottomSheetColorPickerData
+} from '../bottom-sheet/bottom-sheet-color-picker';
 
 @Component({
 	selector: 'app-settings',
@@ -205,6 +210,38 @@ export class SettingsComponent implements OnInit {
 
 	private saveEventColors(): void {
 		this.settingsService.setEventColors(this.eventPalettes).subscribe();
+	}
+
+	// The picker starts from the current color. Saved only when applied.
+	public openEventColorPicker(theme: 'light' | 'dark', item: { type: string, label: string, icon?: string, svg?: string }): void {
+		const data: IBottomSheetColorPickerData = {
+			title: item.label,
+			color: this.eventPalettes[theme][item.type],
+			swatches: this.getSuggestedEventColors(theme, item.type),
+			icon: item.icon,
+			svg: item.svg,
+			darkTheme: theme === 'dark'
+		};
+		this.bottomSheet.open(BottomSheetColorPickerComponent, {
+			panelClass: 'color-picker-panel',
+			// Only the close button can dismiss it, to avoid losing an ongoing choice
+			disableClose: true,
+			data
+		}).afterDismissed().subscribe(response => {
+			if (response == null || response.answer !== 'yes') {
+				return;
+			}
+			this.setEventColor(theme, item.type, response.color);
+		});
+	}
+
+	// Colors made for the theme: the default one of the type first, then the other default ones and the ready-made
+	// colors of the custom types
+	private getSuggestedEventColors(theme: 'light' | 'dark', type: string): string[] {
+		const defaults = getDefaultEventPalettes()[theme];
+		const colors = [defaults[type], ...CUSTOMIZABLE_EVENT_TYPES.map(other => defaults[other]),
+			...CUSTOM_TYPE_COLORS.map(preset => preset[theme])].map(color => color.toUpperCase());
+		return colors.filter((color, index) => colors.indexOf(color) === index);
 	}
 
 	// Color of the icon drawn on a swatch, as it would be drawn in the app

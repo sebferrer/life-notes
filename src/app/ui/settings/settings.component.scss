@@ -235,7 +235,19 @@ textarea {
         align-items: center;
         gap: 0.35rem;
         min-width: 0;
+        padding: 0;
+        border: none;
+        border-radius: 12px;
+        background: none;
+        font: inherit;
+        color: inherit;
         cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+
+        &:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 1px;
+        }
 
         .swatch-circle {
             position: relative;
@@ -250,19 +262,6 @@ textarea {
             img {
                 width: 1.3rem;
                 height: 1.3rem;
-            }
-
-            // Native color picker, hidden but still opened by the label
-            input[type="color"] {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                opacity: 0;
-                border: none;
-                padding: 0;
-                cursor: pointer;
             }
         }
 
