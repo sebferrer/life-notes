@@ -14,7 +14,8 @@ const config: CapacitorConfig = {
     },
     plugins: {
         SplashScreen: {
-            launchShowDuration: 3000,
+            // Hidden by the app once the timeline is drawn, at the latest after 3 s (see GlobalService.hideSplashScreen)
+            launchAutoHide: false,
             backgroundColor: "#ffffff"
         }
     }

@@ -367,29 +367,21 @@ export class MonthlyReportComponent implements OnInit, OnDestroy {
 	}
 
 	public updateCalendar(month: number, year: number): void {
-		this.daysService.getMonthDaysOverviews(month, year).subscribe(
-			days => {
-				const previousMonth = month - 1 === 0 ? 12 : month - 1;
-				const previousYear = previousMonth === 12 ? year - 1 : year;
-				this.daysService.getMonthDaysOverviews(previousMonth, previousYear).subscribe(
-					previousDays => {
-						this.overviews = new Array<DayOverviewViewModel>();
-						days.forEach(day => {
-							this.overviews.push(new DayOverviewViewModel(day));
-						});
-						this.previousOverviews = new Array<DayOverviewViewModel>();
-						previousDays.forEach(day => {
-							this.previousOverviews.push(new DayOverviewViewModel(day));
-						});
+		this.daysService.getMonthAndPreviousDaysOverviews(month, year).subscribe(({ days, previousDays }) => {
+			// A faster tap on the arrows asked for another month meanwhile
+			if (month !== this.month || year !== this.year) {
+				return;
+			}
+			this.overviews = days.map(day => new DayOverviewViewModel(day));
+			this.previousOverviews = previousDays.map(day => new DayOverviewViewModel(day));
 
-						// Symptoms are filtered on this month's data, so load them once the overviews are known
-						this.loadSymptoms();
-						this.overviews$.next(this.overviews);
-						this.previousOverviews$.next(this.previousOverviews);
-						this.updateCharts();
-						this.calculateStats();
-					});
-			});
+			// Symptoms are filtered on this month's data, so load them once the overviews are known
+			this.loadSymptoms();
+			this.overviews$.next(this.overviews);
+			this.previousOverviews$.next(this.previousOverviews);
+			this.updateCharts();
+			this.calculateStats();
+		});
 	}
 
 	public previous(): void {

@@ -43,19 +43,41 @@ export class DaysService {
 		);
 	}
 
-	public getMonthDaysOverviews(month: number, year: number): Observable<IDayOverview[]> {
+	// The days stored whose date starts with one of these prefixes ('2026-10-', '2026-'), from the first to the last.
+	// The id of a day is its date (YYYY-MM-DD): only these days are read, not the whole history.
+	private getStoredDaysOverviews(firstPrefix: string, lastPrefix: string): Observable<IDayOverview[]> {
 		return this.dbContext.asArrayObservable<IDayOverview>(
-			this.dbContext.daysCollection.allDocs({ include_docs: true, descending: true })
-		).pipe(
+			this.dbContext.daysCollection.allDocs({ include_docs: true, startkey: firstPrefix, endkey: lastPrefix + '\ufff0' })
+		);
+	}
+
+	private monthPrefix(month: number, year: number): string {
+		return year + '-' + String(month).padStart(2, '0') + '-';
+	}
+
+	public getMonthDaysOverviews(month: number, year: number): Observable<IDayOverview[]> {
+		const prefix = this.monthPrefix(month, year);
+		return this.getStoredDaysOverviews(prefix, prefix).pipe(
 			map(days => this.getFilledMonthDays(days, month, year))
+		);
+	}
+
+	// The days of the month and of the previous one (the sleep of the night before the 1st), read at once
+	public getMonthAndPreviousDaysOverviews(month: number, year: number):
+		Observable<{ days: IDayOverview[], previousDays: IDayOverview[] }> {
+		const previousMonth = month === 1 ? 12 : month - 1;
+		const previousYear = month === 1 ? year - 1 : year;
+		return this.getStoredDaysOverviews(this.monthPrefix(previousMonth, previousYear), this.monthPrefix(month, year)).pipe(
+			map(days => ({
+				days: this.getFilledMonthDays(days, month, year),
+				previousDays: this.getFilledMonthDays(days, previousMonth, previousYear)
+			}))
 		);
 	}
 
 	// The days of each month of the year (index 0 for January), the days without data included
 	public getYearDaysOverviews(year: number): Observable<IDayOverview[][]> {
-		return this.dbContext.asArrayObservable<IDayOverview>(
-			this.dbContext.daysCollection.allDocs({ include_docs: true, descending: true })
-		).pipe(
+		return this.getStoredDaysOverviews(year + '-', year + '-').pipe(
 			map(days => {
 				const yearDays = days.filter(d => d.detailedDate.year === year);
 				return Array.from({ length: 12 }, (_, i) => this.getFilledMonthDays(yearDays, i + 1, year));

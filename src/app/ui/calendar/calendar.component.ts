@@ -82,6 +82,8 @@ export class CalendarComponent implements OnInit {
 		this.month = detailedDate.month;
 		this.year = detailedDate.year;
 		this.today = getDetailedDate(moment().format('YYYY-MM-DD'));
+		// The symptoms are loaded again with each month: their charts follow (subscribed once, before the template)
+		this.symptoms$.subscribe(symptoms => this.updateSymptomCharts(symptoms));
 		this.updateCalendar(this.today.month, this.today.year);
 		this.symptomMap = this.globalService.symptomMap;
 	}
@@ -150,15 +152,7 @@ export class CalendarComponent implements OnInit {
 			overview.symptomOverviews.forEach(symptom => this.symptomKeysWithEntry.add(symptom.key));
 			overview.loggedSymptomKeys.forEach(key => this.symptomKeysWithEntry.add(key));
 		});
-		this.symptoms$.subscribe(symptoms => {
-			symptoms.forEach(symptom => {
-				this.pieCharts.set(symptom.key, new CalendarPieChartViewModel('doughnut', symptom.key,
-					this.globalService.getPainColors(), !!symptom.invertedScale));
-				this.pieCharts.get(symptom.key).update(this.overviews, this.globalService.painScale);
-				this.intensitySummaries.set(symptom.key, getIntensitySummary(this.pieCharts.get(symptom.key),
-					this.overviews, symptom.key, !!symptom.invertedScale, this.globalService.painScale));
-			});
-		});
+		this.updateSymptomCharts(this.symptoms$.value);
 		this.bedTimeChart.timeFormat = this.globalService.timeFormat;
 		this.bedTimeChart.update(this.overviews);
 		this.wakeUpChart.timeFormat = this.globalService.timeFormat;
@@ -166,30 +160,33 @@ export class CalendarComponent implements OnInit {
 		this.sleepChart.update(this.overviews, this.previousOverviews);
 	}
 
+	private updateSymptomCharts(symptoms: ISymptom[]): void {
+		// null: a target symptom which no longer exists (see organizeSymptoms)
+		symptoms.filter(symptom => symptom != null).forEach(symptom => {
+			this.pieCharts.set(symptom.key, new CalendarPieChartViewModel('doughnut', symptom.key,
+				this.globalService.getPainColors(), !!symptom.invertedScale));
+			this.pieCharts.get(symptom.key).update(this.overviews, this.globalService.painScale);
+			this.intensitySummaries.set(symptom.key, getIntensitySummary(this.pieCharts.get(symptom.key),
+				this.overviews, symptom.key, !!symptom.invertedScale, this.globalService.painScale));
+		});
+	}
+
 	public updateCalendar(month: number, year: number): void {
 		this.weekDays = this.globalService.calendarStartOnSunday ? [7, 1, 2, 3, 4, 5, 6] : [1, 2, 3, 4, 5, 6, 7];
 		this.loadSymptoms();
-		this.daysService.getMonthDaysOverviews(month, year).subscribe(
-			days => {
-				const previousMonth = month - 1 === 0 ? 12 : month - 1;
-				const previousYear = previousMonth === 12 ? year - 1 : year;
-				this.daysService.getMonthDaysOverviews(previousMonth, previousYear).subscribe(
-					previousDays => {
-						this.overviews = new Array<DayOverviewViewModel>();
-						days.forEach(day => {
-							this.overviews.push(new DayOverviewViewModel(day));
-						});
-						this.previousOverviews = new Array<DayOverviewViewModel>();
-						previousDays.forEach(day => {
-							this.previousOverviews.push(new DayOverviewViewModel(day));
-						});
+		this.daysService.getMonthAndPreviousDaysOverviews(month, year).subscribe(({ days, previousDays }) => {
+			// A faster tap on the arrows asked for another month meanwhile
+			if (month !== this.month || year !== this.year) {
+				return;
+			}
+			this.overviews = days.map(day => new DayOverviewViewModel(day));
+			this.previousOverviews = previousDays.map(day => new DayOverviewViewModel(day));
 
-						this.overviews$.next(this.overviews);
-						this.previousOverviews$.next(this.previousOverviews);
-						this.calculateEmptySlots();
-						this.updateCharts();
-					});
-			});
+			this.overviews$.next(this.overviews);
+			this.previousOverviews$.next(this.previousOverviews);
+			this.calculateEmptySlots();
+			this.updateCharts();
+		});
 	}
 
 	public calculateEmptySlots(): void {

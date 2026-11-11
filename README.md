@@ -64,10 +64,14 @@ See [tests/README.md](tests/README.md).
 ### Build and run on Android
 
 ```bash
-ionic cordova platform add android
-ionic cordova run android
-ionic cordova build android --release
+npm run build:android
+npx cap open android
 ```
+
+`build:android` makes the production build of the web app (`www`) and copies it into the Android project, then
+Android Studio builds and runs the APK. The APK embeds that copy: without this step, it ships the last one synced.
+`npm run build` is a development build (templates compiled at runtime, Angular in development mode), several times
+slower on a phone: it is for the tests, never for the APK.
 
 ## Contributing
 

@@ -70,6 +70,8 @@ test.describe('Settings', () => {
 			const code = sheet.locator('.cp-hex-input');
 			// Drags from the middle of an element to a point given as fractions of its size
 			const drag = async (selector: string, x: number, y: number) => {
+				// Measured once it stands still: the sheet slides up when opened (a trial click only waits for that)
+				await sheet.locator(selector).click({ trial: true });
 				const box = await sheet.locator(selector).boundingBox();
 				await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
 				await page.mouse.down();

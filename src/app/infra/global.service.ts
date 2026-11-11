@@ -7,6 +7,7 @@ import { SettingsService } from './settings.service';
 import * as ChartJs from 'chart.js';
 import { Capacitor } from '@capacitor/core';
 import { ScreenOrientation } from '@capacitor/screen-orientation';
+import { SplashScreen } from '@capacitor/splash-screen';
 import {
 	CUSTOMIZABLE_EVENT_TYPES, IEventColors, IEventPalettes, completeEventPalettes, getDefaultEventPalettes,
 	getEventColorVariables
@@ -209,6 +210,19 @@ export class GlobalService {
 	public set landscapeMode(value: boolean) {
 		this._landscapeMode = !!value;
 		this.updateOrientation();
+	}
+
+	// The splash screen of Android stays until the first page is drawn (launchAutoHide off in capacitor.config.ts):
+	// hidden by the timeline once its days are shown, by the app after SPLASH_SCREEN_MAX_DURATION whatever happens
+	private splashScreenHidden = false;
+	public readonly SPLASH_SCREEN_MAX_DURATION = 3000;
+
+	public hideSplashScreen(): void {
+		if (this.splashScreenHidden || !Capacitor.isNativePlatform()) {
+			return;
+		}
+		this.splashScreenHidden = true;
+		SplashScreen.hide().catch(error => console.error('Splash screen hide failed', error));
 	}
 
 	private updateOrientation(): void {

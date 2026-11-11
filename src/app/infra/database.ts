@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { from, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Collection } from './collection';
@@ -7,14 +7,25 @@ import { Collection } from './collection';
 	providedIn: 'root'
 })
 export class DbContext {
-	public daysCollection = new Collection('days');
-	public symptomsCollection = new Collection('symptoms');
-	public medsCollection = new Collection('meds');
-	public logsCollection = new Collection('logs');
-	public sportsCollection = new Collection('sports');
-	public mealsCollection = new Collection('meals');
-	public customTypesCollection = new Collection('customTypes');
-	public settingsCollection = new Collection('settings');
+	public readonly daysCollection: Collection;
+	public readonly symptomsCollection: Collection;
+	public readonly medsCollection: Collection;
+	public readonly logsCollection: Collection;
+	public readonly sportsCollection: Collection;
+	public readonly mealsCollection: Collection;
+	public readonly customTypesCollection: Collection;
+	public readonly settingsCollection: Collection;
+
+	constructor(zone: NgZone) {
+		this.daysCollection = new Collection('days', zone);
+		this.symptomsCollection = new Collection('symptoms', zone);
+		this.medsCollection = new Collection('meds', zone);
+		this.logsCollection = new Collection('logs', zone);
+		this.sportsCollection = new Collection('sports', zone);
+		this.mealsCollection = new Collection('meals', zone);
+		this.customTypesCollection = new Collection('customTypes', zone);
+		this.settingsCollection = new Collection('settings', zone);
+	}
 
 	public asArrayObservable<T>(dbSet: Promise<{ rows: { doc: T }[] }>): Observable<T[]> {
 		return from(dbSet).pipe(

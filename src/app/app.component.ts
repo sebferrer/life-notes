@@ -54,6 +54,8 @@ export class AppComponent implements OnInit {
 			this.activeSection = this.getSection(event.urlAfterRedirects);
 		});
 		// this.updateSymptoms();
+		// The timeline hides the splash screen once drawn: this is in case it isn't (an error, another first page)
+		setTimeout(() => this.globalService.hideSplashScreen(), this.globalService.SPLASH_SCREEN_MAX_DURATION);
 		this.customTypesService.loadCustomTypes().subscribe();
 		this.settingsService.initSettings().subscribe(settings => {
 			this.initSettings(settings);

@@ -69,6 +69,8 @@ export class TimelineComponent extends ATimeComponent implements OnInit {
 				this.nbDays += this.BATCH_SIZE;
 				this.daysContents$.next(this.daysContents);
 				this.isLoading = false;
+				// The first page of the app is drawn: the splash screen can go (only once)
+				this.globalService.hideSplashScreen();
 			}
 		);
 		this.globalService.timeFormat$.subscribe(() => {
