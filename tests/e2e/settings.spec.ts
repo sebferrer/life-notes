@@ -10,7 +10,7 @@ test.describe('Settings', () => {
 		await app.goToSettings('Apparence');
 		await app.setToggle('Mode sombre', true);
 		await expect(page.locator('body')).toHaveClass(/dark-theme/);
-		expect(await app.cssVariable('--color-event-symptomLog')).toBe('#FF7A90');
+		expect(await app.cssVariable('--color-event-symptomLog')).toBe('#C1465B');
 
 		await app.reload();
 		await expect(page.locator('body')).toHaveClass(/dark-theme/);
@@ -48,7 +48,7 @@ test.describe('Settings', () => {
 		await app.setToggle('Mode sombre', true);
 		await expect(card).toHaveCount(1);
 		await expect(card.locator('.palette-card-title')).toHaveText('Mode sombre');
-		expect(await app.cssVariable('--color-event-symptomLog')).toBe('#FF7A90');
+		expect(await app.cssVariable('--color-event-symptomLog')).toBe('#C1465B');
 		// Typed in lowercase, saved in uppercase as the default colors
 		await setSymptomColor('#abcdef');
 		await expect.poll(() => app.cssVariable('--color-event-symptomLog')).toBe('#ABCDEF');
@@ -61,6 +61,34 @@ test.describe('Settings', () => {
 		// Resetting the light palette keeps the dark one
 		await app.setToggle('Mode sombre', true);
 		expect(await app.cssVariable('--color-event-symptomLog')).toBe('#ABCDEF');
+	});
+
+	test('every built-in type has its color, the meals included', async ({ app, page }) => {
+		const card = page.locator('.palette-card');
+		const sheet = page.locator('.color-picker-sheet');
+		await app.goToSettings('Apparence');
+		// In the order of the manage menu, each label shown whole
+		await expect(card.locator('.swatch-label')).toHaveText(['Symptômes', 'Repas', 'Médicaments', 'Sport', 'Notes']);
+		for (const label of await card.locator('.swatch-label').all()) {
+			expect(await label.evaluate(element => element.scrollWidth <= element.clientWidth)).toBe(true);
+		}
+
+		const meals = card.locator('.palette-swatch').nth(1);
+		await meals.click();
+		await expect(sheet.locator('.cp-hex-input')).toHaveValue('31AE1D');
+		await sheet.locator('.cp-hex-input').fill('#123456');
+		await sheet.locator('.confirm-button').click();
+		await expect.poll(() => app.cssVariable('--color-event-meal')).toBe('#123456');
+		expect(await app.cssVariable('--color-event-meal-on')).toBe('#FFFFFF');
+
+		// Muted color of the dark theme, drawn with white
+		await app.setToggle('Mode sombre', true);
+		expect(await app.cssVariable('--color-event-meal')).toBe('#3F7E39');
+		expect(await app.cssVariable('--color-event-meal-on')).toBe('#FFFFFF');
+		await app.reload();
+		await app.goToSettings('Apparence');
+		await app.setToggle('Mode sombre', false);
+		expect(await app.cssVariable('--color-event-meal')).toBe('#123456');
 	});
 
 	test('the color picker starts from the current color, keeps it at hand and saves only when applied',
@@ -105,10 +133,11 @@ test.describe('Settings', () => {
 			await expect(sheet).toBeHidden();
 			expect(await app.cssVariable('--color-event-symptomLog')).toBe('#FF3154');
 
-			// A suggestion, applied: the picker then starts from it
+			// A suggestion (the default colors of the other types, in the order of the manage menu), applied: the picker
+			// then starts from it
 			await card.locator('.palette-swatch').first().click();
 			await expect(code).toHaveValue('FF3154');
-			await sheet.locator('.cp-swatch').nth(1).click();
+			await sheet.locator('.cp-swatch').nth(2).click();
 			await expect(code).toHaveValue('0096BF');
 			await sheet.locator('.confirm-button').click();
 			await expect.poll(() => app.cssVariable('--color-event-symptomLog')).toBe('#0096BF');
@@ -139,8 +168,21 @@ test.describe('Settings', () => {
 		const color = () => page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--color-pain-5').trim());
 		const before = await color();
 		await app.goToSettings('Apparence');
-		await page.locator('.pain-palette-preview').first().click();
+		// The default palette first, chosen
+		const palettes = page.locator('mat-radio-button:has(.pain-palette-preview)');
+		await expect(palettes.first()).toHaveClass(/mat-radio-checked/);
+		await palettes.nth(1).click();
 		await expect.poll(color).not.toBe(before);
+	});
+
+	test('the intensity colors are muted in the dark theme, and previewed as such', async ({ app, page }) => {
+		const color = () => page.evaluate(() => getComputedStyle(document.body).getPropertyValue('--color-pain-5').trim());
+		await app.goToSettings('Apparence');
+		expect(await color()).toBe('#B22222');
+		await app.setToggle('Mode sombre', true);
+		expect(await color()).toBe('#892E35');
+		await expect(page.locator('.pain-palette-preview').first().locator('span').last())
+			.toHaveCSS('background-color', 'rgb(137, 46, 53)');
 	});
 
 	test('the landscape mode is not offered for now', async ({ app }) => {

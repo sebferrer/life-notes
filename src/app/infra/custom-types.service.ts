@@ -5,7 +5,7 @@ import { DbContext } from './database';
 import { DaysService } from './days.service';
 import { GlobalService } from './global.service';
 import { IDay } from '../models';
-import { ICustomEntry, ICustomEntryHistory, ICustomType } from '../models/custom-type.model';
+import { ICustomEntry, ICustomEntryHistory, ICustomType, completeCustomTypeColors } from '../models/custom-type.model';
 
 // Event types created by the user (definitions), and their entries stored in the days
 @Injectable()
@@ -21,7 +21,7 @@ export class CustomTypesService {
 		return this.dbContext.asArrayObservable<ICustomType>(
 			this.dbContext.customTypesCollection.allDocs({ include_docs: true })
 		).pipe(
-			map(types => types.sort((a, b) => a.created - b.created))
+			map(types => types.map(completeCustomTypeColors).sort((a, b) => a.created - b.created))
 		);
 	}
 

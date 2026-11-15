@@ -20,7 +20,7 @@ const LANDSCAPE_MODE_ENABLED = false;
 
 // Colors of the entries whose type no longer exists
 const UNKNOWN_CUSTOM_TYPE: ICustomType = {
-	key: '', label: '', icon: 'label', colors: { light: '#78909C', dark: '#B0BEC5' }, quantity: false, unit: '', created: 0
+	key: '', label: '', icon: 'label', colors: { light: '#78909C', dark: '#65747B' }, quantity: false, unit: '', created: 0
 };
 
 @Injectable({ providedIn: 'root' })
@@ -112,7 +112,8 @@ export class GlobalService {
 		this._calendarBlockView = value;
 	}
 
-	private _painPalette: string = '2';
+	public readonly DEFAULT_PAIN_PALETTE = '2';
+	private _painPalette: string = this.DEFAULT_PAIN_PALETTE;
 	public get painPalette(): string { return this._painPalette; }
 	public set painPalette(value: string) {
 		this._painPalette = value;
@@ -124,8 +125,18 @@ export class GlobalService {
 		'2': ['#8AF59C', '#F1F078', '#FFD940', '#FFB347', '#FF5C5C', '#B22222']
 	};
 
-	public getPainColors(): string[] {
-		return this.PALETTES[this.painPalette] || this.PALETTES['2'];
+	// Dark theme: muted tones of the same hues, darker for the highest levels, drawn with white (--text-on-pain):
+	// bright colors glare on dark surfaces
+	public readonly DARK_PALETTES = {
+		'1': ['#468037', '#727820', '#8F7114', '#9F5C1A', '#AD2B3D', '#88273F'],
+		'2': ['#3F804A', '#747931', '#8C6F21', '#9B5B29', '#A83935', '#892E35']
+	};
+
+	// Colors of the theme displayed by default. The monthly report, always drawn in the light theme, asks for the
+	// light ones.
+	public getPainColors(darkTheme: boolean = this._darkMode): string[] {
+		const palettes = darkTheme ? this.DARK_PALETTES : this.PALETTES;
+		return palettes[this.painPalette] || palettes[this.DEFAULT_PAIN_PALETTE];
 	}
 
 	public getPainColor(pain: number): string {
@@ -315,14 +326,13 @@ export class GlobalService {
 		ChartJs.defaults.global.elements.arc.borderColor = this._darkMode ? 'transparent' : '#FFFFFF';
 	}
 
+	// The colors of both themes: each theme picks its own ones as --color-pain-* (see styles.scss), so that the
+	// content drawn in the light theme inside the dark one (monthly report, PDF) keeps the light ones
 	private updateCssVariables(): void {
-		const colors = this.getPainColors();
-		document.documentElement.style.setProperty('--color-pain-0', colors[0]);
-		document.documentElement.style.setProperty('--color-pain-1', colors[1]);
-		document.documentElement.style.setProperty('--color-pain-2', colors[2]);
-		document.documentElement.style.setProperty('--color-pain-3', colors[3]);
-		document.documentElement.style.setProperty('--color-pain-4', colors[4]);
-		document.documentElement.style.setProperty('--color-pain-5', colors[5]);
+		const style = document.documentElement.style;
+		const colors: { [theme: string]: string[] } = { light: this.getPainColors(false), dark: this.getPainColors(true) };
+		Object.keys(colors).forEach(theme => colors[theme].forEach((color, level) =>
+			style.setProperty(`--color-pain-${theme}-${level}`, color)));
 	}
 
 	constructor(

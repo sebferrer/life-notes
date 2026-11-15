@@ -348,8 +348,9 @@ export class MonthlyReportComponent implements OnInit, OnDestroy {
 	public updateCharts(): void {
 		this.symptoms$.subscribe(symptoms => {
 			symptoms.forEach(symptom => {
+				// The report (and its PDF) is drawn in the light theme
 				this.pieCharts.set(symptom.key, new CalendarPieChartViewModel('doughnut', symptom.key,
-					this.globalService.getPainColors(), !!symptom.invertedScale));
+					this.globalService.getPainColors(false), !!symptom.invertedScale));
 				this.pieCharts.get(symptom.key).update(this.overviews, this.globalService.painScale);
 			});
 		})

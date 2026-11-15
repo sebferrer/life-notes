@@ -63,6 +63,10 @@
                 @each $panel, $color in $panel-colors {
                     &.#{$panel} {
                         --panel-color: #{$color};
+
+                        :host-context(.dark-theme) & {
+                            --panel-color: #{map-get($panel-dark-colors, $panel)};
+                        }
                     }
                 }
             }
@@ -222,14 +226,17 @@ textarea {
         }
     }
 
+    // Five types on one line: each one as wide as its label, so that the long ones ("Médicaments") aren't cut
     .palette-swatches {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        display: flex;
+        justify-content: space-between;
         gap: 0.25rem;
-        padding-top: 0.25rem;
+        // Centered in the card, whose right padding is smaller (reset button)
+        padding: 0.25rem 0.25rem 0 0;
     }
 
     .palette-swatch {
+        flex: 0 1 auto;
         display: flex;
         flex-direction: column;
         align-items: center;

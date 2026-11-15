@@ -103,8 +103,8 @@
         .day-number {
             font-size: 0.95rem;
             font-weight: 600;
-            // The pain colors are light in both themes
-            color: rgba(0, 0, 0, 0.75);
+            // Dark on the light pain colors, white on the muted ones of the dark theme
+            color: var(--text-on-pain);
         }
 
         // Darkest pain color
@@ -138,7 +138,7 @@
                 height: 2.25rem;
                 border-radius: 11px;
                 color: #ffffff;
-                background-color: #ef6c57;
+                background-color: var(--card-icon-intensities);
 
                 mat-icon {
                     font-size: 1.25rem;
@@ -358,8 +358,12 @@
 
     .day-label {
         margin-top: 0.3rem;
-        // The pain colors are light in both themes (the dark theme came later)
+        // Dark on the light pain colors, white on the muted ones of the dark theme (which came later)
         color: rgba(0, 0, 0, 0.87);
+
+        :host-context(.dark-theme) & {
+            color: var(--text-on-pain);
+        }
         width: 3vh;
         height: 3vh;
         width: 100%;

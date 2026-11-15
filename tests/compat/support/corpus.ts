@@ -286,15 +286,15 @@ export const STRESS = (() => {
 
 export const CUSTOM_TYPES = [
 	{
-		key: 'ctwater01', label: 'Eau', icon: 'water_drop', colors: { light: '#00897B', dark: '#4DB6AC' },
+		key: 'ctwater01', label: 'Eau', icon: 'water_drop', colors: { light: '#00897B', dark: '#337D75' },
 		quantity: true, unit: 'L', created: 1790000000000
 	},
 	{
-		key: 'ctcafe002', label: 'Café ☕ "serré"', icon: 'local_cafe', colors: { light: '#6D4C41', dark: '#BCAAA4' },
+		key: 'ctcafe002', label: 'Café ☕ "serré"', icon: 'local_cafe', colors: { light: '#6D4C41', dark: '#8A6A5C' },
 		quantity: true, unit: 'tasses', created: 1790000001000
 	},
 	{
-		key: 'ctmood003', label: 'Méditation', icon: 'self_improvement', colors: { light: '#8E24AA', dark: '#CE93D8' },
+		key: 'ctmood003', label: 'Méditation', icon: 'self_improvement', colors: { light: '#8E24AA', dark: '#965BA1' },
 		quantity: false, unit: '', created: 1790000002000
 	}
 ];
@@ -353,8 +353,8 @@ export const RICH_V2 = (() => {
 			timePicker: 'material', _id: 'settings', dailyReminder: true, lastDailyReminder: 1794000000000,
 			darkMode: true, landscapeMode: false, uiVersion: 'v2', sleepChartMode: 'curves', newUiPopupSeen: true,
 			eventColors: {
-				light: { symptomLog: '#AA0000', med: '#0096BF', log: '#98A2AE', sport: '#FF8C00' },
-				dark: { symptomLog: '#FF7A90', med: '#00FF00', log: '#AAB4C0', sport: '#FFAD5C' }
+				light: { symptomLog: '#AA0000', meal: '#31AE1D', med: '#0096BF', sport: '#FF8C00', log: '#98A2AE' },
+				dark: { symptomLog: '#C1465B', meal: '#3F7E39', med: '#00FF00', sport: '#9F6328', log: '#657284' }
 			}
 		},
 		customTypes: CUSTOM_TYPES

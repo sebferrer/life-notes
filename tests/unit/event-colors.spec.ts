@@ -2,7 +2,8 @@ import { test, expect } from '@playwright/test';
 import { readFileSync } from 'fs';
 import {
 	CUSTOMIZABLE_EVENT_TYPES, DEFAULT_EVENT_PALETTES, completeEventPalettes, getContrast, getDefaultEventPalettes,
-	getEventBadgeTextColor, getEventOnColor, getEventSoftColor, getEventSoftTextColor, getEventTonalIconColor
+	getEventBadgeTextColor, getEventOnColor, getEventSoftColor, getEventSoftTextColor, getEventTonalIconColor,
+	getLuminance
 } from '../../src/app/models/event-colors.model';
 
 const LIGHT_SURFACE = '#FFFFFF';
@@ -65,6 +66,22 @@ test.describe('Event colors', () => {
 			dark: { symptomLog: '#e5485f', med: '#123456', log: '#6B7480', sport: '#E67E22' }
 		});
 		expect(legacy.dark).toEqual({ ...DEFAULT_EVENT_PALETTES.dark, med: '#123456' });
+		// The pastel dark defaults (too bright) too, the meals included
+		const pastel = completeEventPalettes({
+			light: { ...DEFAULT_EVENT_PALETTES.light },
+			dark: { symptomLog: '#FF7A90', meal: '#7ED492', med: '#5CC8F2', log: '#AAB4C0', sport: '#ABCDEF' }
+		});
+		expect(pastel.dark).toEqual({ ...DEFAULT_EVENT_PALETTES.dark, sport: '#ABCDEF' });
+	});
+
+	test('the default colors of the dark theme are muted: drawn with white, visible on the dark surfaces', () => {
+		for (const type of CUSTOMIZABLE_EVENT_TYPES) {
+			const color = DEFAULT_EVENT_PALETTES.dark[type];
+			expect(getContrast(color, '#FFFFFF'), `${type} white text`).toBeGreaterThanOrEqual(4.5);
+			expect(getContrast(color, DARK_SURFACE), `${type} on a card`).toBeGreaterThanOrEqual(3);
+			// Darker than the light theme ones: no glaring large surface
+			expect(getLuminance(color), type).toBeLessThan(getLuminance(DEFAULT_EVENT_PALETTES.light[type]));
+		}
 	});
 
 	test('the contrast ratio follows WCAG', () => {
@@ -72,13 +89,14 @@ test.describe('Event colors', () => {
 		expect(getContrast('#777777', '#777777')).toBeCloseTo(1, 5);
 	});
 
-	test('texts and icons drawn on the default colors keep the theme convention', () => {
+	test('texts and icons drawn on the default colors are white in both themes', () => {
 		for (const type of CUSTOMIZABLE_EVENT_TYPES) {
 			expect(getEventOnColor(DEFAULT_EVENT_PALETTES.light[type], false), type).toBe('#FFFFFF');
-			expect(getEventOnColor(DEFAULT_EVENT_PALETTES.dark[type], true), type).toBe('#1A1A1A');
+			expect(getEventOnColor(DEFAULT_EVENT_PALETTES.dark[type], true), type).toBe('#FFFFFF');
 		}
 		// Unless the chosen color would make them unreadable
 		expect(getEventOnColor('#FFEE58', false)).toBe('#1A1A1A');
+		expect(getEventOnColor('#FF7A90', true)).toBe('#1A1A1A');
 		expect(getEventOnColor('#1A237E', true)).toBe('#FFFFFF');
 	});
 

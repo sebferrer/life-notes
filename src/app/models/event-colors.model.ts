@@ -1,10 +1,12 @@
-export const CUSTOMIZABLE_EVENT_TYPES = ['symptomLog', 'med', 'log', 'sport'];
+// Built-in event types, in the order of the manage menu (see BUILT_IN_EVENT_TYPES)
+export const CUSTOMIZABLE_EVENT_TYPES = ['symptomLog', 'meal', 'med', 'sport', 'log'];
 
 export interface IEventColors {
 	symptomLog: string;
+	meal: string;
 	med: string;
-	log: string;
 	sport: string;
+	log: string;
 }
 
 // One palette per theme, each one can be customized and reset independently
@@ -17,28 +19,32 @@ export interface IEventPalettes {
 export const DEFAULT_EVENT_PALETTES: IEventPalettes = {
 	light: {
 		symptomLog: '#FF3154',
+		meal: '#31AE1D',
 		med: '#0096BF',
-		log: '#98A2AE',
-		sport: '#FF8C00'
+		sport: '#FF8C00',
+		log: '#98A2AE'
 	},
-	// Lighter and softer tones: saturated colors look harsh on dark surfaces
+	// Muted mid-dark tones, all of the same luminance, with white texts and icons: bright or saturated colors glare
+	// on the large surfaces of the dark theme (tiles of the manage menu, chips, chart bars)
 	dark: {
-		symptomLog: '#FF7A90',
-		med: '#5CC8F2',
-		log: '#AAB4C0',
-		sport: '#FFAD5C'
+		symptomLog: '#C1465B',
+		meal: '#3F7E39',
+		med: '#2C7998',
+		sport: '#9F6328',
+		log: '#657284'
 	}
 };
 
-// Former defaults (dark: too close to the light palette). Users who kept them get the new defaults,
-// customized colors are left untouched.
-const LEGACY_DEFAULTS: { light: Partial<IEventColors>, dark: Partial<IEventColors> } = {
+// Former defaults. Users who kept them get the new defaults, customized colors are left untouched.
+const LEGACY_DEFAULTS: { light: { [type: string]: string[] }, dark: { [type: string]: string[] } } = {
 	light: {},
 	dark: {
-		symptomLog: '#E5485F',
-		med: '#1A8FC4',
-		log: '#6B7480',
-		sport: '#E67E22'
+		// First ones: too close to the light palette. Then pastel ones: too bright on dark surfaces.
+		symptomLog: ['#E5485F', '#FF7A90'],
+		meal: ['#7ED492'],
+		med: ['#1A8FC4', '#5CC8F2'],
+		sport: ['#E67E22', '#FFAD5C'],
+		log: ['#6B7480', '#AAB4C0']
 	}
 };
 
@@ -61,7 +67,7 @@ export function completeEventPalettes(palettes: IEventPalettes): IEventPalettes 
 	};
 	['light', 'dark'].forEach(theme => {
 		CUSTOMIZABLE_EVENT_TYPES.forEach(type => {
-			if ((completed[theme][type] || '').toUpperCase() === LEGACY_DEFAULTS[theme][type]) {
+			if ((LEGACY_DEFAULTS[theme][type] || []).includes((completed[theme][type] || '').toUpperCase())) {
 				completed[theme][type] = defaults[theme][type];
 			}
 		});
@@ -110,8 +116,8 @@ export function getLuminance(color: string): number {
 	return 0.2126 * r + 0.7152 * g + 0.0722 * b;
 }
 
-// Texts and icons drawn on an event color: white in the light theme, dark on the pastel colors
-// of the dark theme, unless the chosen color would make them unreadable
+// Texts and icons drawn on an event color: white on the default colors of both themes, dark on the light colors
+// (e.g. a pastel chosen for the dark theme), so that they stay readable
 export function getEventOnColor(color: string, darkTheme: boolean): string {
 	const luminance = getLuminance(color);
 	if (darkTheme) {
@@ -157,7 +163,7 @@ function getReadableShade(color: string, background: string, darkTheme: boolean,
 // color rather than a neutral grey. Muted is for secondary texts (e.g. details).
 // Weights are the part of the event color, see styles.scss.
 export function getEventSoftTextColor(color: string, darkTheme: boolean, muted: boolean): string {
-	const weight = darkTheme ? (muted ? 0.7 : 0.3) : (muted ? 0.55 : 0.35);
+	const weight = darkTheme ? (muted ? 0.65 : 0.3) : (muted ? 0.55 : 0.35);
 	return getReadableShade(color, getEventSoftColor(color, darkTheme), darkTheme, MIN_TEXT_CONTRAST, weight);
 }
 

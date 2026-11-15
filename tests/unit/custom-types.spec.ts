@@ -1,9 +1,9 @@
 import { test, expect } from '@playwright/test';
 import {
-	BUILT_IN_EVENT_TYPES, CUSTOM_TYPE_COLORS, CUSTOM_TYPE_ICONS, MAX_CUSTOM_TYPES, MAX_EVENT_TYPES, generateCustomTypeKey,
-	getCustomTypeColors
+	BUILT_IN_EVENT_TYPES, CUSTOM_TYPE_COLORS, CUSTOM_TYPE_ICONS, ICustomType, MAX_CUSTOM_TYPES, MAX_EVENT_TYPES,
+	completeCustomTypeColors, generateCustomTypeKey, getCustomTypeColors
 } from '../../src/app/models/custom-type.model';
-import { DEFAULT_EVENT_PALETTES } from '../../src/app/models/event-colors.model';
+import { DEFAULT_EVENT_PALETTES, getContrast, getEventOnColor, getLuminance } from '../../src/app/models/event-colors.model';
 
 const HEX = /^#[0-9A-F]{6}$/;
 
@@ -45,14 +45,32 @@ test.describe('Custom event types', () => {
 		}
 		// At least one per custom type, so that each new type gets its own color
 		expect(CUSTOM_TYPE_COLORS.length).toBeGreaterThanOrEqual(MAX_CUSTOM_TYPES);
+		// Muted in the dark theme, as the default palettes: drawn with white, visible on the dark surfaces
+		for (const preset of CUSTOM_TYPE_COLORS) {
+			expect(getContrast(preset.dark, '#FFFFFF'), preset.dark).toBeGreaterThanOrEqual(4.5);
+			expect(getContrast(preset.dark, '#1E1E1E'), preset.dark).toBeGreaterThanOrEqual(3);
+		}
+	});
+
+	test('types made with a former ready-made color get its new dark variant, the others are kept', () => {
+		const water: ICustomType = {
+			key: 'ctwater', label: 'Eau', icon: 'water_drop', colors: { light: '#00897B', dark: '#4DB6AC' },
+			quantity: true, unit: 'L', created: 1
+		};
+		expect(completeCustomTypeColors(water)).toEqual({ ...water, colors: { light: '#00897B', dark: '#337D75' } });
+		// Chosen dark color, or light color customized: untouched
+		for (const colors of [{ light: '#00897B', dark: '#123456' }, { light: '#123456', dark: '#4DB6AC' }]) {
+			expect(completeCustomTypeColors({ ...water, colors })).toEqual({ ...water, colors });
+		}
 	});
 
 	test('a color chosen in a theme is kept, the other theme gets a matching variant', () => {
 		const fromLight = getCustomTypeColors('#00897b', false);
 		expect(fromLight.light).toBe('#00897B');
 		expect(fromLight.dark).toMatch(HEX);
-		// Lighter in the dark theme
-		expect(channels(fromLight.dark).reduce((a, b) => a + b)).toBeGreaterThan(channels(fromLight.light).reduce((a, b) => a + b));
+		// Dimmer in the dark theme, drawn with white as the default palettes
+		expect(getLuminance(getCustomTypeColors('#FF3154', false).dark)).toBeLessThan(getLuminance('#FF3154'));
+		expect(getEventOnColor(fromLight.dark, true)).toBe('#FFFFFF');
 
 		// The light variant of a dark variant gives the color back (rounding apart)
 		const back = getCustomTypeColors(fromLight.dark, true);

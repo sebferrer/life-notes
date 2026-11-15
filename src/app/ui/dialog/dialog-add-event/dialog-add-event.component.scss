@@ -181,7 +181,7 @@ app-dialog-add-event .bottom-sheet-container {
                 --knob-size: 24px;
             }
 
-            // White on the color of the symptoms (dark text on the pastel one of the dark theme)
+            // Readable text on the color of the symptoms (see getEventOnColor)
             .pain-badge {
                 background-color: var(--event-color);
                 color: var(--event-on-color);

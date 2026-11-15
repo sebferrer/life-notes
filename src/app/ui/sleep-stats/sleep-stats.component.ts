@@ -17,9 +17,10 @@ const COLORS = {
 		bar: '#5C6BC0', barOutside: 'rgba(92, 107, 192, 0.4)', band: 'rgba(76, 175, 80, 0.14)', area: '92, 107, 192',
 		bedTime: '#3949AB', wakeUp: '#F9A825', grid: 'rgba(128, 128, 128, 0.2)', text: '#666'
 	},
+	// Muted tones, as the event colors of the dark theme (the bars are those of the bedtime, goToBed)
 	dark: {
-		bar: '#9FA8DA', barOutside: 'rgba(159, 168, 218, 0.4)', band: 'rgba(129, 199, 132, 0.16)', area: '159, 168, 218',
-		bedTime: '#C5CAE9', wakeUp: '#FFD54F', grid: 'rgba(128, 128, 128, 0.25)', text: '#B0B0B0'
+		bar: '#626DAB', barOutside: 'rgba(98, 109, 171, 0.55)', band: 'rgba(129, 199, 132, 0.16)', area: '98, 109, 171',
+		bedTime: '#828BBF', wakeUp: '#AB8632', grid: 'rgba(128, 128, 128, 0.25)', text: '#B0B0B0'
 	}
 };
 

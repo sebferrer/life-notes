@@ -35,6 +35,22 @@ test.describe('PDF report', () => {
 		await app.setDayIntensity(6);
 	});
 
+	test('in the dark theme, the calendar has muted intensity colors, the report keeps the light ones',
+		async ({ app, page }) => {
+			await app.goToSettings('Apparence');
+			await app.setToggle('Mode sombre', true);
+			await app.goToCalendar();
+			// 6/10: level 3, drawn with white
+			const today = page.locator('.day-cell.today');
+			await expect(today).toHaveCSS('background-color', 'rgb(155, 91, 41)');
+			await expect(today.locator('.day-number')).toHaveCSS('color', 'rgb(255, 255, 255)');
+
+			// Drawn in the light theme, as its PDF
+			await openReport(app, page);
+			await expect(page.locator('.modern-report .day-cell.color-pain-3').first())
+				.toHaveCSS('background-color', 'rgb(255, 179, 71)');
+		});
+
 	test('in V2, each symptom is shown as in the calendar', async ({ app, page }) => {
 		// March 1st, 2026 is a Sunday: 6 days of February before it in a week starting on Monday
 		await app.goToSettings('Apparence');

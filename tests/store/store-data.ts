@@ -317,9 +317,9 @@ export function storeBackup(lang: Lang, options: { customTypes?: boolean } = {})
 			{ key: SYMPTOM_KEYS.back, label: t.symptoms.back, invertedScale: false }
 		].map(symptom => ({ ...symptom, _id: symptom.key })),
 		customTypes: options.customTypes === false ? [] : [
-			customType(CUSTOM_KEYS.water, t.customTypes.water, 'water_drop', { light: '#00897B', dark: '#4DB6AC' }),
-			customType(CUSTOM_KEYS.coffee, t.customTypes.coffee, 'local_cafe', { light: '#6D4C41', dark: '#BCAAA4' }),
-			customType(CUSTOM_KEYS.meditation, t.customTypes.meditation, 'self_improvement', { light: '#8E24AA', dark: '#CE93D8' })
+			customType(CUSTOM_KEYS.water, t.customTypes.water, 'water_drop', { light: '#00897B', dark: '#337D75' }),
+			customType(CUSTOM_KEYS.coffee, t.customTypes.coffee, 'local_cafe', { light: '#6D4C41', dark: '#8A6A5C' }),
+			customType(CUSTOM_KEYS.meditation, t.customTypes.meditation, 'self_improvement', { light: '#8E24AA', dark: '#965BA1' })
 		],
 		settings: {
 			_id: 'settings',
@@ -348,8 +348,8 @@ export function storeBackup(lang: Lang, options: { customTypes?: boolean } = {})
 			uiVersion: 'v2',
 			newUiPopupSeen: true,
 			eventColors: {
-				light: { symptomLog: '#FF3154', med: '#0096BF', log: '#98A2AE', sport: '#FF8C00' },
-				dark: { symptomLog: '#FF7A90', med: '#5CC8F2', log: '#AAB4C0', sport: '#FFAD5C' }
+				light: { symptomLog: '#FF3154', meal: '#31AE1D', med: '#0096BF', sport: '#FF8C00', log: '#98A2AE' },
+				dark: { symptomLog: '#C1465B', meal: '#3F7E39', med: '#2C7998', sport: '#9F6328', log: '#657284' }
 			}
 		}
 	};

@@ -996,8 +996,8 @@
     justify-content: center;
     font-size: u(7);
     font-weight: 600;
-    // The pain colors are light in both themes
-    color: rgba(0, 0, 0, 0.75);
+    // Dark on the light pain colors, white on the muted ones of the dark theme
+    color: var(--text-on-pain);
 
     &.empty {
         background-color: transparent;
@@ -1087,7 +1087,7 @@
     color: #ffffff;
 
     &.intensities {
-        background-color: #ef6c57;
+        background-color: var(--card-icon-intensities);
     }
 
     mat-icon {
@@ -1435,6 +1435,10 @@
     @each $panel, $color in $panel-colors {
         &.#{$panel} {
             background-color: $color;
+
+            :host-context(.dark-theme) & {
+                background-color: map-get($panel-dark-colors, $panel);
+            }
         }
     }
 }

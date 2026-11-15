@@ -64,40 +64,64 @@ export const CUSTOM_TYPE_ICONS = [
 	'smartphone', 'music_note', 'menu_book', 'pets', 'celebration'
 ];
 
-// Ready-made colors, distinct from the built-in types: a saturated one for the light theme and a softer one
-// for the dark theme (as the default palettes)
+// Ready-made colors, distinct from the built-in types: a saturated one for the light theme and a muted, darker one
+// for the dark theme, drawn with white (as the default palettes)
 export const CUSTOM_TYPE_COLORS: { light: string, dark: string }[] = [
-	{ light: '#00897B', dark: '#4DB6AC' },
-	{ light: '#8E24AA', dark: '#CE93D8' },
-	{ light: '#3949AB', dark: '#9FA8DA' },
-	{ light: '#43A047', dark: '#81C784' },
-	{ light: '#D81B60', dark: '#F48FB1' },
-	{ light: '#F4511E', dark: '#FF8A65' },
-	{ light: '#FDD835', dark: '#FFF176' },
-	{ light: '#6D4C41', dark: '#BCAAA4' },
-	{ light: '#00ACC1', dark: '#80DEEA' },
-	{ light: '#546E7A', dark: '#B0BEC5' }
+	{ light: '#00897B', dark: '#337D75' },
+	{ light: '#8E24AA', dark: '#965BA1' },
+	{ light: '#3949AB', dark: '#646CAF' },
+	{ light: '#43A047', dark: '#417E4B' },
+	{ light: '#D81B60', dark: '#B64B7B' },
+	{ light: '#F4511E', dark: '#BA5136' },
+	{ light: '#FDD835', dark: '#807125' },
+	{ light: '#6D4C41', dark: '#8A6A5C' },
+	{ light: '#00ACC1', dark: '#287B88' },
+	{ light: '#546E7A', dark: '#5E7580' }
 ];
 
-// Part of the light color in its dark variant (the rest is white), close to the default palettes
-const DARK_VARIANT_WEIGHT = 0.65;
+// Former dark colors of the ready-made ones (pastel, too bright on dark surfaces), by light color
+const LEGACY_CUSTOM_TYPE_DARK_COLORS: { [light: string]: string } = {
+	'#00897B': '#4DB6AC', '#8E24AA': '#CE93D8', '#3949AB': '#9FA8DA', '#43A047': '#81C784', '#D81B60': '#F48FB1',
+	'#F4511E': '#FF8A65', '#FDD835': '#FFF176', '#6D4C41': '#BCAAA4', '#00ACC1': '#80DEEA', '#546E7A': '#B0BEC5'
+};
 
-// Color chosen in one theme: the other theme gets a matching variant, softer for the dark one
+// Types made with a former ready-made color get its new dark variant, customized colors are left untouched
+export function completeCustomTypeColors(customType: ICustomType): ICustomType {
+	const colors = customType && customType.colors;
+	if (colors == null || typeof colors.light !== 'string' || typeof colors.dark !== 'string') {
+		return customType;
+	}
+	const light = colors.light.toUpperCase();
+	if (LEGACY_CUSTOM_TYPE_DARK_COLORS[light] !== colors.dark.toUpperCase()) {
+		return customType;
+	}
+	const preset = CUSTOM_TYPE_COLORS.find(other => other.light === light);
+	return { ...customType, colors: { ...colors, dark: preset.dark } };
+}
+
+// Dark variant of a color: mixed with a mid grey, so dimmer and less saturated (close to the default palettes)
+const DARK_VARIANT_GREY = '#6A6A6A';
+// Part of the color in its dark variant
+const DARK_VARIANT_WEIGHT = 0.6;
+
+// Color chosen in one theme: the other theme gets a matching variant, muted for the dark one
 export function getCustomTypeColors(color: string, darkTheme: boolean): { light: string, dark: string } {
 	return darkTheme
 		? { light: getLightVariant(color), dark: color.toUpperCase() }
-		: { light: color.toUpperCase(), dark: mixColors(color, '#FFFFFF', DARK_VARIANT_WEIGHT) };
+		: { light: color.toUpperCase(), dark: mixColors(color, DARK_VARIANT_GREY, DARK_VARIANT_WEIGHT) };
 }
 
-// Inverse of the dark variant: removes the white part
+// Inverse of the dark variant: removes the grey part
 function getLightVariant(color: string): string {
 	const match = /^#([0-9a-f]{6})$/i.exec(color);
 	if (match == null) {
 		return color;
 	}
 	const value = parseInt(match[1], 16);
+	// Same value on every channel of a grey
+	const grey = parseInt(DARK_VARIANT_GREY.slice(1, 3), 16);
 	return '#' + [(value >> 16) & 255, (value >> 8) & 255, value & 255].map(channel => {
-		const light = Math.round((channel - 255 * (1 - DARK_VARIANT_WEIGHT)) / DARK_VARIANT_WEIGHT);
+		const light = Math.round((channel - grey * (1 - DARK_VARIANT_WEIGHT)) / DARK_VARIANT_WEIGHT);
 		return ('0' + Math.min(255, Math.max(0, light)).toString(16)).slice(-2);
 	}).join('').toUpperCase();
 }

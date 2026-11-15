@@ -91,7 +91,7 @@ export class DialogOccurrenceHistoryComponent {
             const colors = this.globalService.getCustomType(this.data.customType).colors;
             return this.globalService.darkMode ? colors.dark : colors.light;
         }
-        // The meals have a fixed color, not in the palettes of the settings
+        // Every built-in type is in the palettes of the settings, the CSS variable stays a fallback
         return this.globalService.eventColors[this.data.type]
             || getComputedStyle(document.body).getPropertyValue(`--color-event-${this.data.type}`).trim();
     }

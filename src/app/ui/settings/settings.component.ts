@@ -27,6 +27,11 @@ import {
 	BottomSheetColorPickerComponent, IBottomSheetColorPickerData
 } from '../bottom-sheet/bottom-sheet-color-picker';
 
+interface IPainPalettePreview {
+	key: string;
+	colors: string[];
+}
+
 @Component({
 	selector: 'app-settings',
 	templateUrl: './settings.component.html',
@@ -64,12 +69,15 @@ export class SettingsComponent implements OnInit {
 	public get hasCustomTypes(): boolean {
 		return this.globalService.customTypes.length > 0;
 	}
-	public painPalettes: { key: string, colors: string[] }[];
+	// Intensity palettes, previewed in the colors of the theme displayed
+	public painPalettesByTheme: { light: IPainPalettePreview[], dark: IPainPalettePreview[] };
+	// The built-in types, in the order of the manage menu
 	public readonly eventColorItems = [
 		{ type: 'symptomLog', label: 'MANAGE_SYMPTOMS', icon: 'spa' },
+		{ type: 'meal', label: 'MANAGE_MEALS', svg: '/assets/svg/curry-chronicles.svg' },
 		{ type: 'med', label: 'MANAGE_MEDS', svg: '/assets/svg/pill-capsule.svg' },
-		{ type: 'log', label: 'MANAGE_LOGS', icon: 'event_note' },
-		{ type: 'sport', label: 'MANAGE_SPORTS', icon: 'fitness_center' }
+		{ type: 'sport', label: 'MANAGE_SPORTS', icon: 'fitness_center' },
+		{ type: 'log', label: 'MANAGE_LOGS', icon: 'event_note' }
 	];
 
 	public debug = 'no error';
@@ -105,8 +113,13 @@ export class SettingsComponent implements OnInit {
 			light: { ...this.globalService.eventPalettes.light },
 			dark: { ...this.globalService.eventPalettes.dark }
 		};
-		this.painPalettes = Object.keys(this.globalService.PALETTES)
-			.map(key => ({ key, colors: this.globalService.PALETTES[key] }));
+		// The default palette first, as the default choice of the other settings
+		const defaultPalette = this.globalService.DEFAULT_PAIN_PALETTE;
+		const paletteKeys = [defaultPalette, ...Object.keys(this.globalService.PALETTES).filter(key => key !== defaultPalette)];
+		this.painPalettesByTheme = {
+			light: paletteKeys.map(key => ({ key, colors: this.globalService.PALETTES[key] })),
+			dark: paletteKeys.map(key => ({ key, colors: this.globalService.DARK_PALETTES[key] }))
+		};
 		this.settingsService.getSettings().subscribe(settings => {
 			// DEVELOPER UPDATES NOTIFICATION FEATURE DISABLED
 			// this.hideDeveloperUpdates = settings.hideDeveloperUpdates;

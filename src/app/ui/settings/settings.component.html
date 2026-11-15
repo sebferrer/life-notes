@@ -251,7 +251,7 @@
                     <span class="toggle-label" transloco="SETTINGS_PAIN_PALETTE_LABEL"></span>
                     <mat-radio-group [(ngModel)]="painPalette" (change)="setPainPalette()" color="primary"
                         class="radio-group">
-                        <mat-radio-button *ngFor="let palette of painPalettes" [value]="palette.key"
+                        <mat-radio-button *ngFor="let palette of painPalettesByTheme[currentTheme]" [value]="palette.key"
                             class="radio-button">
                             <span class="pain-palette-preview">
                                 <span *ngFor="let color of palette.colors" [style.background-color]="color"></span>
