@@ -1,9 +1,10 @@
-import { Observable, of } from 'rxjs';
+import { Observable, defer, from, of } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { DbContext } from './database';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { ISettings } from '../models/settings.model';
 import { GlobalService } from './global.service';
+import { IEventPalettes, completeEventPalettes, getDefaultEventPalettes } from '../models/event-colors.model';
 
 const KEY = 'settings';
 
@@ -14,12 +15,26 @@ export class SettingsService {
 	public readonly AVAILABLE_TIME_FORMATS = ['us', 'eu'];
 	public readonly AVAILABLE_PAIN_SCALES = [5, 10];
 
-	public readonly CURRENT_VERSION = "0.3.7";
+	public readonly CURRENT_VERSION = "0.4.0";
 
 	constructor(
 		private readonly dbContext: DbContext,
 		private readonly globalService: GlobalService
 	) { }
+
+	// The settings are a single document: concurrent read-modify-write cycles conflict (409) and lose one
+	// of the changes (e.g. at first launch, the time format and the version were written at the same time).
+	// The writes are therefore run one after the other.
+	private writeQueue: Promise<unknown> = Promise.resolve();
+
+	private queueWrite<T>(write: () => Observable<T>): Observable<T> {
+		return defer(() => {
+			const result = this.writeQueue.then(() => write().toPromise());
+			// A failed write must not block the next ones
+			this.writeQueue = result.catch(() => undefined);
+			return from(result);
+		});
+	}
 
 	public getSettings(): Observable<ISettings> {
 		return this.dbContext.asObservable<ISettings>(
@@ -30,22 +45,36 @@ export class SettingsService {
 	}
 
 	public editSettings(newSettings: ISettings): Observable<ISettings> {
-		const settings = this.getSettings();
-		return settings.pipe(
+		return this.queueWrite(() => this.getSettings().pipe(
 			switchMap(s => {
 				s.language = newSettings.language;
 				s.targetSymptomKey = newSettings.targetSymptomKey;
+				// Backups made before the appearance settings existed don't contain them
+				if (newSettings.darkMode != null) {
+					s.darkMode = newSettings.darkMode;
+				}
+				if (newSettings.uiVersion != null) {
+					s.uiVersion = newSettings.uiVersion;
+				}
+				if (newSettings.sleepChartMode != null) {
+					s.sleepChartMode = newSettings.sleepChartMode;
+				}
+				if (newSettings.landscapeMode != null) {
+					s.landscapeMode = newSettings.landscapeMode;
+				}
+				if (newSettings.eventColors != null) {
+					s.eventColors = completeEventPalettes(newSettings.eventColors);
+				}
 				s.lastInstall = this.CURRENT_VERSION
 				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
 					map(() => s)
 				);
 			})
-		);
+		));
 	}
 
 	public setLanguage(newDefaultLanguage: string): Observable<ISettings> {
-		const settings = this.getSettings();
-		return settings.pipe(
+		return this.queueWrite(() => this.getSettings().pipe(
 			switchMap(s => {
 				s.language = newDefaultLanguage;
 				this.globalService.language = newDefaultLanguage;
@@ -53,12 +82,11 @@ export class SettingsService {
 					map(() => s)
 				);
 			})
-		);
+		));
 	}
 
 	public setTimeFormat(newDefaultTimeFormat: string): Observable<ISettings> {
-		const settings = this.getSettings();
-		return settings.pipe(
+		return this.queueWrite(() => this.getSettings().pipe(
 			switchMap(s => {
 				s.timeFormat = newDefaultTimeFormat;
 				this.globalService.timeFormat = newDefaultTimeFormat;
@@ -66,12 +94,11 @@ export class SettingsService {
 					map(() => s)
 				);
 			})
-		);
+		));
 	}
 
 	public setPainScale(newPainScale: number): Observable<ISettings> {
-		const settings = this.getSettings();
-		return settings.pipe(
+		return this.queueWrite(() => this.getSettings().pipe(
 			switchMap(s => {
 				s.painScale = newPainScale;
 				this.globalService.painScale = newPainScale;
@@ -79,19 +106,18 @@ export class SettingsService {
 					map(() => s)
 				);
 			})
-		);
+		));
 	}
 
 	public setCurrentVersion(): Observable<ISettings> {
-		const settings = this.getSettings();
-		return settings.pipe(
+		return this.queueWrite(() => this.getSettings().pipe(
 			switchMap(s => {
 				s.lastInstall = this.CURRENT_VERSION;
 				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
 					map(() => s)
 				);
 			})
-		);
+		));
 	}
 
 	public getSettingsCurrentVersion(): Observable<string> {
@@ -107,27 +133,25 @@ export class SettingsService {
 	}
 
 	public setTargetSymptomKey(newTargetSymptomKey: string): Observable<ISettings> {
-		const settings = this.getSettings();
-		return settings.pipe(
+		return this.queueWrite(() => this.getSettings().pipe(
 			switchMap(s => {
 				s.targetSymptomKey = newTargetSymptomKey;
 				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
 					map(() => s)
 				);
 			})
-		);
+		));
 	}
 
 	public setFirstStart(firstStart: boolean): Observable<ISettings> {
-		const settings = this.getSettings();
-		return settings.pipe(
+		return this.queueWrite(() => this.getSettings().pipe(
 			switchMap(s => {
 				s.firstStart = firstStart;
 				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
 					map(() => s)
 				);
 			})
-		);
+		));
 	}
 
 	/*public updateLastInstall(): Observable<ISettings> {
@@ -151,39 +175,60 @@ export class SettingsService {
 	}*/
 
 	public setLastUpdate(lastUpdate: number): Observable<ISettings> {
-		const settings = this.getSettings();
-		return settings.pipe(
+		return this.queueWrite(() => this.getSettings().pipe(
 			switchMap(s => {
 				s.lastUpdate = lastUpdate;
 				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
 					map(() => s)
 				);
 			})
-		);
+		));
 	}
 
 	public setWeeklyReminder(weeklyReminder: boolean): Observable<ISettings> {
-		const settings = this.getSettings();
-		return settings.pipe(
+		return this.queueWrite(() => this.getSettings().pipe(
 			switchMap(s => {
 				s.weeklyReminder = weeklyReminder;
 				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
 					map(() => s)
 				);
 			})
-		);
+		));
 	}
 
 	public setLastWeeklyReminder(lastWeeklyReminder: number): Observable<ISettings> {
-		const settings = this.getSettings();
-		return settings.pipe(
+		return this.queueWrite(() => this.getSettings().pipe(
 			switchMap(s => {
 				s.lastWeeklyReminder = lastWeeklyReminder;
 				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
 					map(() => s)
 				);
 			})
-		);
+		));
+	}
+
+	public setDailyReminder(dailyReminder: boolean): Observable<ISettings> {
+		return this.queueWrite(() => this.getSettings().pipe(
+			switchMap(s => {
+				s.dailyReminder = dailyReminder;
+				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
+					map(() => s)
+				);
+			})
+		));
+	}
+
+	public setLastDailyReminder(lastDailyReminder: number): Observable<ISettings> {
+		return this.queueWrite(() => this.getSettings().pipe(
+			switchMap(s => {
+				s.lastDailyReminder = lastDailyReminder;
+				// A backup reminder has just been shown: no need for the weekly one too
+				s.lastWeeklyReminder = lastDailyReminder;
+				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
+					map(() => s)
+				);
+			})
+		));
 	}
 
 	// DEVELOPER UPDATES NOTIFICATION FEATURE DISABLED
@@ -201,32 +246,29 @@ export class SettingsService {
 	// }
 
 	public setShowAdvancedSettings(show: boolean): Observable<ISettings> {
-		const settings = this.getSettings();
-		return settings.pipe(
+		return this.queueWrite(() => this.getSettings().pipe(
 			switchMap(s => {
 				s.showAdvancedSettings = show;
 				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
 					map(() => s)
 				);
 			})
-		);
+		));
 	}
 
 	public setShowDeveloperMode(show: boolean): Observable<ISettings> {
-		const settings = this.getSettings();
-		return settings.pipe(
+		return this.queueWrite(() => this.getSettings().pipe(
 			switchMap(s => {
 				s.showDeveloperMode = show;
 				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
 					map(() => s)
 				);
 			})
-		);
+		));
 	}
 
 	public setCalendarStartOnSunday(startOnSunday: boolean): Observable<ISettings> {
-		const settings = this.getSettings();
-		return settings.pipe(
+		return this.queueWrite(() => this.getSettings().pipe(
 			switchMap(s => {
 				s.calendarStartOnSunday = startOnSunday;
 				this.globalService.calendarStartOnSunday = startOnSunday;
@@ -234,12 +276,11 @@ export class SettingsService {
 					map(() => s)
 				);
 			})
-		);
+		));
 	}
 
 	public setCalendarBlockView(blockView: boolean): Observable<ISettings> {
-		const settings = this.getSettings();
-		return settings.pipe(
+		return this.queueWrite(() => this.getSettings().pipe(
 			switchMap(s => {
 				s.calendarBlockView = blockView;
 				this.globalService.calendarBlockView = blockView;
@@ -247,12 +288,11 @@ export class SettingsService {
 					map(() => s)
 				);
 			})
-		);
+		));
 	}
 
 	public setPainPalette(palette: string): Observable<ISettings> {
-		const settings = this.getSettings();
-		return settings.pipe(
+		return this.queueWrite(() => this.getSettings().pipe(
 			switchMap(s => {
 				s.painPalette = palette;
 				this.globalService.painPalette = palette;
@@ -260,12 +300,11 @@ export class SettingsService {
 					map(() => s)
 				);
 			})
-		);
+		));
 	}
 
 	public setAutoCalculateOverview(auto: boolean): Observable<ISettings> {
-		const settings = this.getSettings();
-		return settings.pipe(
+		return this.queueWrite(() => this.getSettings().pipe(
 			switchMap(s => {
 				s.autoCalculateOverview = auto;
 				this.globalService.autoCalculateOverview = auto;
@@ -273,12 +312,11 @@ export class SettingsService {
 					map(() => s)
 				);
 			})
-		);
+		));
 	}
 
 	public setAutoOverviewPopupSeen(seen: boolean): Observable<ISettings> {
-		const settings = this.getSettings();
-		return settings.pipe(
+		return this.queueWrite(() => this.getSettings().pipe(
 			switchMap(s => {
 				s.autoOverviewPopupSeen = seen;
 				this.globalService.autoOverviewPopupSeen = seen;
@@ -286,12 +324,11 @@ export class SettingsService {
 					map(() => s)
 				);
 			})
-		);
+		));
 	}
 
 	public setTimePicker(picker: string): Observable<ISettings> {
-		const settings = this.getSettings();
-		return settings.pipe(
+		return this.queueWrite(() => this.getSettings().pipe(
 			switchMap(s => {
 				s.timePicker = picker;
 				this.globalService.timePicker = picker;
@@ -299,11 +336,82 @@ export class SettingsService {
 					map(() => s)
 				);
 			})
-		);
+		));
+	}
+
+	public setDarkMode(darkMode: boolean): Observable<ISettings> {
+		return this.queueWrite(() => this.getSettings().pipe(
+			switchMap(s => {
+				s.darkMode = darkMode;
+				this.globalService.darkMode = darkMode;
+				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
+					map(() => s)
+				);
+			})
+		));
+	}
+
+	public setSleepChartMode(sleepChartMode: string): Observable<ISettings> {
+		return this.queueWrite(() => this.getSettings().pipe(
+			switchMap(s => {
+				s.sleepChartMode = sleepChartMode;
+				this.globalService.sleepChartMode = sleepChartMode;
+				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
+					map(() => s)
+				);
+			})
+		));
+	}
+
+	public setUiVersion(uiVersion: string): Observable<ISettings> {
+		return this.queueWrite(() => this.getSettings().pipe(
+			switchMap(s => {
+				s.uiVersion = uiVersion;
+				this.globalService.uiVersion = uiVersion;
+				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
+					map(() => s)
+				);
+			})
+		));
+	}
+
+	public setNewUiPopupSeen(seen: boolean): Observable<ISettings> {
+		return this.queueWrite(() => this.getSettings().pipe(
+			switchMap(s => {
+				s.newUiPopupSeen = seen;
+				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
+					map(() => s)
+				);
+			})
+		));
+	}
+
+	public setLandscapeMode(landscapeMode: boolean): Observable<ISettings> {
+		return this.queueWrite(() => this.getSettings().pipe(
+			switchMap(s => {
+				s.landscapeMode = landscapeMode;
+				this.globalService.landscapeMode = landscapeMode;
+				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
+					map(() => s)
+				);
+			})
+		));
+	}
+
+	public setEventColors(eventColors: IEventPalettes): Observable<ISettings> {
+		return this.queueWrite(() => this.getSettings().pipe(
+			switchMap(s => {
+				s.eventColors = completeEventPalettes(eventColors);
+				this.globalService.eventPalettes = s.eventColors;
+				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
+					map(() => s)
+				);
+			})
+		));
 	}
 
 	public initSettings(): Observable<ISettings> {
-		return this.getSettings().pipe(
+		return this.queueWrite(() => this.getSettings().pipe(
 			switchMap(s => {
 				if (s == null) {
 					const settings = {
@@ -323,10 +431,19 @@ export class SettingsService {
 						'calendarBlockView': false,
 						'painPalette': '2',
 						'weeklyReminder': true,
-						'lastWeeklyReminder': 0,
+						// Counted from the installation: no backup reminder before the user has any data
+						'lastWeeklyReminder': Date.now(),
+						'dailyReminder': false,
+						'lastDailyReminder': Date.now(),
 						'autoCalculateOverview': true, // Default ON for new users
 						'autoOverviewPopupSeen': false,
-						'timePicker': 'material'
+						'timePicker': 'material',
+						'darkMode': false,
+						'landscapeMode': false,
+						'uiVersion': 'v2', // The V1 is for the users of the former versions
+						'sleepChartMode': 'bars',
+						'newUiPopupSeen': true,
+						'eventColors': getDefaultEventPalettes()
 					};
 					return this.dbContext.asObservable(this.dbContext.settingsCollection.put(settings)).pipe(
 						tap(() => {
@@ -334,6 +451,11 @@ export class SettingsService {
 							this.globalService.autoCalculateOverview = settings.autoCalculateOverview;
 							this.globalService.autoOverviewPopupSeen = settings.autoOverviewPopupSeen;
 							this.globalService.timePicker = settings.timePicker;
+							this.globalService.darkMode = settings.darkMode;
+							this.globalService.landscapeMode = settings.landscapeMode;
+							this.globalService.uiVersion = settings.uiVersion;
+							this.globalService.sleepChartMode = settings.sleepChartMode;
+							this.globalService.eventPalettes = settings.eventColors;
 						}),
 						map(() => settings)
 					);
@@ -346,6 +468,14 @@ export class SettingsService {
 					}
 					if (s.lastWeeklyReminder == null) {
 						s.lastWeeklyReminder = 0;
+						changed = true;
+					}
+					if (s.dailyReminder == null) {
+						s.dailyReminder = false;
+						changed = true;
+					}
+					if (s.lastDailyReminder == null) {
+						s.lastDailyReminder = 0;
 						changed = true;
 					}
 					if (s.painScale == null) {
@@ -395,19 +525,66 @@ export class SettingsService {
 						changed = true;
 					}
 
+					if (s.darkMode == null) {
+						s.darkMode = false;
+						changed = true;
+					}
+
+					// Existing users keep the interface they know (V1), a popup tells them about the V2.
+					// The first builds of the V2 had a style per screen instead: the one of the timeline gives the version.
+					if (s.uiVersion == null) {
+						const styles = s as any;
+						if (styles.timelineStyle == null) {
+							s.uiVersion = 'v1';
+							s.newUiPopupSeen = false;
+						} else {
+							s.uiVersion = styles.timelineStyle === 'modern' ? 'v2' : 'v1';
+						}
+						delete styles.timelineStyle;
+						delete styles.calendarStyle;
+						changed = true;
+					}
+
+					if (s.newUiPopupSeen == null) {
+						s.newUiPopupSeen = true;
+						changed = true;
+					}
+
+					if (s.sleepChartMode == null) {
+						s.sleepChartMode = 'bars';
+						changed = true;
+					}
+
+					if (s.landscapeMode == null) {
+						s.landscapeMode = false;
+						changed = true;
+					}
+
+					if (s.eventColors == null) {
+						s.eventColors = getDefaultEventPalettes();
+						changed = true;
+					}
+
 					// Update GlobalService with loaded values
 					this.globalService.painScale = s.painScale;
 					this.globalService.autoCalculateOverview = s.autoCalculateOverview;
 					this.globalService.autoOverviewPopupSeen = s.autoOverviewPopupSeen;
 					this.globalService.timePicker = s.timePicker;
+					this.globalService.darkMode = s.darkMode;
+					this.globalService.landscapeMode = s.landscapeMode;
+					this.globalService.uiVersion = s.uiVersion;
+					this.globalService.sleepChartMode = s.sleepChartMode;
+					this.globalService.eventPalettes = s.eventColors;
 
-					if (changed) {
-						this.dbContext.settingsCollection.put(s);
+					if (!changed) {
+						return of(s);
 					}
-					return of(s);
+					return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
+						map(() => s)
+					);
 				}
 			})
-		);
+		));
 	}
 
 }

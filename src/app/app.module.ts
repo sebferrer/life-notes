@@ -16,6 +16,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
@@ -51,10 +52,14 @@ import { DialogSelectSymptomComponent } from './ui/dialog/dialog-select-symptom'
 import { DialogSelectBackupComponent } from './ui/dialog/dialog-select-backup';
 import { PieChartComponent } from './ui/chart/pie-chart';
 import { LineChartComponent } from './ui/chart/line-chart';
+import { OccurrenceStatsComponent } from './ui/occurrence-stats';
+import { SleepStatsComponent } from './ui/sleep-stats';
+import { IntensityRingComponent } from './ui/intensity-ring';
 import { DialogNoTargetSymptomWarningComponent } from './ui/dialog/dialog-no-target-symptom-warning';
 import { DialogExportConfirmComponent } from './ui/dialog/dialog-export-confirm';
 import { DialogInfoComponent } from './ui/dialog/dialog-info';
 import { TutorialComponent } from './ui/tutorial';
+import { TutorialSceneComponent } from './ui/tutorial/tutorial-scene';
 import { IonicModule } from '@ionic/angular';
 import { SwipingFingerComponent } from './ui/graphic/swiping-finger';
 import { MedsService } from './infra/meds.service';
@@ -63,12 +68,22 @@ import { DialogEditMedComponent } from './ui/dialog/dialog-edit-med/dialog-edit-
 import { DialogEditLogComponent } from './ui/dialog/dialog-edit-log/dialog-edit-log.component';
 import { LogsService } from './infra/logs.service';
 import { LogsComponent } from './ui/logs/logs.component';
+import { SportsService } from './infra/sports.service';
+import { SportsComponent } from './ui/sports';
+import { MealsService } from './infra/meals.service';
+import { MealsComponent } from './ui/meals';
+import { CustomTypesService } from './infra/custom-types.service';
+import { CustomEntriesComponent } from './ui/custom-entries';
+import { BottomSheetEditCustomTypeComponent } from './ui/bottom-sheet/bottom-sheet-edit-custom-type';
+import { ManageComponent } from './ui/manage';
 import { DialogSelectLanguageComponent } from './ui/dialog/dialog-select-language';
 import { MonthlyReportComponent } from './ui/monthly-report';
+import { YearInPixelsComponent } from './ui/year-in-pixels';
 import { DialogUpdatesComponent } from './ui/dialog/dialog-updates';
 import { AboutComponent } from './ui/about';
 
 import { DialogTutorialNoticeComponent } from './ui/dialog/dialog-tutorial-notice';
+import { DialogNewUiComponent } from './ui/dialog/dialog-new-ui';
 
 
 import { DialogOccurrenceHistoryComponent } from './ui/dialog/dialog-occurrence-history';
@@ -77,6 +92,8 @@ import { BottomSheetDeleteEventComponent } from './ui/bottom-sheet/bottom-sheet-
 import { BottomSheetEditMedComponent } from './ui/bottom-sheet/bottom-sheet-edit-med';
 import { BottomSheetEditLogComponent } from './ui/bottom-sheet/bottom-sheet-edit-log';
 import { BottomSheetDeleteOverviewComponent } from './ui/bottom-sheet/bottom-sheet-delete-overview';
+import { BottomSheetConfirmComponent } from './ui/bottom-sheet/bottom-sheet-confirm';
+import { BottomSheetAutoOverviewHelpComponent } from './ui/bottom-sheet/bottom-sheet-auto-overview-help';
 import { BottomSheetEditSymptomOverviewComponent } from './ui/bottom-sheet/bottom-sheet-edit-symptom-overview';
 import { BottomSheetImportConfirmComponent } from './ui/bottom-sheet/bottom-sheet-import-confirm';
 import { BottomSheetImportErrorComponent } from './ui/bottom-sheet/bottom-sheet-import-error';
@@ -87,6 +104,8 @@ import { BottomSheetForceLoadWarningComponent } from './ui/bottom-sheet/bottom-s
 import { BottomSheetInfoComponent } from './ui/bottom-sheet/bottom-sheet-info';
 import { BottomSheetDeleteTimelineEventComponent } from './ui/bottom-sheet/bottom-sheet-delete-timeline-event';
 import { SpacerItemComponent } from './ui/shared/spacer-item';
+import { ColorPickerComponent } from './ui/shared/color-picker';
+import { BottomSheetColorPickerComponent } from './ui/bottom-sheet/bottom-sheet-color-picker';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 
 
@@ -100,12 +119,21 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 		SymptomsComponent,
 		MedsComponent,
 		LogsComponent,
+		SportsComponent,
+		MealsComponent,
+		CustomEntriesComponent,
+		ManageComponent,
 		SettingsComponent,
 		TutorialComponent,
+		TutorialSceneComponent,
 		AboutComponent,
 		MonthlyReportComponent,
+		YearInPixelsComponent,
 		PieChartComponent,
 		LineChartComponent,
+		OccurrenceStatsComponent,
+		SleepStatsComponent,
+		IntensityRingComponent,
 		SwipingFingerComponent,
 		DialogAddEventComponent,
 		DialogShowEventComponent,
@@ -123,11 +151,14 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 		DialogEditLogComponent,
 		DialogUpdatesComponent,
 		DialogTutorialNoticeComponent,
+		DialogNewUiComponent,
 		DialogOccurrenceHistoryComponent,
 		BottomSheetDeleteEventComponent,
 		BottomSheetEditMedComponent,
 		BottomSheetEditLogComponent,
 		BottomSheetDeleteOverviewComponent,
+		BottomSheetConfirmComponent,
+		BottomSheetAutoOverviewHelpComponent,
 
 		// Helpers
 		InfiniteScrollComponent,
@@ -141,7 +172,10 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 		BottomSheetForceLoadWarningComponent,
 		BottomSheetInfoComponent,
 		BottomSheetDeleteTimelineEventComponent,
-		SpacerItemComponent
+		BottomSheetEditCustomTypeComponent,
+		BottomSheetColorPickerComponent,
+		SpacerItemComponent,
+		ColorPickerComponent
 	],
 	imports: [
 		BrowserModule,
@@ -165,6 +199,7 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 		MatFormFieldModule,
 		MatInputModule,
 		MatSnackBarModule,
+		MatTooltipModule,
 		MatSelectModule,
 		MatSliderModule,
 		MatBottomSheetModule,
@@ -187,6 +222,9 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 		BackupService,
 		MedsService,
 		LogsService,
+		SportsService,
+		MealsService,
+		CustomTypesService,
 		SettingsService,
 		BackupService,
 		MedsService,
@@ -217,9 +255,12 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 		DialogEditMedComponent,
 		DialogUpdatesComponent,
 		DialogTutorialNoticeComponent,
+		DialogNewUiComponent,
 		BottomSheetEditMedComponent,
 		BottomSheetEditLogComponent,
 		BottomSheetDeleteOverviewComponent,
+		BottomSheetConfirmComponent,
+		BottomSheetAutoOverviewHelpComponent,
 		BottomSheetEditSymptomOverviewComponent,
 		BottomSheetImportConfirmComponent,
 		BottomSheetImportErrorComponent,
@@ -229,7 +270,8 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 		BottomSheetDeleteSymptomComponent,
 		BottomSheetForceLoadWarningComponent,
 		BottomSheetInfoComponent,
-		BottomSheetDeleteTimelineEventComponent
+		BottomSheetDeleteTimelineEventComponent,
+		BottomSheetColorPickerComponent
 	],
 	bootstrap: [AppComponent]
 })

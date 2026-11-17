@@ -12,11 +12,18 @@ import { SymptomsService } from './symptoms.service';
 import { SettingsService } from './settings.service';
 import { IBackup } from '../models/backup.model';
 import { GlobalService } from './global.service';
+import { CustomTypesService } from './custom-types.service';
 import { TranslocoService } from '@ngneat/transloco';
 import * as moment from 'moment';
 import { saveAs } from 'file-saver';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
+
+// Width of the reports in CSS pixels when they are drawn in the PDF (A4 pages)
+export const PDF_REPORT_WIDTH = 800;
+const PDF_PAGE_HEIGHT = PDF_REPORT_WIDTH * 297 / 210;
+// Space kept at the top and the bottom of the pages of the modern report
+const PDF_PAGE_MARGIN = 40;
 
 @Injectable({
 	providedIn: 'root'
@@ -35,6 +42,7 @@ export class ImporterExporterService {
 		private symptomsService: SymptomsService,
 		private settingsService: SettingsService,
 		private backupService: BackupService,
+		private customTypesService: CustomTypesService,
 		private translocoService: TranslocoService
 	) { }
 
@@ -56,9 +64,16 @@ export class ImporterExporterService {
 		this.symptomsService.addSymptoms(symptomsJsonArr).subscribe(() => {
 			this.globalService.loadSymptoms().subscribe(() => { });
 		});
-		this.settingsService.editSettings(settingsJsonOnj).subscribe(() => {
+		// The types of the backup replace the current ones (see importCustomTypes for the backups without types)
+		this.customTypesService.importCustomTypes(backupJsonObj.customTypes, daysJsonArr).subscribe(() => { });
+		this.settingsService.editSettings(settingsJsonOnj).subscribe(settings => {
 			this.globalService.language = settingsJsonOnj.language;
 			this.globalService.targetSymptomKey = settingsJsonOnj.targetSymptomKey;
+			this.globalService.darkMode = settings.darkMode;
+			this.globalService.landscapeMode = settings.landscapeMode;
+			this.globalService.uiVersion = settings.uiVersion;
+			this.globalService.sleepChartMode = settings.sleepChartMode;
+			this.globalService.eventPalettes = settings.eventColors;
 			this.translocoService.setActiveLang(settingsJsonOnj.language);
 		});
 	}
@@ -133,6 +148,10 @@ export class ImporterExporterService {
 			delete symptom['_rev'];
 		});
 		delete backup.settings['_rev'];
+		(backup.customTypes || []).map(customType => {
+			delete customType['_id'];
+			delete customType['_rev'];
+		});
 
 		return backup;
 	}
@@ -240,7 +259,7 @@ export class ImporterExporterService {
 			clone = element.cloneNode(true) as HTMLElement;
 
 			// Setup Container for Clone
-			clone.style.width = '800px'; // Fixed width
+			clone.style.width = `${PDF_REPORT_WIDTH}px`; // Fixed width
 			clone.style.position = 'absolute';
 			clone.style.top = '0';
 			clone.style.left = '0';
@@ -249,37 +268,10 @@ export class ImporterExporterService {
 			clone.style.height = 'auto';
 			clone.style.overflow = 'visible';
 
-			// Fix specific child elements in the clone
-			const contentElement = clone.querySelector('.content') as HTMLElement;
-			if (contentElement) {
-				contentElement.style.height = 'auto';
-				contentElement.style.overflow = 'visible';
-				contentElement.style.position = 'static';
-				contentElement.style.marginTop = '2rem';   // Space between header and first symptom
-			}
-
-			const calendarHeader = clone.querySelector('.calendar-header') as HTMLElement;
-			if (calendarHeader) {
-				calendarHeader.style.position = 'static';
-				calendarHeader.style.height = '3.5rem';
-				calendarHeader.style.width = '100%';
-			}
-
-			const calendarContainer = clone.id === 'calendar-container' ? clone : clone.querySelector('#calendar-container') as HTMLElement;
-			if (calendarContainer) {
-				calendarContainer.style.height = 'auto';
-				calendarContainer.style.overflow = 'visible';
-				calendarContainer.style.position = 'relative';
-			}
-
-			// Spacing for every 4th symptom to avoid cut on page break
-			const symptomContainers = clone.querySelectorAll('.sympmtom-container');
-			if (symptomContainers) {
-				symptomContainers.forEach((container, index) => {
-					if ((index + 1) % 4 === 0) {
-						(container as HTMLElement).style.marginBottom = '6rem';
-					}
-				});
+			// The modern report (V2) is already laid out at the width of the PDF, the classic one (V1) is fixed here
+			const modern = clone.classList.contains('modern-report');
+			if (!modern) {
+				this.fixClassicReport(clone);
 			}
 
 			// Copy Canvas Content (Pie Charts)
@@ -294,10 +286,15 @@ export class ImporterExporterService {
 				}
 			});
 
+			// The PDF is always rendered with the light theme, even when the app is in dark mode
+			clone.classList.add('force-light-theme');
 			document.body.appendChild(clone);
 
 			// Wait a tick for rendering
 			await new Promise(resolve => setTimeout(resolve, 200));
+			if (modern) {
+				this.paginate(clone);
+			}
 
 			const canvas = await html2canvas(clone, {
 				scale: 2,
@@ -305,7 +302,7 @@ export class ImporterExporterService {
 				logging: false, // Turn off logging if fixed
 				allowTaint: true,
 				scrollY: 0,
-				windowWidth: 800
+				windowWidth: PDF_REPORT_WIDTH
 			});
 
 			const imgData = canvas.toDataURL('image/jpeg', 0.95);
@@ -393,6 +390,55 @@ export class ImporterExporterService {
 		}
 	}
 
+	// Classic report (V1): its screen layout, made for a phone, adapted to the PDF
+	private fixClassicReport(clone: HTMLElement): void {
+		const contentElement = clone.querySelector('.content') as HTMLElement;
+		if (contentElement) {
+			contentElement.style.height = 'auto';
+			contentElement.style.overflow = 'visible';
+			contentElement.style.position = 'static';
+			contentElement.style.marginTop = '2rem';   // Space between header and first symptom
+		}
+
+		const calendarHeader = clone.querySelector('.calendar-header') as HTMLElement;
+		if (calendarHeader) {
+			calendarHeader.style.position = 'static';
+			calendarHeader.style.height = '3.5rem';
+			calendarHeader.style.width = '100%';
+		}
+
+		const calendarContainer = clone.id === 'calendar-container' ? clone : clone.querySelector('#calendar-container') as HTMLElement;
+		if (calendarContainer) {
+			calendarContainer.style.height = 'auto';
+			calendarContainer.style.overflow = 'visible';
+			calendarContainer.style.position = 'relative';
+		}
+
+		// Spacing for every 4th symptom to avoid cut on page break
+		clone.querySelectorAll('.sympmtom-container').forEach((container, index) => {
+			if ((index + 1) % 4 === 0) {
+				(container as HTMLElement).style.marginBottom = '6rem';
+			}
+		});
+	}
+
+	// Modern report (V2): its blocks (.pdf-block) are never cut by a page break. A block that would reach the bottom
+	// margin of a page starts the next one, below its top margin.
+	private paginate(report: HTMLElement): void {
+		const reportTop = report.getBoundingClientRect().top;
+		report.querySelectorAll<HTMLElement>('.pdf-block').forEach(block => {
+			// Measured after the blocks above it have moved
+			const rect = block.getBoundingClientRect();
+			const top = rect.top - reportTop;
+			const pageEnd = (Math.floor(top / PDF_PAGE_HEIGHT) + 1) * PDF_PAGE_HEIGHT;
+			// A block taller than a page is cut anyway
+			if (rect.bottom - reportTop > pageEnd - PDF_PAGE_MARGIN && rect.height <= PDF_PAGE_HEIGHT - 2 * PDF_PAGE_MARGIN) {
+				const marginTop = parseFloat(getComputedStyle(block).marginTop) || 0;
+				block.style.marginTop = `${marginTop + pageEnd + PDF_PAGE_MARGIN - top}px`;
+			}
+		});
+	}
+
 	public validateBackupContent(content: string): { valid: boolean; errorKey: string } {
 		if (!content || content.trim().length === 0) {
 			return { valid: false, errorKey: 'IMPORT_ERROR_EMPTY_FILE' };
@@ -412,12 +458,24 @@ export class ImporterExporterService {
 			!Array.isArray(parsed.symptoms) ||
 			parsed.settings == null ||
 			typeof parsed.settings !== 'object' ||
-			Array.isArray(parsed.settings)
+			Array.isArray(parsed.settings) ||
+			// Optional, but a list of complete types when there is one: the current types are replaced by it
+			(parsed.customTypes != null && (!Array.isArray(parsed.customTypes)
+				|| !parsed.customTypes.every(customType => this.isValidCustomType(customType))))
 		) {
 			return { valid: false, errorKey: 'IMPORT_ERROR_INVALID_SCHEMA' };
 		}
 
 		return { valid: true, errorKey: '' };
+	}
+
+	// What the screens need to show a type
+	private isValidCustomType(customType: any): boolean {
+		return customType != null && typeof customType === 'object'
+			&& typeof customType.key === 'string' && customType.key !== ''
+			&& typeof customType.label === 'string' && typeof customType.icon === 'string'
+			&& customType.colors != null && typeof customType.colors.light === 'string'
+			&& typeof customType.colors.dark === 'string';
 	}
 
 	public exportHtml(): void {

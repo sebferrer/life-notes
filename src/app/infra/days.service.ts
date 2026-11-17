@@ -11,6 +11,7 @@ import { IMeal } from '../models/meal.model';
 import { ISymptom } from '../models/symptom.model';
 import { map, switchMap, catchError, tap } from 'rxjs/operators';
 import { ICustomEvent } from '../models/customEvent.model';
+import { ICustomEntry } from '../models/custom-type.model';
 import { getDaysInMonth, subDays } from 'date-fns';
 import * as moment from 'moment';
 import { GlobalService } from './global.service';
@@ -18,6 +19,14 @@ import { GlobalService } from './global.service';
 // const CALENDAR_API = '/api/calendar';
 // const CALENDAR_FROM_API = '/api/calendar-from';
 // const DAY_OVERVIEW_FIELDS = 'date, symptomOverviews';
+
+// The fields of a day known by this version
+const KNOWN_DAY_FIELDS = ['_id', '_rev', 'date', 'detailedDate', 'symptomOverviews', 'symptoms', 'logs', 'meds', 'meals',
+	'sports', 'customs', 'wakeUp', 'goToBed'];
+
+function isEmptyValue(value: any): boolean {
+	return value == null || value === '' || (Array.isArray(value) && value.length === 0);
+}
 
 @Injectable()
 export class DaysService {
@@ -34,11 +43,45 @@ export class DaysService {
 		);
 	}
 
-	public getMonthDaysOverviews(month: number, year: number): Observable<IDayOverview[]> {
+	// The days stored whose date starts with one of these prefixes ('2026-10-', '2026-'), from the first to the last.
+	// The id of a day is its date (YYYY-MM-DD): only these days are read, not the whole history.
+	private getStoredDaysOverviews(firstPrefix: string, lastPrefix: string): Observable<IDayOverview[]> {
 		return this.dbContext.asArrayObservable<IDayOverview>(
-			this.dbContext.daysCollection.allDocs({ include_docs: true, descending: true })
-		).pipe(
+			this.dbContext.daysCollection.allDocs({ include_docs: true, startkey: firstPrefix, endkey: lastPrefix + '\ufff0' })
+		);
+	}
+
+	private monthPrefix(month: number, year: number): string {
+		return year + '-' + String(month).padStart(2, '0') + '-';
+	}
+
+	public getMonthDaysOverviews(month: number, year: number): Observable<IDayOverview[]> {
+		const prefix = this.monthPrefix(month, year);
+		return this.getStoredDaysOverviews(prefix, prefix).pipe(
 			map(days => this.getFilledMonthDays(days, month, year))
+		);
+	}
+
+	// The days of the month and of the previous one (the sleep of the night before the 1st), read at once
+	public getMonthAndPreviousDaysOverviews(month: number, year: number):
+		Observable<{ days: IDayOverview[], previousDays: IDayOverview[] }> {
+		const previousMonth = month === 1 ? 12 : month - 1;
+		const previousYear = month === 1 ? year - 1 : year;
+		return this.getStoredDaysOverviews(this.monthPrefix(previousMonth, previousYear), this.monthPrefix(month, year)).pipe(
+			map(days => ({
+				days: this.getFilledMonthDays(days, month, year),
+				previousDays: this.getFilledMonthDays(days, previousMonth, previousYear)
+			}))
+		);
+	}
+
+	// The days of each month of the year (index 0 for January), the days without data included
+	public getYearDaysOverviews(year: number): Observable<IDayOverview[][]> {
+		return this.getStoredDaysOverviews(year + '-', year + '-').pipe(
+			map(days => {
+				const yearDays = days.filter(d => d.detailedDate.year === year);
+				return Array.from({ length: 12 }, (_, i) => this.getFilledMonthDays(yearDays, i + 1, year));
+			})
 		);
 	}
 
@@ -59,6 +102,8 @@ export class DaysService {
 					'logs': [],
 					'meds': [],
 					'meals': [],
+					'sports': [],
+					'customs': [],
 					'wakeUp': '',
 					'goToBed': ''
 				};
@@ -189,6 +234,20 @@ export class DaysService {
 		day.meals.push({ type: 'meal', time, key, detail });
 	}
 
+	public addSport(day: IDay, time: string, key: string, detail: string): void {
+		if (day.sports == null) {
+			day.sports = [];
+		}
+		day.sports.push({ type: 'sport', time, key, detail });
+	}
+
+	public addCustom(day: IDay, customType: string, time: string, key: string, detail: string, quantity: number): void {
+		if (day.customs == null) {
+			day.customs = [];
+		}
+		day.customs.push({ type: 'custom', customType, time, key, detail, quantity });
+	}
+
 	public setStartEnd(day: IDay, time: string, type: string): void {
 		switch (type) {
 			case 'wakeUp':
@@ -246,6 +305,13 @@ export class DaysService {
 						case 'meal':
 							this.addMeal(d, customEvent.time, customEvent.key, customEvent.detail);
 							break;
+						case 'sport':
+							this.addSport(d, customEvent.time, customEvent.key, customEvent.detail);
+							break;
+						case 'custom':
+							this.addCustom(d, customEvent.customType, customEvent.time, customEvent.key, customEvent.detail,
+								customEvent.quantity);
+							break;
 						case 'wakeUp':
 						case 'goToBed':
 							this.setStartEnd(d, customEvent.time, customEvent.type);
@@ -296,6 +362,12 @@ export class DaysService {
 					case 'meal':
 						d.meals = this.filterEvent(d.meals, customEvent.time, customEvent.key);
 						break;
+					case 'sport':
+						d.sports = this.filterEvent(d.sports || [], customEvent.time, customEvent.key);
+						break;
+					case 'custom':
+						d.customs = this.removeCustomEntry(d.customs || [], customEvent);
+						break;
 				}
 				return this.dbContext.asObservable(this.dbContext.daysCollection.put(d)).pipe(
 					map(() => d)
@@ -319,7 +391,26 @@ export class DaysService {
 			day.symptoms.length === 0 &&
 			day.meds.length === 0 &&
 			day.meals.length === 0 &&
-			day.wakeUp === '' && day.goToBed === '';
+			(day.sports == null || day.sports.length === 0) &&
+			(day.customs == null || day.customs.length === 0) &&
+			day.wakeUp === '' && day.goToBed === '' &&
+			// The fields added by a later version, not shown here: a day holding something in them is never removed
+			// with its last entry (an app rolled back, or a backup of a later version). The 0.3.7 removed the sports
+			// and custom entries of the V2 this way
+			Object.keys(day).filter(key => !KNOWN_DAY_FIELDS.includes(key)).every(key => isEmptyValue((day as any)[key]));
+	}
+
+	// Entries have no id and the name is optional: two entries of the same minute are often identical.
+	// Only one of them is removed, the one with the same details and quantity if they differ.
+	private removeCustomEntry(entries: ICustomEntry[], removed: ICustomEvent): ICustomEntry[] {
+		const sameEvent = (entry: ICustomEntry) => entry.customType === removed.customType
+			&& entry.time === removed.time && (entry.key || '') === (removed.key || '');
+		let index = entries.findIndex(entry => sameEvent(entry) && (entry.detail || '') === (removed.detail || '')
+			&& (entry.quantity ?? null) === (removed.quantity ?? null));
+		if (index < 0) {
+			index = entries.findIndex(sameEvent);
+		}
+		return entries.filter((_, i) => i !== index);
 	}
 
 	public filterEvent(events: any[], time: string, key: string) {
@@ -337,6 +428,8 @@ export class DaysService {
 			'logs': [],
 			'meds': [],
 			'meals': [],
+			'sports': [],
+			'customs': [],
 			'wakeUp': '',
 			'goToBed': ''
 		};
@@ -359,6 +452,8 @@ export class DaysService {
 			'logs': [],
 			'meds': [],
 			'meals': [],
+			'sports': [],
+			'customs': [],
 			'wakeUp': '',
 			'goToBed': ''
 		};

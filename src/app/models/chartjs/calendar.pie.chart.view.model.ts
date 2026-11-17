@@ -1,5 +1,6 @@
 import { APieChartViewModel } from './pie.chart.view.model';
 import { DayOverviewViewModel } from '../day.overview.view.model';
+import { getPainColorLevel } from '../symptom.model';
 
 export class CalendarPieChartViewModel extends APieChartViewModel {
 
@@ -7,17 +8,21 @@ export class CalendarPieChartViewModel extends APieChartViewModel {
 	private symptomKey: string;
 	private symptomPainMap: Map<number, number>;
 	private colorsArray: string[];
+	private invertedScale: boolean;
 
 	constructor(
 		type: string,
 		symptomKey: string,
-		colors: string[]
+		colors: string[],
+		invertedScale: boolean = false
 	) {
 		super(type);
 		this.type = type;
 		this.symptomPainMap = new Map<number, number>();
 		this.symptomKey = symptomKey;
-		this.colorsArray = colors;
+		this.invertedScale = invertedScale;
+		// One color per level, in the order of the labels (0 first)
+		this.colorsArray = colors.map((_, level) => colors[getPainColorLevel(level, invertedScale)]);
 		this.colors = [
 			{
 				backgroundColor: this.colorsArray
@@ -33,6 +38,10 @@ export class CalendarPieChartViewModel extends APieChartViewModel {
 	public update(dayOverviews: DayOverviewViewModel[], painScale: number = 5): void {
 		dayOverviews.forEach(overview => {
 			const symptom = overview.symptomOverviews.find(s => s.key === this.symptomKey);
+			// A day without intensity counts as a day without pain, not as the worst value of an inverted scale
+			if (symptom == null && this.invertedScale) {
+				return;
+			}
 			const symptomPain = symptom == null ? 0 : symptom.pain;
 			let key = Math.ceil(symptomPain);
 

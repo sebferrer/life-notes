@@ -1,12 +1,14 @@
 <div *ngIf="symptoms$ | async as symptoms" id="settings-container">
     <h3 class="title" transloco="SETTINGS_TITLE"></h3>
     <mat-accordion class="accordion">
-        <mat-expansion-panel hideToggle>
-            <mat-expansion-panel-header class="mat-expansion-panel-header">
-                <div class="panel-title" transloco="SETTINGS_SYMPTOMS_TITLE"></div>
-                <div class="panel-description" transloco="SETTINGS_SYMPTOMS_SUBTITLE"></div>
-                <div class="panel-icon">
+        <mat-expansion-panel>
+            <mat-expansion-panel-header class="mat-expansion-panel-header main-header">
+                <div class="panel-icon symptoms">
                     <mat-icon>spa</mat-icon>
+                </div>
+                <div class="panel-text">
+                    <div class="panel-title" transloco="SETTINGS_SYMPTOMS_TITLE"></div>
+                    <div class="panel-description" transloco="SETTINGS_SYMPTOMS_SUBTITLE"></div>
                 </div>
             </mat-expansion-panel-header>
 
@@ -26,67 +28,26 @@
                     </mat-select>
                 </mat-form-field>
                 <div class="toggle-container">
-                    <span class="toggle-label" transloco="SETTINGS_AUTO_CALCULATE_OVERVIEW"></span>
+                    <span class="toggle-label">
+                        {{ 'SETTINGS_AUTO_CALCULATE_OVERVIEW' | transloco }}
+                        <mat-icon class="help-icon-inline auto-overview-help-button" role="button"
+                            [attr.aria-label]="'HELP' | transloco" (click)="openAutoOverviewHelp()">help_outline</mat-icon>
+                    </span>
                     <mat-slide-toggle [(ngModel)]="autoCalculateOverview" (change)="setAutoCalculateOverview()"
                         color="primary">
                     </mat-slide-toggle>
                 </div>
-                <div class="manage-symptoms-container">
-                    <mat-selection-list multiple="false">
-                        <mat-list-option routerLink="/symptoms">
-                            <p class="list-item-text">{{ 'SYMPTOM_MANAGE_LINK' | transloco }}</p>
-                        </mat-list-option>
-                    </mat-selection-list>
-                </div>
             </div>
         </mat-expansion-panel>
 
-        <mat-expansion-panel hideToggle>
-            <mat-expansion-panel-header class="mat-expansion-panel-header">
-                <div class="panel-title" transloco="SETTINGS_MEDS_TITLE"></div>
-                <div class="panel-description" transloco="SETTINGS_MEDS_SUBTITLE"></div>
-                <div class="panel-icon">
-                    <img src="/assets/svg/pill-capsule.svg" class="list-icon-svg" />
-                </div>
-            </mat-expansion-panel-header>
-
-            <div class="mat-expansion-panel-content">
-                <div class="manage-meds-container">
-                    <mat-selection-list multiple="false">
-                        <mat-list-option routerLink="/meds">
-                            <p class="list-item-text">{{ 'MEDS_MANAGE_LINK' | transloco }}</p>
-                        </mat-list-option>
-                    </mat-selection-list>
-                </div>
-            </div>
-        </mat-expansion-panel>
-
-        <mat-expansion-panel hideToggle>
-            <mat-expansion-panel-header class="mat-expansion-panel-header">
-                <div class="panel-title" transloco="SETTINGS_LOGS_TITLE"></div>
-                <div class="panel-description" transloco="SETTINGS_LOGS_SUBTITLE"></div>
-                <div class="panel-icon">
-                    <mat-icon>event_note</mat-icon>
-                </div>
-            </mat-expansion-panel-header>
-
-            <div class="mat-expansion-panel-content">
-                <div class="manage-meds-container">
-                    <mat-selection-list multiple="false">
-                        <mat-list-option routerLink="/logs">
-                            <p class="list-item-text">{{ 'LOGS_MANAGE_LINK' | transloco }}</p>
-                        </mat-list-option>
-                    </mat-selection-list>
-                </div>
-            </div>
-        </mat-expansion-panel>
-
-        <mat-expansion-panel hideToggle>
-            <mat-expansion-panel-header class="mat-expansion-panel-header">
-                <div class="panel-title" transloco="SETTINGS_LANGUAGE_TITLE"></div>
-                <div class="panel-description" transloco="SETTINGS_LANGUAGE_SUBTITLE"></div>
-                <div class="panel-icon">
+        <mat-expansion-panel>
+            <mat-expansion-panel-header class="mat-expansion-panel-header main-header">
+                <div class="panel-icon language">
                     <mat-icon>language</mat-icon>
+                </div>
+                <div class="panel-text">
+                    <div class="panel-title" transloco="SETTINGS_LANGUAGE_TITLE"></div>
+                    <div class="panel-description" transloco="SETTINGS_LANGUAGE_SUBTITLE"></div>
                 </div>
             </mat-expansion-panel-header>
 
@@ -113,12 +74,14 @@
             </div>
         </mat-expansion-panel>
 
-        <mat-expansion-panel hideToggle>
-            <mat-expansion-panel-header class="mat-expansion-panel-header">
-                <div class="panel-title" transloco="SETTINGS_TIME_TITLE"></div>
-                <div class="panel-description" transloco="SETTINGS_TIME_SUBTITLE"></div>
-                <div class="panel-icon">
+        <mat-expansion-panel>
+            <mat-expansion-panel-header class="mat-expansion-panel-header main-header">
+                <div class="panel-icon time">
                     <mat-icon>access_time</mat-icon>
+                </div>
+                <div class="panel-text">
+                    <div class="panel-title" transloco="SETTINGS_TIME_TITLE"></div>
+                    <div class="panel-description" transloco="SETTINGS_TIME_SUBTITLE"></div>
                 </div>
             </mat-expansion-panel-header>
 
@@ -141,16 +104,22 @@
             </div>
         </mat-expansion-panel>
 
-        <mat-expansion-panel hideToggle>
-            <mat-expansion-panel-header class="mat-expansion-panel-header">
-                <div class="panel-title" transloco="SETTINGS_IMPORT_EXPORT_TITLE"></div>
-                <div class="panel-description" transloco="SETTINGS_IMPORT_EXPORT_SUBTITLE"></div>
-                <div class="panel-icon">
+        <mat-expansion-panel>
+            <mat-expansion-panel-header class="mat-expansion-panel-header main-header">
+                <div class="panel-icon backup">
                     <mat-icon>import_export</mat-icon>
+                </div>
+                <div class="panel-text">
+                    <div class="panel-title" transloco="SETTINGS_IMPORT_EXPORT_TITLE"></div>
+                    <div class="panel-description" transloco="SETTINGS_IMPORT_EXPORT_SUBTITLE"></div>
                 </div>
             </mat-expansion-panel-header>
 
             <div class="mat-expansion-panel-content">
+                <div class="help-container" (click)="openBackupWhyManualInfo()">
+                    <mat-icon class="help-icon">info</mat-icon>
+                    <span class="help-text">{{ 'BACKUP_WHY_MANUAL_LINK' | transloco }}</span>
+                </div>
                 <div class="import-export-buttons-container">
                     <mat-selection-list multiple="false">
                         <mat-list-option (click)="fileClickFire()">
@@ -196,12 +165,14 @@
 
         </mat-expansion-panel>
 
-        <mat-expansion-panel hideToggle>
-            <mat-expansion-panel-header class="mat-expansion-panel-header">
-                <div class="panel-title" transloco="SETTINGS_TUTORIAL_TITLE"></div>
-                <div class="panel-description" transloco="SETTINGS_TUTORIAL_SUBTITLE"></div>
-                <div class="panel-icon">
+        <mat-expansion-panel>
+            <mat-expansion-panel-header class="mat-expansion-panel-header main-header">
+                <div class="panel-icon tutorial">
                     <mat-icon>help</mat-icon>
+                </div>
+                <div class="panel-text">
+                    <div class="panel-title" transloco="SETTINGS_TUTORIAL_TITLE"></div>
+                    <div class="panel-description" transloco="SETTINGS_TUTORIAL_SUBTITLE"></div>
                 </div>
             </mat-expansion-panel-header>
 
@@ -216,22 +187,52 @@
             </div>
         </mat-expansion-panel>
 
-        <mat-expansion-panel hideToggle>
-            <mat-expansion-panel-header class="mat-expansion-panel-header">
-                <div class="panel-title" transloco="SETTINGS_CUSTOMIZATION_TITLE"></div>
-                <div class="panel-description" transloco="SETTINGS_CUSTOMIZATION_SUBTITLE"></div>
-                <div class="panel-icon">
-                    <mat-icon>build</mat-icon>
+        <mat-expansion-panel>
+            <mat-expansion-panel-header class="mat-expansion-panel-header main-header">
+                <div class="panel-icon appearance">
+                    <mat-icon>palette</mat-icon>
+                </div>
+                <div class="panel-text">
+                    <div class="panel-title" transloco="SETTINGS_APPEARANCE_TITLE"></div>
+                    <div class="panel-description" transloco="SETTINGS_APPEARANCE_SUBTITLE"></div>
                 </div>
             </mat-expansion-panel-header>
 
             <div class="mat-expansion-panel-content">
-                <!-- DEVELOPER UPDATES NOTIFICATION FEATURE DISABLED -->
+                <div class="settings-section-title" transloco="SETTINGS_SECTION_DISPLAY"></div>
+                <div class="toggle-container">
+                    <span class="toggle-label" transloco="SETTINGS_DARK_MODE_LABEL"></span>
+                    <mat-slide-toggle [(ngModel)]="darkMode" (change)="setDarkMode()" color="primary">
+                    </mat-slide-toggle>
+                </div>
+                <!-- LANDSCAPE MODE SETTING DISABLED (see LANDSCAPE_MODE_ENABLED in global.service.ts) -->
                 <!-- <div class="toggle-container">
-                    <span class="toggle-label" transloco="SETTINGS_HIDE_DEVELOPER_UPDATES_LABEL"></span>
-                    <mat-slide-toggle [(ngModel)]="hideDeveloperUpdates" (change)="setHideDeveloperUpdates()"
-                        color="primary"></mat-slide-toggle>
+                    <span class="toggle-label" transloco="SETTINGS_LANDSCAPE_MODE_LABEL"></span>
+                    <mat-slide-toggle [(ngModel)]="landscapeMode" (change)="setLandscapeMode()" color="primary">
+                    </mat-slide-toggle>
                 </div> -->
+                <div class="toggle-container stacked">
+                    <span class="toggle-label" transloco="SETTINGS_UI_VERSION_LABEL"></span>
+                    <mat-radio-group [(ngModel)]="uiVersion" (change)="setUiVersion()" color="primary"
+                        class="radio-group">
+                        <mat-radio-button value="v2" class="radio-button">{{ 'UI_VERSION_V2' | transloco
+                            }}</mat-radio-button>
+                        <mat-radio-button value="v1" class="radio-button">{{ 'UI_VERSION_V1' | transloco
+                            }}</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+                <div class="toggle-container stacked">
+                    <span class="toggle-label" transloco="SETTINGS_TIME_PICKER_LABEL"></span>
+                    <mat-radio-group [(ngModel)]="selectedTimePicker" (change)="setTimePicker()" color="primary"
+                        class="radio-group">
+                        <mat-radio-button value="material" class="radio-button">{{ 'TIME_PICKER_CLOCK' | transloco
+                            }}</mat-radio-button>
+                        <mat-radio-button value="ionic" class="radio-button">{{ 'TIME_PICKER_SCROLLER' | transloco
+                            }}</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+
+                <div class="settings-section-title" transloco="SETTINGS_SECTION_CALENDAR"></div>
                 <div class="toggle-container">
                     <span class="toggle-label" transloco="SETTINGS_CALENDAR_START_SUNDAY_LABEL"></span>
                     <mat-slide-toggle [(ngModel)]="calendarStartOnSunday" (change)="setCalendarStartOnSunday()"
@@ -246,27 +247,88 @@
                     <mat-slide-toggle [(ngModel)]="calendarBlockView" (change)="setCalendarBlockView()"
                         color="primary"></mat-slide-toggle>
                 </div>
-                <div class="toggle-container">
+                <div class="toggle-container stacked">
                     <span class="toggle-label" transloco="SETTINGS_PAIN_PALETTE_LABEL"></span>
                     <mat-radio-group [(ngModel)]="painPalette" (change)="setPainPalette()" color="primary"
                         class="radio-group">
-                        <mat-radio-button value="1" class="radio-button">1</mat-radio-button>
-                        <mat-radio-button value="2" class="radio-button">2</mat-radio-button>
+                        <mat-radio-button *ngFor="let palette of painPalettesByTheme[currentTheme]" [value]="palette.key"
+                            class="radio-button">
+                            <span class="pain-palette-preview">
+                                <span *ngFor="let color of palette.colors" [style.background-color]="color"></span>
+                            </span>
+                        </mat-radio-button>
                     </mat-radio-group>
                 </div>
-                <div class="toggle-container">
-                    <span class="toggle-label" transloco="SETTINGS_TIME_PICKER_LABEL"></span>
-                    <mat-radio-group [(ngModel)]="selectedTimePicker" (change)="setTimePicker()" color="primary"
+                <!-- The sleep card of the V2 only (see GlobalService.uiVersion) -->
+                <div *ngIf="uiVersion === 'v2'" class="toggle-container stacked">
+                    <span class="toggle-label" transloco="SETTINGS_SLEEP_CHART_LABEL"></span>
+                    <mat-radio-group [(ngModel)]="sleepChartMode" (change)="setSleepChartMode()" color="primary"
                         class="radio-group">
-                        <mat-radio-button value="material" class="radio-button">{{ 'TIME_PICKER_CLOCK' | transloco
+                        <mat-radio-button value="bars" class="radio-button">{{ 'SLEEP_CHART_BARS' | transloco
                             }}</mat-radio-button>
-                        <mat-radio-button value="ionic" class="radio-button">{{ 'TIME_PICKER_SCROLLER' | transloco
+                        <mat-radio-button value="curves" class="radio-button">{{ 'SLEEP_CHART_CURVES' | transloco
                             }}</mat-radio-button>
                     </mat-radio-group>
                 </div>
+
+                <div class="settings-section-title" transloco="SETTINGS_EVENT_COLORS_TITLE"></div>
+                <!-- Palette of the current theme only: each theme has its own one -->
+                <div *ngIf="currentTheme as theme" class="palette-card">
+                    <div class="palette-card-header">
+                        <span class="palette-card-title">
+                            {{ (theme === 'dark' ? 'SETTINGS_EVENT_COLORS_DARK' : 'SETTINGS_EVENT_COLORS_LIGHT') |
+                            transloco }}</span>
+                        <button mat-button class="palette-reset" (click)="resetEventColors(theme)">
+                            <mat-icon>restart_alt</mat-icon>
+                            {{ 'SETTINGS_RESET_COLORS' | transloco }}
+                        </button>
+                    </div>
+                    <div class="palette-swatches">
+                        <!-- Opens the color picker of the app, starting from this color -->
+                        <button *ngFor="let item of eventColorItems" type="button" class="palette-swatch"
+                            (click)="openEventColorPicker(theme, item)">
+                            <span class="swatch-circle" [style.background-color]="eventPalettes[theme][item.type]">
+                                <mat-icon *ngIf="item.icon" [style.color]="getOnColor(theme, item.type)">{{ item.icon
+                                    }}</mat-icon>
+                                <img *ngIf="item.svg" [src]="item.svg" [style.filter]="getOnFilter(theme, item.type)" />
+                            </span>
+                            <span class="swatch-label">{{ item.label | transloco }}</span>
+                        </button>
+                    </div>
+                </div>
+                <div *ngIf="hasCustomTypes" class="palette-hint">
+                    <mat-icon fontSet="material-icons-outlined">info</mat-icon>
+                    <span>{{ 'SETTINGS_CUSTOM_TYPE_COLORS_HINT' | transloco }}</span>
+                </div>
+            </div>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel>
+            <mat-expansion-panel-header class="mat-expansion-panel-header main-header">
+                <div class="panel-icon customization">
+                    <mat-icon>build</mat-icon>
+                </div>
+                <div class="panel-text">
+                    <div class="panel-title" transloco="SETTINGS_CUSTOMIZATION_TITLE"></div>
+                    <div class="panel-description" transloco="SETTINGS_CUSTOMIZATION_SUBTITLE"></div>
+                </div>
+            </mat-expansion-panel-header>
+
+            <div class="mat-expansion-panel-content">
+                <!-- DEVELOPER UPDATES NOTIFICATION FEATURE DISABLED -->
+                <!-- <div class="toggle-container">
+                    <span class="toggle-label" transloco="SETTINGS_HIDE_DEVELOPER_UPDATES_LABEL"></span>
+                    <mat-slide-toggle [(ngModel)]="hideDeveloperUpdates" (change)="setHideDeveloperUpdates()"
+                        color="primary"></mat-slide-toggle>
+                </div> -->
                 <div class="toggle-container">
                     <span class="toggle-label" transloco="SETTINGS_WEEKLY_REMINDER_LABEL"></span>
                     <mat-slide-toggle [(ngModel)]="weeklyReminder" (change)="setWeeklyReminder()"
+                        color="primary"></mat-slide-toggle>
+                </div>
+                <div class="toggle-container">
+                    <span class="toggle-label" transloco="SETTINGS_DAILY_REMINDER_LABEL"></span>
+                    <mat-slide-toggle [(ngModel)]="dailyReminder" (change)="setDailyReminder()"
                         color="primary"></mat-slide-toggle>
                 </div>
                 <div class="toggle-container">
@@ -282,12 +344,14 @@
             </div>
         </mat-expansion-panel>
 
-        <mat-expansion-panel hideToggle *ngIf="showAdvancedSettings">
-            <mat-expansion-panel-header class="mat-expansion-panel-header">
-                <div class="panel-title" transloco="SETTINGS_ADVANCED_SETTINGS_TITLE"></div>
-                <div class="panel-description" transloco="SETTINGS_ADVANCED_SETTINGS_SUBTITLE"></div>
-                <div class="panel-icon">
+        <mat-expansion-panel *ngIf="showAdvancedSettings">
+            <mat-expansion-panel-header class="mat-expansion-panel-header main-header">
+                <div class="panel-icon advanced">
                     <mat-icon>settings_applications</mat-icon>
+                </div>
+                <div class="panel-text">
+                    <div class="panel-title" transloco="SETTINGS_ADVANCED_SETTINGS_TITLE"></div>
+                    <div class="panel-description" transloco="SETTINGS_ADVANCED_SETTINGS_SUBTITLE"></div>
                 </div>
             </mat-expansion-panel-header>
 
@@ -296,7 +360,12 @@
                     <mat-selection-list multiple="false">
                         <div id="manual-backup-div-content">
                             <mat-expansion-panel-header class="mat-expansion-panel-header">
-                                <div class="panel-title" transloco="SETTINGS_MANUAL_SAVE_TITLE"></div>
+                                <div class="panel-title">
+                                    {{ 'SETTINGS_MANUAL_SAVE_TITLE' | transloco }}
+                                    <!-- stopPropagation: this header belongs to the "Advanced" panel, which would close -->
+                                    <mat-icon class="help-icon-inline manual-backup-info"
+                                        (click)="openManualBackupInfo(); $event.stopPropagation()">info</mat-icon>
+                                </div>
                                 <div class="panel-description" transloco="SETTINGS_MANUAL_SAVE_SUBTITLE"></div>
                             </mat-expansion-panel-header>
 
@@ -346,12 +415,14 @@
             </div>
         </mat-expansion-panel>
 
-        <mat-expansion-panel hideToggle *ngIf="showDeveloperMode">
-            <mat-expansion-panel-header class="mat-expansion-panel-header">
-                <div class="panel-title" transloco="SETTINGS_ADVANCED_TITLE"></div>
-                <div class="panel-description" transloco="SETTINGS_ADVANCED_SUBTITLE"></div>
-                <div class="panel-icon">
+        <mat-expansion-panel *ngIf="showDeveloperMode">
+            <mat-expansion-panel-header class="mat-expansion-panel-header main-header">
+                <div class="panel-icon developer">
                     <mat-icon>developer_mode</mat-icon>
+                </div>
+                <div class="panel-text">
+                    <div class="panel-title" transloco="SETTINGS_ADVANCED_TITLE"></div>
+                    <div class="panel-description" transloco="SETTINGS_ADVANCED_SUBTITLE"></div>
                 </div>
             </mat-expansion-panel-header>
 
@@ -382,12 +453,14 @@
 
         </mat-expansion-panel>
 
-        <mat-expansion-panel hideToggle>
-            <mat-expansion-panel-header class="mat-expansion-panel-header">
-                <div class="panel-title" transloco="SETTINGS_ABOUT_TITLE"></div>
-                <div class="panel-description" transloco="SETTINGS_ABOUT_SUBTITLE"></div>
-                <div class="panel-icon">
+        <mat-expansion-panel>
+            <mat-expansion-panel-header class="mat-expansion-panel-header main-header">
+                <div class="panel-icon about">
                     <mat-icon>info</mat-icon>
+                </div>
+                <div class="panel-text">
+                    <div class="panel-title" transloco="SETTINGS_ABOUT_TITLE"></div>
+                    <div class="panel-description" transloco="SETTINGS_ABOUT_SUBTITLE"></div>
                 </div>
             </mat-expansion-panel-header>
 

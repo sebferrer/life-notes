@@ -7,9 +7,19 @@
     "ng": "ng",
     "start": "set NODE_OPTIONS=--openssl-legacy-provider && ng serve",
     "build": "set NODE_OPTIONS=--openssl-legacy-provider && ng build",
-    "test": "ng test",
-    "lint": "ng lint",
-    "e2e": "ng e2e"
+    "build:android": "set NODE_OPTIONS=--openssl-legacy-provider && ng build --prod && npx cap sync android",
+    "test": "npm run build && npm run test:run",
+    "test:run": "playwright test --config=playwright.config.ts",
+    "test:unit": "playwright test --config=playwright.config.ts --project=unit",
+    "test:e2e": "npm run build && playwright test --config=playwright.config.ts --project=unit --project=e2e",
+    "test:visual": "npm run build && playwright test --config=playwright.config.ts --project=visual",
+    "test:visual:update": "npm run build && playwright test --config=playwright.config.ts --project=visual --update-snapshots",
+    "test:report": "playwright show-report tests/report",
+    "test:compat": "node tests/compat/build.mjs && playwright test --config=playwright.compat.config.ts",
+    "test:compat:prod": "node tests/compat/build.mjs --prod && set COMPAT_MODE=prod && playwright test --config=playwright.compat.config.ts",
+    "test:compat:report": "playwright show-report tests/compat/report",
+    "screenshots:store": "npm run build && playwright test --config=playwright.store.config.ts",
+    "lint": "ng lint"
   },
   "private": true,
   "dependencies": {
@@ -32,6 +42,7 @@
     "@capacitor/core": "^8.0.2",
     "@capacitor/filesystem": "^8.1.0",
     "@capacitor/keyboard": "^8.0.0",
+    "@capacitor/screen-orientation": "^8.0.2",
     "@capacitor/share": "^8.0.0",
     "@capacitor/splash-screen": "^8.0.0",
     "@capacitor/status-bar": "^8.0.0",
@@ -51,6 +62,7 @@
     "material-design-icons": "^3.0.1",
     "moment": "^2.29.1",
     "ng2-charts": "^2.4.2",
+    "ngx-material-timepicker": "^5.5.3",
     "pouchdb": "^7.2.2",
     "rxjs": "~6.6.3",
     "simplify-string": "^1.0.3",
@@ -65,6 +77,7 @@
     "@angular/language-service": "~11.0.2",
     "@capacitor/assets": "^3.0.5",
     "@ionic/angular-toolkit": "^3.0.0",
+    "@playwright/test": "^1.64.1",
     "@types/chart.js": "^2.9.29",
     "@types/file-saver": "^2.0.1",
     "@types/jasmine": "~3.5.0",
@@ -85,6 +98,9 @@
     "ts-node": "~7.0.0",
     "tslint": "~6.1.0",
     "typescript": "~4.0.5"
+  },
+  "overrides": {
+    "websocket-driver": "^0.7.4"
   },
   "description": "Life notes and stats",
   "cordova": {

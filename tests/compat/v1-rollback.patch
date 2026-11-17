@@ -1,0 +1,165 @@
+--- a/src/app/infra/backup.service.ts
++++ b/src/app/infra/backup.service.ts
+@@ -5,6 +5,7 @@
+ import { DaysService } from './days.service';
+ import { SymptomsService } from './symptoms.service';
+ import { SettingsService } from './settings.service';
++import { DbContext } from './database';
+ 
+ @Injectable()
+ export class BackupService {
+@@ -12,17 +13,20 @@
+ 	constructor(
+ 		private daysService: DaysService,
+ 		private symptomsService: SymptomsService,
+-		private settingsService: SettingsService
++		private settingsService: SettingsService,
++		private dbContext: DbContext
+ 	) { }
+ 
+ 	public getBackup(): Observable<IBackup> {
+ 		return forkJoin([
+ 			this.daysService.getDays(),
+ 			this.symptomsService.getSymptoms(),
+-			this.settingsService.getSettings()
++			this.settingsService.getSettings(),
++			this.dbContext.asArrayObservable<any>(this.dbContext.customTypesCollection.allDocs({ include_docs: true }))
+ 		]).pipe(
+-			map(([days, symptoms, settings]) => {
+-				return { days, symptoms, settings };
++			map(([days, symptoms, settings, customTypes]) => {
++				// The event types of the V2 (none on a phone that never had it: the backup stays as before)
++				return customTypes.length > 0 ? { days, symptoms, settings, customTypes } : { days, symptoms, settings };
+ 			})
+ 		);
+ 	}
+--- a/src/app/infra/database.ts
++++ b/src/app/infra/database.ts
+@@ -12,6 +12,8 @@
+ 	public medsCollection = new Collection('meds');
+ 	public logsCollection = new Collection('logs');
+ 	public settingsCollection = new Collection('settings');
++	// Event types created by the user in the later versions (V2): not shown here, kept in the backups for them
++	public customTypesCollection = new Collection('customTypes');
+ 
+ 	public asArrayObservable<T>(dbSet: Promise<{ rows: { doc: T }[] }>): Observable<T[]> {
+ 		return from(dbSet).pipe(
+--- a/src/app/infra/days.service.ts
++++ b/src/app/infra/days.service.ts
+@@ -19,6 +19,14 @@
+ // const CALENDAR_FROM_API = '/api/calendar-from';
+ // const DAY_OVERVIEW_FIELDS = 'date, symptomOverviews';
+ 
++// The fields of a day known by this version
++const KNOWN_DAY_FIELDS = ['_id', '_rev', 'date', 'detailedDate', 'symptomOverviews', 'symptoms', 'logs', 'meds', 'meals',
++	'wakeUp', 'goToBed'];
++
++function isEmptyValue(value: any): boolean {
++	return value == null || value === '' || (Array.isArray(value) && value.length === 0);
++}
++
+ @Injectable()
+ export class DaysService {
+ 
+@@ -319,7 +327,10 @@
+ 			day.symptoms.length === 0 &&
+ 			day.meds.length === 0 &&
+ 			day.meals.length === 0 &&
+-			day.wakeUp === '' && day.goToBed === '';
++			day.wakeUp === '' && day.goToBed === '' &&
++			// The fields added by a later version (sports and custom entries of the V2...), not shown here: a day
++			// holding something in them is never removed with its last entry
++			Object.keys(day).filter(key => !KNOWN_DAY_FIELDS.includes(key)).every(key => isEmptyValue((day as any)[key]));
+ 	}
+ 
+ 	public filterEvent(events: any[], time: string, key: string) {
+--- a/src/app/infra/importer-exporter.service.ts
++++ b/src/app/infra/importer-exporter.service.ts
+@@ -13,6 +13,7 @@
+ import { IBackup } from '../models/backup.model';
+ import { GlobalService } from './global.service';
+ import { TranslocoService } from '@ngneat/transloco';
++import { DbContext } from './database';
+ import * as moment from 'moment';
+ import { saveAs } from 'file-saver';
+ import { jsPDF } from 'jspdf';
+@@ -35,7 +36,8 @@
+ 		private symptomsService: SymptomsService,
+ 		private settingsService: SettingsService,
+ 		private backupService: BackupService,
+-		private translocoService: TranslocoService
++		private translocoService: TranslocoService,
++		private dbContext: DbContext
+ 	) { }
+ 
+ 	private getBackupFile(isAuto: boolean): Observable<string> {
+@@ -56,6 +58,7 @@
+ 		this.symptomsService.addSymptoms(symptomsJsonArr).subscribe(() => {
+ 			this.globalService.loadSymptoms().subscribe(() => { });
+ 		});
++		this.importCustomTypes(backupJsonObj.customTypes, daysJsonArr);
+ 		this.settingsService.editSettings(settingsJsonOnj).subscribe(() => {
+ 			this.globalService.language = settingsJsonOnj.language;
+ 			this.globalService.targetSymptomKey = settingsJsonOnj.targetSymptomKey;
+@@ -124,6 +127,26 @@
+ 		);
+ 	}
+ 
++	// Event types created by the user in the V2, kept for it as it does (see importCustomTypes of the V2): those of
++	// the backup, or else those of the phone used by the entries of the backup
++	private importCustomTypes(backupTypes: any[], days: any[]): void {
++		const collection = this.dbContext.customTypesCollection;
++		const used = new Set<string>();
++		days.forEach(day => (day.customs || []).forEach(entry => used.add(entry.customType)));
++		from(collection.allDocs<any>({ include_docs: true })).pipe(
++			// A list of types with a key (the V2 refuses the other backups, this version doesn't check them)
++			map(all => Array.isArray(backupTypes)
++				? backupTypes.filter(type => type != null && typeof type.key === 'string')
++				: all.rows.map(row => row.doc).filter(type => used.has(type.key))),
++			switchMap(types => collection.reset().pipe(map(() => types))),
++			switchMap(types => types.length === 0 ? of(null) : from(collection.bulkDocs(types.map(type => {
++				const doc = { ...type, '_id': type.key };
++				delete doc['_rev'];
++				return doc;
++			}))))
++		).subscribe(() => { });
++	}
++
+ 	public cleanBackupData(backup: IBackup): IBackup {
+ 		backup.days.map(day => {
+ 			delete day['_rev'];
+@@ -133,6 +156,10 @@
+ 			delete symptom['_rev'];
+ 		});
+ 		delete backup.settings['_rev'];
++		(backup.customTypes || []).forEach(type => {
++			delete type['_id'];
++			delete type['_rev'];
++		});
+ 
+ 		return backup;
+ 	}
+--- a/src/app/infra/settings.service.ts
++++ b/src/app/infra/settings.service.ts
+@@ -35,6 +35,12 @@
+ 			switchMap(s => {
+ 				s.language = newSettings.language;
+ 				s.targetSymptomKey = newSettings.targetSymptomKey;
++				// The settings of the V2 restored by its backups: not used here, kept for it
++				for (const key of ['darkMode', 'landscapeMode', 'uiVersion', 'sleepChartMode', 'eventColors']) {
++					if (newSettings[key] != null) {
++						s[key] = newSettings[key];
++					}
++				}
+ 				s.lastInstall = this.CURRENT_VERSION
+ 				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
+ 					map(() => s)
+--- a/src/app/models/backup.model.ts
++++ b/src/app/models/backup.model.ts
+@@ -6,4 +6,6 @@
+ 	days: IDay[];
+ 	symptoms: ISymptom[];
+ 	settings: ISettings;
++	// Event types created by the user in the later versions (V2), only when the phone has some
++	customTypes?: any[];
+ }

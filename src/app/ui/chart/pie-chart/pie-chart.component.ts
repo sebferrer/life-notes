@@ -16,6 +16,9 @@ export class PieChartComponent implements OnInit {
 	width: string;
 	@Input()
 	legend: boolean;
+	// Width / height of the chart without legend (Chart.js default: 2)
+	@Input()
+	aspectRatio: number;
 
 	public labels: string[];
 	public type: string;
@@ -40,6 +43,9 @@ export class PieChartComponent implements OnInit {
 				tooltips: {
 					enabled: false
 				}
+			}
+			if (this.aspectRatio != null) {
+				this.options.aspectRatio = this.aspectRatio;
 			}
 		}
 	}

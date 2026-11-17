@@ -1,0 +1,18 @@
+<div class="ring-cell">
+	<div class="ring-name">{{ label }}</div>
+	<div class="ring" [class.empty]="summary.total === 0" role="img" [attr.aria-label]="description">
+		<canvas *ngIf="summary.total > 0" baseChart width="118" height="118" chartType="doughnut"
+			[datasets]="datasets" [labels]="chart.labels" [options]="options" [legend]="false"></canvas>
+		<div class="ring-center">
+			<div class="ring-value">{{ summary.days }}<small>{{ 'CALENDAR_INTENSITY_DAY_UNIT' | transloco }}</small></div>
+			<div class="ring-label">{{ daysLabel | transloco }}</div>
+		</div>
+		<div *ngIf="active" class="ring-tooltip">{{ segmentDescription(active) }}</div>
+	</div>
+	<div class="ring-peak">
+		<ng-container *ngIf="summary.average != null">
+			{{ 'CALENDAR_INTENSITY_AVERAGE' | transloco: { average: format(summary.average) } }} ·
+			{{ (invertedScale ? 'CALENDAR_INTENSITY_MIN' : 'CALENDAR_INTENSITY_MAX') | transloco:
+			{ value: format(summary.worst) } }}</ng-container>
+	</div>
+</div>

@@ -3,6 +3,10 @@ import { MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef } from '@angular/material/bott
 
 export interface IBottomSheetEditLogData {
     key: string;
+    // Optional translation keys, so the sheet can be reused for other key-only entries (e.g. sports)
+    title?: string;
+    label?: string;
+    warning?: string;
 }
 
 @Component({

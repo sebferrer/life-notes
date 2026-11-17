@@ -10,6 +10,7 @@ import { GlobalService } from 'src/app/infra/global.service';
 import { TranslocoService } from '@ngneat/transloco';
 import { MedsService } from 'src/app/infra/meds.service';
 import { DialogConfirmComponent } from '../dialog/dialog-confirm';
+import { BottomSheetConfirmComponent } from '../bottom-sheet/bottom-sheet-confirm';
 
 import { getSortOrder } from 'src/app/util/array.utils';
 import { DialogOccurrenceHistoryComponent } from '../dialog/dialog-occurrence-history';
@@ -19,14 +20,13 @@ import { BottomSheetDeleteOverviewComponent } from '../bottom-sheet/bottom-sheet
 @Component({
 	selector: 'app-meds',
 	templateUrl: './meds.component.html',
-	styleUrls: ['./meds.component.scss']
+	styleUrls: ['../manage/manage-list.scss']
 })
 export class MedsComponent implements OnInit {
 
 	public meds: MedHistoryViewModel[];
 	public meds$: BehaviorSubject<MedHistoryViewModel[]>;
 
-	public displayedColumns: string[] = ['key', 'quantity', 'occurrences', 'actions'];
 	public dataSource: IMedHistory[];
 
 	constructor(
@@ -64,6 +64,8 @@ export class MedsComponent implements OnInit {
 	public openEditDialog(med: MedHistoryViewModel): void {
 		this.bottomSheet.open(BottomSheetEditMedComponent, {
 			panelClass: 'event-bottom-sheet',
+			// Only the close button can dismiss it, to avoid losing an ongoing edition
+			disableClose: true,
 			data: {
 				key: med.key,
 				quantity: med.quantity
@@ -97,13 +99,15 @@ export class MedsComponent implements OnInit {
 		});
 	}
 
-	public openOccurrenceHistory(med: MedHistoryViewModel): void {
+	// The history after a deletion, else the default tab of the version of the interface
+	public openOccurrenceHistory(med: MedHistoryViewModel, tab?: 'stats' | 'history'): void {
 		this.medsService.getMedOccurrences(med.key, med.quantity).subscribe(occurrences => {
 			const title = med.key + (med.quantity ? ' ' + med.quantity + ' mg' : '');
 			const ref = this.bottomSheet.open(DialogOccurrenceHistoryComponent, {
-				panelClass: 'event-bottom-sheet',
+				panelClass: ['event-bottom-sheet', 'occurrence-history-panel'],
 				disableClose: true,
 				data: {
+					tab,
 					title,
 					type: 'med',
 					key: med.key,
@@ -120,12 +124,13 @@ export class MedsComponent implements OnInit {
 					this.refreshMedsList();
 				}
 				if (result?.reopen) {
-					this.openOccurrenceHistory(med);
+					this.openOccurrenceHistory(med, 'history');
 				}
 			});
 		});
 	}
 
+	// V1: floating button, confirmation in a dialog (see GlobalService.uiVersion)
 	public openRefreshDialog(): void {
 		this.dialog.open(DialogConfirmComponent, {
 			autoFocus: false,
@@ -136,6 +141,23 @@ export class MedsComponent implements OnInit {
 				content: ['MEDS_REFRESH_DIALOG_CONTENT_1', 'MEDS_REFRESH_DIALOG_CONTENT_2']
 			}
 		}).afterClosed().subscribe(response => {
+			if (response == null || response.answer !== 'yes') {
+				return;
+			}
+			this.refreshMedsList();
+		});
+	}
+
+	// V2: button of the header, confirmation in a sheet
+	public openRefreshSheet(): void {
+		this.bottomSheet.open(BottomSheetConfirmComponent, {
+			panelClass: 'event-bottom-sheet',
+			data: {
+				icon: 'sync',
+				title: 'MEDS_REFRESH_DIALOG_TITLE',
+				content: ['MEDS_REFRESH_DIALOG_CONTENT_1', 'MEDS_REFRESH_DIALOG_CONTENT_2']
+			}
+		}).afterDismissed().subscribe(response => {
 			if (response == null || response.answer !== 'yes') {
 				return;
 			}

@@ -1,0 +1,109 @@
+:host {
+    display: block;
+    min-width: 0;
+}
+
+.ring-cell {
+    padding: 0.6rem 0.4rem 0.5rem 0.4rem;
+    border-radius: 12px;
+    background-color: var(--surface-variant);
+}
+
+.ring-name {
+    margin-bottom: 0.4rem;
+    text-align: center;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-strong);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ring {
+    position: relative;
+    width: 118px;
+    height: 118px;
+    margin: 0 auto;
+
+    canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    // No day counted (inverted scale without any value): the ring alone, with the edges of the colors of the other
+    // rings (from 44 to 56.5 px from the middle, see the component)
+    &.empty::before {
+        content: '';
+        position: absolute;
+        top: 2.5px;
+        right: 2.5px;
+        bottom: 2.5px;
+        left: 2.5px;
+        border-radius: 50%;
+        border: 12.5px solid var(--border-subtle);
+    }
+}
+
+// The days with the symptom, in the middle of the ring
+.ring-center {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+
+    .ring-value {
+        font-size: 1.4rem;
+        font-weight: 700;
+        line-height: 1;
+        color: var(--text-strong);
+
+        small {
+            margin-left: 3px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-medium);
+        }
+    }
+
+    .ring-label {
+        max-width: 4.6rem;
+        margin-top: 0.2rem;
+        text-align: center;
+        font-size: 0.66rem;
+        line-height: 1.15;
+        color: var(--text-medium);
+    }
+}
+
+// Days of the part hovered or tapped, above the ring. Opaque: the strong text color laid on the card.
+.ring-tooltip {
+    position: absolute;
+    left: 50%;
+    top: -0.3rem;
+    z-index: 2;
+    transform: translate(-50%, -100%);
+    padding: 0.35rem 0.6rem;
+    border-radius: 8px;
+    white-space: nowrap;
+    font-size: 0.75rem;
+    color: var(--surface);
+    background: linear-gradient(var(--text-strong), var(--text-strong)), var(--surface);
+    box-shadow: 0 2px 6px var(--shadow);
+    pointer-events: none;
+}
+
+.ring-peak {
+    min-height: 1rem;
+    margin-top: 0.4rem;
+    text-align: center;
+    font-size: 0.7rem;
+    color: var(--text-weak);
+}

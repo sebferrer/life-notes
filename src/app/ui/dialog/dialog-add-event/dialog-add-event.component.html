@@ -1,20 +1,25 @@
 <ng-template transloco let-t>
-    <div class="bottom-sheet-container {{ data.type }}">
+    <div class="bottom-sheet-container closable-sheet {{ data.type }} {{ globalService.customTypeClass(data.customType) }}">
+        <button mat-icon-button class="sheet-close-button" (click)="onNoClick()" [attr.aria-label]="t('CLOSE')">
+            <mat-icon>close</mat-icon>
+        </button>
 
         <div class="header-section">
             <div class="title-row">
                 <div class="icon-bubble">
                     <mat-icon *ngIf="data.type === 'symptomLog'">spa</mat-icon>
                     <mat-icon *ngIf="data.type === 'log'">event_note</mat-icon>
-                    <img *ngIf="data.type === 'med'" src="/assets/svg/pill-capsule.svg" class="custom-svg" />
-                    <img *ngIf="data.type === 'meal'" src="/assets/svg/curry-chronicles.svg" class="custom-svg" />
+                    <mat-icon *ngIf="data.type === 'sport'">fitness_center</mat-icon>
+                    <mat-icon *ngIf="data.type === 'custom'">{{ customType.icon }}</mat-icon>
+                    <span *ngIf="data.type === 'med'" class="svg-icon pill custom-svg"></span>
+                    <span *ngIf="data.type === 'meal'" class="svg-icon meal custom-svg"></span>
                     <mat-icon *ngIf="data.type === 'wakeUp'">alarm</mat-icon>
                     <mat-icon *ngIf="data.type === 'goToBed'">bedtime</mat-icon>
                 </div>
                 <div class="main-title">
                     <span *ngIf="data.edit">{{ t('EDIT') }}</span>
                     <span *ngIf="!data.edit && data.type !== 'wakeUp' && data.type !== 'goToBed'">{{ t('ADD') }}</span>
-                    {{ t(data.type) | titlecase }}
+                    {{ data.type === 'custom' ? customType.label : (t(data.type) | titlecase) }}
                 </div>
             </div>
 
@@ -40,7 +45,7 @@
                     <mat-form-field *ngIf="timePicker === 'material'" appearance="none" class="clean-input">
                         <input matInput [ngxTimepicker]="materialTimePicker" [(ngModel)]="data.time"
                             [format]="timeFormat" readonly placeholder="Select Time">
-                        <ngx-material-timepicker #materialTimePicker></ngx-material-timepicker>
+                        <ngx-material-timepicker #materialTimePicker [theme]="timepickerTheme"></ngx-material-timepicker>
                     </mat-form-field>
                 </div>
             </div>
@@ -88,15 +93,89 @@
                 <div *ngSwitchCase="'log'" class="form-fields-group">
                     <div class="form-field">
                         <div class="field-label">{{ t(data.type) | titlecase }}</div>
-                        <div class="field-input-box">
+                        <div class="field-input-box" matAutocompleteOrigin #autologBox="matAutocompleteOrigin">
                             <mat-form-field appearance="none" class="clean-input">
                                 <input type="text" matInput [formControl]="myControl" [(ngModel)]="data.key"
-                                    [matAutocomplete]="autolog" required>
-                                <mat-autocomplete #autolog="matAutocomplete"
+                                    [matAutocomplete]="autolog"
+                                    [matAutocompleteConnectedTo]="globalService.isUiV1 ? null : autologBox" required>
+                                <mat-autocomplete #autolog="matAutocomplete" class="{{ suggestionsClass }}"
                                     (optionSelected)="setLog($event.option.value)">
                                     <mat-option *ngFor="let option of filteredLogsOptions | async"
-                                        [value]="option">{{option}}</mat-option>
+                                        [value]="option">
+                                        <ng-container *ngTemplateOutlet="suggestion; context: { $implicit: option }">
+                                        </ng-container>
+                                    </mat-option>
                                 </mat-autocomplete>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <div class="field-label">{{ t('DETAIL') }}</div>
+                        <div class="field-input-box">
+                            <ion-item lines="none" class="ion-no-padding">
+                                <ion-textarea [(ngModel)]="data.detail" rows="1" autoGrow="true"></ion-textarea>
+                            </ion-item>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sport -->
+                <div *ngSwitchCase="'sport'" class="form-fields-group">
+                    <div class="form-field">
+                        <div class="field-label">{{ t(data.type) | titlecase }}</div>
+                        <div class="field-input-box" matAutocompleteOrigin #autosportBox="matAutocompleteOrigin">
+                            <mat-form-field appearance="none" class="clean-input">
+                                <input type="text" matInput [formControl]="myControl" [(ngModel)]="data.key"
+                                    [matAutocomplete]="autosport"
+                                    [matAutocompleteConnectedTo]="globalService.isUiV1 ? null : autosportBox" required>
+                                <mat-autocomplete #autosport="matAutocomplete" class="{{ suggestionsClass }}"
+                                    (optionSelected)="setSport($event.option.value)">
+                                    <mat-option *ngFor="let option of filteredSportsOptions | async"
+                                        [value]="option">
+                                        <ng-container *ngTemplateOutlet="suggestion; context: { $implicit: option }">
+                                        </ng-container>
+                                    </mat-option>
+                                </mat-autocomplete>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <div class="field-label">{{ t('DETAIL') }}</div>
+                        <div class="field-input-box">
+                            <ion-item lines="none" class="ion-no-padding">
+                                <ion-textarea [(ngModel)]="data.detail" rows="1" autoGrow="true"></ion-textarea>
+                            </ion-item>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event type created by the user -->
+                <div *ngSwitchCase="'custom'" class="form-fields-group">
+                    <div class="form-field">
+                        <div class="field-label">{{ t('CUSTOM_ENTRY_NAME') }}</div>
+                        <div class="field-input-box" matAutocompleteOrigin #autocustomBox="matAutocompleteOrigin">
+                            <mat-form-field appearance="none" class="clean-input">
+                                <input type="text" matInput [formControl]="myControl" [(ngModel)]="data.key"
+                                    [placeholder]="customType.label" [matAutocomplete]="autocustom"
+                                    [matAutocompleteConnectedTo]="globalService.isUiV1 ? null : autocustomBox">
+                                <mat-autocomplete #autocustom="matAutocomplete" class="{{ suggestionsClass }}"
+                                    (optionSelected)="setCustom($event.option.value)">
+                                    <mat-option *ngFor="let option of filteredCustomOptions | async"
+                                        [value]="option">
+                                        <ng-container *ngTemplateOutlet="suggestion; context: { $implicit: option }">
+                                        </ng-container>
+                                    </mat-option>
+                                </mat-autocomplete>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div *ngIf="customType.quantity" class="form-field">
+                        <div class="field-label">{{ t('CUSTOM_ENTRY_QUANTITY') }}<ng-container *ngIf="customType.unit">
+                                ({{ customType.unit }})</ng-container>
+                        </div>
+                        <div class="field-input-box">
+                            <mat-form-field appearance="none" class="clean-input">
+                                <input matInput inputmode="decimal" class="quantity-input" [(ngModel)]="data.quantity">
                             </mat-form-field>
                         </div>
                     </div>
@@ -114,14 +193,18 @@
                 <div *ngSwitchCase="'med'" class="form-fields-group">
                     <div class="form-field">
                         <div class="field-label">{{ t(data.type) | titlecase }}</div>
-                        <div class="field-input-box">
+                        <div class="field-input-box" matAutocompleteOrigin #automedBox="matAutocompleteOrigin">
                             <mat-form-field appearance="none" class="clean-input">
                                 <input type="text" matInput [formControl]="myControl" [(ngModel)]="data.key"
-                                    [matAutocomplete]="automed" required>
-                                <mat-autocomplete #automed="matAutocomplete"
+                                    [matAutocomplete]="automed"
+                                    [matAutocompleteConnectedTo]="globalService.isUiV1 ? null : automedBox" required>
+                                <mat-autocomplete #automed="matAutocomplete" class="{{ suggestionsClass }}"
                                     (optionSelected)="setMed($event.option.value)">
                                     <mat-option *ngFor="let option of filteredMedsOptions | async"
-                                        [value]="option">{{option}}</mat-option>
+                                        [value]="option">
+                                        <ng-container *ngTemplateOutlet="suggestion; context: { $implicit: option }">
+                                        </ng-container>
+                                    </mat-option>
                                 </mat-autocomplete>
                             </mat-form-field>
                         </div>
@@ -140,9 +223,19 @@
                 <div *ngSwitchCase="'meal'" class="form-fields-group">
                     <div class="form-field">
                         <div class="field-label">{{ t(data.type) | titlecase }}</div>
-                        <div class="field-input-box">
+                        <div class="field-input-box" matAutocompleteOrigin #automealBox="matAutocompleteOrigin">
                             <mat-form-field appearance="none" class="clean-input">
-                                <input matInput [(ngModel)]="data.key" required>
+                                <input type="text" matInput [formControl]="myControl" [(ngModel)]="data.key"
+                                    [matAutocomplete]="automeal"
+                                    [matAutocompleteConnectedTo]="globalService.isUiV1 ? null : automealBox" required>
+                                <mat-autocomplete #automeal="matAutocomplete" class="{{ suggestionsClass }}"
+                                    (optionSelected)="setMeal($event.option.value)">
+                                    <mat-option *ngFor="let option of filteredMealsOptions | async"
+                                        [value]="option">
+                                        <ng-container *ngTemplateOutlet="suggestion; context: { $implicit: option }">
+                                        </ng-container>
+                                    </mat-option>
+                                </mat-autocomplete>
                             </mat-form-field>
                         </div>
                     </div>
@@ -173,4 +266,16 @@
         <app-spacer-item></app-spacer-item>
 
     </div>
+
+    <!-- A suggested name (V2): what was typed in bold, the dose of a medication in a badge. V1: the text alone -->
+    <ng-template #suggestion let-option>
+        <ng-container *ngIf="globalService.isUiV1; else modernSuggestion">{{ option }}</ng-container>
+        <ng-template #modernSuggestion>
+            <span class="suggestion" *ngIf="suggestionParts(option) as parts">
+                <span class="suggestion-name" [class.filtered]="parts.name.length > 1"><span *ngFor="let part of parts.name; trackBy: trackByIndex"
+                        [class.match]="part.match">{{ part.text }}</span></span>
+                <span *ngIf="parts.badge" class="suggestion-badge">{{ ' ' + parts.badge }}</span>
+            </span>
+        </ng-template>
+    </ng-template>
 </ng-template>

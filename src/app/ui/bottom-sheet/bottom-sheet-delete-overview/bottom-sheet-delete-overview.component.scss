@@ -10,7 +10,7 @@
         .title {
             font-size: 1.3rem;
             font-weight: 700;
-            color: rgba(0,0,0,0.85);
+            color: var(--text-strong);
             margin: 0;
             text-align: center;
         }
@@ -23,11 +23,11 @@
         
         .message {
             margin: 0;
-            color: rgba(0,0,0,0.7);
+            color: var(--text-medium);
             margin-bottom: 0.5rem;
 
             &:last-child {
-                color: #d32f2f;
+                color: var(--danger);
                 font-weight: 500;
                 font-size: 0.9rem;
             }
@@ -49,8 +49,8 @@
         }
 
         .cancel-button {
-            border-color: rgba(0,0,0,0.15);
-            color: rgba(0,0,0,0.6);
+            border-color: var(--border-medium);
+            color: var(--text-medium);
         }
     }
 }

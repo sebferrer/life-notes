@@ -8,6 +8,8 @@ export interface IDeleteTimelineEventData {
     type: string;
     time: string;
     key: string;
+    // Label of the custom types, instead of the translation of the type
+    typeLabel?: string;
 }
 
 @Component({

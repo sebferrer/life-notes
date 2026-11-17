@@ -1,0 +1,153 @@
+// The thumbs stay inside their track: their center goes from one radius to the other edge minus one radius, and the
+// gradients start and end at those centers, so that the color under a thumb is the one picked.
+// Big tracks and thumbs: they are dragged with a finger.
+app-color-picker {
+    display: block;
+}
+
+.color-picker {
+    --cp-area-radius: 0.75rem;
+    --cp-hue-radius: 0.875rem;
+
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    -webkit-user-select: none;
+    user-select: none;
+
+    .cp-area,
+    .cp-hue {
+        position: relative;
+        // The finger drags the thumb, it doesn't scroll the sheet
+        touch-action: none;
+        cursor: pointer;
+        outline: none;
+        -webkit-tap-highlight-color: transparent;
+
+        &:focus-visible {
+            box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--primary);
+        }
+    }
+
+    // White from the left and black from the bottom, over the pure hue (background-color)
+    .cp-area {
+        height: 11rem;
+        border-radius: var(--cp-area-radius);
+        background-image:
+            linear-gradient(to top, #000 var(--cp-area-radius), rgba(0, 0, 0, 0) calc(100% - var(--cp-area-radius))),
+            linear-gradient(to right, #fff var(--cp-area-radius), rgba(255, 255, 255, 0) calc(100% - var(--cp-area-radius)));
+
+        .cp-thumb {
+            width: calc(2 * var(--cp-area-radius));
+            height: calc(2 * var(--cp-area-radius));
+        }
+    }
+
+    .cp-hue {
+        height: calc(2 * var(--cp-hue-radius));
+        border-radius: 999px;
+        background-image: linear-gradient(to right,
+            #f00 var(--cp-hue-radius),
+            #ff0 calc(var(--cp-hue-radius) + (100% - 2 * var(--cp-hue-radius)) * 0.16667),
+            #0f0 calc(var(--cp-hue-radius) + (100% - 2 * var(--cp-hue-radius)) * 0.33333),
+            #0ff calc(var(--cp-hue-radius) + (100% - 2 * var(--cp-hue-radius)) * 0.5),
+            #00f calc(var(--cp-hue-radius) + (100% - 2 * var(--cp-hue-radius)) * 0.66667),
+            #f0f calc(var(--cp-hue-radius) + (100% - 2 * var(--cp-hue-radius)) * 0.83333),
+            #f00 calc(100% - var(--cp-hue-radius)));
+
+        .cp-thumb {
+            top: 50%;
+            width: calc(2 * var(--cp-hue-radius));
+            height: calc(2 * var(--cp-hue-radius));
+        }
+    }
+
+    // A white ring filled with the color, enlarged while dragged so that it shows around the finger
+    .cp-thumb {
+        position: absolute;
+        box-sizing: border-box;
+        border: 3px solid #fff;
+        border-radius: 50%;
+        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.18), 0 2px 6px rgba(0, 0, 0, 0.35);
+        transform: translate(-50%, -50%);
+        transition: transform 0.12s ease;
+        pointer-events: none;
+    }
+
+    .dragging .cp-thumb {
+        transform: translate(-50%, -50%) scale(1.3);
+    }
+
+    .cp-hex {
+        align-self: flex-start;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.5rem 0.85rem 0.5rem 0.6rem;
+        border-radius: 12px;
+        background-color: var(--surface-variant);
+        cursor: text;
+
+        &:focus-within {
+            box-shadow: inset 0 0 0 2px var(--primary);
+        }
+
+        .cp-hex-dot {
+            width: 1.4rem;
+            height: 1.4rem;
+            flex-shrink: 0;
+            margin-right: 0.25rem;
+            border-radius: 50%;
+            box-shadow: inset 0 0 0 1px var(--border-medium);
+        }
+
+        .cp-hex-prefix {
+            font-size: 1rem;
+            color: var(--text-weak);
+        }
+
+        .cp-hex-input {
+            width: 5.2em;
+            padding: 0;
+            border: none;
+            outline: none;
+            background: transparent;
+            color: var(--text-strong);
+            font: inherit;
+            font-size: 1rem;
+            font-weight: 500;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            -webkit-user-select: text;
+            user-select: text;
+        }
+    }
+
+    .cp-swatches {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(2.25rem, 1fr));
+        gap: 0.6rem;
+        justify-items: center;
+
+        .cp-swatch {
+            width: 2.25rem;
+            height: 2.25rem;
+            padding: 0;
+            border: none;
+            border-radius: 50%;
+            box-shadow: inset 0 0 0 1px var(--border-subtle);
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+
+            &.selected {
+                box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--text-strong);
+            }
+
+            &:focus-visible {
+                outline: 2px solid var(--primary);
+                outline-offset: 3px;
+            }
+        }
+    }
+}

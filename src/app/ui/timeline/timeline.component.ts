@@ -12,12 +12,14 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MedsService } from 'src/app/infra/meds.service';
 import { LogsService } from 'src/app/infra/logs.service';
+import { SportsService } from 'src/app/infra/sports.service';
+import { MealsService } from 'src/app/infra/meals.service';
 import { SettingsService } from 'src/app/infra/settings.service';
 
 @Component({
 	selector: 'app-timeline',
 	templateUrl: './timeline.component.html',
-	styleUrls: ['./timeline.component.scss']
+	styleUrls: ['./timeline.component.scss', '../time/day-card.scss']
 })
 export class TimelineComponent extends ATimeComponent implements OnInit {
 
@@ -34,12 +36,14 @@ export class TimelineComponent extends ATimeComponent implements OnInit {
 		protected daysService: DaysService,
 		protected medsService: MedsService,
 		protected logsService: LogsService,
+		protected sportsService: SportsService,
+		protected mealsService: MealsService,
 		protected settingsService: SettingsService,
 		protected dialog: MatDialog,
 		protected snackBar: MatSnackBar,
 		protected bottomSheet: MatBottomSheet
 	) {
-		super(globalService, translocoService, daysService, medsService, logsService, settingsService, dialog, snackBar, bottomSheet);
+		super(globalService, translocoService, daysService, medsService, logsService, sportsService, mealsService, settingsService, dialog, snackBar, bottomSheet);
 		this.updateCallback = (day: IDay): void => {
 			this.daysContents = this.daysContents.filter(dayContent => dayContent.date !== day.date);
 			this.daysContents.push(new DayViewModel(day));
@@ -65,14 +69,12 @@ export class TimelineComponent extends ATimeComponent implements OnInit {
 				this.nbDays += this.BATCH_SIZE;
 				this.daysContents$.next(this.daysContents);
 				this.isLoading = false;
+				// The first page of the app is drawn: the splash screen can go (only once)
+				this.globalService.hideSplashScreen();
 			}
 		);
 		this.globalService.timeFormat$.subscribe(() => {
 			this.daysContents$.next(this.daysContents);
 		});
-	}
-	public displayTimeHtml(time: string): string {
-		const formattedTime = this.displayTime(time);
-		return formattedTime.replace(/ (AM|PM)/, '<span class="ampm-suffix"> $1</span>');
 	}
 }

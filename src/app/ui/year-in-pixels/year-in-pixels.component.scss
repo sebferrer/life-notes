@@ -1,0 +1,152 @@
+.year-in-pixels {
+    padding-bottom: 1rem;
+}
+
+.page-header {
+    display: flex;
+    align-items: center;
+    margin: 0.5rem 0.75rem 0 0.25rem;
+
+    .back-button {
+        color: var(--text-medium);
+    }
+
+    .title {
+        margin: 0 0 0 0.25rem;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--text-strong);
+    }
+}
+
+// Same card as the calendar
+.pixels-card {
+    margin: 0.75rem;
+    padding: 0.5rem 0.75rem 0.75rem 0.75rem;
+    background-color: var(--surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 16px;
+    box-shadow: 0 1px 3px var(--shadow);
+}
+
+.year-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 0.5rem;
+
+    .year-nav {
+        color: var(--text-medium);
+        background-color: var(--surface-variant);
+    }
+
+    .year-label {
+        flex: 1;
+        text-align: center;
+
+        .year {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--text-strong);
+        }
+
+        .symptom {
+            font-size: 0.85rem;
+            color: var(--text-medium);
+        }
+    }
+}
+
+// One column per month, one row per day: the whole year fits on a phone screen
+.pixels-grid {
+    display: grid;
+    grid-template-columns: 1.25rem repeat(12, 1fr);
+    grid-auto-rows: 1rem;
+    gap: 3px;
+}
+
+.month-label,
+.day-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: var(--text-weak);
+}
+
+.month-label {
+    text-transform: uppercase;
+}
+
+.pixel {
+    border-radius: 4px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+
+    &.missing {
+        cursor: default;
+    }
+
+    &.today {
+        position: relative;
+        z-index: 1;
+        // Ring detached from the pixel by a gap of the card color, as in the calendar
+        box-shadow: 0 0 0 1.5px var(--surface), 0 0 0 3px var(--primary);
+    }
+}
+
+.no-data {
+    background-color: var(--surface-variant);
+    box-shadow: inset 0 0 0 1px var(--border-subtle);
+}
+
+.future {
+    box-shadow: inset 0 0 0 1px var(--border-subtle);
+}
+
+.color-default {
+    background-color: var(--color-pain-0);
+}
+
+.color-pain-1 {
+    background-color: var(--color-pain-1);
+}
+
+.color-pain-2 {
+    background-color: var(--color-pain-2);
+}
+
+.color-pain-3 {
+    background-color: var(--color-pain-3);
+}
+
+.color-pain-4 {
+    background-color: var(--color-pain-4);
+}
+
+.color-pain-5 {
+    background-color: var(--color-pain-5);
+}
+
+.legend {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.4rem 0.9rem;
+    margin-top: 0.9rem;
+    font-size: 0.75rem;
+    color: var(--text-medium);
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+
+    .swatch {
+        width: 0.8rem;
+        height: 0.8rem;
+        border-radius: 3px;
+    }
+}

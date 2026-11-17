@@ -13,7 +13,12 @@ import { TutorialComponent } from './ui/tutorial';
 import { AboutComponent } from './ui/about';
 import { MedsComponent } from './ui/meds';
 import { LogsComponent } from './ui/logs';
+import { SportsComponent } from './ui/sports';
+import { MealsComponent } from './ui/meals';
+import { CustomEntriesComponent } from './ui/custom-entries';
+import { ManageComponent } from './ui/manage';
 import { MonthlyReportComponent } from './ui/monthly-report';
+import { YearInPixelsComponent } from './ui/year-in-pixels';
 
 const routes: Routes = [
 	{
@@ -38,6 +43,20 @@ const routes: Routes = [
 		]
 	},
 	{
+		// One pixel per day of the year (the current one without year)
+		path: 'yearinpixels',
+		children: [
+			{
+				path: '',
+				component: YearInPixelsComponent
+			},
+			{
+				path: ':year',
+				component: YearInPixelsComponent
+			}
+		]
+	},
+	{
 		path: 'timeline',
 		component: TimelineComponent
 	},
@@ -46,12 +65,29 @@ const routes: Routes = [
 		component: SymptomsComponent
 	},
 	{
+		path: 'meals',
+		component: MealsComponent
+	},
+	{
 		path: 'meds',
 		component: MedsComponent
 	},
 	{
 		path: 'logs',
 		component: LogsComponent
+	},
+	{
+		path: 'sports',
+		component: SportsComponent
+	},
+	{
+		// Entries of an event type created by the user
+		path: 'custom/:key',
+		component: CustomEntriesComponent
+	},
+	{
+		path: 'manage',
+		component: ManageComponent
 	},
 	{
 		path: 'settings',

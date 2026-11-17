@@ -1,4 +1,8 @@
-<div class="bottom-sheet-container import-confirm">
+<div class="bottom-sheet-container closable-sheet import-confirm">
+    <button mat-icon-button class="sheet-close-button v2-only" (click)="onNoClick()"
+        [attr.aria-label]="'CLOSE' | transloco">
+        <mat-icon>close</mat-icon>
+    </button>
     <div class="header-section">
         <h2 class="title">{{ 'IMPORT_DIALOG_TITLE' | transloco }}</h2>
     </div>

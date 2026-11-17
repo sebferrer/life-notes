@@ -41,11 +41,12 @@ export class SymptomsService {
 		);
 	}
 
-	public editSymptom(key: string, newLabel: string): Observable<ISymptom> {
+	public editSymptom(key: string, newLabel: string, invertedScale: boolean): Observable<ISymptom> {
 		const symptom = this.getSymptom(key);
 		return symptom.pipe(
 			switchMap(s => {
 				s.label = newLabel;
+				s.invertedScale = invertedScale;
 				return this.dbContext.asObservable(this.dbContext.symptomsCollection.put(s)).pipe(
 					map(() => s)
 				);
@@ -53,11 +54,12 @@ export class SymptomsService {
 		);
 	}
 
-	public createNewSymptom(key: string, label: string): Observable<null> {
+	public createNewSymptom(key: string, label: string, invertedScale: boolean = false): Observable<null> {
 		const symptom = {
 			'_id': key,
 			'key': key,
-			'label': label
+			'label': label,
+			'invertedScale': invertedScale
 		};
 		return this.dbContext.asObservable(this.dbContext.symptomsCollection.put(symptom)).pipe(
 			map(() => null)

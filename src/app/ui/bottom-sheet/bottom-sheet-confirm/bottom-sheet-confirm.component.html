@@ -1,0 +1,28 @@
+<ng-template transloco let-t>
+    <div class="bottom-sheet-container closable-sheet confirm-sheet">
+        <button mat-icon-button class="sheet-close-button" (click)="onCancel()"
+            [attr.aria-label]="'CLOSE' | transloco">
+            <mat-icon>close</mat-icon>
+        </button>
+        <div class="header-section">
+            <mat-icon class="confirm-icon" *ngIf="data.icon">{{ data.icon }}</mat-icon>
+            <h2 class="title">{{ t(data.title) }}</h2>
+        </div>
+
+        <div class="content-section">
+            <p class="message" *ngFor="let line of data.content">{{ t(line) }}</p>
+        </div>
+
+        <div class="actions">
+            <button mat-stroked-button (click)="onCancel()" class="cancel-button">
+                {{ t(data.cancelLabel || 'NO') }}
+            </button>
+            <button mat-flat-button color="primary" (click)="onConfirm()" class="confirm-button">
+                {{ t(data.confirmLabel || 'YES') }}
+            </button>
+        </div>
+
+        <app-spacer-item></app-spacer-item>
+
+    </div>
+</ng-template>

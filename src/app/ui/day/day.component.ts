@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 import { DaysService } from '../../infra';
 import { Subject } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DayViewModel } from 'src/app/models/day.view.model';
 import { GlobalService } from 'src/app/infra/global.service';
 import { TranslocoService } from '@ngneat/transloco';
@@ -12,19 +13,20 @@ import { ATimeComponent } from '../time';
 import { IDay } from 'src/app/models';
 import { MedsService } from 'src/app/infra/meds.service';
 import { LogsService } from 'src/app/infra/logs.service';
+import { SportsService } from 'src/app/infra/sports.service';
+import { MealsService } from 'src/app/infra/meals.service';
 import { SettingsService } from 'src/app/infra/settings.service';
 
 @Component({
 	selector: 'app-day',
 	templateUrl: './day.component.html',
-	styleUrls: ['./day.component.scss']
+	styleUrls: ['./day.component.scss', '../time/day-card.scss']
 })
 export class DayComponent extends ATimeComponent implements OnInit {
 
 	public dayContent: DayViewModel;
 	public dayContent$: Subject<DayViewModel>;
 	public symptomMap: Map<string, string>;
-	public symptomPainColorMap: Map<number, string>;
 	public displayCharts = false;
 
 	constructor(
@@ -33,13 +35,17 @@ export class DayComponent extends ATimeComponent implements OnInit {
 		protected daysService: DaysService,
 		protected medsService: MedsService,
 		protected logsService: LogsService,
+		protected sportsService: SportsService,
+		protected mealsService: MealsService,
 		protected settingsService: SettingsService,
 		protected dialog: MatDialog,
 		protected snackBar: MatSnackBar,
 		protected bottomSheet: MatBottomSheet,
-		private route: ActivatedRoute
+		private route: ActivatedRoute,
+		private router: Router,
+		private location: Location
 	) {
-		super(globalService, translocoService, daysService, medsService, logsService, settingsService, dialog, snackBar, bottomSheet);
+		super(globalService, translocoService, daysService, medsService, logsService, sportsService, mealsService, settingsService, dialog, snackBar, bottomSheet);
 		this.updateCallback = (day: IDay): void => {
 			this.dayContent = new DayViewModel(day);
 			this.dayContent$.next(this.dayContent);
@@ -57,6 +63,15 @@ export class DayComponent extends ATimeComponent implements OnInit {
 				this.dayContent$.next(this.dayContent);
 			}
 		);
+	}
+
+	// Back to where the day was opened from (timeline or calendar)
+	public goBack(): void {
+		if (window.history.length > 1) {
+			this.location.back();
+		} else {
+			this.router.navigate(['/timeline']);
+		}
 	}
 
 	public toggleCharts(): void {

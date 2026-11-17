@@ -19,9 +19,12 @@ import { DayViewModel } from 'src/app/models/day.view.model';
 import { DialogNoTargetSymptomWarningComponent } from '../dialog/dialog-no-target-symptom-warning';
 import { MedsService } from 'src/app/infra/meds.service';
 import { LogsService } from 'src/app/infra/logs.service';
+import { SportsService } from 'src/app/infra/sports.service';
+import { MealsService } from 'src/app/infra/meals.service';
 import { SettingsService } from 'src/app/infra/settings.service';
 import { DialogInfoComponent } from '../dialog/dialog-info';
 import { format24H, formatAMPM } from 'src/app/util/time.util';
+import * as moment from 'moment';
 
 @Component({
 	selector: 'app-time',
@@ -33,7 +36,6 @@ export abstract class ATimeComponent {
 	public symptoms: ISymptom[];
 	public symptoms$: Observable<ISymptom[]>;
 	public symptomMap: Map<string, string>;
-	public symptomPainColorMap: Map<number, string>;
 
 	protected updateCallback: (day: IDay) => void;
 
@@ -43,6 +45,8 @@ export abstract class ATimeComponent {
 		protected daysService: DaysService,
 		protected medsService: MedsService,
 		protected logsService: LogsService,
+		protected sportsService: SportsService,
+		protected mealsService: MealsService,
 		protected settingsService: SettingsService,
 		protected dialog: MatDialog,
 		protected snackBar: MatSnackBar,
@@ -56,8 +60,6 @@ export abstract class ATimeComponent {
 			});
 		});
 		this.symptomMap = this.globalService.symptomMap;
-		this.symptomPainColorMap =
-			new Map([[0, 'default'], [1, 'pain-1'], [2, 'pain-2'], [3, 'pain-3'], [4, 'pain-4'], [5, 'pain-5']]);
 	}
 
 	public openShowDialog(date: string, customEvent: ICustomEvent, symptoms: ISymptom[]): void {
@@ -74,16 +76,19 @@ export abstract class ATimeComponent {
 					this.openAddSymptomDialog(customEvent.type, date, symptoms, customEvent);
 				}
 				else {
-					this.openAddDialog(customEvent.type, date, customEvent);
+					this.openAddDialog(customEvent.type, date, customEvent, customEvent.customType);
 				}
 			}
 		});
 	}
 
-	public openAddDialog(type: string, date: string, customEvent?: ICustomEvent): void {
+	// customType: type definition of the 'custom' events
+	public openAddDialog(type: string, date: string, customEvent?: ICustomEvent, customType?: string): void {
 		this.bottomSheet.open(DialogAddEventComponent, {
 			panelClass: 'event-bottom-sheet',
-			data: { type, date, customEvent }
+			// Only the close button can dismiss it, to avoid losing an ongoing edition
+			disableClose: true,
+			data: { type, date, customEvent, customType }
 		}).afterDismissed().subscribe(response => {
 			this.postAddDialog(date, response, type, customEvent);
 		});
@@ -92,6 +97,8 @@ export abstract class ATimeComponent {
 	public openAddSymptomDialog(type: string, date: string, symptoms: ISymptom[], customEvent?: ICustomEvent): void {
 		this.bottomSheet.open(DialogAddEventComponent, {
 			panelClass: 'event-bottom-sheet',
+			// Only the close button can dismiss it, to avoid losing an ongoing edition
+			disableClose: true,
 			data: { type, date, symptoms, customEvent }
 		}).afterDismissed().subscribe(response => {
 			this.postAddDialog(date, response, type, customEvent);
@@ -143,7 +150,8 @@ export abstract class ATimeComponent {
 				'key': response.key,
 				'pain': response.pain,
 				'detail': response.detail,
-				'quantity': response.quantity
+				'quantity': response.quantity,
+				'customType': response.customType
 			}).subscribe(day => { this.updateCallback(day); });
 	}
 
@@ -156,7 +164,8 @@ export abstract class ATimeComponent {
 				'key': response.key,
 				'pain': response.pain,
 				'detail': response.detail,
-				'quantity': response.quantity
+				'quantity': response.quantity,
+				'customType': response.customType
 			}).subscribe(day => { this.updateCallback(day); });
 
 		if (response.type === 'med') {
@@ -165,12 +174,22 @@ export abstract class ATimeComponent {
 		else if (response.type === 'log') {
 			this.logsService.addLog(date, response.key).subscribe(() => { });
 		}
+		else if (response.type === 'sport') {
+			this.sportsService.addSport(date, response.key).subscribe(() => { });
+		}
+		else if (response.type === 'meal') {
+			this.mealsService.addMeal(date, response.key).subscribe(() => { });
+		}
 	}
 
 	public openDeleteDialog(date: string, customEvent: ICustomEvent): void {
 		this.bottomSheet.open(BottomSheetDeleteTimelineEventComponent, {
 			panelClass: 'bottom-sheet-container',
-			data: { date, 'detailedDate': getDetailedDate(date), 'type': customEvent.type, 'key': customEvent.key, 'time': customEvent.time }
+			data: {
+				date, 'detailedDate': getDetailedDate(date), 'type': customEvent.type, 'key': customEvent.key,
+				'time': customEvent.time,
+				'typeLabel': customEvent.type === 'custom' ? this.globalService.getCustomType(customEvent.customType).label : null
+			}
 		}).afterDismissed().subscribe(response => {
 			if (response == null || response.answer !== 'yes') {
 				return;
@@ -181,6 +200,12 @@ export abstract class ATimeComponent {
 			}
 			else if (customEvent.type === 'log') {
 				this.logsService.removeLogByKey(customEvent.key).subscribe(() => { });
+			}
+			else if (customEvent.type === 'sport') {
+				this.sportsService.removeSportByKey(customEvent.key).subscribe(() => { });
+			}
+			else if (customEvent.type === 'meal') {
+				this.mealsService.removeMealByKey(customEvent.key).subscribe(() => { });
 			}
 			/*this.snackBar.open(this.translocoService.translate('TIMELINE_DELETE_EVENT_SNACKBAR',
 				{ type: this.translocoService.translate(customEvent.type) }), 'Close',
@@ -208,6 +233,8 @@ export abstract class ATimeComponent {
 					const symptomMap = this.symptomMap;
 					this.bottomSheet.open(BottomSheetEditSymptomOverviewComponent, {
 						panelClass: 'event-bottom-sheet',
+						// Only the close button can dismiss it, to avoid losing an ongoing edition
+						disableClose: true,
 						data: { date, symptomOverview, symptomMap }
 					}).afterDismissed().subscribe(response => {
 						if (response == null || response.answer !== 'yes') {
@@ -224,8 +251,9 @@ export abstract class ATimeComponent {
 	}
 
 	public openBottomSheet(date: string): void {
+		// V2: rounded corners like the other sheets of an event
 		this.bottomSheet.open(BottomSheetAddEventComponent, {
-			panelClass: 'custom-bottom-sheet'
+			panelClass: this.globalService.isUiV1 ? 'custom-bottom-sheet' : ['custom-bottom-sheet', 'event-bottom-sheet']
 		})
 			.afterDismissed().subscribe(response => {
 				if (response == null) {
@@ -233,7 +261,7 @@ export abstract class ATimeComponent {
 				} else if (response.type === 'symptomLog') {
 					this.openAddSymptomDialog(response.type, date, this.symptoms);
 				} else {
-					this.openAddDialog(response.type, date);
+					this.openAddDialog(response.type, date, undefined, response.customType);
 				}
 			});
 	}
@@ -264,7 +292,17 @@ export abstract class ATimeComponent {
 		return this.painScale === 10 ? pain * 2 : Math.ceil(pain);
 	}
 
-	public getPainColor(pain: number): string {
-		return this.symptomPainColorMap.get(Math.ceil(pain));
+	public getPainColor(day: DayViewModel, symptomKey: string): string {
+		return this.globalService.getPainColorClass(symptomKey, day.findSymptomPain(symptomKey));
+	}
+
+	public isToday(date: string): boolean {
+		return date === moment().format('YYYY-MM-DD');
+	}
+
+	// Time with a smaller AM/PM suffix
+	public displayTimeHtml(time: string): string {
+		const formattedTime = this.displayTime(time);
+		return formattedTime.replace(/ (AM|PM)/, '<span class="ampm-suffix"> $1</span>');
 	}
 }

@@ -1,4 +1,8 @@
-<div class="bottom-sheet-container force-load-warning">
+<div class="bottom-sheet-container closable-sheet force-load-warning">
+    <button mat-icon-button class="sheet-close-button v2-only" (click)="onCancelClick()"
+        [attr.aria-label]="'CLOSE' | transloco">
+        <mat-icon>close</mat-icon>
+    </button>
     <div class="header-section">
         <mat-icon class="warning-icon">warning_amber</mat-icon>
         <h2 class="title">{{ 'FORCE_LOAD_WARNING_TITLE' | transloco }}</h2>

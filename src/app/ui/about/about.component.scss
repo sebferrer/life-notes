@@ -8,7 +8,7 @@
 }
 
 .title {
-    color: #3f51b5;
+    color: var(--primary);
     margin-bottom: 30px;
     text-align: center;
 }
@@ -20,21 +20,21 @@
 }
 
 .section {
-    background: #f5f5f5;
+    background: var(--surface-variant);
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .section-title {
-    color: #3f51b5;
+    color: var(--primary);
     margin-bottom: 15px;
     font-size: 1.2em;
 }
 
 .section-content {
     line-height: 1.6;
-    color: #333;
+    color: var(--text-strong);
     margin: 0;
 }
 
@@ -58,7 +58,7 @@
 }
 
 .update-link {
-    color: #3f51b5;
+    color: var(--primary);
     text-decoration: none;
     word-break: break-all;
     

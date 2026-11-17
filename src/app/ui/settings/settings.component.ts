@@ -11,12 +11,26 @@ import { BottomSheetImportConfirmComponent } from '../bottom-sheet/bottom-sheet-
 import { BottomSheetImportErrorComponent } from '../bottom-sheet/bottom-sheet-import-error';
 import { BottomSheetForceLoadWarningComponent } from '../bottom-sheet/bottom-sheet-force-load-warning';
 import { BottomSheetInfoComponent } from '../bottom-sheet/bottom-sheet-info';
+import { BottomSheetAutoOverviewHelpComponent } from '../bottom-sheet/bottom-sheet-auto-overview-help';
 import { BottomSheetExportPdfComponent } from '../bottom-sheet/bottom-sheet-export-pdf';
 import { DialogSelectBackupComponent } from '../dialog/dialog-select-backup';
 import { DialogInfoComponent } from '../dialog/dialog-info';
 import { BackupService } from 'src/app/infra/backup.service';
 import { DialogExportConfirmComponent } from '../dialog/dialog-export-confirm';
 import { Router } from '@angular/router';
+import {
+	CUSTOMIZABLE_EVENT_TYPES, IEventPalettes, completeEventPalettes, getDefaultEventPalettes, getEventOnColor,
+	getEventOnFilter
+} from 'src/app/models/event-colors.model';
+import { CUSTOM_TYPE_COLORS } from 'src/app/models/custom-type.model';
+import {
+	BottomSheetColorPickerComponent, IBottomSheetColorPickerData
+} from '../bottom-sheet/bottom-sheet-color-picker';
+
+interface IPainPalettePreview {
+	key: string;
+	colors: string[];
+}
 
 @Component({
 	selector: 'app-settings',
@@ -37,9 +51,34 @@ export class SettingsComponent implements OnInit {
 	public calendarStartOnSunday: boolean;
 	public calendarBlockView: boolean;
 	public weeklyReminder: boolean;
+	public dailyReminder: boolean;
 	public painPalette: string;
 	public autoCalculateOverview: boolean;
 	public selectedTimePicker: string;
+	public darkMode: boolean;
+	public landscapeMode: boolean;
+	public uiVersion: string;
+	public sleepChartMode: string;
+	public eventPalettes: IEventPalettes;
+	// The palette edited is the one of the theme currently displayed
+	public get currentTheme(): 'light' | 'dark' {
+		return this.darkMode ? 'dark' : 'light';
+	}
+
+	// Their colors are set with the types themselves, in the manage menu
+	public get hasCustomTypes(): boolean {
+		return this.globalService.customTypes.length > 0;
+	}
+	// Intensity palettes, previewed in the colors of the theme displayed
+	public painPalettesByTheme: { light: IPainPalettePreview[], dark: IPainPalettePreview[] };
+	// The built-in types, in the order of the manage menu
+	public readonly eventColorItems = [
+		{ type: 'symptomLog', label: 'MANAGE_SYMPTOMS', icon: 'spa' },
+		{ type: 'meal', label: 'MANAGE_MEALS', svg: '/assets/svg/curry-chronicles.svg' },
+		{ type: 'med', label: 'MANAGE_MEDS', svg: '/assets/svg/pill-capsule.svg' },
+		{ type: 'sport', label: 'MANAGE_SPORTS', icon: 'fitness_center' },
+		{ type: 'log', label: 'MANAGE_LOGS', icon: 'event_note' }
+	];
 
 	public debug = 'no error';
 	public backupData = '';
@@ -66,6 +105,21 @@ export class SettingsComponent implements OnInit {
 		this.selectedLanguage = this.globalService.language;
 		this.selectedTimeFormat = this.globalService.timeFormat;
 		this.selectedPainScale = this.globalService.painScale;
+		this.darkMode = this.globalService.darkMode;
+		this.landscapeMode = this.globalService.landscapeMode;
+		this.uiVersion = this.globalService.uiVersion;
+		this.sleepChartMode = this.globalService.sleepChartMode;
+		this.eventPalettes = {
+			light: { ...this.globalService.eventPalettes.light },
+			dark: { ...this.globalService.eventPalettes.dark }
+		};
+		// The default palette first, as the default choice of the other settings
+		const defaultPalette = this.globalService.DEFAULT_PAIN_PALETTE;
+		const paletteKeys = [defaultPalette, ...Object.keys(this.globalService.PALETTES).filter(key => key !== defaultPalette)];
+		this.painPalettesByTheme = {
+			light: paletteKeys.map(key => ({ key, colors: this.globalService.PALETTES[key] })),
+			dark: paletteKeys.map(key => ({ key, colors: this.globalService.DARK_PALETTES[key] }))
+		};
 		this.settingsService.getSettings().subscribe(settings => {
 			// DEVELOPER UPDATES NOTIFICATION FEATURE DISABLED
 			// this.hideDeveloperUpdates = settings.hideDeveloperUpdates;
@@ -74,9 +128,16 @@ export class SettingsComponent implements OnInit {
 			this.calendarStartOnSunday = settings.calendarStartOnSunday;
 			this.calendarBlockView = settings.calendarBlockView;
 			this.weeklyReminder = settings.weeklyReminder;
+			this.dailyReminder = settings.dailyReminder;
 			this.painPalette = settings.painPalette;
 			this.autoCalculateOverview = settings.autoCalculateOverview;
 			this.selectedTimePicker = settings.timePicker || 'material';
+			// GlobalService may not be initialized yet when the app is opened on this page
+			this.darkMode = !!settings.darkMode;
+			this.landscapeMode = !!settings.landscapeMode;
+			this.uiVersion = settings.uiVersion || 'v2';
+			this.sleepChartMode = settings.sleepChartMode || 'bars';
+			this.eventPalettes = completeEventPalettes(settings.eventColors);
 		});
 	}
 
@@ -118,6 +179,10 @@ export class SettingsComponent implements OnInit {
 		this.settingsService.setWeeklyReminder(this.weeklyReminder).subscribe();
 	}
 
+	public setDailyReminder(): void {
+		this.settingsService.setDailyReminder(this.dailyReminder).subscribe();
+	}
+
 	public setPainPalette(): void {
 		this.settingsService.setPainPalette(this.painPalette).subscribe();
 	}
@@ -130,11 +195,109 @@ export class SettingsComponent implements OnInit {
 		this.settingsService.setTimePicker(this.selectedTimePicker).subscribe();
 	}
 
+	public setDarkMode(): void {
+		this.settingsService.setDarkMode(this.darkMode).subscribe();
+	}
+
+	public setUiVersion(): void {
+		this.settingsService.setUiVersion(this.uiVersion).subscribe();
+	}
+
+	public setSleepChartMode(): void {
+		this.settingsService.setSleepChartMode(this.sleepChartMode).subscribe();
+	}
+
+	public setLandscapeMode(): void {
+		this.settingsService.setLandscapeMode(this.landscapeMode).subscribe();
+	}
+
+	public setEventColor(theme: 'light' | 'dark', type: string, color: string): void {
+		this.eventPalettes = { ...this.eventPalettes, [theme]: { ...this.eventPalettes[theme], [type]: color } };
+		this.saveEventColors();
+	}
+
+	public resetEventColors(theme: 'light' | 'dark'): void {
+		this.eventPalettes = { ...this.eventPalettes, [theme]: getDefaultEventPalettes()[theme] };
+		this.saveEventColors();
+	}
+
+	private saveEventColors(): void {
+		this.settingsService.setEventColors(this.eventPalettes).subscribe();
+	}
+
+	// The picker starts from the current color. Saved only when applied.
+	public openEventColorPicker(theme: 'light' | 'dark', item: { type: string, label: string, icon?: string, svg?: string }): void {
+		const data: IBottomSheetColorPickerData = {
+			title: item.label,
+			color: this.eventPalettes[theme][item.type],
+			swatches: this.getSuggestedEventColors(theme, item.type),
+			icon: item.icon,
+			svg: item.svg,
+			darkTheme: theme === 'dark'
+		};
+		this.bottomSheet.open(BottomSheetColorPickerComponent, {
+			panelClass: 'color-picker-panel',
+			// Only the close button can dismiss it, to avoid losing an ongoing choice
+			disableClose: true,
+			data
+		}).afterDismissed().subscribe(response => {
+			if (response == null || response.answer !== 'yes') {
+				return;
+			}
+			this.setEventColor(theme, item.type, response.color);
+		});
+	}
+
+	// Colors made for the theme: the default one of the type first, then the other default ones and the ready-made
+	// colors of the custom types
+	private getSuggestedEventColors(theme: 'light' | 'dark', type: string): string[] {
+		const defaults = getDefaultEventPalettes()[theme];
+		const colors = [defaults[type], ...CUSTOMIZABLE_EVENT_TYPES.map(other => defaults[other]),
+			...CUSTOM_TYPE_COLORS.map(preset => preset[theme])].map(color => color.toUpperCase());
+		return colors.filter((color, index) => colors.indexOf(color) === index);
+	}
+
+	// Color of the icon drawn on a swatch, as it would be drawn in the app
+	public getOnColor(theme: 'light' | 'dark', type: string): string {
+		return getEventOnColor(this.eventPalettes[theme][type], theme === 'dark');
+	}
+
+	public getOnFilter(theme: 'light' | 'dark', type: string): string {
+		return getEventOnFilter(this.getOnColor(theme, type));
+	}
+
 	public openInfoBottomSheet(titleKey: string, contentKeys: string[]): void {
 		this.bottomSheet.open(BottomSheetInfoComponent, {
 			panelClass: 'bottom-sheet-container',
 			data: { titleKey, contentKeys }
 		});
+	}
+
+	// What the overview of the day is, calculated or entered by hand, illustrated
+	public openAutoOverviewHelp(): void {
+		this.bottomSheet.open(BottomSheetAutoOverviewHelpComponent, {
+			panelClass: 'event-bottom-sheet'
+		});
+	}
+
+	public openBackupWhyManualInfo(): void {
+		this.openInfoBottomSheet('BACKUP_WHY_MANUAL_TITLE', [
+			'BACKUP_WHY_MANUAL_CONTENT_1',
+			'BACKUP_WHY_MANUAL_CONTENT_2',
+			'BACKUP_WHY_MANUAL_CONTENT_3',
+			'BACKUP_WHY_MANUAL_CONTENT_4',
+			'BACKUP_WHY_MANUAL_CONTENT_5',
+			'BACKUP_WHY_MANUAL_CONTENT_6'
+		]);
+	}
+
+	public openManualBackupInfo(): void {
+		this.openInfoBottomSheet('MANUAL_BACKUP_INFO_TITLE', [
+			'MANUAL_BACKUP_INFO_CONTENT_1',
+			'MANUAL_BACKUP_INFO_CONTENT_2',
+			'MANUAL_BACKUP_INFO_CONTENT_3',
+			'MANUAL_BACKUP_INFO_CONTENT_4'
+		]);
 	}
 
 	public setTargetSymptom(): void {

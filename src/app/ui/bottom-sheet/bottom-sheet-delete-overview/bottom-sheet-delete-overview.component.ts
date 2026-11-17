@@ -4,6 +4,8 @@ import { MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef } from '@angular/material/bott
 export interface IBottomSheetDeleteOverviewData {
     title: string;
     content: string[];
+    // Parameters of the translations, e.g. a name or a count
+    params?: { [name: string]: any };
 }
 
 @Component({

@@ -1,4 +1,7 @@
-<div class="bottom-sheet-container add-symptom">
+<div class="bottom-sheet-container closable-sheet add-symptom">
+    <button mat-icon-button class="sheet-close-button" (click)="onNoClick()" [attr.aria-label]="'CLOSE' | transloco">
+        <mat-icon>close</mat-icon>
+    </button>
 
     <div class="header-section">
         <h1 class="title">
@@ -16,13 +19,33 @@
                 </mat-form-field>
             </div>
         </div>
+
+        <div class="inverted-scale">
+            <div class="inverted-scale-row">
+                <div class="inverted-scale-text">
+                    <span class="inverted-scale-label">{{ 'SYMPTOM_INVERTED_SCALE' | transloco }}</span>
+                    <span class="inverted-scale-hint">{{ 'SYMPTOM_INVERTED_SCALE_HINT' | transloco }}</span>
+                </div>
+                <mat-slide-toggle [(ngModel)]="data.symptom.invertedScale" color="primary"
+                    class="inverted-scale-toggle"></mat-slide-toggle>
+            </div>
+            <!-- Colors of the intensities, from 0 to the maximum -->
+            <div class="scale-preview">
+                <span class="scale-end">0</span>
+                <span class="scale-colors">
+                    <span *ngFor="let color of scaleColors" class="scale-color" [style.background-color]="color"></span>
+                </span>
+                <span class="scale-end">{{ painScale }}</span>
+            </div>
+        </div>
     </div>
 
     <div class="actions">
-        <button mat-stroked-button (click)="onNoClick()">
+        <button mat-stroked-button (click)="onNoClick()" class="cancel-button">
             {{ 'CANCEL' | transloco }}
         </button>
-        <button mat-flat-button color="primary" (click)="onYesClick()" [disabled]="!data.symptom.label">
+        <button mat-flat-button color="primary" (click)="onYesClick()" [disabled]="!data.symptom.label"
+            class="confirm-button">
             <span *ngIf="data.edit">{{ 'EDIT' | transloco }}</span>
             <span *ngIf="!data.edit">{{ 'ADD' | transloco }}</span>
         </button>

@@ -1,0 +1,61 @@
+<ng-template transloco let-t>
+	<div class="occurrence-stats">
+		<div class="stats-figures" [class.compact]="quantities || intensities">
+			<div class="stats-figure total">
+				<div class="stats-value">{{ summary.total }}</div>
+				<div class="stats-label">{{ t('STATS_TOTAL') }}</div>
+			</div>
+			<div class="stats-figure last-30-days">
+				<div class="stats-value">{{ summary.last30Days }}</div>
+				<div class="stats-label">{{ t('STATS_LAST_30_DAYS') }}</div>
+			</div>
+			<div class="stats-figure per-week">
+				<div class="stats-value">{{ formatNumber(summary.perWeek) }}</div>
+				<div class="stats-label">{{ t('STATS_PER_WEEK') }}</div>
+			</div>
+			<div *ngIf="quantities" class="stats-figure quantity">
+				<div class="stats-value">{{ formatNumber(summary.quantity) }}<span *ngIf="unit" class="stats-unit">
+						{{ unit }}</span></div>
+				<div class="stats-label">{{ t('STATS_TOTAL_QUANTITY') }}</div>
+			</div>
+			<div *ngIf="intensities" class="stats-figure intensity">
+				<div class="stats-value">
+					<ng-container *ngIf="averageIntensity != null; else noIntensity">{{ formatNumber(averageIntensity) }}<span
+							class="stats-unit">/{{ painScale }}</span></ng-container>
+					<ng-template #noIntensity>–</ng-template>
+				</div>
+				<div class="stats-label">{{ t('STATS_AVERAGE_INTENSITY') }}</div>
+			</div>
+		</div>
+
+		<div class="stats-chart-card evolution">
+			<div class="stats-chart-header">
+				<span class="stats-chart-title">{{ t('STATS_EVOLUTION') }}</span>
+				<div class="period-toggle">
+					<button class="period-button week" [class.active]="period === 'week'" (click)="setPeriod('week')">
+						{{ t('STATS_WEEKS') }}</button>
+					<button class="period-button month" [class.active]="period === 'month'" (click)="setPeriod('month')">
+						{{ t('STATS_MONTHS') }}</button>
+				</div>
+			</div>
+			<div *ngIf="quantities" class="stats-chart-subtitle">
+				{{ t('STATS_QUANTITY') }}<ng-container *ngIf="unit"> ({{ unit }})</ng-container>
+			</div>
+			<div class="stats-chart">
+				<canvas baseChart chartType="bar" [datasets]="evolutionDatasets" [labels]="evolutionLabels"
+					[options]="evolutionOptions" [legend]="!!intensities" role="img"
+					[attr.aria-label]="evolutionDescription"></canvas>
+			</div>
+		</div>
+
+		<div *ngIf="hasHours" class="stats-chart-card hours">
+			<div class="stats-chart-header">
+				<span class="stats-chart-title">{{ t('STATS_HOURS') }}</span>
+			</div>
+			<div class="stats-chart">
+				<canvas baseChart chartType="bar" [datasets]="hourDatasets" [labels]="hourLabels" [options]="hourOptions"
+					[legend]="false" role="img" [attr.aria-label]="hourDescription"></canvas>
+			</div>
+		</div>
+	</div>
+</ng-template>

@@ -1,4 +1,8 @@
-<div class="bottom-sheet-container import-error">
+<div class="bottom-sheet-container closable-sheet import-error">
+    <button mat-icon-button class="sheet-close-button v2-only" (click)="onCloseClick()"
+        [attr.aria-label]="'CLOSE' | transloco">
+        <mat-icon>close</mat-icon>
+    </button>
     <div class="header-section">
         <mat-icon class="error-icon">error_outline</mat-icon>
         <h2 class="title">{{ 'IMPORT_ERROR_TITLE' | transloco }}</h2>

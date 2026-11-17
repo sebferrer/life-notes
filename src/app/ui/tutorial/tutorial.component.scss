@@ -1,6 +1,6 @@
 a {
     text-decoration: none;
-    color: #1155CC;
+    color: var(--link);
 }
 
 .slideshow {
@@ -22,13 +22,6 @@ ion-slides {
     margin-top: 2.8rem;
 }
 
-.swiper-slide img {
-    max-height: 50%;
-    max-width: 80%;
-    margin: 60px 0 40px;
-    pointer-events: none;
-}
-
 b {
     font-weight: 500;
 }
@@ -44,47 +37,53 @@ p b {
     color: var(--ion-text-color, #000000);
 }
 
+// First and last slides: in the flow, not absolute. The slideshow is as tall as its tallest slide and cuts the rest,
+// so a long text (small screen, large font, English) must make its slide taller, the page then scrolls.
 .slide {
-    img {
-        margin-bottom: 0;
-    }
     app-swiping-finger {
-        position: absolute;
-        width: 100%;
-        top: 70vh;
-        left: 20vw;
+        display: block;
+        margin-left: 20vw;
     }
     .rate-stars {
         width: 80%;
-        position: absolute;
-        top: 15vh;
-        left: 10%;
-    }
-    .slide-text-tutorial {
-        width: 80%;
-        margin-left: auto;
-        margin-right: auto;
-        height: 30vh;
-        overflow-y: auto;
-    }
-    .slide-text-tutorial-longtext {
-        width: 80%;
-        position: absolute;
-        top: 45vh;
-        left: 10%;
-        height: 40vh;
-        overflow-y: auto;
+        margin: 0 auto;
+        padding-top: 15vh;
     }
     .slide-text-header {
         width: 80%;
-        position: absolute;
-        top: 25vh;
-        left: 10%;
+        margin: 0 auto;
+        padding-top: 25vh;
     }
     .slide-text-rateit {
         width: 80%;
-        position: absolute;
-        top: 20vh;
-        left: 10%;
+        margin: 0 auto;
+        padding-bottom: 2rem;
     }
+}
+
+// Illustrated slides: the scene on top, then the explanation
+.slide-scene {
+    padding-top: 1rem;
+
+    h2 {
+        margin-top: 1rem;
+    }
+
+    .slide-text-scene {
+        max-width: 32rem;
+        margin: 0 auto;
+        padding-bottom: 2rem;
+    }
+
+    p {
+        padding: 0 1.5rem;
+        text-align: left;
+    }
+}
+
+// Icons inside the translated texts (innerHTML, hence ::ng-deep)
+:host ::ng-deep .tuto-inline-icon {
+    font-size: 1.2em;
+    vertical-align: -0.25em;
+    color: var(--primary);
 }

@@ -1,0 +1,6 @@
+// Icon tile color of each settings section (settings page and tutorial)
+$panel-colors: (symptoms: #EC407A, language: #42A5F5, time: #FFA726, backup: #66BB6A, tutorial: #AB47BC,
+    appearance: #7E57C2, customization: #26A69A, advanced: #78909C, developer: #8D6E63, about: #5C6BC0);
+// Dark theme: muted tones of the same hues and luminance, as the event colors (see $dark-event-colors in styles.scss)
+$panel-dark-colors: (symptoms: #BE476E, language: #3875A8, time: #966823, backup: #3E7E42, tutorial: #9C56A8,
+    appearance: #7F63AE, customization: #337D75, advanced: #60747D, developer: #8C695D, about: #626DAB);
