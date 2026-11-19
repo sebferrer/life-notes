@@ -453,7 +453,8 @@
                 <mat-icon class="m-close">close</mat-icon>
                 <div class="m-sheet-heading">
                     <span class="m-bubble"><span class="svg-icon pill"></span></span>
-                    <span class="m-sheet-title">{{ t('ADD') }} {{ t('med') | titlecase }}</span>
+                    <span class="m-sheet-title">{{ t('EVENT_DIALOG_ADD_TITLE',
+                        { type: titleCase ? (t('med') | titlecase) : t('med') }) }}</span>
                 </div>
                 <div class="m-fields">
                     <span>

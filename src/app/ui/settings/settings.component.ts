@@ -23,6 +23,7 @@ import {
 	getEventOnFilter
 } from 'src/app/models/event-colors.model';
 import { CUSTOM_TYPE_COLORS } from 'src/app/models/custom-type.model';
+import { LANGUAGES } from 'src/app/models/language.model';
 import {
 	BottomSheetColorPickerComponent, IBottomSheetColorPickerData
 } from '../bottom-sheet/bottom-sheet-color-picker';
@@ -42,6 +43,7 @@ export class SettingsComponent implements OnInit {
 	public symptoms$: Observable<ISymptom[]>;
 	public selectedSymptom: string;
 	public selectedLanguage: string;
+	public readonly languages = LANGUAGES;
 	public selectedTimeFormat: string;
 	public selectedPainScale: number;
 	// DEVELOPER UPDATES NOTIFICATION FEATURE DISABLED

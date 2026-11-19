@@ -106,7 +106,8 @@ export class Phone {
 	// First launch of a fresh install: language choice, then the welcome dialogs
 	public async firstLaunch(language: 'fr' | 'en' = 'fr'): Promise<void> {
 		await this.page.goto('/');
-		const label = this.page.locator('.language-label', { hasText: language === 'fr' ? 'French' : 'English' });
+		// "French" in the published app 0.3.7, each language named in itself ("Français") in the new one
+		const label = this.page.locator('.language-label', { hasText: language === 'fr' ? /French|Français/ : 'English' });
 		await expect(label).toBeVisible();
 		// The V1 opens its weekly backup reminder over the choice of the language, at the first launch
 		await expect(async () => {

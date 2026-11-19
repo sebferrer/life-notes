@@ -28,7 +28,8 @@ Add `--headed` to watch it, or `--ui` for the interactive mode.
 - `unit/`: pure logic of `src`, without browser
   - event colors: palettes, migrations, readability of texts and icons on any customized color, and the
     colors precomputed in `styles.scss` (they must match the code)
-  - translations: same keys and parameters in French and English, every key used by the app exists
+  - translations: every language of `language.model.ts` has its file and flag, the same keys, parameters and HTML tags
+    as English, and every key used by the app
   - custom event types: limit of 10 types, icons, ready-made colors, light and dark variants, type keys
   - inverted intensity scale of a symptom (colors, doughnut charts), statistics of an event (periods, key
     figures, hours of the day), sleep of the nights of a month
@@ -38,6 +39,9 @@ Add `--headed` to watch it, or `--ui` for the interactive mode.
     PDF report (V2: each symptom as in the calendar, V1: the classic report, both saved as a PDF), tutorial (illustrated
     with the screens of the version of the interface, no text cut on a small phone), small screens, the cross of every
     bottom sheet
+  - languages: the texts built by the code follow each language (order of the dates, month numbers in Japanese,
+    capitals of the German nouns and of the Spanish titles, singular), the language of the page, the day of an
+    entry in a time zone behind UTC
   - event types created by the user: creation (the icons must all exist in the Material Icons font), entries
     from the timeline, colors per theme, limit of 10 types, edition, renaming and deletion of entries, deletion
     of a type with its entries, backups, PDF report; restart in the dark theme, several types sharing entry

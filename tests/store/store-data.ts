@@ -11,6 +11,8 @@ const FIRST_DAY = '2026-01-01';
 
 export const SYMPTOM_KEYS = { migraine: 'migraine', fatigue: 'fatigue', stomach: 'stomach', back: 'back' };
 const CUSTOM_KEYS = { water: 'ctwater', coffee: 'ctcoffee', meditation: 'ctmeditation' };
+// Volumes of one drink, in litres (the unit of the hydration type): a glass, a can, a small bottle
+const WATER_SERVINGS = [0.25, 0.33, 0.5];
 
 const TEXTS = {
 	fr: {
@@ -184,7 +186,11 @@ export function storeBackup(lang: Lang, options: { customTypes?: boolean } = {})
 			if (migraine >= 3) {
 				med(t.meds.sumatriptan, '50', start + 10);
 			} else if (migraine >= 1.5) {
-				med(chance(0.6) ? t.meds.paracetamol : t.meds.ibuprofen, chance(0.6) ? '1000' : '400', start + 15);
+				// The usual adult dose of each: paracetamol 1000 mg, ibuprofen 400 mg. A second number is still drawn (it
+				// used to pick the dose), so that the other data stay the same.
+				const paracetamol = chance(0.6);
+				rnd();
+				med(paracetamol ? t.meds.paracetamol : t.meds.ibuprofen, paracetamol ? '1000' : '400', start + 15);
 			}
 		}
 
@@ -264,7 +270,8 @@ export function storeBackup(lang: Lang, options: { customTypes?: boolean } = {})
 			custom(CUSTOM_KEYS.coffee, pick(t.coffees), 13 * 60 + 30 + rnd() * 60);
 		}
 		if (chance(0.7)) {
-			custom(CUSTOM_KEYS.water, t.water, 19 * 60 + rnd() * 90, intensity(1 + rnd() * 1.2));
+			// One drink at a time: a glass, a can or a small bottle. Never litres at once, which can be dangerous.
+			custom(CUSTOM_KEYS.water, t.water, 19 * 60 + rnd() * 90, pick(WATER_SERVINGS));
 		}
 		if (index > 60 && chance(0.4)) {
 			custom(CUSTOM_KEYS.meditation, pick(t.meditations), 21 * 60 + rnd() * 60, chance(0.6) ? 10 : 15);
@@ -298,7 +305,7 @@ export function storeBackup(lang: Lang, options: { customTypes?: boolean } = {})
 		sports: [{ type: 'sport', time: '18:30', key: t.today.yoga[0], detail: t.today.yoga[1] }],
 		customs: [
 			{ type: 'custom', customType: CUSTOM_KEYS.coffee, time: '07:20', key: t.coffees[0], detail: '', quantity: null },
-			{ type: 'custom', customType: CUSTOM_KEYS.water, time: '19:30', key: t.water, detail: '', quantity: 1.5 }
+			{ type: 'custom', customType: CUSTOM_KEYS.water, time: '19:30', key: t.water, detail: '', quantity: 0.5 }
 		]
 	});
 

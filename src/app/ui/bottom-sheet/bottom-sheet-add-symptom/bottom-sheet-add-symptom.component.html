@@ -15,7 +15,8 @@
             <div class="field-label">{{ 'SYMPTOM' | transloco | titlecase }}</div>
             <div class="field-input-box">
                 <mat-form-field appearance="none" class="clean-input">
-                    <input matInput [(ngModel)]="data.symptom.label" cdkFocusInitial placeholder="Ex: Migraine">
+                    <input matInput [(ngModel)]="data.symptom.label" cdkFocusInitial
+                        [placeholder]="'SYMPTOM_NAME_PLACEHOLDER' | transloco">
                 </mat-form-field>
             </div>
         </div>

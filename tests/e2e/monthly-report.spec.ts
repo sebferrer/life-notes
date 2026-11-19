@@ -58,7 +58,7 @@ test.describe('PDF report', () => {
 		await openReport(app, page);
 
 		const report = page.locator('.modern-report');
-		await expect(report.locator('.report-title')).toHaveText('mars 2026');
+		await expect(report.locator('.report-title')).toHaveText('Mars 2026');
 		const symptom = report.locator('.sympmtom-container', { hasText: 'Tête' });
 		await expect(symptom.locator('.weekday')).toHaveText(['L', 'M', 'M', 'J', 'V', 'S', 'D']);
 		await expect(symptom.locator('.day-cell.empty')).toHaveCount(6);

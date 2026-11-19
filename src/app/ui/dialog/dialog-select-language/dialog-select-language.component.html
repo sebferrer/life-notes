@@ -2,19 +2,11 @@
 <div mat-dialog-content>
     <mat-selection-list class="language-list" #languages
         [multiple]="false">
-        <mat-list-option class="language-list-item">
-            <div class="symptom-label-container" (click)="onEnClick()">
+        <mat-list-option *ngFor="let language of languageList" class="language-list-item">
+            <div class="symptom-label-container" (click)="onLanguageClick(language.code)">
                 <div class="language-container">
-                    <div class="icon-container"><img src="/assets/svg/united-kingdom.svg" class="icon-svg" /></div>
-                    <div class="language-label">English</div>
-                </div>
-            </div>
-        </mat-list-option>
-        <mat-list-option class="language-list-item">
-            <div class="symptom-label-container" (click)="onFrClick()">
-                <div class="language-container">
-                    <div class="icon-container"><img src="/assets/svg/france.svg" class="icon-svg" /></div>
-                    <div class="language-label">French</div>
+                    <div class="icon-container"><img [src]="'/assets/svg/' + language.flag" class="icon-svg" /></div>
+                    <div class="language-label" [attr.lang]="language.code">{{ language.name }}</div>
                 </div>
             </div>
         </mat-list-option>

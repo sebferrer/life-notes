@@ -5,13 +5,14 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { ISettings } from '../models/settings.model';
 import { GlobalService } from './global.service';
 import { IEventPalettes, completeEventPalettes, getDefaultEventPalettes } from '../models/event-colors.model';
+import { LANGUAGE_CODES } from '../models/language.model';
 
 const KEY = 'settings';
 
 @Injectable()
 export class SettingsService {
 
-	public readonly AVAILABLE_LANGS = ['en', 'fr'];
+	public readonly AVAILABLE_LANGS = LANGUAGE_CODES;
 	public readonly AVAILABLE_TIME_FORMATS = ['us', 'eu'];
 	public readonly AVAILABLE_PAIN_SCALES = [5, 10];
 

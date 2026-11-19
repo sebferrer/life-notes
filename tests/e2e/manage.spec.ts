@@ -258,7 +258,7 @@ test('the statistics in English, with the 12 hour format', async ({ app, page })
 	await page.locator('mat-option', { hasText: '12' }).click();
 	await app.goToSettings('Langue');
 	await app.settingsPanel('Langue').locator('mat-select').click();
-	await page.locator('mat-option', { hasText: 'Anglais' }).click();
+	await page.locator('mat-option', { hasText: 'English' }).click();
 	await expect(page.locator('#settings-container .title')).toHaveText('Settings');
 	await app.goToManage('log');
 	await page.locator('.manage-item-actions button').nth(0).click();

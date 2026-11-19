@@ -1,4 +1,6 @@
 import { test, expect } from '../support/app';
+import { readFileSync } from 'fs';
+import { LANGUAGES } from '../../src/app/models/language.model';
 
 test.describe('First launch', () => {
 
@@ -42,4 +44,21 @@ test.describe('First launch', () => {
 		await page.locator('#menu-icon-target-symptom').click();
 		await expect(page.locator('mat-dialog-container')).toContainText('Aucun symptôme');
 	});
+
+	for (const language of LANGUAGES.filter(l => l.code !== 'fr' && l.code !== 'en')) {
+		test(`the app can be used in ${language.name}`, async ({ app, page }) => {
+			const texts = JSON.parse(readFileSync(`src/assets/i18n/${language.code}.json`, 'utf-8'));
+			await app.start(language.code);
+			// Language of the page: Japanese shapes of the characters, pronunciation of the screen readers
+			await expect(page.locator('html')).toHaveAttribute('lang', language.code);
+			await app.goToSettings();
+			await expect(page.locator('#settings-container .title')).toHaveText(texts.SETTINGS_TITLE);
+			await app.goToManage();
+			await expect(page.locator('.manage-tile.med')).toContainText(texts.MANAGE_MEDS);
+			// Chosen language remembered after a restart
+			await page.reload();
+			await app.goToSettings();
+			await expect(page.locator('#settings-container .title')).toHaveText(texts.SETTINGS_TITLE);
+		});
+	}
 });

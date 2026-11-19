@@ -146,6 +146,11 @@ export class TutorialSceneComponent implements AfterViewInit, OnDestroy {
 		return (this.uiVersion || this.globalService.uiVersion) === 'v1';
 	}
 
+	// Title of the event form as in the app: "Add Medicine", "Añadir medicamento"
+	public get titleCase(): boolean {
+		return this.globalService.titleCase;
+	}
+
 	public get height(): number {
 		return (this.classic && CLASSIC_SCENE_HEIGHTS[this.scene]) || SCENE_HEIGHTS[this.scene] || 380;
 	}

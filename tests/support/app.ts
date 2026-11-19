@@ -1,5 +1,6 @@
 import { test as base, expect, Locator, Page } from '@playwright/test';
 import { readFileSync } from 'fs';
+import { LANGUAGES } from '../../src/app/models/language.model';
 
 // Day used as "today" by every test (frozen clock): the dates and times shown by the app are deterministic
 export const TODAY = '2026-03-18';
@@ -66,9 +67,11 @@ export class App {
 	constructor(public readonly page: Page) { }
 
 	// First launch: language choice then the welcome dialogs
-	public async start(language: 'fr' | 'en' = 'fr'): Promise<void> {
+	public async start(language: string = 'fr'): Promise<void> {
 		await this.page.goto('/');
-		await this.page.locator('.language-label', { hasText: language === 'fr' ? 'French' : 'English' }).click();
+		// Each language is named in itself: Français, English, Deutsch...
+		const name = LANGUAGES.find(l => l.code === language).name;
+		await this.page.locator('.language-label', { hasText: name }).click();
 		await expect(this.page.locator('.language-label')).toHaveCount(0);
 		await this.closeDialogs();
 	}

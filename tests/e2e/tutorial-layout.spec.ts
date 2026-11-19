@@ -1,4 +1,5 @@
 import { test, expect, TODAY } from '../support/app';
+import { LANGUAGE_CODES } from '../../src/app/models/language.model';
 
 // Arrows expected in each illustrated slide (see SCENE_ARROWS in tutorial-scene.component.ts)
 const SCENE_ARROWS = {
@@ -10,11 +11,10 @@ const SCENE_ARROWS = {
 const UNTRANSLATED = /\b[A-Z][A-Z0-9]+(_[A-Z0-9]+)+\b/;
 
 const VARIANTS = [
-	{ language: 'fr', classic: false },
-	{ language: 'en', classic: false },
+	...LANGUAGE_CODES.map(language => ({ language, classic: false })),
 	// The tutorial follows the version of the interface: the scenes showing a day have a V1 design too
 	{ language: 'fr', classic: true }
-] as const;
+];
 
 for (const { language, classic } of VARIANTS) {
 	test(`tutorial (${language}${classic ? ', classic design' : ''}): every slide is illustrated, linked by arrows and translated`,
@@ -52,7 +52,7 @@ for (const { language, classic } of VARIANTS) {
 }
 
 // The slideshow is as tall as its tallest slide and cuts what goes beyond: every text must stay inside it
-for (const language of ['fr', 'en'] as const) {
+for (const language of LANGUAGE_CODES) {
 	test(`tutorial (${language}): no slide cuts its text, even on a small phone`, async ({ app, page }) => {
 		await page.setViewportSize({ width: 320, height: 568 });
 		await app.start(language);

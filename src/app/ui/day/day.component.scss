@@ -353,9 +353,10 @@
             font-weight: 700;
             line-height: 1.2;
             color: var(--text-strong);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            // A date too long for the line takes a second one, in two even parts, rather than being cut:
+            // "28 de septiembre de 2026" in Spanish
+            overflow-wrap: anywhere;
+            text-wrap: balance;
         }
 
         &.today .day-page-weekday {

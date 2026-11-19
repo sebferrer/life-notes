@@ -1,5 +1,6 @@
 import { Component, Inject, ViewEncapsulation, NgZone } from '@angular/core';
 import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
+import { TranslocoService } from '@ngneat/transloco';
 import { DaysService } from 'src/app/infra';
 import { ICustomEvent } from 'src/app/models/customEvent.model';
 import { IDeleteConfirmationDetails } from '../../bottom-sheet/bottom-sheet-delete-event';
@@ -52,6 +53,7 @@ export class DialogOccurrenceHistoryComponent {
         @Inject(MAT_BOTTOM_SHEET_DATA) public data: IOccurrenceHistoryData,
         private daysService: DaysService,
         public globalService: GlobalService,
+        private translocoService: TranslocoService,
         private zone: NgZone
     ) {
         this.tab = data.tab || (globalService.isUiV1 ? 'history' : 'stats');
@@ -63,13 +65,13 @@ export class DialogOccurrenceHistoryComponent {
         this.bottomSheetRef.dismiss({ hasChanges: this.hasChanges, reopen: false });
     }
 
+    // In numbers, in the order of the language: 18/03/2026, 18.03.2026 in German, 2026/03/18 in Japanese
     public formatDate(date: string): string {
         if (!date) return '';
-        const d = new Date(date);
-        const day = d.getDate();
-        const month = d.getMonth() + 1;
-        const year = d.getFullYear();
-        return `${day.toString().padStart(2, '0')}/${month.toString().padStart(2, '0')}/${year}`;
+        // The parts as they are written (YYYY-MM-DD): a Date would move to the day before in the time zones behind UTC
+        const [year, month, day] = date.slice(0, 10).split('-');
+        return this.translocoService.translate('NUMERIC_DATE',
+            { day: (day || '').padStart(2, '0'), month: (month || '').padStart(2, '0'), year });
     }
 
     public formatTime(time: string): string {
