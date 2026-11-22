@@ -29,6 +29,7 @@ const CLASSIC_TEXTS = ['day-overview', 'add-event', 'manage'];
 export class TutorialComponent {
 
 	public slides: ISlide[];
+	public readonly email = 'kimida.life.notes@gmail.com';
 
 	// The tutorial shows the screens of the version of the interface
 	public get classic(): boolean {
@@ -53,15 +54,11 @@ export class TutorialComponent {
 			...sceneSlides,
 			{
 				index: sceneSlides.length + 2,
-				label: 'rateit',
-				title: 'TUTORIAL_SLIDE_RATEIT_TITLE',
-				text: ''
+				label: 'contact',
+				title: 'TUTORIAL_SLIDE_CONTACT_TITLE',
+				text: 'TUTORIAL_SLIDE_CONTACT_TEXT'
 			}
 		];
-	}
-
-	public rateApp(): void {
-		window.open('https://play.google.com/store/apps/details?id=com.sebferrer.life_notes', '_system');
 	}
 
 }

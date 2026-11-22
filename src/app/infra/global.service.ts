@@ -13,6 +13,7 @@ import {
 	getEventColorVariables
 } from '../models/event-colors.model';
 import { ICustomType } from '../models/custom-type.model';
+import { getLanguage, getLanguageLocale } from '../models/language.model';
 
 // LANDSCAPE MODE SETTING DISABLED: hidden from the settings for now, the app stays in portrait even if
 // the setting was turned on before
@@ -36,6 +37,23 @@ export class GlobalService {
 	public get language(): string { return this._language; }
 	public set language(language: string) {
 		this._language = language;
+		// Language of the page: Japanese shapes of the characters shared with Chinese, pronunciation of the screen readers
+		document.documentElement.lang = getLanguage(language).code;
+	}
+
+	// Format of the numbers in the language, e.g. en-US
+	public get locale(): string {
+		return getLanguageLocale(this._language);
+	}
+
+	// e.g. ',' in French
+	public get decimalSeparator(): string {
+		return (1.5).toLocaleString(this.locale).charAt(1);
+	}
+
+	// "Heure De Coucher" in French, "Hora de acostarse" in Spanish: see ILanguage
+	public get titleCase(): boolean {
+		return getLanguage(this._language).titleCase;
 	}
 
 	private _timeFormat: string;
@@ -148,12 +166,6 @@ export class GlobalService {
 	public get autoCalculateOverview(): boolean { return this._autoCalculateOverview; }
 	public set autoCalculateOverview(value: boolean) {
 		this._autoCalculateOverview = value;
-	}
-
-	private _autoOverviewPopupSeen: boolean = false;
-	public get autoOverviewPopupSeen(): boolean { return this._autoOverviewPopupSeen; }
-	public set autoOverviewPopupSeen(value: boolean) {
-		this._autoOverviewPopupSeen = value;
 	}
 
 	private _timePicker: string = 'material';
@@ -278,7 +290,7 @@ export class GlobalService {
 		if (quantity == null || isNaN(quantity)) {
 			return '';
 		}
-		return Number(quantity).toLocaleString(this.language === 'fr' ? 'fr-FR' : 'en-US', { maximumFractionDigits: 3 });
+		return Number(quantity).toLocaleString(this.locale, { maximumFractionDigits: 3 });
 	}
 
 	// Empty when the type no longer has a quantity: the values typed before are kept, but hidden

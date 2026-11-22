@@ -22,7 +22,7 @@ import { LogsService } from 'src/app/infra/logs.service';
 import { SportsService } from 'src/app/infra/sports.service';
 import { MealsService } from 'src/app/infra/meals.service';
 import { SettingsService } from 'src/app/infra/settings.service';
-import { DialogInfoComponent } from '../dialog/dialog-info';
+import { ReviewService } from 'src/app/infra/review.service';
 import { format24H, formatAMPM } from 'src/app/util/time.util';
 import * as moment from 'moment';
 
@@ -50,7 +50,8 @@ export abstract class ATimeComponent {
 		protected settingsService: SettingsService,
 		protected dialog: MatDialog,
 		protected snackBar: MatSnackBar,
-		protected bottomSheet: MatBottomSheet
+		protected bottomSheet: MatBottomSheet,
+		protected reviewService: ReviewService
 	) {
 		this.symptoms$ = this.globalService.symptoms$;
 		this.symptoms = new Array<ISymptom>();
@@ -119,25 +120,6 @@ export abstract class ATimeComponent {
 		/*this.snackBar.open(this.translocoService.translate('TIMELINE_ADD_EVENT_SNACKBAR',
 			{ type: this.translocoService.translate(type), action: this.translocoService.translate(action) }), 'Close',
 				{ duration: 2000 });*/
-
-		// Onboarding Popup for Auto-Calculate Feature
-		if (!this.globalService.autoOverviewPopupSeen && type === 'symptomLog') {
-			this.settingsService.setAutoOverviewPopupSeen(true).subscribe();
-
-			this.dialog.open(DialogInfoComponent, {
-				autoFocus: false,
-				width: '20rem',
-				panelClass: 'custom-modalbox',
-				data: {
-					title: this.translocoService.translate('POPUP_AUTO_CALCULATE_TITLE'),
-					content: [
-						this.translocoService.translate('POPUP_AUTO_CALCULATE_CONTENT_1'),
-						this.translocoService.translate('POPUP_AUTO_CALCULATE_CONTENT_2'),
-						this.translocoService.translate('POPUP_AUTO_CALCULATE_CONTENT_3')
-					]
-				}
-			});
-		}
 	}
 
 	public editEvent(date: string, response: any, customEvent: ICustomEvent): void {
@@ -156,17 +138,20 @@ export abstract class ATimeComponent {
 	}
 
 	public addEvent(date: string, response: any) {
-		this.daysService.addEvent(
-			date,
-			{
-				'time': response.time,
-				'type': response.type,
-				'key': response.key,
-				'pain': response.pain,
-				'detail': response.detail,
-				'quantity': response.quantity,
-				'customType': response.customType
-			}).subscribe(day => { this.updateCallback(day); });
+		const event: ICustomEvent = {
+			'time': response.time,
+			'type': response.type,
+			'key': response.key,
+			'pain': response.pain,
+			'detail': response.detail,
+			'quantity': response.quantity,
+			'customType': response.customType
+		};
+		this.daysService.addEvent(date, event).subscribe(day => {
+			this.updateCallback(day);
+			// The end of a task: the moment of the invitation to rate the app, if it is due (shown once)
+			this.reviewService.onEventAdded(event);
+		});
 
 		if (response.type === 'med') {
 			this.medsService.addMed(date, response.key, response.quantity).subscribe(() => { });

@@ -38,6 +38,11 @@
     margin: 0;
 }
 
+// Link to the story of the app, under the presentation
+.story-line {
+    margin-top: 12px;
+}
+
 .support-section {
     text-align: center;
 }
@@ -49,6 +54,35 @@
     gap: 8px;
     padding: 10px 20px;
     font-size: 1em;
+}
+
+// Rate the app and the coffee side by side, as two tiles of the same size: the icon above its label leaves the
+// whole width to the label, which only goes on two lines in the longest languages on a narrow phone
+.support-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+
+    .kofi-button {
+        flex: 1 1 0;
+        min-width: 0;
+        max-width: 180px;
+        justify-content: center;
+        margin-top: 0;
+        padding: 10px 6px;
+        font-size: 14px;
+        line-height: 1.3;
+        white-space: normal;
+        text-wrap: balance;
+
+        ::ng-deep .mat-button-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+    }
 }
 
 .coffee-icon {

@@ -102,11 +102,13 @@ import { BottomSheetAddSymptomComponent } from './ui/bottom-sheet/bottom-sheet-a
 import { BottomSheetDeleteSymptomComponent } from './ui/bottom-sheet/bottom-sheet-delete-symptom';
 import { BottomSheetForceLoadWarningComponent } from './ui/bottom-sheet/bottom-sheet-force-load-warning';
 import { BottomSheetInfoComponent } from './ui/bottom-sheet/bottom-sheet-info';
+import { BottomSheetReviewPromptComponent } from './ui/bottom-sheet/bottom-sheet-review-prompt';
 import { BottomSheetDeleteTimelineEventComponent } from './ui/bottom-sheet/bottom-sheet-delete-timeline-event';
 import { SpacerItemComponent } from './ui/shared/spacer-item';
 import { ColorPickerComponent } from './ui/shared/color-picker';
 import { BottomSheetColorPickerComponent } from './ui/bottom-sheet/bottom-sheet-color-picker';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
+import { LANGUAGE_CODES } from './models/language.model';
 
 
 @NgModule({
@@ -171,6 +173,7 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 		BottomSheetDeleteSymptomComponent,
 		BottomSheetForceLoadWarningComponent,
 		BottomSheetInfoComponent,
+		BottomSheetReviewPromptComponent,
 		BottomSheetDeleteTimelineEventComponent,
 		BottomSheetEditCustomTypeComponent,
 		BottomSheetColorPickerComponent,
@@ -233,8 +236,8 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 			provide: APP_INITIALIZER,
 			useFactory: (translocoService: TranslocoService) => {
 				return async () => {
-					await translocoService.load('fr').toPromise();
-					await translocoService.load('en').toPromise();
+					// Every language, so that the texts translated by the code are there as soon as it is chosen
+					await Promise.all(LANGUAGE_CODES.map(language => translocoService.load(language).toPromise()));
 				};
 			},
 			deps: [TranslocoService],
@@ -270,6 +273,7 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 		BottomSheetDeleteSymptomComponent,
 		BottomSheetForceLoadWarningComponent,
 		BottomSheetInfoComponent,
+		BottomSheetReviewPromptComponent,
 		BottomSheetDeleteTimelineEventComponent,
 		BottomSheetColorPickerComponent
 	],

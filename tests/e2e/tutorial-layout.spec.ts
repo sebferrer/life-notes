@@ -1,4 +1,5 @@
 import { test, expect, TODAY } from '../support/app';
+import { LANGUAGE_CODES } from '../../src/app/models/language.model';
 
 // Arrows expected in each illustrated slide (see SCENE_ARROWS in tutorial-scene.component.ts)
 const SCENE_ARROWS = {
@@ -10,11 +11,10 @@ const SCENE_ARROWS = {
 const UNTRANSLATED = /\b[A-Z][A-Z0-9]+(_[A-Z0-9]+)+\b/;
 
 const VARIANTS = [
-	{ language: 'fr', classic: false },
-	{ language: 'en', classic: false },
+	...LANGUAGE_CODES.map(language => ({ language, classic: false })),
 	// The tutorial follows the version of the interface: the scenes showing a day have a V1 design too
 	{ language: 'fr', classic: true }
-] as const;
+];
 
 for (const { language, classic } of VARIANTS) {
 	test(`tutorial (${language}${classic ? ', classic design' : ''}): every slide is illustrated, linked by arrows and translated`,
@@ -46,13 +46,17 @@ for (const { language, classic } of VARIANTS) {
 			}
 		}
 		expect(await page.locator('ion-slides').innerText()).not.toMatch(UNTRANSLATED);
-		// No pressure to rate the app before using it
-		await expect(page.locator('.slide-text-rateit p').nth(3)).not.toBeEmpty();
+		// The last slide only gives the contact address: no request to rate the app (Google Play forbids asking for 5
+		// stars, the invitation of ReviewService does it once)
+		const contact = page.locator('.slide-text-contact');
+		await expect(contact.locator('a')).toHaveAttribute('href', 'mailto:kimida.life.notes@gmail.com');
+		await expect(contact.locator('p')).toHaveCount(1);
+		await expect(page.locator('ion-slide').last().locator('button, .rate-stars')).toHaveCount(0);
 	});
 }
 
 // The slideshow is as tall as its tallest slide and cuts what goes beyond: every text must stay inside it
-for (const language of ['fr', 'en'] as const) {
+for (const language of LANGUAGE_CODES) {
 	test(`tutorial (${language}): no slide cuts its text, even on a small phone`, async ({ app, page }) => {
 		await page.setViewportSize({ width: 320, height: 568 });
 		await app.start(language);
@@ -69,11 +73,11 @@ for (const language of ['fr', 'en'] as const) {
 			}, i);
 			expect(cut, `slide ${i + 1}`).toEqual([]);
 		}
-		// The button rating the app, at the end of the last slide, can be reached
+		// The contact address, at the end of the last slide, can be reached
 		await page.locator('ion-slides').evaluate((slides: any, index) => slides.slideTo(index, 0), count - 1);
-		const rate = page.locator('.slide-text-rateit button');
-		await rate.scrollIntoViewIfNeeded();
-		await expect(rate).toBeInViewport();
+		const email = page.locator('.slide-text-contact a');
+		await email.scrollIntoViewIfNeeded();
+		await expect(email).toBeInViewport();
 	});
 }
 

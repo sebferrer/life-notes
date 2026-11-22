@@ -292,7 +292,7 @@ export class DialogAddEventComponent {
 
 	// Quantity in the input, with the decimal separator of the language (parsed back by parseQuantity)
 	private displayQuantity(quantity: number): any {
-		return quantity == null ? null : ('' + quantity).replace('.', this.globalService.language === 'fr' ? ',' : '.');
+		return quantity == null ? null : ('' + quantity).replace('.', this.globalService.decimalSeparator);
 	}
 
 	// Number typed with a comma or a dot. null when empty, undefined when it isn't a number.

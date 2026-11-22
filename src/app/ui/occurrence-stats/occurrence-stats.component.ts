@@ -64,7 +64,7 @@ export class OccurrenceStatsComponent implements OnChanges {
 
 	// One decimal at most, in the format of the language
 	public formatNumber(value: number): string {
-		return value.toLocaleString(this.globalService.language === 'en' ? 'en-US' : 'fr-FR', { maximumFractionDigits: 1 });
+		return value.toLocaleString(this.globalService.locale, { maximumFractionDigits: 1 });
 	}
 
 	public get painScale(): number {
@@ -171,7 +171,8 @@ export class OccurrenceStatsComponent implements OnChanges {
 	private periodLabel(start: string): string {
 		const date = moment(start);
 		const month = this.translocoService.translate('MONTH-SHORT-' + (date.month() + 1));
-		return this.period === 'month' ? month : date.date() + ' ' + month;
+		// The day and the month in the order of the language: "18 mars", "3月18日"
+		return this.period === 'month' ? month : this.translocoService.translate('DAY_MONTH_DATE', { day: date.date(), month });
 	}
 
 	private hourLabel(hour: number): string {

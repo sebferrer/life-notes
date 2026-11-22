@@ -5,17 +5,18 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { ISettings } from '../models/settings.model';
 import { GlobalService } from './global.service';
 import { IEventPalettes, completeEventPalettes, getDefaultEventPalettes } from '../models/event-colors.model';
+import { LANGUAGE_CODES } from '../models/language.model';
 
 const KEY = 'settings';
 
 @Injectable()
 export class SettingsService {
 
-	public readonly AVAILABLE_LANGS = ['en', 'fr'];
+	public readonly AVAILABLE_LANGS = LANGUAGE_CODES;
 	public readonly AVAILABLE_TIME_FORMATS = ['us', 'eu'];
 	public readonly AVAILABLE_PAIN_SCALES = [5, 10];
 
-	public readonly CURRENT_VERSION = "0.4.0";
+	public readonly CURRENT_VERSION = "0.4.1";
 
 	constructor(
 		private readonly dbContext: DbContext,
@@ -64,6 +65,10 @@ export class SettingsService {
 				}
 				if (newSettings.eventColors != null) {
 					s.eventColors = completeEventPalettes(newSettings.eventColors);
+				}
+				// Shown once: neither a new phone nor an older backup brings the invitation to rate the app back
+				if (!s.reviewPromptDate && newSettings.reviewPromptDate) {
+					s.reviewPromptDate = newSettings.reviewPromptDate;
 				}
 				s.lastInstall = this.CURRENT_VERSION
 				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
@@ -315,18 +320,6 @@ export class SettingsService {
 		));
 	}
 
-	public setAutoOverviewPopupSeen(seen: boolean): Observable<ISettings> {
-		return this.queueWrite(() => this.getSettings().pipe(
-			switchMap(s => {
-				s.autoOverviewPopupSeen = seen;
-				this.globalService.autoOverviewPopupSeen = seen;
-				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
-					map(() => s)
-				);
-			})
-		));
-	}
-
 	public setTimePicker(picker: string): Observable<ISettings> {
 		return this.queueWrite(() => this.getSettings().pipe(
 			switchMap(s => {
@@ -379,6 +372,17 @@ export class SettingsService {
 		return this.queueWrite(() => this.getSettings().pipe(
 			switchMap(s => {
 				s.newUiPopupSeen = seen;
+				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
+					map(() => s)
+				);
+			})
+		));
+	}
+
+	public setReviewPromptDate(reviewPromptDate: number): Observable<ISettings> {
+		return this.queueWrite(() => this.getSettings().pipe(
+			switchMap(s => {
+				s.reviewPromptDate = reviewPromptDate;
 				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
 					map(() => s)
 				);
@@ -443,13 +447,13 @@ export class SettingsService {
 						'uiVersion': 'v2', // The V1 is for the users of the former versions
 						'sleepChartMode': 'bars',
 						'newUiPopupSeen': true,
-						'eventColors': getDefaultEventPalettes()
+						'eventColors': getDefaultEventPalettes(),
+						'reviewPromptDate': 0
 					};
 					return this.dbContext.asObservable(this.dbContext.settingsCollection.put(settings)).pipe(
 						tap(() => {
 							this.globalService.painScale = settings.painScale;
 							this.globalService.autoCalculateOverview = settings.autoCalculateOverview;
-							this.globalService.autoOverviewPopupSeen = settings.autoOverviewPopupSeen;
 							this.globalService.timePicker = settings.timePicker;
 							this.globalService.darkMode = settings.darkMode;
 							this.globalService.landscapeMode = settings.landscapeMode;
@@ -565,10 +569,14 @@ export class SettingsService {
 						changed = true;
 					}
 
+					if (s.reviewPromptDate == null) {
+						s.reviewPromptDate = 0;
+						changed = true;
+					}
+
 					// Update GlobalService with loaded values
 					this.globalService.painScale = s.painScale;
 					this.globalService.autoCalculateOverview = s.autoCalculateOverview;
-					this.globalService.autoOverviewPopupSeen = s.autoOverviewPopupSeen;
 					this.globalService.timePicker = s.timePicker;
 					this.globalService.darkMode = s.darkMode;
 					this.globalService.landscapeMode = s.landscapeMode;

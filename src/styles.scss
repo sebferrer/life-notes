@@ -466,6 +466,12 @@ body:not(.ui-v1) .v1-only {
     height: auto !important;
 }
 
+// Invitation to rate the app: as high as its text
+.event-bottom-sheet.review-prompt-panel .mat-bottom-sheet-container {
+    max-height: 90vh !important;
+    height: auto !important;
+}
+
 // Landscape phones: half of the screen height is too small for the add/edit sheets
 @media (orientation: landscape) and (max-height: 600px) {
     .event-bottom-sheet .mat-bottom-sheet-container {

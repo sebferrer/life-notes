@@ -1,9 +1,18 @@
 import { test, expect } from '@playwright/test';
 import { readdirSync, readFileSync, statSync } from 'fs';
 import { join } from 'path';
+import { LANGUAGES, LANGUAGE_CODES } from '../../src/app/models/language.model';
 
-const fr: { [key: string]: string } = JSON.parse(readFileSync('src/assets/i18n/fr.json', 'utf-8'));
-const en: { [key: string]: string } = JSON.parse(readFileSync('src/assets/i18n/en.json', 'utf-8'));
+type Texts = { [key: string]: string };
+
+const I18N_DIR = 'src/assets/i18n';
+const translations: { [language: string]: Texts } = {};
+for (const language of LANGUAGE_CODES) {
+	translations[language] = JSON.parse(readFileSync(join(I18N_DIR, language + '.json'), 'utf-8'));
+}
+// English is the reference of the keys
+const en = translations.en;
+const fr = translations.fr;
 
 function files(dir: string, extension: string): string[] {
 	return readdirSync(dir).flatMap(name => {
@@ -14,6 +23,10 @@ function files(dir: string, extension: string): string[] {
 
 function params(text: string): string[] {
 	return (text.match(/{{\s*\w+\s*}}/g) || []).map(param => param.replace(/[{}\s]/g, '')).sort();
+}
+
+function tags(text: string): string[] {
+	return text.match(/<[^>]+>/g) || [];
 }
 
 // Translation keys written as such in the templates and the code (keys built at runtime are not found)
@@ -39,28 +52,51 @@ function usedKeys(): Map<string, string> {
 
 test.describe('Translations', () => {
 
-	test('French and English have the same keys', () => {
-		expect(Object.keys(en).filter(key => !(key in fr)), 'missing in fr.json').toEqual([]);
-		expect(Object.keys(fr).filter(key => !(key in en)), 'missing in en.json').toEqual([]);
+	test('every translation file is a language of the app, with its flag', () => {
+		const jsonFiles = readdirSync(I18N_DIR).filter(name => name.endsWith('.json')).map(name => name.replace('.json', ''));
+		expect(jsonFiles.sort()).toEqual([...LANGUAGE_CODES].sort());
+		for (const language of LANGUAGES) {
+			expect(statSync(join('src/assets/svg', language.flag)).isFile(), language.flag).toBe(true);
+		}
 	});
 
+	for (const language of LANGUAGE_CODES.filter(code => code !== 'en')) {
+		test(`${language}: same keys as English, in the same order`, () => {
+			const texts = translations[language];
+			expect(Object.keys(en).filter(key => !(key in texts)), `missing in ${language}.json`).toEqual([]);
+			expect(Object.keys(texts).filter(key => !(key in en)), `missing in en.json`).toEqual([]);
+			// The French file has its own order since the beginning
+			if (language !== 'fr') {
+				expect(Object.keys(texts)).toEqual(Object.keys(en));
+			}
+		});
+
+		test(`${language}: same parameters and HTML tags as English`, () => {
+			const texts = translations[language];
+			const differentParams = Object.keys(en).filter(key => key in texts
+				&& JSON.stringify(params(en[key])) !== JSON.stringify(params(texts[key])));
+			expect(differentParams).toEqual([]);
+			const differentTags = Object.keys(en).filter(key => key in texts
+				&& JSON.stringify(tags(en[key])) !== JSON.stringify(tags(texts[key])));
+			expect(differentTags).toEqual([]);
+		});
+	}
+
 	test('no translation is empty', () => {
-		for (const [language, texts] of [['fr', fr], ['en', en]] as const) {
+		for (const language of LANGUAGE_CODES) {
+			const texts = translations[language];
 			expect(Object.keys(texts).filter(key => !String(texts[key]).trim()), language).toEqual([]);
 		}
 	});
 
-	test('both languages use the same parameters', () => {
-		const different = Object.keys(fr).filter(key => key in en
-			&& JSON.stringify(params(fr[key])) !== JSON.stringify(params(en[key])));
-		expect(different).toEqual([]);
-	});
-
-	test('every key used by the app exists', () => {
-		const missing = [...usedKeys().entries()]
-			.filter(([key]) => !(key in fr) || !(key in en))
-			.map(([key, file]) => `${key} (${file})`);
-		expect(missing).toEqual([]);
+	test('every key used by the app exists in every language', () => {
+		const used = [...usedKeys().entries()];
+		for (const language of LANGUAGE_CODES) {
+			const missing = used
+				.filter(([key]) => !(key in translations[language]))
+				.map(([key, file]) => `${key} (${file})`);
+			expect(missing, language).toEqual([]);
+		}
 	});
 
 	test('every tutorial slide has its title and text', () => {
@@ -76,8 +112,9 @@ test.describe('Translations', () => {
 		const classicScenes = /const CLASSIC_TEXTS = \[([^\]]*)\]/.exec(source)[1].match(/'[\w-]+'/g);
 		for (const scene of classicScenes.map(s => s.replace(/'/g, ''))) {
 			const key = 'TUTORIAL_' + scene.toUpperCase().replace(/-/g, '_') + '_TEXT_CLASSIC';
-			expect(fr[key], key).toBeTruthy();
-			expect(en[key], key).toBeTruthy();
+			for (const language of LANGUAGE_CODES) {
+				expect(translations[language][key], `${key} (${language})`).toBeTruthy();
+			}
 		}
 	});
 });

@@ -21,7 +21,7 @@
 		<div *ngIf="monthDays; else loading" class="pixels-grid">
 			<div></div>
 			<ng-template transloco let-t>
-				<div *ngFor="let month of months" class="month-label">{{ t('MONTH-SHORT-' + month) | slice:0:1 }}</div>
+				<div *ngFor="let month of months" class="month-label">{{ monthInitial(t('MONTH-SHORT-' + month)) }}</div>
 			</ng-template>
 			<ng-container *ngFor="let dayNumber of dayNumbers">
 				<div class="day-label">{{ dayNumber }}</div>

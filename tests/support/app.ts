@@ -1,5 +1,6 @@
 import { test as base, expect, Locator, Page } from '@playwright/test';
 import { readFileSync } from 'fs';
+import { LANGUAGES } from '../../src/app/models/language.model';
 
 // Day used as "today" by every test (frozen clock): the dates and times shown by the app are deterministic
 export const TODAY = '2026-03-18';
@@ -66,9 +67,11 @@ export class App {
 	constructor(public readonly page: Page) { }
 
 	// First launch: language choice then the welcome dialogs
-	public async start(language: 'fr' | 'en' = 'fr'): Promise<void> {
+	public async start(language: string = 'fr'): Promise<void> {
 		await this.page.goto('/');
-		await this.page.locator('.language-label', { hasText: language === 'fr' ? 'French' : 'English' }).click();
+		// Each language is named in itself: Français, English, Deutsch...
+		const name = LANGUAGES.find(l => l.code === language).name;
+		await this.page.locator('.language-label', { hasText: name }).click();
 		await expect(this.page.locator('.language-label')).toHaveCount(0);
 		await this.closeDialogs();
 	}
@@ -204,8 +207,10 @@ export class App {
 		return this.dayCard(date).locator(type ? `.event-row.${type}` : '.event-row');
 	}
 
-	// Adds an event to a day of the timeline, at the current (frozen) time unless a time is given
-	public async addEvent(type: EventType, options: { key?: string, quantity?: string, detail?: string } = {},
+	// Adds an event to a day of the timeline, at the current (frozen) time unless a time is given. pain: intensity of a
+	// symptom, on the scale of the settings (0-10 for a new user)
+	public async addEvent(type: EventType,
+		options: { key?: string, quantity?: string, detail?: string, pain?: number } = {},
 		date: string = TODAY): Promise<void> {
 		const rowsBefore = await this.eventRows(date).count();
 		await this.dayCard(date).locator('.add-event').click();
@@ -222,11 +227,18 @@ export class App {
 		if (options.detail != null) {
 			await sheet.locator('ion-textarea textarea').fill(options.detail);
 		}
+		if (options.pain != null) {
+			await sheet.locator('ion-range').evaluate((range: any, v) => {
+				range.value = v;
+				range.dispatchEvent(new CustomEvent('ionChange', { detail: { value: v } }));
+			}, options.pain);
+			await expect(sheet.locator('.pain-badge')).toHaveText(String(options.pain));
+		}
 		// Closes the suggestions of the name field (the sheet itself ignores Escape)
 		await this.page.keyboard.press('Escape');
 		await sheet.locator('.confirm-button').click();
 		await expect(sheet).toBeHidden();
-		// One-time information dialogs (e.g. after the first symptom)
+		// One-time dialogs that may follow an addition
 		await this.closeDialogs();
 		await expect(this.eventRows(date)).toHaveCount(rowsBefore + 1);
 	}

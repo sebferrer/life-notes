@@ -16,10 +16,13 @@
                     <mat-icon *ngIf="data.type === 'wakeUp'">alarm</mat-icon>
                     <mat-icon *ngIf="data.type === 'goToBed'">bedtime</mat-icon>
                 </div>
+                <!-- The verb and the type in the order of the language: "Add Symptom", "Symptom hinzufügen" -->
                 <div class="main-title">
-                    <span *ngIf="data.edit">{{ t('EDIT') }}</span>
-                    <span *ngIf="!data.edit && data.type !== 'wakeUp' && data.type !== 'goToBed'">{{ t('ADD') }}</span>
-                    {{ data.type === 'custom' ? customType.label : (t(data.type) | titlecase) }}
+                    <ng-container *ngIf="{ type: data.type === 'custom' ? customType.label
+                        : globalService.titleCase ? (t(data.type) | titlecase) : t(data.type) } as title">
+                        {{ data.edit ? t('EVENT_DIALOG_EDIT_TITLE', title)
+                        : data.type === 'wakeUp' || data.type === 'goToBed' ? title.type : t('EVENT_DIALOG_ADD_TITLE', title) }}
+                    </ng-container>
                 </div>
             </div>
 

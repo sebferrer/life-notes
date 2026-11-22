@@ -51,6 +51,12 @@ export class YearInPixelsComponent implements OnInit {
 		this.loadYear(this.year + 1);
 	}
 
+	// First letter of the month, or its number where the months are numbered: "10" for "10月" in Japanese
+	public monthInitial(name: string): string {
+		const monthNumber = /^\d+/.exec(name);
+		return monthNumber ? monthNumber[0] : name.charAt(0);
+	}
+
 	// null when the month is shorter
 	public getDay(month: number, dayNumber: number): DayOverviewViewModel {
 		return this.monthDays[month - 1][dayNumber - 1] || null;

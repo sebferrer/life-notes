@@ -18,7 +18,8 @@
                 <div class="main-title">{{ data.title }}</div>
             </div>
             <div class="date-time-row">
-                {{ data.occurrences.length }} {{ t('TABLE_OCCURRENCES') | lowercase }}
+                {{ data.occurrences.length === 1 ? t('OCCURRENCE_TOTAL_ONE')
+                : t('OCCURRENCE_TOTAL_MANY', { count: data.occurrences.length }) }}
             </div>
         </div>
 

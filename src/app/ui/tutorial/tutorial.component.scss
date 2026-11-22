@@ -44,17 +44,24 @@ p b {
         display: block;
         margin-left: 20vw;
     }
-    .rate-stars {
+    .contact-icon {
         width: 80%;
         margin: 0 auto;
-        padding-top: 15vh;
+        padding-top: 20vh;
+
+        mat-icon {
+            width: 48px;
+            height: 48px;
+            font-size: 48px;
+            color: var(--primary);
+        }
     }
     .slide-text-header {
         width: 80%;
         margin: 0 auto;
         padding-top: 25vh;
     }
-    .slide-text-rateit {
+    .slide-text-contact {
         width: 80%;
         margin: 0 auto;
         padding-bottom: 2rem;

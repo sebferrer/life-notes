@@ -395,7 +395,7 @@ test.describe('Sleep of the month', () => {
 
 		await app.goToSettings('Langue');
 		await app.settingsPanel('Langue').locator('mat-select').click();
-		await page.locator('mat-option', { hasText: 'Anglais' }).click();
+		await page.locator('mat-option', { hasText: 'English' }).click();
 		await expect(page.locator('#settings-container .title')).toHaveText('Settings');
 		await app.goToCalendar();
 		await expect(page.locator('app-sleep-stats .durations .legend-item'))

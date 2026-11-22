@@ -75,8 +75,11 @@ export class SleepStatsComponent implements OnChanges {
 		this.summary = getSleepSummary(days, this.nights);
 		this.hasData = !!(this.summary.duration || this.summary.bedTime || this.summary.wakeUp);
 		this.hasAloneTimes = this.nights.some(night => !this.isComplete(night) && (night.bedTime != null || night.wakeUp != null));
-		this.dates = (this.overviews || []).map(overview => overview.detailedDate.day + ' '
-			+ this.translocoService.translate('MONTH-SHORT-' + overview.detailedDate.month));
+		// The day and the month in the order of the language: "18 mars", "3月18日"
+		this.dates = (this.overviews || []).map(overview => this.translocoService.translate('DAY_MONTH_DATE', {
+			day: overview.detailedDate.day,
+			month: this.translocoService.translate('MONTH-SHORT-' + overview.detailedDate.month)
+		}));
 		this.labels = days.map(day => String(day.day));
 		this.updateCharts();
 	}
@@ -90,7 +93,7 @@ export class SleepStatsComponent implements OnChanges {
 	public formatDuration(minutes: number): string {
 		const hours = Math.floor(minutes / 60);
 		const rest = String(minutes % 60).padStart(2, '0');
-		return this.globalService.language === 'en' ? `${hours}h ${rest}` : `${hours} h ${rest}`;
+		return this.translocoService.translate('SLEEP_DURATION_FORMAT', { hours, minutes: rest });
 	}
 
 	// A time in minutes from midnight, in the time format of the settings
@@ -271,7 +274,7 @@ export class SleepStatsComponent implements OnChanges {
 	}
 
 	private formatHours(minutes: number): string {
-		return this.globalService.language === 'en' ? `${minutes / 60}h` : `${minutes / 60} h`;
+		return this.translocoService.translate('SLEEP_HOURS_FORMAT', { hours: minutes / 60 });
 	}
 
 	private chartOptions(yAxis: any, tooltipLabel: (item: any) => string): any {

@@ -20,6 +20,7 @@ export interface ISettings {
 	calendarBlockView: boolean;
 	painPalette: string;
 	autoCalculateOverview: boolean;
+	// No longer used (its popup was removed): kept so the settings and backups stay readable by the 0.3.7
 	autoOverviewPopupSeen: boolean;
 	timePicker: string;
 	darkMode: boolean;
@@ -31,4 +32,6 @@ export interface ISettings {
 	// Users of the former versions are told once about the V2
 	newUiPopupSeen: boolean;
 	eventColors: IEventPalettes;
+	// When the invitation to rate the app was shown (ms), 0 if never: it is shown only once (see ReviewService)
+	reviewPromptDate: number;
 }

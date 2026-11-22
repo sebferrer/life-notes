@@ -28,16 +28,23 @@ Add `--headed` to watch it, or `--ui` for the interactive mode.
 - `unit/`: pure logic of `src`, without browser
   - event colors: palettes, migrations, readability of texts and icons on any customized color, and the
     colors precomputed in `styles.scss` (they must match the code)
-  - translations: same keys and parameters in French and English, every key used by the app exists
+  - translations: every language of `language.model.ts` has its file and flag, the same keys, parameters and HTML tags
+    as English, and every key used by the app
   - custom event types: limit of 10 types, icons, ready-made colors, light and dark variants, type keys
   - inverted intensity scale of a symptom (colors, doughnut charts), statistics of an event (periods, key
     figures, hours of the day), sleep of the nights of a month
+  - invitation to rate the app: due once, to the users who know the app (days with data, since how long), never
+    right after a strong symptom (every value of both scales: up to 2 of 5, up to 4 of 10, reversed when inverted)
 - `e2e/`: user flows, in French, each test starting from a fresh app (empty database)
   - first launch, symptoms (inverted intensity scale too), timeline (every event type, edit, delete, wake-up/bedtime, intensity, V1),
     day view, calendar (V1 too, V2: intensities of the symptoms entered as rings, V1: pie charts, sleep of the month as bars or curves), Year in Pixels, manage lists (refreshed from their header, confirmed in a sheet), statistics of an event, settings (the help of the automatic overview, illustrated in V1 and V2), backups (export, import, another phone, invalid files),
     PDF report (V2: each symptom as in the calendar, V1: the classic report, both saved as a PDF), tutorial (illustrated
-    with the screens of the version of the interface, no text cut on a small phone), small screens, the cross of every
+    with the screens of the version of the interface, no text cut on a small phone, the last slide only gives the
+    contact address), small screens, the cross of every
     bottom sheet
+  - languages: the texts built by the code follow each language (order of the dates, month numbers in Japanese,
+    capitals of the German nouns and of the Spanish titles, singular), the language of the page, the day of an
+    entry in a time zone behind UTC
   - event types created by the user: creation (the icons must all exist in the Material Icons font), entries
     from the timeline, colors per theme, limit of 10 types, edition, renaming and deletion of entries, deletion
     of a type with its entries, backups, PDF report; restart in the dark theme, several types sharing entry
@@ -46,6 +53,11 @@ Add `--headed` to watch it, or `--ui` for the interactive mode.
   - versions of the interface: the V2 for new users only, the users of a former version (`app.startAsFormerUser`,
     settings written in the database before the app starts) keep the V1 and get a popup once; what differs in V1
     (see `GlobalService.uiVersion`); when the app starts, only the chosen version is ever drawn (no flash)
+  - rating the app: the invitation (previewed from the developer mode) says it is shown once and that a new user
+    can wait, its button opens the page of the store on the web (the card of Google Play on Android); the page of
+    the store from the about page (Settings > About > Learn more, next to the coffee); the web app never shows the
+    invitation by itself; as on Android (platform faked), no invitation after a symptom above 2/5 or 4/10, one at
+    2/5 or 4/10
   - data of the former versions: `fixtures/backup-0.3.7.json` is a real backup made by the version 0.3.7 (the one
     published before the V2; September and October 2026, some of its entries typed in its own interface). Imported,
     every day and symptom is found again as it was; a phone with the settings of a 2025 version (five fields) gets

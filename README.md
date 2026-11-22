@@ -20,7 +20,7 @@ This project is maintained voluntarily, on my personal time, and is developed as
 - Simple statistics and trends
 - Local-only data storage
 - Free to use, no ads
-- English and French support
+- Available in English, French, German, Spanish, Italian, Portuguese (Brazil) and Japanese
 
 ## Tech Stack
 

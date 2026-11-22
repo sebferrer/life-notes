@@ -419,6 +419,12 @@ export class MonthlyReportComponent implements OnInit, OnDestroy {
 		});
 	}
 
+	// "Octobre 2026", "Marzo de 2026": the first letter only ("text-transform: capitalize" gave "Marzo De 2026"),
+	// in the text itself so that the PDF, drawn by html2canvas, doesn't depend on a ::first-letter style
+	public capitalize(text: string): string {
+		return text.charAt(0).toUpperCase() + text.slice(1);
+	}
+
 	public getPainColor(day: DayOverviewViewModel, symptomKey: string): string {
 		return this.globalService.getPainColorClass(symptomKey, day.findSymptomPain(symptomKey));
 	}
