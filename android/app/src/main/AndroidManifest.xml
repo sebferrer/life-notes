@@ -30,6 +30,10 @@
         </provider>
     </application>
 
+    <!-- The activity is locked in portrait: without this line, Google Play infers that a portrait screen is required
+         and hides the app from the devices without one (some tablets, Chromebooks, Android XR) -->
+    <uses-feature android:name="android.hardware.screen.portrait" android:required="false" />
+
     <!-- Permissions -->
 
     <uses-permission android:name="android.permission.INTERNET" />

@@ -16,6 +16,7 @@ import { BottomSheetExportPdfComponent } from '../bottom-sheet/bottom-sheet-expo
 import { DialogSelectBackupComponent } from '../dialog/dialog-select-backup';
 import { DialogInfoComponent } from '../dialog/dialog-info';
 import { BackupService } from 'src/app/infra/backup.service';
+import { ReviewService } from 'src/app/infra/review.service';
 import { DialogExportConfirmComponent } from '../dialog/dialog-export-confirm';
 import { Router } from '@angular/router';
 import {
@@ -61,6 +62,8 @@ export class SettingsComponent implements OnInit {
 	public landscapeMode: boolean;
 	public uiVersion: string;
 	public sleepChartMode: string;
+	// When the invitation to rate the app was shown, 0 if never (developer mode)
+	public reviewPromptDate = 0;
 	public eventPalettes: IEventPalettes;
 	// The palette edited is the one of the theme currently displayed
 	public get currentTheme(): 'light' | 'dark' {
@@ -98,6 +101,7 @@ export class SettingsComponent implements OnInit {
 		private bottomSheet: MatBottomSheet,
 		private dialog: MatDialog,
 		private snackBar: MatSnackBar,
+		private reviewService: ReviewService,
 		private router: Router
 	) { }
 
@@ -140,6 +144,7 @@ export class SettingsComponent implements OnInit {
 			this.uiVersion = settings.uiVersion || 'v2';
 			this.sleepChartMode = settings.sleepChartMode || 'bars';
 			this.eventPalettes = completeEventPalettes(settings.eventColors);
+			this.reviewPromptDate = settings.reviewPromptDate || 0;
 		});
 	}
 
@@ -472,6 +477,23 @@ export class SettingsComponent implements OnInit {
 
 	public getWindowLocationOrigin() {
 		return window.location.origin;
+	}
+
+	// Developer mode: the invitation to rate the app, shown once (see ReviewService)
+	public get reviewPromptDateLabel(): string {
+		return new Date(this.reviewPromptDate).toLocaleString(this.globalService.locale);
+	}
+
+	public previewReviewPrompt(): void {
+		this.reviewService.openPrompt();
+	}
+
+	// Shown again at the next event added, if it is due
+	public resetReviewPrompt(): void {
+		this.settingsService.setReviewPromptDate(0).subscribe(() => {
+			this.reviewPromptDate = 0;
+			this.reviewService.resetSession();
+		});
 	}
 
 	public openBackupHelpDialog(): void {

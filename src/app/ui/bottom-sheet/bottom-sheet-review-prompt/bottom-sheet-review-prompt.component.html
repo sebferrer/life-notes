@@ -1,0 +1,33 @@
+<div class="bottom-sheet-container closable-sheet review-prompt">
+    <button mat-icon-button class="sheet-close-button v2-only" (click)="onCloseClick()"
+        [attr.aria-label]="'CLOSE' | transloco">
+        <mat-icon>close</mat-icon>
+    </button>
+    <div class="header-section">
+        <mat-icon class="review-icon">rate_review</mat-icon>
+        <h2 class="title">{{ 'REVIEW_PROMPT_TITLE' | transloco }}</h2>
+    </div>
+
+    <div class="content-body">
+        <p>{{ 'REVIEW_PROMPT_CONTENT_1' | transloco }}</p>
+        <p>{{ 'REVIEW_PROMPT_CONTENT_2' | transloco }}</p>
+        <p class="not-yet">{{ 'REVIEW_PROMPT_NOT_YET' | transloco }}</p>
+        <p class="contact">{{ 'REVIEW_PROMPT_CONTACT' | transloco }}<a href="mailto:{{ email }}">{{ email }}</a></p>
+        <p class="once">
+            <mat-icon fontSet="material-icons-outlined">info</mat-icon>
+            <span>{{ 'REVIEW_PROMPT_ONCE' | transloco }}</span>
+        </p>
+    </div>
+
+    <div class="actions">
+        <button mat-stroked-button (click)="onCloseClick()" class="cancel-button">
+            {{ 'REVIEW_PROMPT_LATER' | transloco }}
+        </button>
+        <button mat-flat-button color="primary" (click)="onRateClick()" class="confirm-button">
+            {{ 'RATE_APP' | transloco }}
+        </button>
+    </div>
+
+    <app-spacer-item></app-spacer-item>
+
+</div>

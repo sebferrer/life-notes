@@ -102,6 +102,7 @@ import { BottomSheetAddSymptomComponent } from './ui/bottom-sheet/bottom-sheet-a
 import { BottomSheetDeleteSymptomComponent } from './ui/bottom-sheet/bottom-sheet-delete-symptom';
 import { BottomSheetForceLoadWarningComponent } from './ui/bottom-sheet/bottom-sheet-force-load-warning';
 import { BottomSheetInfoComponent } from './ui/bottom-sheet/bottom-sheet-info';
+import { BottomSheetReviewPromptComponent } from './ui/bottom-sheet/bottom-sheet-review-prompt';
 import { BottomSheetDeleteTimelineEventComponent } from './ui/bottom-sheet/bottom-sheet-delete-timeline-event';
 import { SpacerItemComponent } from './ui/shared/spacer-item';
 import { ColorPickerComponent } from './ui/shared/color-picker';
@@ -172,6 +173,7 @@ import { LANGUAGE_CODES } from './models/language.model';
 		BottomSheetDeleteSymptomComponent,
 		BottomSheetForceLoadWarningComponent,
 		BottomSheetInfoComponent,
+		BottomSheetReviewPromptComponent,
 		BottomSheetDeleteTimelineEventComponent,
 		BottomSheetEditCustomTypeComponent,
 		BottomSheetColorPickerComponent,
@@ -271,6 +273,7 @@ import { LANGUAGE_CODES } from './models/language.model';
 		BottomSheetDeleteSymptomComponent,
 		BottomSheetForceLoadWarningComponent,
 		BottomSheetInfoComponent,
+		BottomSheetReviewPromptComponent,
 		BottomSheetDeleteTimelineEventComponent,
 		BottomSheetColorPickerComponent
 	],

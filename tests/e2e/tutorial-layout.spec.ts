@@ -46,8 +46,12 @@ for (const { language, classic } of VARIANTS) {
 			}
 		}
 		expect(await page.locator('ion-slides').innerText()).not.toMatch(UNTRANSLATED);
-		// No pressure to rate the app before using it
-		await expect(page.locator('.slide-text-rateit p').nth(3)).not.toBeEmpty();
+		// The last slide only gives the contact address: no request to rate the app (Google Play forbids asking for 5
+		// stars, the invitation of ReviewService does it once)
+		const contact = page.locator('.slide-text-contact');
+		await expect(contact.locator('a')).toHaveAttribute('href', 'mailto:kimida.life.notes@gmail.com');
+		await expect(contact.locator('p')).toHaveCount(1);
+		await expect(page.locator('ion-slide').last().locator('button, .rate-stars')).toHaveCount(0);
 	});
 }
 
@@ -69,11 +73,11 @@ for (const language of LANGUAGE_CODES) {
 			}, i);
 			expect(cut, `slide ${i + 1}`).toEqual([]);
 		}
-		// The button rating the app, at the end of the last slide, can be reached
+		// The contact address, at the end of the last slide, can be reached
 		await page.locator('ion-slides').evaluate((slides: any, index) => slides.slideTo(index, 0), count - 1);
-		const rate = page.locator('.slide-text-rateit button');
-		await rate.scrollIntoViewIfNeeded();
-		await expect(rate).toBeInViewport();
+		const email = page.locator('.slide-text-contact a');
+		await email.scrollIntoViewIfNeeded();
+		await expect(email).toBeInViewport();
 	});
 }
 

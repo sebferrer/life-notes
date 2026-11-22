@@ -16,25 +16,16 @@
                     <p [innerHTML]="(classic && slide.classicText ? slide.classicText : slide.text) | transloco"></p>
                 </div>
             </div>
-            <div *ngSwitchCase="'rateit'" class="slide">
-                <div class="rate-stars">
-                    <mat-icon>star_rate</mat-icon>
-                    <mat-icon>star_rate</mat-icon>
-                    <mat-icon>star_rate</mat-icon>
-                    <mat-icon>star_rate</mat-icon>
-                    <mat-icon>star_rate</mat-icon>
+            <!-- No request to rate the app: the invitation of ReviewService does it once, as Google Play allows -->
+            <div *ngSwitchCase="'contact'" class="slide">
+                <div class="contact-icon">
+                    <mat-icon>email</mat-icon>
                 </div>
-                <div class="slide-text-rateit">
+                <div class="slide-text-contact">
                     <h2>{{ slide.title | transloco }}</h2>
-                    <p>{{ 'TUTORIAL_SLIDE_RATEIT_TEXT_1' | transloco }}</p>
-                    <p>{{ 'TUTORIAL_SLIDE_RATEIT_TEXT_2' | transloco }}
-                        <a href="mailto: kimida.life.notes@gmail.com">kimida.life.notes@gmail.com</a>
+                    <p>{{ slide.text | transloco }}
+                        <a href="mailto:{{ email }}">{{ email }}</a>
                     </p>
-                    <p>{{ 'TUTORIAL_SLIDE_RATEIT_TEXT_3' | transloco }}</p>
-                    <p>{{ 'TUTORIAL_SLIDE_RATEIT_TEXT_NOT_YET' | transloco }}</p>
-                    <p>{{ 'TUTORIAL_SLIDE_RATEIT_TEXT_4' | transloco }}</p>
-                    <button mat-flat-button color="primary" (click)="rateApp()">{{ 'TUTORIAL_SLIDE_RATEIT_TEXT_5' |
-                        transloco }}</button>
                 </div>
             </div>
         </ion-slide>

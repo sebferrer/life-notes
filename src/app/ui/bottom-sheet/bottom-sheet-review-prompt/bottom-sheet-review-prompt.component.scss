@@ -1,0 +1,94 @@
+.bottom-sheet-container.review-prompt {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 1rem 1.5rem 1rem;
+    gap: 1.25rem;
+    box-sizing: border-box;
+    width: 100%;
+
+    .header-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+
+        .review-icon {
+            font-size: 2.5rem;
+            width: 2.5rem;
+            height: 2.5rem;
+            color: var(--primary);
+        }
+
+        .title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-strong);
+            margin: 0;
+            text-align: center;
+        }
+    }
+
+    .content-body {
+        display: flex;
+        flex-direction: column;
+        gap: 0.85rem;
+
+        p {
+            margin: 0;
+            line-height: 1.5;
+            color: var(--text-medium);
+        }
+
+        // The address goes to the next line whole, and is only cut when it is wider than the line itself
+        a {
+            display: inline-block;
+            max-width: 100%;
+            color: var(--primary);
+            word-break: break-all;
+        }
+
+        // Shown once: the last thing read before the buttons
+        .once {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            padding: 0.6rem 0.75rem;
+            border-radius: 12px;
+            background-color: var(--app-background);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-strong);
+            font-weight: 600;
+
+            mat-icon {
+                flex-shrink: 0;
+                font-size: 1.25rem;
+                width: 1.25rem;
+                height: 1.25rem;
+                margin-top: 0.1rem;
+                color: var(--primary);
+            }
+        }
+    }
+
+    .actions {
+        display: flex;
+        gap: 1rem;
+
+        button {
+            flex: 1;
+            height: 3.5rem;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            // Long labels of some languages on two lines rather than cut
+            line-height: 1.2;
+            white-space: normal;
+        }
+
+        .cancel-button {
+            border-color: var(--border-medium);
+            color: var(--text-medium);
+        }
+    }
+}

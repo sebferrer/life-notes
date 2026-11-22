@@ -15,6 +15,7 @@ import { LogsService } from 'src/app/infra/logs.service';
 import { SportsService } from 'src/app/infra/sports.service';
 import { MealsService } from 'src/app/infra/meals.service';
 import { SettingsService } from 'src/app/infra/settings.service';
+import { ReviewService } from 'src/app/infra/review.service';
 
 @Component({
 	selector: 'app-timeline',
@@ -41,9 +42,11 @@ export class TimelineComponent extends ATimeComponent implements OnInit {
 		protected settingsService: SettingsService,
 		protected dialog: MatDialog,
 		protected snackBar: MatSnackBar,
-		protected bottomSheet: MatBottomSheet
+		protected bottomSheet: MatBottomSheet,
+		protected reviewService: ReviewService
 	) {
-		super(globalService, translocoService, daysService, medsService, logsService, sportsService, mealsService, settingsService, dialog, snackBar, bottomSheet);
+		super(globalService, translocoService, daysService, medsService, logsService, sportsService, mealsService, settingsService, dialog, snackBar, bottomSheet,
+			reviewService);
 		this.updateCallback = (day: IDay): void => {
 			this.daysContents = this.daysContents.filter(dayContent => dayContent.date !== day.date);
 			this.daysContents.push(new DayViewModel(day));
@@ -60,6 +63,11 @@ export class TimelineComponent extends ATimeComponent implements OnInit {
 	}
 
 	public loadBatch() {
+		// The infinite scroll asks for the next days as soon as its end is visible, at startup too: a second
+		// batch asked before the first one arrives would load the same days again (nbDays not increased yet)
+		if (this.isLoading) {
+			return;
+		}
 		this.isLoading = true;
 		this.daysService.getDays(this.BATCH_SIZE, this.nbDays).subscribe(
 			days => {

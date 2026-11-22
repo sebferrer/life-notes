@@ -39,6 +39,21 @@ test.describe('First launch', () => {
 		expect(content.settings.firstStart).toBe(false);
 	});
 
+	test('a new user sees the welcome then the tutorial notice, without the update dialog', async ({ page }) => {
+		await page.goto('/');
+		await page.locator('.language-label', { hasText: 'Français' }).click();
+		const welcome = page.locator('app-dialog-info', { hasText: 'Avant de commencer' });
+		await expect(welcome).toBeVisible();
+		await welcome.locator('button[mat-dialog-close]').click();
+		await expect(page.locator('app-dialog-tutorial-notice')).toBeVisible();
+		await expect(page.locator('mat-dialog-container', { hasText: 'Life-Notes mis à jour' })).toHaveCount(0);
+		await page.locator('app-dialog-tutorial-notice button[mat-dialog-close]:not([routerlink])').click();
+		// Nothing else after the tutorial notice
+		await expect(page.locator('mat-dialog-container')).toHaveCount(0);
+		await page.waitForTimeout(1000);
+		await expect(page.locator('mat-dialog-container')).toHaveCount(0);
+	});
+
 	test('a symptom is required before tracking: the symptom chip explains it', async ({ app, page }) => {
 		await app.start('fr');
 		await page.locator('#menu-icon-target-symptom').click();

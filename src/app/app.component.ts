@@ -16,6 +16,7 @@ import { DialogUpdatesComponent } from './ui/dialog/dialog-updates';
 import { DialogTutorialNoticeComponent } from './ui/dialog/dialog-tutorial-notice';
 import { DialogNewUiComponent } from './ui/dialog/dialog-new-ui';
 import { CustomTypesService } from './infra/custom-types.service';
+import { ReviewService } from './infra/review.service';
 
 @Component({
 	selector: 'app-root',
@@ -43,6 +44,7 @@ export class AppComponent implements OnInit {
 		private dialog: MatDialog,
 		private updatesService: UpdatesService,
 		private customTypesService: CustomTypesService,
+		private reviewService: ReviewService,
 		private router: Router
 	) {
 		/*this.symptoms = new Array<ISymptom>();
@@ -95,6 +97,8 @@ export class AppComponent implements OnInit {
 	// 	});
 	// }
 
+	// Every dialog opened by the app itself at startup (first launch, update, V2, backup reminder) tells the
+	// ReviewService: the invitation to rate the app never comes in the same session
 	public checkBackupReminders(settings: ISettings): void {
 		// The first launch belongs to the language choice and the welcome dialogs
 		if (settings.firstStart) {
@@ -113,6 +117,7 @@ export class AppComponent implements OnInit {
 	}
 
 	public openBackupReminderDialog(firstContentKey: string) {
+		this.reviewService.skipThisSession();
 		this.dialog.open(DialogInfoComponent, {
 			autoFocus: false,
 			width: '20rem',
@@ -202,6 +207,7 @@ export class AppComponent implements OnInit {
 	}
 
 	public selectLanguageOpenDialog() {
+		this.reviewService.skipThisSession();
 		this.dialog.open(DialogSelectLanguageComponent, {
 			autoFocus: false,
 			width: '20rem',
@@ -231,14 +237,14 @@ export class AppComponent implements OnInit {
 					'START_CONTENT_7']
 			}
 		}).afterClosed().subscribe(_ => {
-			this.settingsService.setFirstStart(false).subscribe(() => {
-				this.updateInfoOpenDialog(() => this.tutorialNoticeOpenDialog());
-			});
+			// No update dialog for a new user: the install already stored the current version
+			this.settingsService.setFirstStart(false).subscribe(() => this.tutorialNoticeOpenDialog());
 		});
 	}
 
 	// update: shown as the dialog of the update (see DialogNewUiComponent)
 	public newUiOpenDialog(update = false) {
+		this.reviewService.skipThisSession();
 		this.settingsService.setNewUiPopupSeen(true).subscribe();
 		this.dialog.open(DialogNewUiComponent, {
 			autoFocus: false,
@@ -257,7 +263,8 @@ export class AppComponent implements OnInit {
 		});
 	}
 
-	public updateInfoOpenDialog(next?: () => void) {
+	public updateInfoOpenDialog() {
+		this.reviewService.skipThisSession();
 		this.dialog.open(DialogInfoComponent, {
 			autoFocus: false,
 			width: '20rem',
@@ -272,9 +279,6 @@ export class AppComponent implements OnInit {
 			}
 		}).afterClosed().subscribe(_ => {
 			this.settingsService.setCurrentVersion().subscribe();
-			if (next) {
-				next();
-			}
 		});
 	}
 

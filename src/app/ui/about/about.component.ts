@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ReviewService } from 'src/app/infra/review.service';
 
 @Component({
     selector: 'app-about',
@@ -7,9 +8,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AboutComponent implements OnInit {
 
-    constructor() { }
+    constructor(
+        private reviewService: ReviewService
+    ) { }
 
     public ngOnInit(): void {
+    }
+
+    public rateApp(): void {
+        this.reviewService.openStorePage();
     }
 
     public openKofi(): void {

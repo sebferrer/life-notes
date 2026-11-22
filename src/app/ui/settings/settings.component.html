@@ -446,6 +446,25 @@
                     </div>
                 </mat-expansion-panel>
 
+                <!-- The invitation to rate the app, shown once: preview it, or show it again at the next event
+                    added (Android only, to the users who know the app, see ReviewService) -->
+                <mat-expansion-panel hideToggle class="review-prompt-developer">
+                    <mat-expansion-panel-header class="mat-expansion-panel-header">
+                        <div class="panel-title" transloco="SETTINGS_REVIEW_PROMPT_TITLE"></div>
+                        <div class="panel-description" transloco="SETTINGS_REVIEW_PROMPT_SUBTITLE"></div>
+                    </mat-expansion-panel-header>
+
+                    <div class="mat-expansion-panel-content">
+                        <p *ngIf="reviewPromptDate">{{ 'SETTINGS_REVIEW_PROMPT_SHOWN' |
+                            transloco: { date: reviewPromptDateLabel } }}</p>
+                        <p *ngIf="!reviewPromptDate">{{ 'SETTINGS_REVIEW_PROMPT_NOT_SHOWN' | transloco }}</p>
+                        <button mat-stroked-button class="preview-review-prompt" (click)="previewReviewPrompt()">
+                            {{ 'SETTINGS_REVIEW_PROMPT_PREVIEW' | transloco }}</button>
+                        <button mat-stroked-button class="reset-review-prompt" [disabled]="!reviewPromptDate"
+                            (click)="resetReviewPrompt()">{{ 'SETTINGS_REVIEW_PROMPT_RESET' | transloco }}</button>
+                    </div>
+                </mat-expansion-panel>
+
             </div>
 
         </mat-expansion-panel>
@@ -464,6 +483,8 @@
             <div class="mat-expansion-panel-content">
                 <div class="manage-meds-container">
                     <mat-selection-list multiple="false">
+                        <!-- Named by the invitation to rate the app (REVIEW_PROMPT_NOT_YET): the about page has the
+                             button rating the app -->
                         <mat-list-option routerLink="/about">
                             <p class="list-item-text">{{ 'SETTINGS_ABOUT_LINK' | transloco }}</p>
                         </mat-list-option>

@@ -168,12 +168,6 @@ export class GlobalService {
 		this._autoCalculateOverview = value;
 	}
 
-	private _autoOverviewPopupSeen: boolean = false;
-	public get autoOverviewPopupSeen(): boolean { return this._autoOverviewPopupSeen; }
-	public set autoOverviewPopupSeen(value: boolean) {
-		this._autoOverviewPopupSeen = value;
-	}
-
 	private _timePicker: string = 'material';
 	public get timePicker(): string { return this._timePicker; }
 	public set timePicker(value: string) {
