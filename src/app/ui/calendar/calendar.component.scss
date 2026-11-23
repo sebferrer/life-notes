@@ -246,14 +246,35 @@
         }
     }
 
-    .year-in-pixels-button {
-        width: 100%;
+    // Year in Pixels, and the share of the month when a symptom has intensities: side by side
+    .calendar-actions {
+        display: flex;
+        gap: 0.5rem;
         margin-top: 0.75rem;
+    }
+
+    .year-in-pixels-button,
+    .share-month-button {
+        flex: 1;
+        min-width: 0;
+        // As high as a button of one line (36px), on two lines too
+        min-height: 36px;
+        padding: 0 0.6rem;
         border-radius: 12px;
         color: var(--primary);
         background-color: var(--surface-variant);
+        // Long labels of some languages on two lines rather than cut
+        line-height: 1.2;
+        white-space: normal;
+
+        .mat-button-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
         .mat-icon {
+            flex-shrink: 0;
             margin-right: 0.4rem;
         }
     }

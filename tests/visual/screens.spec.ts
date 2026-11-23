@@ -87,6 +87,18 @@ for (const theme of ['light', 'dark']) {
 			await screen(`${theme}-calendar-all-symptoms`);
 		});
 
+		// The image of the month, always drawn in the light theme
+		test('share of the month', async () => {
+			await app.goToCalendar();
+			// The calendar behind the sheet from its top, whatever the test before did
+			await page.evaluate(() => window.scrollTo(0, 0));
+			await page.locator('.share-month-button').click();
+			await expect(page.locator('.share-month .share-preview img')).toBeVisible({ timeout: 15_000 });
+			await screen(`${theme}-share-month`);
+			await page.locator('.share-month .sheet-close-button').click();
+			await expect(page.locator('mat-bottom-sheet-container')).toHaveCount(0);
+		});
+
 		test('year in pixels', async () => {
 			await app.goToCalendar();
 			await page.locator('.year-in-pixels-button').click();

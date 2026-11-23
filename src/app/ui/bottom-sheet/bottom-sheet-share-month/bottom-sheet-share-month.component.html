@@ -1,0 +1,58 @@
+<div class="bottom-sheet-container closable-sheet share-month">
+    <button mat-icon-button class="sheet-close-button" (click)="onCloseClick()" [attr.aria-label]="'CLOSE' | transloco">
+        <mat-icon>close</mat-icon>
+    </button>
+    <div class="header-section">
+        <h2 class="title">{{ 'SHARE_MONTH_TITLE' | transloco }}</h2>
+    </div>
+
+    <!-- The image itself, as it will be sent -->
+    <div class="share-preview" [class.ready]="image">
+        <img *ngIf="image" [src]="image.dataUrl" [alt]="'SHARE_MONTH_PREVIEW_ALT' | transloco">
+        <mat-spinner *ngIf="!image && !drawError" [diameter]="36"></mat-spinner>
+        <p *ngIf="drawError" class="share-preview-error">{{ 'SHARE_MONTH_DRAW_ERROR' | transloco }}</p>
+    </div>
+
+    <!-- The symptoms with intensities, then the sleep -->
+    <div *ngIf="choices.length > 1" class="share-choices" role="radiogroup">
+        <button *ngFor="let choice of choices" type="button" class="share-choice" role="radio"
+            [class.sleep]="!choice.symptom" [class.selected]="choice === selected"
+            [attr.aria-checked]="choice === selected" (click)="choose(choice)">
+            <mat-icon *ngIf="!choice.symptom">bedtime</mat-icon>{{ choice.label }}</button>
+    </div>
+
+    <p *ngIf="errorKey" class="share-error">{{ errorKey | transloco }}</p>
+
+    <!-- The share first; the save on the phone and the full report of the month next to each other under it -->
+    <div class="actions">
+        <button mat-flat-button color="primary" class="confirm-button" [disabled]="!image || busy"
+            (click)="onShareClick()">
+            <mat-icon>share</mat-icon>
+            <span>{{ 'SHARE_MONTH_SHARE' | transloco }}</span>
+        </button>
+        <div class="secondary-actions">
+            <button mat-button class="save-button" [class.saved]="saved" [disabled]="!image || busy || saved"
+                (click)="onSaveClick()">
+                <mat-icon>{{ saved ? 'check' : 'download' }}</mat-icon>
+                <span>{{ (saved ? 'SHARE_MONTH_SAVED' : 'SHARE_MONTH_SAVE') | transloco }}</span>
+            </button>
+            <button mat-button class="pdf-button" (click)="onPdfClick()">
+                <mat-icon>picture_as_pdf</mat-icon>
+                <span>{{ 'SHARE_MONTH_PDF' | transloco }}</span>
+            </button>
+        </div>
+    </div>
+
+    <app-spacer-item></app-spacer-item>
+
+    <!-- Drawn as the image (see ImageShareService), never shown as such -->
+    <div #stage class="share-card-stage" aria-hidden="true">
+        <app-month-share-card [title]="selected.label" [monthLabel]="monthLabel"
+            [sleepOverviews]="selected.symptom ? null : data.overviews"
+            [sleepPreviousOverviews]="data.previousOverviews" [sleepMode]="data.sleepChartMode"
+            [previousMonthLabel]="previousMonthLabel" [stats]="stats"
+            [invertedScale]="!!selected.symptom?.invertedScale" [painScale]="painScale" [days]="days"
+            [emptySlots]="data.emptySlots" [weekDays]="data.weekDays">
+        </app-month-share-card>
+    </div>
+</div>

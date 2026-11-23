@@ -16,7 +16,7 @@ export class SettingsService {
 	public readonly AVAILABLE_TIME_FORMATS = ['us', 'eu'];
 	public readonly AVAILABLE_PAIN_SCALES = [5, 10];
 
-	public readonly CURRENT_VERSION = "0.4.1";
+	public readonly CURRENT_VERSION = "0.4.2";
 
 	constructor(
 		private readonly dbContext: DbContext,

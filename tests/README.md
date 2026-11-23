@@ -23,6 +23,9 @@ The tests use the installed Google Chrome. Without it, run `npx playwright insta
 A single test or file: `npx playwright test --config=playwright.config.ts tests/e2e/timeline.spec.ts -g "deleted"`.
 Add `--headed` to watch it, or `--ui` for the interactive mode.
 
+At most 3 browsers run in parallel, so that the tests don't take the whole processor (6, the default of
+Playwright on a 12-thread CPU, keep it at 100%). `PW_WORKERS=n` changes it for one run.
+
 ## What is tested
 
 - `unit/`: pure logic of `src`, without browser
@@ -35,6 +38,9 @@ Add `--headed` to watch it, or `--ui` for the interactive mode.
     figures, hours of the day), sleep of the nights of a month
   - invitation to rate the app: due once, to the users who know the app (days with data, since how long), never
     right after a strong symptom (every value of both scales: up to 2 of 5, up to 4 of 10, reversed when inverted)
+  - image of the month of a symptom: the symptoms that can be shared, its figures (as its ring in the calendar, both
+    scales), the improvement on the previous month only once the month is over and only when it is better; the sleep
+    of a month can be shared from its first complete night
 - `e2e/`: user flows, in French, each test starting from a fresh app (empty database)
   - first launch, symptoms (inverted intensity scale too), timeline (every event type, edit, delete, wake-up/bedtime, intensity, V1),
     day view, calendar (V1 too, V2: intensities of the symptoms entered as rings, V1: pie charts, sleep of the month as bars or curves), Year in Pixels, manage lists (refreshed from their header, confirmed in a sheet), statistics of an event, settings (the help of the automatic overview, illustrated in V1 and V2), backups (export, import, another phone, invalid files),
@@ -42,6 +48,16 @@ Add `--headed` to watch it, or `--ui` for the interactive mode.
     with the screens of the version of the interface, no text cut on a small phone, the last slide only gives the
     contact address), small screens, the cross of every
     bottom sheet
+  - share of the month as an image (calendar of the V2, when a symptom has intensities or the month a complete night):
+    the month and the address in a dark green (the name of the app on the PDF report too); a PNG of 1080 x 1350 and its
+    message given to the share sheet of the browser, downloaded without one; on Android (bridge of Capacitor faked),
+    written in the cache by Filesystem then given to Share with its message, a share sheet left without choosing
+    an app being no error; the image saved (downloaded on the web, on Android written in the cache then given to the
+    "Save as" of the system by FileSaver, as the PDF report; the sheet stays open, leaving the "Save as" is no error);
+    the choice of the symptom, the sleep after the symptoms (alone when no symptom has an intensity: the sleep card of
+    the calendar, its figures and both charts, taller than 1350 and checked on the pixels of the image, in the mode of
+    the card, bars or curves, the PDF report opened from the share too), the comparison with the previous month, the
+    PDF report of the same month from the sheet, no share for a month without intensity nor night, nor in V1
   - languages: the texts built by the code follow each language (order of the dates, month numbers in Japanese,
     capitals of the German nouns and of the Spanish titles, singular), the language of the page, the day of an
     entry in a time zone behind UTC

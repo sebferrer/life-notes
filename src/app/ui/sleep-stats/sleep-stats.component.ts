@@ -1,15 +1,12 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { TranslocoService } from '@ngneat/transloco';
 import { GlobalService } from 'src/app/infra/global.service';
 import { DayOverviewViewModel } from 'src/app/models/day.overview.view.model';
 import {
-	ISleepDay, ISleepNight, ISleepSummary, fromNightMinutes, getSleepNights, getSleepSummary
+	ISleepDay, ISleepNight, ISleepSummary, SLEEP_TARGET_MAX as TARGET_MAX, SLEEP_TARGET_MIN as TARGET_MIN,
+	fromNightMinutes, getSleepNights, getSleepSummary
 } from 'src/app/models/sleep-stats.model';
 import { formatAMPM } from 'src/app/util/time.util';
-
-// Recommended sleep duration for adults, shown as a band on the chart of the durations
-const TARGET_MIN = 7 * 60;
-const TARGET_MAX = 9 * 60;
 
 // Chart.js draws on canvas: the colors can't come from the CSS variables (the legend of the template uses the same)
 const COLORS = {
@@ -42,6 +39,18 @@ export class SleepStatsComponent implements OnChanges {
 	@Input() public timeFormat: string;
 	// Light colors whatever the theme, without the buttons of the modes (the PDF report)
 	@Input() public report = false;
+	// Mode to start with instead of the one of the settings: the PDF report opened from the share of the calendar
+	// draws the mode shown there
+	@Input() public set initialMode(mode: SleepChartMode) {
+		if (mode === 'bars' || mode === 'curves') {
+			this.mode = mode;
+		}
+	}
+	// Pixels of the charts per CSS pixel, instead of the one of the screen: the image of the share of the month is
+	// 2.7 times as large as the card
+	@Input() public pixelRatio: number;
+	// A button of the card changed the mode (the share of the month draws the sleep in the same one)
+	@Output() public modeChange = new EventEmitter<SleepChartMode>();
 
 	// The one of the settings, until changed with the buttons of the card
 	public mode: SleepChartMode;
@@ -87,6 +96,7 @@ export class SleepStatsComponent implements OnChanges {
 	public setMode(mode: SleepChartMode): void {
 		this.mode = mode;
 		this.updateCharts();
+		this.modeChange.emit(mode);
 	}
 
 	// e.g. 7 h 05
@@ -281,6 +291,7 @@ export class SleepStatsComponent implements OnChanges {
 		return {
 			responsive: true,
 			maintainAspectRatio: false,
+			devicePixelRatio: this.pixelRatio || undefined,
 			// Drawn at once
 			animation: { duration: 0 },
 			legend: { display: false },

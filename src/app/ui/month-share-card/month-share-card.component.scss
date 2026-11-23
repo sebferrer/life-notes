@@ -1,0 +1,211 @@
+// Drawn in the light theme (force-light-theme, see ImageShareService): the colors are those of the theme, the month
+// and the address in the green of the logo
+.month-share-card {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    height: 500px;
+    padding: 22px 22px 16px 22px;
+    background-color: var(--surface);
+    color: var(--text-strong);
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+
+    .card-header {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .card-month {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--brand-green);
+    }
+
+    .card-title {
+        font-weight: 700;
+        line-height: 1.2;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    .card-weekdays,
+    .card-days {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 5px;
+    }
+
+    .card-weekdays {
+        margin-top: 14px;
+        font-size: 11px;
+        font-weight: 600;
+        text-align: center;
+        color: var(--text-weak);
+    }
+
+    // As high as the room left: 5 or 6 weeks
+    .card-days {
+        flex: 1;
+        min-height: 0;
+        grid-auto-rows: 1fr;
+        margin-top: 6px;
+    }
+
+    .card-day {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-on-pain);
+
+        &.empty {
+            background-color: transparent;
+        }
+
+        &.color-default {
+            background-color: var(--color-pain-0);
+        }
+
+        &.color-pain-1 {
+            background-color: var(--color-pain-1);
+        }
+
+        &.color-pain-2 {
+            background-color: var(--color-pain-2);
+        }
+
+        &.color-pain-3 {
+            background-color: var(--color-pain-3);
+        }
+
+        &.color-pain-4 {
+            background-color: var(--color-pain-4);
+        }
+
+        &.color-pain-5 {
+            background-color: var(--color-pain-5);
+            color: #ffffff;
+        }
+
+        // Days to come, no value on an inverted scale
+        &.color-none {
+            background-color: var(--surface-variant);
+            color: var(--text-weak);
+        }
+    }
+
+    // Sleep: as high as its card. The card of the calendar without its frame nor its title (the one of the image)
+    &.sleep {
+        height: auto;
+    }
+
+    app-sleep-stats .sleep-stats {
+        margin: 12px 0 0 0;
+        padding: 0;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        background-color: transparent;
+    }
+
+    app-sleep-stats .sleep-header {
+        display: none;
+    }
+
+    .card-legend {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 4px 10px;
+        margin-top: 10px;
+        font-size: 11px;
+        color: var(--text-medium);
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .swatch {
+            width: 10px;
+            height: 10px;
+            border-radius: 3px;
+        }
+    }
+
+    .card-stats {
+        display: flex;
+        gap: 8px;
+        margin-top: 14px;
+    }
+
+    .card-stat {
+        flex: 1;
+        min-width: 0;
+        padding: 10px 6px;
+        border-radius: 12px;
+        background-color: var(--surface-variant);
+        text-align: center;
+
+        .stat-value {
+            font-size: 22px;
+            font-weight: 700;
+            line-height: 1.15;
+
+            small {
+                margin-left: 2px;
+                font-size: 12px;
+                font-weight: 600;
+                color: var(--text-medium);
+            }
+        }
+
+        .stat-label {
+            margin-top: 3px;
+            font-size: 11px;
+            line-height: 1.2;
+            color: var(--text-medium);
+        }
+
+        // Better than the previous month
+        &.improvement {
+            background-color: #e3f4e3;
+
+            .stat-value,
+            .stat-value small {
+                color: #2e7d32;
+            }
+        }
+    }
+
+    .card-footer {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 14px;
+        padding-top: 12px;
+        border-top: 1px solid var(--border-subtle);
+
+        img {
+            width: 26px;
+            height: 26px;
+        }
+
+        .card-brand {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .card-site {
+            margin-left: auto;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--brand-green);
+        }
+    }
+}

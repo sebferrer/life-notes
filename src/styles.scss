@@ -124,6 +124,9 @@ $dark-event-variants: (surface: #1e1e1e, soft-weight: 30%, on: #ffffff, on-filte
 
     --primary: #3f51b5;
     --primary-rgb: 63, 81, 181;
+    // Green of the logo, darker for the texts: name and address of the app, dates, on the PDF report and the shared
+    // images
+    --brand-green: #1A7F37;
     --accent: #e91e63;
     --danger: #d32f2f;
     --warning: #ff9800;
@@ -169,6 +172,7 @@ $dark-event-variants: (surface: #1e1e1e, soft-weight: 30%, on: #ffffff, on-filte
 
     --primary: #7986cb;
     --primary-rgb: 121, 134, 203;
+    --brand-green: #1A7F37;
     --accent: #f06292;
     --danger: #ef5350;
     --warning: #ffb74d;
@@ -468,6 +472,12 @@ body:not(.ui-v1) .v1-only {
 
 // Invitation to rate the app: as high as its text
 .event-bottom-sheet.review-prompt-panel .mat-bottom-sheet-container {
+    max-height: 90vh !important;
+    height: auto !important;
+}
+
+// Share of the month as an image: as high as its preview
+.event-bottom-sheet.share-month-panel .mat-bottom-sheet-container {
     max-height: 90vh !important;
     height: auto !important;
 }

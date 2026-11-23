@@ -1,0 +1,167 @@
+.bottom-sheet-container.share-month {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 1rem 1.5rem 1rem;
+    gap: 1rem;
+    box-sizing: border-box;
+    width: 100%;
+
+    .header-section .title {
+        margin: 0;
+        font-size: 1.3rem;
+        font-weight: 700;
+        text-align: center;
+        color: var(--text-strong);
+    }
+
+    // As high as the screen allows next to the buttons, as wide as the image: 4:5 for a symptom, narrower for the
+    // sleep (a taller image). 4:5 while it is drawn.
+    .share-preview {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        align-self: center;
+        height: 38vh;
+        max-height: 24rem;
+        width: 30.4vh;
+        max-width: 19.2rem;
+        overflow: hidden;
+
+        &.ready {
+            width: auto;
+            max-width: 100%;
+        }
+        border-radius: 12px;
+        border: 1px solid var(--border-subtle);
+        background-color: var(--surface-variant);
+        box-shadow: 0 2px 10px var(--shadow);
+
+        img {
+            display: block;
+            width: auto;
+            height: 100%;
+        }
+
+        .share-preview-error {
+            margin: 0;
+            padding: 1rem;
+            text-align: center;
+            color: var(--text-medium);
+        }
+    }
+
+    // What the image shows: a symptom, or the sleep
+    .share-choices {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .share-choice {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        max-width: 100%;
+        padding: 0.45rem 0.9rem;
+        overflow: hidden;
+        border-radius: 999px;
+        border: 1px solid var(--border-medium);
+        background-color: transparent;
+        color: var(--text-medium);
+        font: inherit;
+        font-size: 0.9rem;
+        font-weight: 500;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+
+        mat-icon {
+            flex-shrink: 0;
+            font-size: 1.1rem;
+            width: 1.1rem;
+            height: 1.1rem;
+        }
+
+        &.selected {
+            border-color: var(--primary);
+            background-color: rgba(var(--primary-rgb), 0.12);
+            color: var(--primary);
+            font-weight: 600;
+        }
+    }
+
+    .share-error {
+        margin: 0;
+        text-align: center;
+        color: var(--danger);
+    }
+
+    .actions {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+
+        button {
+            // Long labels of some languages on two lines rather than cut
+            line-height: 1.2;
+            white-space: normal;
+
+            .mat-button-wrapper {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.5rem;
+            }
+
+            .mat-icon {
+                flex-shrink: 0;
+            }
+        }
+
+        .confirm-button {
+            min-height: 3.5rem;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .secondary-actions {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.25rem 0.5rem;
+        }
+
+        .save-button,
+        .pdf-button {
+            min-height: 2.75rem;
+            border-radius: 12px;
+            color: var(--text-medium);
+            font-weight: 500;
+        }
+
+        // Done: in the color of a success, not greyed as a disabled button, without the trace of the tap (the button
+        // got wider)
+        .save-button.saved {
+            color: var(--success);
+
+            .mat-button-focus-overlay,
+            .mat-ripple-element {
+                display: none;
+            }
+        }
+    }
+
+    // Laid out (the charts of the sleep need a size) but clipped: never seen, never scrolled to
+    .share-card-stage {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0;
+        height: 0;
+        overflow: hidden;
+    }
+}

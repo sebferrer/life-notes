@@ -98,10 +98,18 @@
 							<span class="day-number">{{ overview.detailedDate.day }}</span>
 						</div>
 					</div>
-					<button mat-button class="year-in-pixels-button" routerLink="/yearinpixels/{{ year }}">
-						<mat-icon>grid_on</mat-icon>
-						<span transloco="YEAR_IN_PIXELS"></span>
-					</button>
+					<div class="calendar-actions">
+						<button mat-button class="year-in-pixels-button" routerLink="/yearinpixels/{{ year }}">
+							<mat-icon>grid_on</mat-icon>
+							<span transloco="YEAR_IN_PIXELS"></span>
+						</button>
+						<!-- The month of a symptom or the sleep as an image, when there is one to show -->
+						<button *ngIf="shareableSymptoms.length > 0 || shareableSleep" mat-button class="share-month-button"
+							[disabled]="loadingMonth" (click)="openShareSheet()">
+							<mat-icon>share</mat-icon>
+							<span transloco="SHARE_MONTH_BUTTON"></span>
+						</button>
+					</div>
 				</div>
 				<!--button routerLink="/monthlyreport/{{ year }}-{{ month }}">Export</button-->
 				<div class="charts">
@@ -153,7 +161,7 @@
 						</button>
 					</div>
 					<app-sleep-stats [overviews]="overviews" [previousOverviews]="previousOverviews"
-						[timeFormat]="globalService.timeFormat"></app-sleep-stats>
+						[timeFormat]="globalService.timeFormat" (modeChange)="sleepChartMode = $event"></app-sleep-stats>
 				</div>
 			</div>
 		</ng-template>

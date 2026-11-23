@@ -1,6 +1,9 @@
 // Sleep of the nights of a month, see SleepStatsComponent
 
 const DAY_MINUTES = 24 * 60;
+// Recommended sleep duration for adults (minutes), shown as a band on the charts of the durations
+export const SLEEP_TARGET_MIN = 7 * 60;
+export const SLEEP_TARGET_MAX = 9 * 60;
 // From this time of the day, a time belongs to the evening before midnight
 const EVENING_START = 15 * 60;
 

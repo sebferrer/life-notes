@@ -103,6 +103,8 @@ import { BottomSheetDeleteSymptomComponent } from './ui/bottom-sheet/bottom-shee
 import { BottomSheetForceLoadWarningComponent } from './ui/bottom-sheet/bottom-sheet-force-load-warning';
 import { BottomSheetInfoComponent } from './ui/bottom-sheet/bottom-sheet-info';
 import { BottomSheetReviewPromptComponent } from './ui/bottom-sheet/bottom-sheet-review-prompt';
+import { BottomSheetShareMonthComponent } from './ui/bottom-sheet/bottom-sheet-share-month';
+import { MonthShareCardComponent } from './ui/month-share-card';
 import { BottomSheetDeleteTimelineEventComponent } from './ui/bottom-sheet/bottom-sheet-delete-timeline-event';
 import { SpacerItemComponent } from './ui/shared/spacer-item';
 import { ColorPickerComponent } from './ui/shared/color-picker';
@@ -136,6 +138,7 @@ import { LANGUAGE_CODES } from './models/language.model';
 		OccurrenceStatsComponent,
 		SleepStatsComponent,
 		IntensityRingComponent,
+		MonthShareCardComponent,
 		SwipingFingerComponent,
 		DialogAddEventComponent,
 		DialogShowEventComponent,
@@ -174,6 +177,7 @@ import { LANGUAGE_CODES } from './models/language.model';
 		BottomSheetForceLoadWarningComponent,
 		BottomSheetInfoComponent,
 		BottomSheetReviewPromptComponent,
+		BottomSheetShareMonthComponent,
 		BottomSheetDeleteTimelineEventComponent,
 		BottomSheetEditCustomTypeComponent,
 		BottomSheetColorPickerComponent,
@@ -274,6 +278,7 @@ import { LANGUAGE_CODES } from './models/language.model';
 		BottomSheetForceLoadWarningComponent,
 		BottomSheetInfoComponent,
 		BottomSheetReviewPromptComponent,
+		BottomSheetShareMonthComponent,
 		BottomSheetDeleteTimelineEventComponent,
 		BottomSheetColorPickerComponent
 	],
