@@ -53,6 +53,14 @@
             </div>
         </div>
 
+        <!-- V2: what might influence this symptom, its correlations (beta), unless hidden in the settings -->
+        <button *ngIf="data.type === 'symptomLog' && globalService.correlationsShown" class="correlations-link"
+            (click)="openCorrelations()">
+            <span class="correlations-link-icon"><mat-icon>join_inner</mat-icon></span>
+            <span class="correlations-link-label">{{ t('CORRELATIONS_SYMPTOM_LINK') }}</span>
+            <mat-icon class="correlations-link-chevron">chevron_right</mat-icon>
+        </button>
+
         <div class="actions">
             <button mat-stroked-button (click)="onClose()" class="close-button">
                 {{ t('CLOSE') }}

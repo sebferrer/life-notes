@@ -182,10 +182,10 @@
                     </ng-template>
                 </div>
             </div>
-            <!-- The list of the symptoms and its sheet are the same in both versions -->
+            <!-- The list of the symptoms and its sheet: the same in both versions, but the short title of the V2 -->
             <div class="screen page s2" data-anchor="list">
                 <div class="m-list-header">
-                    <mat-icon>arrow_back</mat-icon><span>{{ t('SYMPTOMS_TITLE') }}</span>
+                    <mat-icon>arrow_back</mat-icon><span>{{ t(classic ? 'SYMPTOMS_TITLE' : 'MANAGE_SYMPTOMS') }}</span>
                 </div>
                 <div class="m-add-card tap" data-anchor="add-card">
                     <span class="m-add-bubble"><mat-icon>add</mat-icon></span>

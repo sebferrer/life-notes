@@ -1,5 +1,6 @@
 import { test, expect, Page, BrowserContext } from '@playwright/test';
 import { App, CURRENT_VERSION, NOW, TODAY, YESTERDAY, shiftDate } from '../support/app';
+import { importCorrelationDays, openCorrelations } from '../support/correlation-data';
 
 // Main screens compared to their approved screenshots (__screenshots__). After a wanted UI change, approve
 // the new screenshots with: npm run test:visual:update
@@ -121,6 +122,20 @@ for (const theme of ['light', 'dark']) {
 			await app.goToManage('symptomLog');
 			await expect(page.locator('.symptom-card:not(.add-card)')).toHaveCount(2);
 			await screen(`${theme}-symptoms`);
+		});
+
+		test('correlations without enough data, and their help', async () => {
+			await app.goToManage('symptomLog');
+			await page.locator('.manage-list-header .correlations-button').click();
+			await expect(page.locator('.state-card.not-enough')).toBeVisible();
+			await screen(`${theme}-correlations-not-enough`);
+			await page.locator('.correlations-page .info-button').click();
+			const sheet = page.locator('.correlations-help');
+			await expect(sheet).toBeVisible();
+			await page.waitForTimeout(500);
+			await screen(`${theme}-correlations-help`);
+			await sheet.locator('.sheet-close-button').click();
+			await expect(sheet).toBeHidden();
 		});
 
 		test('statistics of an event', async () => {
@@ -278,4 +293,38 @@ test('sleep of the month', async ({ browser }) => {
 		await expect(card).toHaveScreenshot(`${theme}-sleep-curves.png`);
 	}
 	await sleepContext.close();
+});
+
+test('correlations', async ({ browser }) => {
+	// Two months of entries with links: a database of its own, so that the other screens keep their data
+	const correlationsContext = await browser.newContext({
+		viewport: { width: 390, height: 844 },
+		deviceScaleFactor: 2,
+		isMobile: true,
+		hasTouch: true,
+		locale: 'fr-FR',
+		timezoneId: 'Europe/Paris',
+		baseURL: test.info().project.use.baseURL
+	});
+	const correlationsPage = await correlationsContext.newPage();
+	await correlationsPage.clock.setFixedTime(NOW);
+	const correlationsApp = new App(correlationsPage);
+	await correlationsApp.start();
+	await correlationsApp.addSymptom('Tête');
+	await correlationsApp.addSymptom('Ventre');
+	await correlationsApp.goToTimeline();
+	await correlationsApp.addEvent('meal', { key: 'Pâtes' });
+	await importCorrelationDays(correlationsApp, 60);
+	for (const theme of ['light', 'dark']) {
+		if (theme === 'dark') {
+			await correlationsApp.goToSettings('Apparence');
+			await correlationsApp.setToggle('Mode sombre', true);
+		}
+		await openCorrelations(correlationsApp);
+		// The days behind the first link
+		await correlationsPage.locator('.correlation-card .days-toggle').first().click();
+		await correlationsApp.fontsReady();
+		await expect(correlationsPage).toHaveScreenshot(`${theme}-correlations.png`, { fullPage: true });
+	}
+	await correlationsContext.close();
 });

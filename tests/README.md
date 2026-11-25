@@ -41,6 +41,15 @@ Playwright on a 12-thread CPU, keep it at 100%). `PW_WORKERS=n` changes it for o
   - image of the month of a symptom: the symptoms that can be shared, its figures (as its ring in the calendar, both
     scales), the improvement on the previous month only once the month is over and only when it is better; the sleep
     of a month can be shared from its first complete night
+  - correlation engine: ranks, median, q-values of Benjamini-Hochberg; the stratified permutation test (finds a
+    strong link, no false alarm on independent data, strata keeping apart what must not be compared, same result
+    every time); the links found in generated days (a meal then a stomach ache within hours, compared with the
+    same hours of the other days; short nights then headaches, a single card for the short nights and the late
+    bedtimes; nights too short or too long for the person then fatigue; an irregular schedule then dizziness; a mood
+    lower the day after a drink; a sport with fewer symptoms; the quantity of a custom type) and those not found (a
+    habit and a symptom of the same season, the soup eaten the evenings without curry, a medication taken because of
+    a symptom, nor linked to the other symptoms of these days, random data); a few striking days stay a weak lead;
+    two years analyzed in less than 5 s
 - `e2e/`: user flows, in French, each test starting from a fresh app (empty database)
   - first launch, symptoms (inverted intensity scale too), timeline (every event type, edit, delete, wake-up/bedtime, intensity, V1),
     day view, calendar (V1 too, V2: intensities of the symptoms entered as rings, V1: pie charts, sleep of the month as bars or curves), Year in Pixels, manage lists (refreshed from their header, confirmed in a sheet), statistics of an event, settings (the help of the automatic overview, illustrated in V1 and V2), backups (export, import, another phone, invalid files),
@@ -78,7 +87,14 @@ Playwright on a 12-thread CPU, keep it at 100%). `PW_WORKERS=n` changes it for o
     published before the V2; September and October 2026, some of its entries typed in its own interface). Imported,
     every day and symptom is found again as it was; a phone with the settings of a 2025 version (five fields) gets
     the V1, the popup and the defaults of then
-- `visual/`: main screens in light and dark themes, the V1 screens and the popup of the V2, compared pixel by pixel to
+  - correlations (V2, beta): a small tonal button on the line of the title of the list of symptoms ("Symptômes" in V2), hidden from the settings with the link of
+    the statistics of a symptom (none in the manage menu, none in V1), the help
+    of the information point (not a cause, not a diagnosis), their icons in the icon font, what is missing without
+    symptom or before 14 days; with 60 generated days imported (`support/correlation-data.ts`): the links in sentences
+    with their figures, the strength of the signal, the latest days behind a link each opening its day, the filter by
+    symptom, the weak leads on demand; the statistics of a symptom open its correlations filtered on it
+- `visual/`: main screens in light and dark themes (the correlations too, empty and with generated days), the V1
+  screens and the popup of the V2, compared pixel by pixel to
   `visual/__screenshots__`
 
 Every test fails on any JavaScript error, console error or failed request of the page, even when the screen

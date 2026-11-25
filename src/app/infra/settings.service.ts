@@ -60,6 +60,9 @@ export class SettingsService {
 				if (newSettings.sleepChartMode != null) {
 					s.sleepChartMode = newSettings.sleepChartMode;
 				}
+				if (newSettings.showCorrelations != null) {
+					s.showCorrelations = newSettings.showCorrelations;
+				}
 				if (newSettings.landscapeMode != null) {
 					s.landscapeMode = newSettings.landscapeMode;
 				}
@@ -344,6 +347,18 @@ export class SettingsService {
 		));
 	}
 
+	public setShowCorrelations(show: boolean): Observable<ISettings> {
+		return this.queueWrite(() => this.getSettings().pipe(
+			switchMap(s => {
+				s.showCorrelations = show;
+				this.globalService.showCorrelations = show;
+				return this.dbContext.asObservable(this.dbContext.settingsCollection.put(s)).pipe(
+					map(() => s)
+				);
+			})
+		));
+	}
+
 	public setSleepChartMode(sleepChartMode: string): Observable<ISettings> {
 		return this.queueWrite(() => this.getSettings().pipe(
 			switchMap(s => {
@@ -460,6 +475,7 @@ export class SettingsService {
 							this.globalService.uiVersion = settings.uiVersion;
 							this.globalService.sleepChartMode = settings.sleepChartMode;
 							this.globalService.eventPalettes = settings.eventColors;
+							this.globalService.showCorrelations = true;
 						}),
 						map(() => settings)
 					);
@@ -583,6 +599,8 @@ export class SettingsService {
 					this.globalService.uiVersion = s.uiVersion;
 					this.globalService.sleepChartMode = s.sleepChartMode;
 					this.globalService.eventPalettes = s.eventColors;
+					// Missing in the settings saved before them: shown, without writing anything
+					this.globalService.showCorrelations = s.showCorrelations;
 
 					if (!changed) {
 						return of(s);

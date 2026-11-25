@@ -1,0 +1,116 @@
+.bottom-sheet-container.correlations-help {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 1rem 1.5rem 1rem;
+    gap: 1.25rem;
+    box-sizing: border-box;
+    width: 100%;
+
+    .header-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+
+        .info-icon {
+            font-size: 2.5rem;
+            width: 2.5rem;
+            height: 2.5rem;
+            color: var(--primary);
+        }
+
+        .title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-strong);
+            margin: 0;
+            text-align: center;
+        }
+    }
+
+    .content-body {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+
+        p {
+            margin: 0;
+            line-height: 1.5;
+            color: var(--text-medium);
+        }
+
+        .intro {
+            text-align: center;
+            margin-bottom: 0.25rem;
+        }
+    }
+
+    .help-part {
+        display: flex;
+        gap: 0.75rem;
+        padding: 0.75rem;
+        border: 1px solid var(--border-subtle);
+        border-radius: 14px;
+        background-color: var(--app-background);
+
+        .help-part-icon {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.25rem;
+            height: 2.25rem;
+            border-radius: 11px;
+            color: var(--primary);
+            background-color: rgba(var(--primary-rgb), 0.12);
+
+            mat-icon {
+                font-size: 1.25rem;
+                width: 1.25rem;
+                height: 1.25rem;
+            }
+        }
+
+        .help-part-text {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            min-width: 0;
+        }
+
+        .help-part-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-strong);
+        }
+    }
+
+    .help-levels {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+        margin-top: 0.35rem;
+
+        .help-level {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-strong);
+        }
+    }
+
+    .actions {
+        display: flex;
+
+        button {
+            flex: 1;
+            height: 3.5rem;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+    }
+}

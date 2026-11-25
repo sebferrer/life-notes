@@ -62,6 +62,8 @@ export class SettingsComponent implements OnInit {
 	public landscapeMode: boolean;
 	public uiVersion: string;
 	public sleepChartMode: string;
+	// V2: the buttons opening the correlations
+	public showCorrelations = true;
 	// When the invitation to rate the app was shown, 0 if never (developer mode)
 	public reviewPromptDate = 0;
 	public eventPalettes: IEventPalettes;
@@ -143,6 +145,7 @@ export class SettingsComponent implements OnInit {
 			this.landscapeMode = !!settings.landscapeMode;
 			this.uiVersion = settings.uiVersion || 'v2';
 			this.sleepChartMode = settings.sleepChartMode || 'bars';
+			this.showCorrelations = settings.showCorrelations !== false;
 			this.eventPalettes = completeEventPalettes(settings.eventColors);
 			this.reviewPromptDate = settings.reviewPromptDate || 0;
 		});
@@ -208,6 +211,10 @@ export class SettingsComponent implements OnInit {
 
 	public setUiVersion(): void {
 		this.settingsService.setUiVersion(this.uiVersion).subscribe();
+	}
+
+	public setShowCorrelations(): void {
+		this.settingsService.setShowCorrelations(this.showCorrelations).subscribe();
 	}
 
 	public setSleepChartMode(): void {

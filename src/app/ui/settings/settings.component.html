@@ -37,6 +37,15 @@
                         color="primary">
                     </mat-slide-toggle>
                 </div>
+                <!-- The buttons of the correlations, in the V2 only (see GlobalService.uiVersion) -->
+                <div *ngIf="uiVersion === 'v2'" class="toggle-container correlations-toggle">
+                    <span class="toggle-label">
+                        {{ 'SETTINGS_SHOW_CORRELATIONS' | transloco }}
+                        <span class="toggle-hint">{{ 'SETTINGS_SHOW_CORRELATIONS_HINT' | transloco }}</span>
+                    </span>
+                    <mat-slide-toggle [(ngModel)]="showCorrelations" (change)="setShowCorrelations()" color="primary">
+                    </mat-slide-toggle>
+                </div>
             </div>
         </mat-expansion-panel>
 

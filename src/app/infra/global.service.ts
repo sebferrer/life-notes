@@ -212,6 +212,8 @@ export class GlobalService {
 	// - spinner of a view being loaded at the top left instead of in the middle of the screen
 	// - no share of the month as an image under the calendar (V2: next to Year in Pixels, when a symptom has
 	//   intensities in the month or when it has a complete night of sleep)
+	// - list of symptoms titled "Your symptom list" (V2: "Symptoms"), without correlations (V2, in beta: a button at the
+	//   end of the header of the list opens them, the statistics of a symptom too; both can be hidden in the settings)
 	private _uiVersion: string = 'v2';
 	public get uiVersion(): string { return this._uiVersion; }
 	public set uiVersion(value: string) {
@@ -221,6 +223,17 @@ export class GlobalService {
 
 	public get isUiV1(): boolean {
 		return this._uiVersion === 'v1';
+	}
+
+	// V2: the buttons opening the correlations, unless hidden in the settings (see ISettings.showCorrelations)
+	private _showCorrelations = true;
+	public get showCorrelations(): boolean { return this._showCorrelations; }
+	public set showCorrelations(value: boolean) {
+		this._showCorrelations = value !== false;
+	}
+
+	public get correlationsShown(): boolean {
+		return !this.isUiV1 && this._showCorrelations;
 	}
 
 	// 'bars' or 'curves': charts of the sleep shown first (V2)

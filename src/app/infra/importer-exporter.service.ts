@@ -73,6 +73,7 @@ export class ImporterExporterService {
 			this.globalService.landscapeMode = settings.landscapeMode;
 			this.globalService.uiVersion = settings.uiVersion;
 			this.globalService.sleepChartMode = settings.sleepChartMode;
+			this.globalService.showCorrelations = settings.showCorrelations;
 			this.globalService.eventPalettes = settings.eventColors;
 			this.translocoService.setActiveLang(settingsJsonOnj.language);
 		});

@@ -78,7 +78,7 @@ export class AppComponent implements OnInit {
 		if (page === 'calendar' || page === 'monthlyreport' || page === 'yearinpixels') {
 			return 'calendar';
 		}
-		if (['manage', 'symptoms', 'meals', 'meds', 'logs', 'sports', 'custom'].includes(page)) {
+		if (['manage', 'symptoms', 'meals', 'meds', 'logs', 'sports', 'custom', 'correlations'].includes(page)) {
 			return 'manage';
 		}
 		if (['settings', 'about', 'tutorial'].includes(page)) {

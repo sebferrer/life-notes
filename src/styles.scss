@@ -482,6 +482,44 @@ body:not(.ui-v1) .v1-only {
     height: auto !important;
 }
 
+// Help of the correlations: as high as its text
+.event-bottom-sheet.correlations-help-panel .mat-bottom-sheet-container {
+    max-height: 90vh !important;
+    height: auto !important;
+}
+
+// Feature in beta (the correlations)
+.beta-badge {
+    display: inline-flex;
+    align-items: center;
+    height: 1.25rem;
+    padding: 0 0.5rem;
+    border-radius: 999px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: var(--primary);
+    background-color: rgba(var(--primary-rgb), 0.14);
+}
+
+// Strength of a correlation: 1 to 3 filled dots
+.confidence-dots {
+    display: inline-flex;
+    gap: 3px;
+
+    .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background-color: var(--border-medium);
+
+        &.filled {
+            background-color: var(--primary);
+        }
+    }
+}
+
 // Landscape phones: half of the screen height is too small for the add/edit sheets
 @media (orientation: landscape) and (max-height: 600px) {
     .event-bottom-sheet .mat-bottom-sheet-container {

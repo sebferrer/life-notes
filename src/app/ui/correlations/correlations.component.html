@@ -1,0 +1,146 @@
+<ng-template transloco let-t>
+	<div class="correlations-page">
+		<div class="page-header">
+			<button mat-icon-button class="back-button" routerLink="/symptoms" aria-label="Back">
+				<mat-icon>arrow_back</mat-icon>
+			</button>
+			<h3 class="title">{{ t('CORRELATIONS_TITLE') }}</h3>
+			<span class="beta-badge">{{ t('CORRELATIONS_BETA') }}</span>
+			<button mat-icon-button class="info-button" (click)="openHelp()" [attr.aria-label]="t('CORRELATIONS_INFO')">
+				<mat-icon fontSet="material-icons-outlined">info</mat-icon>
+			</button>
+		</div>
+		<p class="intro"><span>{{ t('CORRELATIONS_INTRO') }}</span><span>{{ t('CORRELATIONS_NOT_A_DIAGNOSIS') }}</span></p>
+
+		<ng-container *ngIf="analysis; else loading">
+			<!-- Nothing to compare yet -->
+			<div *ngIf="symptoms.length === 0" class="state-card no-symptom">
+				<span class="state-icon"><mat-icon>spa</mat-icon></span>
+				<p class="state-text">{{ t('CORRELATIONS_NO_SYMPTOM') }}</p>
+				<button mat-flat-button color="primary" class="state-button" routerLink="/symptoms">{{ t('MANAGE_SYMPTOMS') }}</button>
+			</div>
+			<div *ngIf="symptoms.length > 0 && !enoughDays" class="state-card not-enough">
+				<span class="state-icon"><mat-icon>hourglass_top</mat-icon></span>
+				<div class="state-title">{{ t('CORRELATIONS_NOT_ENOUGH_TITLE') }}</div>
+				<p class="state-text">{{ t('CORRELATIONS_NOT_ENOUGH_TEXT', { min: minDays, count: analysis.trackedDays }) }}</p>
+				<div class="progress" role="progressbar" [attr.aria-valuenow]="analysis.trackedDays" aria-valuemin="0"
+					[attr.aria-valuemax]="minDays">
+					<span class="progress-fill" [style.width.%]="analysis.trackedDays / minDays * 100"></span>
+				</div>
+				<div class="progress-label">{{ analysis.trackedDays }} / {{ minDays }}</div>
+			</div>
+
+			<ng-container *ngIf="symptoms.length > 0 && enoughDays">
+				<div class="summary-card">
+					<span class="summary-icon"><mat-icon>join_inner</mat-icon></span>
+					<div class="summary-text">
+						<div class="summary-title">{{ t('CORRELATIONS_DAYS_ANALYZED', { count: analysis.trackedDays }) }}</div>
+						<div class="summary-period">{{ t('CORRELATIONS_PERIOD', { start: formatDate(analysis.firstDate),
+							end: formatDate(analysis.lastDate) }) }}</div>
+					</div>
+					<div class="summary-figures">
+						<span class="figure">{{ t('CORRELATIONS_FACTORS', { count: analysis.factors }) }}</span>
+						<span class="figure">{{ t('CORRELATIONS_SYMPTOMS', { count: analysis.symptoms }) }}</span>
+						<span class="figure">{{ t('CORRELATIONS_COMPARISONS', { count: analysis.tests }) }}</span>
+					</div>
+				</div>
+
+				<!-- Filter by symptom, when several of them have correlations -->
+				<div *ngIf="symptomChips.length > 0" class="symptom-filter">
+					<button class="filter-chip" [class.active]="selectedSymptom === null" (click)="selectSymptom(null)"
+						[attr.aria-pressed]="selectedSymptom === null">{{ t('CORRELATIONS_ALL') }}</button>
+					<button *ngFor="let chip of symptomChips; trackBy: trackChip" class="filter-chip" [class.active]="selectedSymptom === chip.key"
+						(click)="selectSymptom(chip.key)" [attr.aria-pressed]="selectedSymptom === chip.key">
+						{{ chip.label }}<span class="chip-count">{{ chip.count }}</span>
+					</button>
+				</div>
+
+				<div *ngIf="visibleCards.length === 0" class="state-card none">
+					<span class="state-icon"><mat-icon>manage_search</mat-icon></span>
+					<div class="state-title">{{ t('CORRELATIONS_NONE_TITLE') }}</div>
+					<p class="state-text">{{ t('CORRELATIONS_NONE_TEXT') }}</p>
+				</div>
+
+				<section *ngIf="worseCards.length > 0" class="correlation-section worse">
+					<h4 class="section-title"><mat-icon>trending_up</mat-icon>{{ t('CORRELATIONS_WORSE_TITLE') }}</h4>
+					<ng-container *ngFor="let card of worseCards; trackBy: trackCard">
+						<ng-container *ngTemplateOutlet="cardTemplate; context: { $implicit: card, t: t }"></ng-container>
+					</ng-container>
+				</section>
+
+				<section *ngIf="betterCards.length > 0" class="correlation-section better">
+					<h4 class="section-title"><mat-icon>trending_down</mat-icon>{{ t('CORRELATIONS_BETTER_TITLE') }}</h4>
+					<ng-container *ngFor="let card of betterCards; trackBy: trackCard">
+						<ng-container *ngTemplateOutlet="cardTemplate; context: { $implicit: card, t: t }"></ng-container>
+					</ng-container>
+				</section>
+
+				<button *ngIf="weakCount > 0" mat-button class="weak-toggle" (click)="showWeak = !showWeak">
+					<mat-icon>{{ showWeak ? 'visibility_off' : 'visibility' }}</mat-icon>
+					{{ showWeak ? t('CORRELATIONS_HIDE_WEAK') : t('CORRELATIONS_SHOW_WEAK', { count: weakCount }) }}
+				</button>
+			</ng-container>
+
+			<p class="local-note"><mat-icon>lock</mat-icon><span>{{ t('CORRELATIONS_LOCAL') }}</span></p>
+		</ng-container>
+	</div>
+
+	<ng-template #loading>
+		<div class="loading">
+			<mat-spinner diameter="44"></mat-spinner>
+			<span>{{ t('CORRELATIONS_ANALYZING') }}</span>
+		</div>
+	</ng-template>
+</ng-template>
+
+<!-- A correlation: the factor and the symptom in a sentence, the two groups compared, the strength of the signal and
+	the days behind it -->
+<ng-template #cardTemplate let-card let-t="t">
+	<article class="correlation-card" [class.weak]="card.correlation.confidence === 1"
+		[attr.data-factor]="card.correlation.factor.id" [attr.data-symptom]="card.correlation.symptomKey">
+		<div class="card-header">
+			<span class="factor-icon {{ card.colorClass }}">
+				<mat-icon *ngIf="card.icon">{{ card.icon }}</mat-icon>
+				<span *ngIf="card.svgIcon" class="svg-icon {{ card.svgIcon }}"></span>
+			</span>
+			<div class="card-heading">
+				<span class="symptom-pill"><mat-icon>spa</mat-icon><span class="symptom-name">{{ card.symptomLabel }}</span></span>
+				<p class="sentence"><ng-container *ngFor="let part of card.sentence"><strong *ngIf="part.strong">{{ part.text
+							}}</strong><ng-container *ngIf="!part.strong">{{ part.text }}</ng-container></ng-container></p>
+			</div>
+		</div>
+
+		<div class="comparison">
+			<div *ngFor="let row of card.rows; let first = first" class="comparison-row" [class.factor-row]="first">
+				<div class="row-header">
+					<span class="row-label">{{ row.label }}</span>
+					<span class="row-value">{{ row.value }}</span>
+				</div>
+				<div class="row-bar"><span class="row-fill" [style.width.%]="row.ratio * 100"></span></div>
+				<div class="row-detail">{{ row.detail }}</div>
+			</div>
+		</div>
+
+		<div class="card-footer">
+			<span class="confidence level-{{ card.correlation.confidence }}">
+				<span class="confidence-dots">
+					<span *ngFor="let level of levels" class="dot" [class.filled]="level <= card.correlation.confidence"></span>
+				</span>
+				{{ t('CORRELATIONS_CONFIDENCE_' + card.correlation.confidence) }}
+			</span>
+			<button *ngIf="card.dates.length > 0" class="days-toggle" (click)="toggleDays(card)"
+				[attr.aria-expanded]="isExpanded(card)">
+				{{ isExpanded(card) ? t('CORRELATIONS_HIDE_DAYS') : t('CORRELATIONS_SHOW_DAYS') }}
+				<mat-icon>{{ isExpanded(card) ? 'expand_less' : 'expand_more' }}</mat-icon>
+			</button>
+		</div>
+
+		<div *ngIf="isExpanded(card)" class="card-days">
+			<div class="days-title">{{ card.dates.length === 1 ? t('CORRELATIONS_DAYS_TITLE_ONE')
+				: t('CORRELATIONS_DAYS_TITLE', { count: card.dates.length }) }}</div>
+			<div class="days-list">
+				<a *ngFor="let day of card.dates" class="day-chip" [routerLink]="['/', day.date]">{{ day.label }}</a>
+			</div>
+		</div>
+	</article>
+</ng-template>

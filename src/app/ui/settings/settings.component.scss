@@ -339,6 +339,15 @@ textarea {
         color: var(--text-strong);
     }
 
+    // What a setting changes, under its label
+    .toggle-hint {
+        display: block;
+        margin-top: 0.15rem;
+        font-size: 0.8rem;
+        line-height: 1.35;
+        color: var(--text-medium);
+    }
+
     // Label above its options (radio groups don't fit next to it on small screens)
     &.stacked {
         flex-direction: column;

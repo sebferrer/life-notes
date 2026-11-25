@@ -1,0 +1,41 @@
+// V2: the correlations, an action of the page at the end of its header: a small tonal button (the color of the actions
+// of the app, as the bubble adding a symptom), its icon and its name. More specific than the buttons of the header.
+.manage-list-header .correlations-button {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    height: 2.1rem;
+    margin-left: auto;
+    padding: 0 0.8rem 0 0.6rem;
+    border: none;
+    border-radius: 999px;
+    font-family: inherit;
+    font-size: 0.88rem;
+    font-weight: 600;
+    white-space: nowrap;
+    color: var(--primary);
+    background-color: rgba(var(--primary-rgb), 0.12);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: background-color 0.15s ease;
+
+    mat-icon {
+        font-size: 1.15rem;
+        width: 1.15rem;
+        height: 1.15rem;
+    }
+
+    &:hover {
+        background-color: rgba(var(--primary-rgb), 0.18);
+    }
+
+    &:active {
+        background-color: rgba(var(--primary-rgb), 0.24);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+    }
+}

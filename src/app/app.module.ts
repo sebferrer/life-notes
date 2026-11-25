@@ -79,6 +79,7 @@ import { ManageComponent } from './ui/manage';
 import { DialogSelectLanguageComponent } from './ui/dialog/dialog-select-language';
 import { MonthlyReportComponent } from './ui/monthly-report';
 import { YearInPixelsComponent } from './ui/year-in-pixels';
+import { CorrelationsComponent } from './ui/correlations';
 import { DialogUpdatesComponent } from './ui/dialog/dialog-updates';
 import { AboutComponent } from './ui/about';
 
@@ -104,6 +105,7 @@ import { BottomSheetForceLoadWarningComponent } from './ui/bottom-sheet/bottom-s
 import { BottomSheetInfoComponent } from './ui/bottom-sheet/bottom-sheet-info';
 import { BottomSheetReviewPromptComponent } from './ui/bottom-sheet/bottom-sheet-review-prompt';
 import { BottomSheetShareMonthComponent } from './ui/bottom-sheet/bottom-sheet-share-month';
+import { BottomSheetCorrelationsHelpComponent } from './ui/bottom-sheet/bottom-sheet-correlations-help';
 import { MonthShareCardComponent } from './ui/month-share-card';
 import { BottomSheetDeleteTimelineEventComponent } from './ui/bottom-sheet/bottom-sheet-delete-timeline-event';
 import { SpacerItemComponent } from './ui/shared/spacer-item';
@@ -133,6 +135,7 @@ import { LANGUAGE_CODES } from './models/language.model';
 		AboutComponent,
 		MonthlyReportComponent,
 		YearInPixelsComponent,
+		CorrelationsComponent,
 		PieChartComponent,
 		LineChartComponent,
 		OccurrenceStatsComponent,
@@ -178,6 +181,7 @@ import { LANGUAGE_CODES } from './models/language.model';
 		BottomSheetInfoComponent,
 		BottomSheetReviewPromptComponent,
 		BottomSheetShareMonthComponent,
+		BottomSheetCorrelationsHelpComponent,
 		BottomSheetDeleteTimelineEventComponent,
 		BottomSheetEditCustomTypeComponent,
 		BottomSheetColorPickerComponent,
@@ -279,6 +283,7 @@ import { LANGUAGE_CODES } from './models/language.model';
 		BottomSheetInfoComponent,
 		BottomSheetReviewPromptComponent,
 		BottomSheetShareMonthComponent,
+		BottomSheetCorrelationsHelpComponent,
 		BottomSheetDeleteTimelineEventComponent,
 		BottomSheetColorPickerComponent
 	],
