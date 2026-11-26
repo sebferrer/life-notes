@@ -19,7 +19,7 @@ export const V1_SETTINGS_KEYS = [
 // Settings added by the V2
 export const V2_SETTINGS_KEYS = [
 	'dailyReminder', 'lastDailyReminder', 'darkMode', 'landscapeMode', 'uiVersion', 'sleepChartMode',
-	'newUiPopupSeen', 'eventColors'
+	'newUiPopupSeen', 'eventColors', 'reviewPromptDate'
 ];
 
 // lastInstall, the version of the app stored in the settings, differs between two versions of the app: compared

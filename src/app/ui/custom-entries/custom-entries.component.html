@@ -19,7 +19,7 @@
         </ng-template>
     </header>
 
-    <div *ngIf="entries$ | async as entries; else loading" class="manage-list">
+    <div *ngIf="entries$ | async as entries; else loading" class="manage-list page-content-in">
         <div *ngFor="let entry of entries" class="manage-item">
             <div class="manage-item-bubble">
                 <mat-icon>{{ customType.icon }}</mat-icon>
@@ -64,5 +64,5 @@
 </div>
 
 <ng-template #loading>
-    <mat-spinner class="view-spinner"></mat-spinner>
+    <app-page-skeleton kind="list"></app-page-skeleton>
 </ng-template>

@@ -85,7 +85,7 @@ test.describe('Backups', () => {
 	test('the PDF report of a month only shows the symptoms filled in that month', async ({ app, page }) => {
 		await app.addSymptom('Ventre');
 		await app.goToSettings('Importer / Exporter');
-		await page.locator('mat-list-option', { hasText: 'Exporter en PDF' }).click();
+		await page.locator('mat-list-option, .data-action', { hasText: 'Exporter en PDF' }).click();
 		await page.locator('.export-pdf .confirm-button').click();
 		await expect(page).toHaveURL(/#\/monthlyreport\/2026-0?3$/);
 		// Hidden placeholders complete the layout of the report

@@ -4,6 +4,11 @@
 			<mat-icon>arrow_back</mat-icon>
 		</button>
 		<h3 class="title" transloco="YEAR_IN_PIXELS"></h3>
+		<!-- V2: the year of a symptom as an image, when one has an intensity in it -->
+		<button *ngIf="canShare" mat-button class="share-year-button" (click)="openShareSheet()">
+			<mat-icon>share</mat-icon>
+			<span transloco="SHARE_MONTH_BUTTON"></span>
+		</button>
 	</div>
 	<div class="pixels-card">
 		<div class="year-header">
@@ -18,7 +23,7 @@
 				<mat-icon>chevron_right</mat-icon>
 			</button>
 		</div>
-		<div *ngIf="monthDays; else loading" class="pixels-grid">
+		<div *ngIf="monthDays; else loading" class="pixels-grid page-content-in">
 			<div></div>
 			<ng-template transloco let-t>
 				<div *ngFor="let month of months" class="month-label">{{ monthInitial(t('MONTH-SHORT-' + month)) }}</div>
@@ -51,5 +56,5 @@
 </ng-template>
 
 <ng-template #loading>
-	<mat-spinner class="view-spinner"></mat-spinner>
+	<app-page-skeleton kind="year"></app-page-skeleton>
 </ng-template>

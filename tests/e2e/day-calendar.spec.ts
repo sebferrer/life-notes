@@ -366,7 +366,7 @@ test.describe('Sleep of the month', () => {
 
 		// The PDF report shows the mode of the setting, without the buttons
 		await app.goToSettings('Importer / Exporter');
-		await page.locator('mat-list-option', { hasText: 'Exporter en PDF' }).click();
+		await page.locator('mat-list-option, .data-action', { hasText: 'Exporter en PDF' }).click();
 		await page.locator('.export-pdf .confirm-button').click();
 		const report = page.locator('.modern-report app-sleep-stats');
 		await expect(report.locator('.durations .legend-item')).toHaveText(['Durée', 'Zone conseillée']);
@@ -414,7 +414,7 @@ test.describe('Sleep of the month', () => {
 
 	test('the PDF report of the V2 has the same card', async ({ app, page }) => {
 		await app.goToSettings('Importer / Exporter');
-		await page.locator('mat-list-option', { hasText: 'Exporter en PDF' }).click();
+		await page.locator('mat-list-option, .data-action', { hasText: 'Exporter en PDF' }).click();
 		await page.locator('.export-pdf .confirm-button').click();
 		await expect(page).toHaveURL(/#\/monthlyreport\/2026-0?3$/);
 		await expect(page.locator('.modern-report app-sleep-stats .sleep-value')).toHaveText(['7 h 30', '23:45', '07:15']);

@@ -3,6 +3,7 @@ import { GlobalService } from 'src/app/infra/global.service';
 import * as moment from 'moment';
 import { IDetailedDate } from 'src/app/models/detailed.date';
 import { getDetailedDate } from 'src/app/util/date.utils';
+import { getCsvFileName } from 'src/app/models/csv-export.model';
 
 type Side = 'top' | 'right' | 'bottom' | 'left';
 
@@ -36,6 +37,8 @@ const SCENE_HEIGHTS: { [scene: string]: number } = {
 	'backup-save': 330,
 	'backup-restore': 372,
 	'pdf-report': 380,
+	'year-in-pixels': 366,
+	'csv-export': 380,
 	'new-ui': 214
 };
 // The classic day takes more room
@@ -45,7 +48,9 @@ const CLASSIC_SCENE_HEIGHTS: { [scene: string]: number } = {
 	'calendar': 404,
 	// Room for the floating refresh button under the list
 	'manage': 392,
-	'edit-event': 356
+	'edit-event': 356,
+	// No share of the month
+	'year-in-pixels': 318
 };
 // Room left between an arrow and the elements it links, so it doesn't overlap their highlight ring
 const START_GAP = 6;
@@ -91,18 +96,30 @@ const SCENE_ARROWS: { [scene: string]: IArrowSpec[] } = {
 	'settings': [
 		{ from: 'a-settings', fromSide: 'bottom', to: 'page', toSide: 'top' }
 	],
+	// The tiles side by side, each one above its window
 	'backup-save': [
-		{ from: 'save', fromSide: 'right', to: 'save-dialog', toSide: 'top' },
+		{ from: 'save', fromSide: 'bottom', to: 'save-dialog', toSide: 'top' },
 		{ from: 'share', fromSide: 'bottom', to: 'share-sheet', toSide: 'top' }
 	],
+	// The import under the tiles: down to the window of the files
 	'backup-restore': [
-		{ from: 'import', fromSide: 'right', to: 'picker', toSide: 'top' },
+		{ from: 'import', fromSide: 'bottom', to: 'picker', toSide: 'top' },
 		{ from: 'file', fromSide: 'left', to: 'confirm', toSide: 'top' },
 		{ from: 'yes', fromSide: 'bottom', to: 'snack', toSide: 'top' }
 	],
 	'pdf-report': [
 		{ from: 'pdf', fromSide: 'right', to: 'month-sheet', toSide: 'top' },
 		{ from: 'month-set', fromSide: 'bottom', to: 'report', toSide: 'right' }
+	],
+	// Year in Pixels, then its share at the end of its header
+	'year-in-pixels': [
+		{ from: 'yip', fromSide: 'bottom', to: 'year', toSide: 'top' },
+		{ from: 'share-year', fromSide: 'right', to: 'share-sheet', toSide: 'top' }
+	],
+	// The spreadsheet under the sheet: into its right side
+	'csv-export': [
+		{ from: 'csv', fromSide: 'bottom', to: 'csv-sheet', toSide: 'top' },
+		{ from: 'csv-actions', fromSide: 'bottom', to: 'spreadsheet', toSide: 'right' }
 	]
 };
 // The V1 has other arrows where its tiles are in another order
@@ -115,6 +132,20 @@ const CLASSIC_SCENE_ARROWS: { [scene: string]: IArrowSpec[] } = {
 	// The medications in the right column: by the right margin, away from the other tiles, close to the screen
 	'manage': [
 		{ from: 'tile', fromSide: 'right', to: 'list', toSide: 'right', bend: 18 }
+	],
+	// The list: the save on the right to its window, the share down to its sheet
+	'backup-save': [
+		{ from: 'save', fromSide: 'right', to: 'save-dialog', toSide: 'top' },
+		{ from: 'share', fromSide: 'bottom', to: 'share-sheet', toSide: 'top' }
+	],
+	'backup-restore': [
+		{ from: 'import', fromSide: 'right', to: 'picker', toSide: 'top' },
+		{ from: 'file', fromSide: 'left', to: 'confirm', toSide: 'top' },
+		{ from: 'yes', fromSide: 'bottom', to: 'snack', toSide: 'top' }
+	],
+	// No share of the month
+	'year-in-pixels': [
+		{ from: 'yip', fromSide: 'bottom', to: 'year', toSide: 'top' }
 	]
 };
 
@@ -167,6 +198,14 @@ export class TutorialSceneComponent implements AfterViewInit, OnDestroy {
 	// The PDF report is usually exported for the last (complete) month
 	public readonly reportMonth: IDetailedDate = getDetailedDate(moment().subtract(1, 'month').format('YYYY-MM-DD'));
 	public readonly reportCells: string[];
+	// End of the calendar of the month (the week of today and the one before), above its buttons
+	public readonly calendarLastWeeks: { day: number, level: string, today: boolean, future: boolean }[];
+	// Year in Pixels: each month and its days (none past the end of the month, future after today)
+	public readonly yearMonths: { month: number, cells: string[] }[];
+	// The CSV file of one line per day, as opened in a spreadsheet: the intensities of a symptom and their chart
+	public readonly csvFileName = getCsvFileName('days', new Date());
+	public readonly csvRows: { date: string, intensity: string, sleep: string }[];
+	public readonly csvChartPoints: string;
 	public readonly reportSymptoms: { label: string, cells: string[], ring: string }[];
 	public readonly settingsRows = [
 		{ key: 'symptoms', icon: 'spa', title: 'SETTINGS_SYMPTOMS_TITLE', subtitle: 'SETTINGS_SYMPTOMS_SUBTITLE' },
@@ -213,6 +252,48 @@ export class TutorialSceneComponent implements AfterViewInit, OnDestroy {
 		this.weekDays = startOnSunday ? [7, 1, 2, 3, 4, 5, 6] : [1, 2, 3, 4, 5, 6, 7];
 		const firstDay = moment(this.today.formattedDate).startOf('month').day(); // 0 = sunday
 		this.calendarOffset = new Array(startOnSunday ? firstDay : (firstDay + 6) % 7);
+
+		// The rows of the grid of the week of today and the one before (empty slots before the first day)
+		const offset = this.calendarOffset.length;
+		const todayRow = Math.floor((offset + this.today.day - 1) / 7);
+		this.calendarLastWeeks = [];
+		for (let slot = Math.max(0, todayRow - 1) * 7; slot < (todayRow + 1) * 7; slot++) {
+			const cell = this.calendarCells[slot - offset];
+			this.calendarLastWeeks.push(cell || { day: null, level: 'none', today: false, future: false });
+		}
+
+		this.yearMonths = Array.from({ length: 12 }, (_, m) => {
+			const month = moment(this.today.formattedDate).month(m).startOf('month');
+			const daysInMonth = month.daysInMonth();
+			return {
+				month: m + 1,
+				cells: Array.from({ length: 31 }, (__, d) => {
+					if (d >= daysInMonth) {
+						return 'none';
+					}
+					const date = month.clone().date(d + 1).format('YYYY-MM-DD');
+					return date > this.today.formattedDate ? 'future' : levels[(m * 31 + d) % levels.length];
+				})
+			};
+		});
+
+		const intensities = [6, 4, 2, null, 3, 5, 2, 1, 3, 6, 4, 2];
+		const sleeps = [7.5, 6.25, 8, 6.5];
+		this.csvRows = sleeps.map((sleep, i) => ({
+			date: moment(this.today.formattedDate).subtract(sleeps.length - i, 'days').format('YYYY-MM-DD'),
+			intensity: intensities[i] != null ? String(intensities[i]) : '',
+			sleep: this.globalService.formatQuantity(sleep)
+		}));
+		// The chart of the column: the known values, on a 100 x 30 box, 10 at the top
+		const known = intensities.map((value, i) => ({ value, i })).filter(point => point.value != null);
+		this.csvChartPoints = known.map(point =>
+			`${Math.round(point.i / (intensities.length - 1) * 100)},${Math.round(28 - point.value / 10 * 26)}`).join(' ');
+	}
+
+	// First letter of the month, or its number where the months are numbered (as Year in Pixels)
+	public monthInitial(name: string): string {
+		const monthNumber = /^\d+/.exec(name || '');
+		return monthNumber ? monthNumber[0] : (name || '').charAt(0);
 	}
 
 	public ngAfterViewInit(): void {

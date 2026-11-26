@@ -1,4 +1,4 @@
-<div id="calendar" *ngIf="overviews$ | async as overviews; else loading">
+<div id="calendar" class="page-content-in" *ngIf="overviews$ | async as overviews; else loading">
 	<div *ngIf="symptoms$ | async as symptoms; else loading">
 		<!-- V1: original calendar (see GlobalService.uiVersion) -->
 		<div *ngIf="globalService.isUiV1; else modernCalendar" id="calendar-container"
@@ -169,5 +169,5 @@
 </div>
 
 <ng-template #loading>
-	<mat-spinner class="view-spinner"></mat-spinner>
+	<app-page-skeleton kind="calendar"></app-page-skeleton>
 </ng-template>

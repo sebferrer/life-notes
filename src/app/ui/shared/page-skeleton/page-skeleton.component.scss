@@ -1,0 +1,469 @@
+// Mock-up of a page being loaded (V2). Sizes as the real pages: day-card.scss, calendar, Year in Pixels, manage-list.scss,
+// report and correlations stylesheets.
+
+:host {
+    display: block;
+}
+
+// Hidden the first 150 ms (a quick load never shows it), then fades in: opacity only, run by the compositor
+.page-skeleton {
+    animation: page-skeleton-in 0.2s ease-out 0.15s both;
+}
+
+@keyframes page-skeleton-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+// A shape: a line of text, an icon, a cell...
+.sk {
+    display: block;
+    flex-shrink: 0;
+    border-radius: 6px;
+    background-color: var(--skeleton);
+}
+
+// A card, as those of the pages
+.sk-card {
+    margin: 0.75rem;
+    background-color: var(--surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 16px;
+    box-shadow: 0 1px 3px var(--shadow);
+}
+
+// The light sweeping a card or a grid: a band moved by a transform only, so that it keeps moving while the page loads.
+// Every card starts it at the same time and at the same speed: one wave going down the page.
+.sk-card,
+.sk-shine {
+    position: relative;
+    overflow: hidden;
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: linear-gradient(100deg, transparent 20%, var(--skeleton-shine) 50%, transparent 80%);
+        transform: translateX(-100%);
+        animation: page-skeleton-shine 1.6s ease-in-out infinite;
+        will-change: transform;
+        pointer-events: none;
+    }
+}
+
+@keyframes page-skeleton-shine {
+    from {
+        transform: translateX(-100%);
+    }
+
+    to {
+        transform: translateX(100%);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .sk-card::after,
+    .sk-shine::after {
+        display: none;
+    }
+}
+
+.sk-lines {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+
+.sk-title {
+    width: 50%;
+    height: 0.95rem;
+}
+
+.sk-line {
+    width: 70%;
+    height: 0.75rem;
+}
+
+.sk-bubble {
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+}
+
+.sk-tile {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 10px;
+}
+
+.sk-section {
+    width: 11rem;
+    height: 1rem;
+    margin: 1.25rem 1rem 0.25rem 1rem;
+}
+
+// Timeline (day-card.scss)
+.sk-day {
+    --time-col: 2.75rem;
+    --marker-size: 2.25rem;
+    --rail-gap: 0.75rem;
+}
+
+.sk-day-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    height: 2.75rem;
+    padding: 0.25rem 1rem 0 1rem;
+
+    .sk-date {
+        width: 8.5rem;
+        height: 1rem;
+        margin-right: auto;
+    }
+
+    .sk-dot {
+        width: 1.1rem;
+        height: 1.1rem;
+        border-radius: 50%;
+    }
+
+    .sk-icon {
+        width: 1.4rem;
+        height: 1.4rem;
+    }
+}
+
+.sk-rail {
+    position: relative;
+    padding: 0.25rem 1rem 0.75rem 1rem;
+
+    // The line linking the markers
+    &::before {
+        content: '';
+        position: absolute;
+        top: 1.8rem;
+        bottom: 2.3rem;
+        left: calc(1rem + var(--time-col) + var(--rail-gap) + var(--marker-size) / 2 - 1px);
+        width: 2px;
+        background-color: var(--skeleton);
+    }
+}
+
+.sk-row {
+    display: flex;
+    align-items: center;
+    gap: var(--rail-gap);
+    min-height: 2.75rem;
+    padding: 0.2rem 0;
+
+    .sk-time {
+        width: 2.2rem;
+        height: 0.8rem;
+        margin-left: calc(var(--time-col) - 2.2rem);
+    }
+
+    .sk-marker {
+        position: relative;
+        width: var(--marker-size);
+        height: var(--marker-size);
+        border-radius: 50%;
+        // Cut the line around it, as the real markers
+        box-shadow: 0 0 0 3px var(--surface);
+    }
+
+    .sk-label {
+        width: 4rem;
+        height: 0.85rem;
+    }
+
+    .sk-event {
+        flex: 1;
+        height: 2.4rem;
+        border-radius: 12px;
+
+        &.tall {
+            height: 3.1rem;
+        }
+    }
+}
+
+// Calendar (calendar.component.scss)
+.sk-calendar {
+    padding: 0.5rem 0.75rem 0.75rem 0.75rem;
+}
+
+.sk-calendar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 0.5rem;
+
+    .sk-nav {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 50%;
+    }
+
+    .sk-month {
+        width: 7.5rem;
+        height: 1.15rem;
+    }
+}
+
+.sk-calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+
+    .sk-weekday {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 1.75rem;
+
+        .sk {
+            width: 0.6rem;
+            height: 0.6rem;
+            border-radius: 3px;
+        }
+    }
+
+    .sk-cell {
+        height: 3rem;
+        border-radius: 12px;
+    }
+}
+
+.sk-calendar-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+
+    .sk {
+        flex: 1;
+        height: 2.25rem;
+        border-radius: 12px;
+    }
+}
+
+.sk-chart {
+    padding: 1rem 0.75rem;
+}
+
+.sk-chart-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    .sk-chart-title {
+        width: 10rem;
+        height: 1.1rem;
+    }
+}
+
+.sk-ring-box {
+    display: flex;
+    justify-content: center;
+    padding: 1.25rem 0;
+
+    .sk-ring {
+        box-sizing: border-box;
+        width: 7.5rem;
+        height: 7.5rem;
+        border-radius: 50%;
+        border: 1rem solid var(--skeleton);
+    }
+}
+
+.sk-legend {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+
+    .sk {
+        width: 1.75rem;
+        height: 0.75rem;
+    }
+}
+
+// Year in Pixels (year-in-pixels.component.scss): the grid only, its card and its header are the page's
+.sk-year {
+    display: grid;
+    grid-template-columns: 1.25rem repeat(12, 1fr);
+    grid-auto-rows: 1rem;
+    gap: 3px;
+
+    .sk-year-label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .sk {
+            width: 0.55rem;
+            height: 0.55rem;
+            border-radius: 2px;
+        }
+    }
+
+    .sk-pixel {
+        border-radius: 4px;
+    }
+}
+
+// Manage lists (manage-list.scss): in the page, under its header
+.sk-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+
+    .sk-card {
+        margin: 0;
+    }
+}
+
+.sk-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.7rem 0.75rem;
+
+    .sk-lines {
+        min-height: 3.35rem;
+        justify-content: center;
+    }
+
+    .sk-actions {
+        width: 5.25rem;
+        height: 1.3rem;
+    }
+}
+
+// PDF report (monthly-report.component.scss): the page of the report
+.sk-report {
+    padding: 0.75rem;
+
+    .sk-document {
+        margin: 0;
+        padding: 1.1rem;
+        border-radius: 6px;
+        box-shadow: 0 2px 12px var(--shadow);
+    }
+
+    .sk-section {
+        margin: 1rem 0 0.75rem 0;
+        width: 6rem;
+    }
+}
+
+.sk-report-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding-bottom: 0.6rem;
+    border-bottom: 2px solid var(--skeleton);
+
+    .sk-report-title {
+        width: 9rem;
+        height: 1.3rem;
+    }
+
+    .sk-report-brand {
+        width: 4rem;
+        height: 0.8rem;
+    }
+}
+
+.sk-report-row {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.sk-report-card {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem;
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+
+    .sk-report-card-title {
+        align-self: flex-start;
+        width: 60%;
+        height: 0.7rem;
+    }
+}
+
+.sk-mini-grid {
+    align-self: stretch;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+
+    .sk {
+        height: 0.9rem;
+        border-radius: 3px;
+    }
+}
+
+.sk-mini-ring {
+    box-sizing: border-box;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    border: 0.5rem solid var(--skeleton);
+}
+
+// Correlations (correlations.component.scss)
+.sk-summary {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.9rem;
+}
+
+.sk-correlation {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 0.9rem;
+
+    .sk-bar {
+        height: 1.5rem;
+        border-radius: 8px;
+
+        &.short {
+            width: 70%;
+        }
+    }
+}
+
+.sk-correlation-head {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    .sk-pill {
+        width: 4.5rem;
+        height: 0.9rem;
+        border-radius: 999px;
+    }
+
+    .sk-title {
+        width: 75%;
+    }
+}

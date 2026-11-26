@@ -99,16 +99,22 @@ import { BottomSheetEditSymptomOverviewComponent } from './ui/bottom-sheet/botto
 import { BottomSheetImportConfirmComponent } from './ui/bottom-sheet/bottom-sheet-import-confirm';
 import { BottomSheetImportErrorComponent } from './ui/bottom-sheet/bottom-sheet-import-error';
 import { BottomSheetExportPdfComponent } from './ui/bottom-sheet/bottom-sheet-export-pdf';
+import { BottomSheetExportCsvComponent } from './ui/bottom-sheet/bottom-sheet-export-csv';
 import { BottomSheetAddSymptomComponent } from './ui/bottom-sheet/bottom-sheet-add-symptom';
 import { BottomSheetDeleteSymptomComponent } from './ui/bottom-sheet/bottom-sheet-delete-symptom';
 import { BottomSheetForceLoadWarningComponent } from './ui/bottom-sheet/bottom-sheet-force-load-warning';
 import { BottomSheetInfoComponent } from './ui/bottom-sheet/bottom-sheet-info';
 import { BottomSheetReviewPromptComponent } from './ui/bottom-sheet/bottom-sheet-review-prompt';
 import { BottomSheetShareMonthComponent } from './ui/bottom-sheet/bottom-sheet-share-month';
+import { BottomSheetShareYearComponent } from './ui/bottom-sheet/bottom-sheet-share-year';
 import { BottomSheetCorrelationsHelpComponent } from './ui/bottom-sheet/bottom-sheet-correlations-help';
+import { BottomSheetCorrelationsWarningComponent } from './ui/bottom-sheet/bottom-sheet-correlations-warning';
 import { MonthShareCardComponent } from './ui/month-share-card';
+import { YearShareCardComponent } from './ui/year-share-card';
 import { BottomSheetDeleteTimelineEventComponent } from './ui/bottom-sheet/bottom-sheet-delete-timeline-event';
 import { SpacerItemComponent } from './ui/shared/spacer-item';
+import { SpinnerComponent } from './ui/shared/spinner';
+import { PageSkeletonComponent } from './ui/shared/page-skeleton';
 import { ColorPickerComponent } from './ui/shared/color-picker';
 import { BottomSheetColorPickerComponent } from './ui/bottom-sheet/bottom-sheet-color-picker';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
@@ -142,6 +148,7 @@ import { LANGUAGE_CODES } from './models/language.model';
 		SleepStatsComponent,
 		IntensityRingComponent,
 		MonthShareCardComponent,
+		YearShareCardComponent,
 		SwipingFingerComponent,
 		DialogAddEventComponent,
 		DialogShowEventComponent,
@@ -175,17 +182,22 @@ import { LANGUAGE_CODES } from './models/language.model';
 		BottomSheetImportErrorComponent,
 
 		BottomSheetExportPdfComponent,
+		BottomSheetExportCsvComponent,
 		BottomSheetAddSymptomComponent,
 		BottomSheetDeleteSymptomComponent,
 		BottomSheetForceLoadWarningComponent,
 		BottomSheetInfoComponent,
 		BottomSheetReviewPromptComponent,
 		BottomSheetShareMonthComponent,
+		BottomSheetShareYearComponent,
 		BottomSheetCorrelationsHelpComponent,
+		BottomSheetCorrelationsWarningComponent,
 		BottomSheetDeleteTimelineEventComponent,
 		BottomSheetEditCustomTypeComponent,
 		BottomSheetColorPickerComponent,
 		SpacerItemComponent,
+		SpinnerComponent,
+		PageSkeletonComponent,
 		ColorPickerComponent
 	],
 	imports: [
@@ -277,13 +289,16 @@ import { LANGUAGE_CODES } from './models/language.model';
 		BottomSheetImportErrorComponent,
 
 		BottomSheetExportPdfComponent,
+		BottomSheetExportCsvComponent,
 		BottomSheetAddSymptomComponent,
 		BottomSheetDeleteSymptomComponent,
 		BottomSheetForceLoadWarningComponent,
 		BottomSheetInfoComponent,
 		BottomSheetReviewPromptComponent,
 		BottomSheetShareMonthComponent,
+		BottomSheetShareYearComponent,
 		BottomSheetCorrelationsHelpComponent,
+		BottomSheetCorrelationsWarningComponent,
 		BottomSheetDeleteTimelineEventComponent,
 		BottomSheetColorPickerComponent
 	],

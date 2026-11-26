@@ -14,7 +14,7 @@
         </button>
     </header>
 
-    <div *ngIf="symptoms$ | async as symptoms; else loading" class="manage-list">
+    <div *ngIf="symptoms$ | async as symptoms; else loading" class="manage-list page-content-in">
         <button class="manage-item manage-add-item symptom-card add-card" (click)="openAddDialog()">
             <span class="manage-item-bubble"><mat-icon>add</mat-icon></span>
             <span class="manage-item-title symptom-label">{{ 'ADD_NEW_SYMPTOM_LABEL' | transloco }}</span>
@@ -75,5 +75,5 @@
 </div>
 
 <ng-template #loading>
-    <mat-spinner class="view-spinner"></mat-spinner>
+    <app-page-skeleton kind="list"></app-page-skeleton>
 </ng-template>

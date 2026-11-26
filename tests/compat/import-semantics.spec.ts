@@ -92,7 +92,11 @@ test.describe('Advanced settings', () => {
 			await p.restart();
 			const saved = await p.exportBackup();
 
-			// Manual save: the same backup as the file
+			// Manual save: the same backup as the file. The V2 folds it under its row.
+			const manualSave = p.page.locator('.manual-save-toggle');
+			if (await manualSave.count() > 0) {
+				await manualSave.dispatchEvent('click');
+			}
 			await p.page.locator('button[transloco="SETTINGS_MANUAL_SAVE_BUTTON"]').dispatchEvent('click');
 			const textarea = p.page.locator('textarea[cdkAutosizeMinRows]');
 			await expect(textarea).not.toHaveValue('');

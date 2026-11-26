@@ -25,12 +25,21 @@
 
             <div class="form-field">
                 <div class="field-label">{{ t('CUSTOM_TYPE_ICON') }}</div>
-                <div class="icon-grid" role="radiogroup">
-                    <button *ngFor="let item of icons" type="button" class="icon-choice" [class.selected]="item === icon"
-                        role="radio" [attr.aria-checked]="item === icon" [attr.data-icon]="item" (click)="icon = item">
+                <!-- V2: the first rows, the others unfolded with the button under them -->
+                <div #iconGrid class="icon-grid" [class.collapsible]="collapsibleIcons"
+                    [style.max-height]="collapsibleIcons ? iconGridHeight : null" role="radiogroup">
+                    <button *ngFor="let item of icons; let i = index" type="button" class="icon-choice"
+                        [class.selected]="item === icon" role="radio" [attr.aria-checked]="item === icon"
+                        [attr.data-icon]="item" [attr.tabindex]="!iconsExpanded && i >= visibleIcons ? -1 : null"
+                        [attr.aria-hidden]="!iconsExpanded && i >= visibleIcons ? true : null" (click)="icon = item">
                         <mat-icon>{{ item }}</mat-icon>
                     </button>
                 </div>
+                <button *ngIf="collapsibleIcons && hasMoreIcons" type="button" class="icons-toggle"
+                    [attr.aria-expanded]="iconsExpanded" (click)="toggleIcons()">
+                    <span>{{ iconsExpanded ? t('CUSTOM_TYPE_FEWER_ICONS') : t('CUSTOM_TYPE_MORE_ICONS', { count: icons.length }) }}</span>
+                    <mat-icon>{{ iconsExpanded ? 'expand_less' : 'expand_more' }}</mat-icon>
+                </button>
             </div>
 
             <div class="form-field">

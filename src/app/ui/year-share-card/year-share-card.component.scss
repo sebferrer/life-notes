@@ -1,0 +1,70 @@
+// The frame, header, legend, figures and footer are those of the image of a month (month-share-card.component.scss)
+.month-share-card.year-share-card {
+
+    // As high as the room left by the header, the legend and the figures
+    .card-pixels {
+        flex: 1;
+        min-height: 0;
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 4px;
+        margin-top: 12px;
+    }
+
+    .card-pixel-month {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5px;
+        min-height: 0;
+    }
+
+    .card-month-initial {
+        flex-shrink: 0;
+        margin-bottom: 3px;
+        font-size: 11px;
+        font-weight: 600;
+        line-height: 1;
+        text-align: center;
+        color: var(--text-weak);
+    }
+
+    .card-pixel {
+        flex: 1;
+        min-height: 0;
+        border-radius: 2px;
+
+        &.color-default {
+            background-color: var(--color-pain-0);
+        }
+
+        &.color-pain-1 {
+            background-color: var(--color-pain-1);
+        }
+
+        &.color-pain-2 {
+            background-color: var(--color-pain-2);
+        }
+
+        &.color-pain-3 {
+            background-color: var(--color-pain-3);
+        }
+
+        &.color-pain-4 {
+            background-color: var(--color-pain-4);
+        }
+
+        &.color-pain-5 {
+            background-color: var(--color-pain-5);
+        }
+
+        // Days to come, no value on an inverted scale
+        &.color-none {
+            background-color: var(--surface-variant);
+        }
+
+        // 30th of February...
+        &.color-missing {
+            background-color: transparent;
+        }
+    }
+}

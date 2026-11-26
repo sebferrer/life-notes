@@ -475,7 +475,7 @@ export class SettingsService {
 							this.globalService.uiVersion = settings.uiVersion;
 							this.globalService.sleepChartMode = settings.sleepChartMode;
 							this.globalService.eventPalettes = settings.eventColors;
-							this.globalService.showCorrelations = true;
+							this.globalService.showCorrelations = false;
 						}),
 						map(() => settings)
 					);
@@ -599,7 +599,7 @@ export class SettingsService {
 					this.globalService.uiVersion = s.uiVersion;
 					this.globalService.sleepChartMode = s.sleepChartMode;
 					this.globalService.eventPalettes = s.eventColors;
-					// Missing in the settings saved before them: shown, without writing anything
+					// Missing in the settings saved before them: off, without writing anything
 					this.globalService.showCorrelations = s.showCorrelations;
 
 					if (!changed) {

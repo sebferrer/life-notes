@@ -215,7 +215,7 @@ test.describe('Settings', () => {
 
 	test('the reason of the manual backups is explained', async ({ app, page }) => {
 		await app.goToSettings('Importer / Exporter');
-		await page.locator('.help-container', { hasText: 'Pourquoi les sauvegardes sont-elles manuelles' }).click();
+		await page.locator('.help-container, .data-banner', { hasText: 'Pourquoi les sauvegardes sont-elles manuelles' }).click();
 		await expect(page.locator('mat-bottom-sheet-container')).toContainText('cloud');
 	});
 
@@ -227,16 +227,50 @@ test.describe('Settings', () => {
 			const advanced = app.settingsPanel('Avancé');
 			await advanced.locator('mat-expansion-panel-header').first().click();
 
+			// V2: the experimental features, then, below a line, the troubleshooting, the manual save folded under its row
+			await expect(advanced.locator('.settings-section-title')).toHaveText(['Fonctions expérimentales', 'Dépannage']);
+			await expect(advanced.locator('.settings-section-title.advanced-separator'))
+				.not.toHaveCSS('border-top-style', 'none');
+			const forceLoad = advanced.locator('mat-list-option', { hasText: 'Forcer le chargement' });
+			await expect(advanced.locator('#generateBackupButton')).toHaveCount(0);
+			await expect(forceLoad).toHaveCount(0);
+			const manualSave = advanced.locator('.manual-save-toggle');
+			await expect(manualSave).toContainText('Sauvegarde manuelle');
+			await expect(manualSave).toHaveAttribute('aria-expanded', 'false');
+			await manualSave.click();
+			await expect(manualSave).toHaveAttribute('aria-expanded', 'true');
+
 			await advanced.locator('.manual-backup-info').click();
 			await expect(page.locator('mat-bottom-sheet-container')).toContainText('dernier recours');
 			await page.locator('.cdk-overlay-backdrop').last().click({ position: { x: 10, y: 10 } });
-			// The info icon is in a header of the "Advanced" panel: it must not close it
 			await expect(advanced).toHaveClass(/mat-expanded/);
 
 			await advanced.locator('#generateBackupButton').click();
 			const data = JSON.parse(await advanced.locator('textarea').inputValue());
 			expect(data.symptoms.map(s => s.label)).toEqual(['Tête']);
+			await expect(forceLoad).toBeVisible();
+
+			// Folded again
+			await manualSave.click();
+			await expect(advanced.locator('#generateBackupButton')).toHaveCount(0);
+			await expect(forceLoad).toHaveCount(0);
 		});
+
+	test('V1: the manual save and the forced import of the advanced settings are shown at once', async ({ app, page }) => {
+		await app.setUiVersion('V1');
+		await app.goToSettings('Personnalisation');
+		await app.setToggle('Afficher les paramètres avancés', true);
+		const advanced = app.settingsPanel('Avancé');
+		await advanced.locator('mat-expansion-panel-header.main-header').click();
+		await expect(advanced.locator('#generateBackupButton')).toBeVisible();
+		await expect(advanced.locator('mat-list-option', { hasText: 'Forcer le chargement' })).toBeVisible();
+		await expect(advanced.locator('.manual-save-toggle, .settings-section-title')).toHaveCount(0);
+		// Its info icon is in a header of the "Advanced" panel: it must not close it
+		await advanced.locator('.manual-backup-info').click();
+		await expect(page.locator('mat-bottom-sheet-container')).toContainText('dernier recours');
+		await page.locator('.cdk-overlay-backdrop').last().click({ position: { x: 10, y: 10 } });
+		await expect(advanced).toHaveClass(/mat-expanded/);
+	});
 
 	test('the toolbar highlights the current section', async ({ app, page }) => {
 		const active = page.locator('.nav-button.active');

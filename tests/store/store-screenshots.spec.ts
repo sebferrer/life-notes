@@ -254,7 +254,7 @@ for (const lang of LANGS) {
 			const editor = page.locator('.edit-custom-type');
 			await expect(editor).toBeVisible();
 			await editor.locator('.custom-type-label-input').fill(texts.customType);
-			await editor.locator('.icon-choice[data-icon="thermostat"]').click();
+			await app.chooseCustomTypeIcon('thermostat');
 			await editor.locator('.custom-type-label-input').blur();
 			await shot(name('custom-type-editor'));
 			await closeSheet('.edit-custom-type');
@@ -380,7 +380,7 @@ for (const lang of LANGS) {
 
 		// PDF report of a month, as the app saves it
 		await app.goToSettings(t('SETTINGS_IMPORT_EXPORT_TITLE'));
-		await page.locator('mat-list-option', { hasText: t('EXPORT_PDF') }).click();
+		await page.locator('mat-list-option, .data-action', { hasText: t('EXPORT_PDF') }).click();
 		await page.locator('.export-pdf mat-select').first().click();
 		await page.locator('mat-option', { hasText: t(`MONTH-${REPORT_MONTH}`) }).click();
 		await page.locator('.export-pdf .confirm-button').click();

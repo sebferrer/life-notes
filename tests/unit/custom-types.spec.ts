@@ -27,6 +27,9 @@ test.describe('Custom event types', () => {
 		for (const icon of CUSTOM_TYPE_ICONS) {
 			expect(icon).toMatch(/^[a-z0-9_]+$/);
 		}
+		// The menstrual cycle: the period, the cycle, ovulation, the fertile days, the flow, pregnancy
+		expect(CUSTOM_TYPE_ICONS).toEqual(expect.arrayContaining(['female', 'woman', 'event_repeat', 'egg', 'local_florist', 'opacity',
+			'pregnant_woman']));
 		// The icons of the built-in types would make a custom type look like one of them
 		for (const icon of ['spa', 'event_note', 'fitness_center']) {
 			expect(CUSTOM_TYPE_ICONS).not.toContain(icon);

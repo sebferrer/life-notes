@@ -55,6 +55,28 @@ export async function importCorrelationDays(app: App, count: number): Promise<vo
 	await expect(snackBar).toHaveCount(0);
 }
 
+export const CORRELATIONS_SETTING = 'Corrélations (expérimental)';
+
+// Settings > Advanced, the advanced settings shown first (in Customization)
+export async function openAdvancedSettings(app: App): Promise<void> {
+	await app.goToSettings('Personnalisation');
+	await app.setToggle('Afficher les paramètres avancés', true);
+	// Its own header, not the one of the manual backup inside it
+	await app.settingsPanel('Avancé').locator('mat-expansion-panel-header.main-header').click();
+}
+
+// The correlations are off by default (experimental): turned on in the advanced settings, their warning accepted
+export async function enableCorrelations(app: App): Promise<void> {
+	await openAdvancedSettings(app);
+	const toggle = app.settingsToggle(CORRELATIONS_SETTING);
+	await expect(toggle.locator('input')).not.toBeChecked();
+	await toggle.locator('label').click();
+	const warning = app.page.locator('.correlations-warning');
+	await warning.locator('.confirm-button').click();
+	await expect(warning).toHaveCount(0);
+	await expect(toggle.locator('input')).toBeChecked();
+}
+
 // Manage > Symptoms > Correlations, once analyzed
 export async function openCorrelations(app: App): Promise<void> {
 	await app.goToManage('symptomLog');

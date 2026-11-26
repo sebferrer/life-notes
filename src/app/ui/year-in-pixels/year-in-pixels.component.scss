@@ -17,6 +17,30 @@
         font-weight: 600;
         color: var(--text-strong);
     }
+
+    // As the share of a month under the calendar
+    .share-year-button {
+        flex-shrink: 0;
+        margin-left: auto;
+        min-height: 36px;
+        padding: 0 0.75rem 0 0.6rem;
+        border-radius: 12px;
+        color: var(--primary);
+        background-color: var(--surface-variant);
+
+        // Drawn by the button itself
+        ::ng-deep .mat-button-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        mat-icon {
+            font-size: 1.2rem;
+            width: 1.2rem;
+            height: 1.2rem;
+        }
+    }
 }
 
 // Same card as the calendar

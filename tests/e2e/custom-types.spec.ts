@@ -40,6 +40,55 @@ test.describe('Event types created by the user', () => {
 			expect(unknown).toEqual([]);
 		});
 
+	test('the icons: their first rows, the others unfolded on demand (all of them in V1)', async ({ app, page }) => {
+		await app.goToManage();
+		await page.locator('.manage-tile.add-tile').click();
+		const sheet = page.locator('.edit-custom-type');
+		const grid = sheet.locator('.icon-grid');
+		const toggle = sheet.locator('.icons-toggle');
+		const hidden = sheet.locator('.icon-choice[aria-hidden="true"]');
+		const pregnancy = sheet.locator('.icon-choice[data-icon="pregnant_woman"]');
+		const bottom = async (locator: Locator) => {
+			const box = await locator.boundingBox();
+			return box.y + box.height;
+		};
+		await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+		await expect(toggle).toContainText(`Toutes les icônes (${CUSTOM_TYPE_ICONS.length})`);
+		// The first rows: 7 icons a line on this phone
+		await expect(hidden).toHaveCount(CUSTOM_TYPE_ICONS.length - 3 * 7);
+		await expect(sheet.locator('.icon-choice[data-icon="water_drop"]')).not.toHaveAttribute('aria-hidden', 'true');
+		await expect(pregnancy).toHaveAttribute('aria-hidden', 'true');
+		expect(await bottom(pregnancy)).toBeGreaterThan(await bottom(grid));
+
+		await toggle.click();
+		await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+		await expect(toggle).toContainText('Moins d\'icônes');
+		await expect(hidden).toHaveCount(0);
+		await expect.poll(async () => (await bottom(pregnancy)) <= (await bottom(grid)) + 1).toBe(true);
+		await sheet.locator('.custom-type-label-input').fill('Grossesse');
+		await pregnancy.click();
+		await sheet.locator('.confirm-button').click();
+		await expect(sheet).toBeHidden();
+
+		// Its icon is never hidden: the grid is unfolded for it
+		await page.locator('.manage-tile.custom', { hasText: 'Grossesse' }).click();
+		await page.locator('.edit-type-button').click();
+		await expect(sheet.locator('.icon-choice.selected')).toHaveAttribute('data-icon', 'pregnant_woman');
+		await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+		await expect(hidden).toHaveCount(0);
+		await sheet.locator('.sheet-close-button').click();
+		await expect(sheet).toBeHidden();
+
+		// V1: every icon, no button
+		await app.setUiVersion('V1');
+		await app.goToManage();
+		await page.locator('.manage-tile.add-tile').click();
+		await expect(sheet.locator('.icon-choice')).toHaveCount(CUSTOM_TYPE_ICONS.length);
+		await expect(toggle).toHaveCount(0);
+		await expect(hidden).toHaveCount(0);
+		await expect.poll(async () => (await bottom(pregnancy)) <= (await bottom(grid)) + 1).toBe(true);
+	});
+
 	test('a type is created with its name, icon, color and quantity, then filled in from the timeline',
 		async ({ app, page }) => {
 			await app.createCustomType('Hydratation', { icon: 'water_drop', color: 0, quantity: true, unit: 'L' });
@@ -324,7 +373,7 @@ test.describe('Event types created by the user', () => {
 		await app.addCustomEvent('Hydratation', { key: 'Eau', quantity: '1,5' });
 		await app.addCustomEvent('Hydratation', { key: 'Eau', quantity: '0,5' }, YESTERDAY);
 		await app.goToSettings('Importer / Exporter');
-		await page.locator('mat-list-option', { hasText: 'Exporter en PDF' }).click();
+		await page.locator('mat-list-option, .data-action', { hasText: 'Exporter en PDF' }).click();
 		await page.locator('.export-pdf .confirm-button').click();
 		await expect(page).toHaveURL(/#\/monthlyreport\/2026-0?3$/);
 		const section = page.locator('.top-custom');
@@ -411,7 +460,7 @@ test.describe('Event types created by the user: other cases', () => {
 		await app.goToTimeline();
 		await app.addCustomEvent('Matin', { key: 'Tisane', quantity: '3' });
 		await app.goToSettings('Importer / Exporter');
-		await page.locator('mat-list-option', { hasText: 'Exporter en PDF' }).click();
+		await page.locator('mat-list-option, .data-action', { hasText: 'Exporter en PDF' }).click();
 		await page.locator('.export-pdf .confirm-button').click();
 		const sections = page.locator('.top-custom');
 		await expect(sections).toHaveCount(2);

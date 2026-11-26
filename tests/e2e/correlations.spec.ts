@@ -1,8 +1,12 @@
 import { test, expect, App } from '../support/app';
-import { importCorrelationDays, openCorrelations } from '../support/correlation-data';
+import {
+	CORRELATIONS_SETTING, enableCorrelations, importCorrelationDays, openAdvancedSettings, openCorrelations
+} from '../support/correlation-data';
 
-// The symptoms of the generated days, and a day: nothing is saved without any
+// The correlations turned on, the symptoms of the generated days, and a day: nothing is saved without any. The backup
+// imported keeps the correlations on.
 async function importDays(app: App, count: number): Promise<void> {
+	await enableCorrelations(app);
 	await app.addSymptom('Tête');
 	await app.addSymptom('Ventre');
 	await app.goToTimeline();
@@ -14,6 +18,7 @@ test.describe('Correlations', () => {
 
 	test('a button of the list of symptoms opens them, in beta, with their help', async ({ app, page }) => {
 		await app.start();
+		await enableCorrelations(app);
 		// Not in the manage menu: its tiles are the lists of entries
 		await app.goToManage();
 		await expect(page.locator('.manage-tile'))
@@ -68,31 +73,74 @@ test.describe('Correlations', () => {
 		await expect(page).toHaveURL(/#\/symptoms$/);
 	});
 
-	test('a setting hides their buttons', async ({ app, page }) => {
+	test('off by default, turned on in the advanced settings once their warning is accepted', async ({ app, page }) => {
 		await app.start();
 		await app.addSymptom('Tête');
-		await expect(page.locator('.correlations-button')).toBeVisible();
-		await app.goToSettings('Symptômes');
-		const setting = page.locator('.toggle-container.correlations-toggle');
-		await expect(setting.locator('.toggle-label')).toContainText('Afficher les corrélations (bêta)');
-		await expect(setting.locator('.toggle-hint'))
-			.toHaveText('Le bouton de la liste des symptômes et le lien des statistiques de chaque symptôme.');
-		await app.setToggle('Afficher les corrélations', false);
-
-		// Neither the button of the list nor the link of the statistics, even after a restart
-		await app.reload();
-		await app.goToManage('symptomLog');
-		await expect(page.locator('.symptom-card', { hasText: 'Tête' })).toBeVisible();
+		const symptom = page.locator('.symptom-card', { hasText: 'Tête' });
+		// Neither the button of the list nor the link of the statistics
+		await expect(symptom).toBeVisible();
 		await expect(page.locator('.correlations-button')).toHaveCount(0);
-		await page.locator('.symptom-card', { hasText: 'Tête' }).locator('.stats-btn').click();
+		await symptom.locator('.stats-btn').click();
 		await expect(page.locator('.occurrence-history')).toBeVisible();
 		await expect(page.locator('.occurrence-history .correlations-link')).toHaveCount(0);
 		await page.locator('.occurrence-history .close-button').click();
 
+		// Not in the settings of the symptoms: in the advanced ones, off
 		await app.goToSettings('Symptômes');
-		await app.setToggle('Afficher les corrélations', true);
+		await expect(app.settingsPanel('Symptômes').locator('.toggle-container').first()).toBeVisible();
+		await expect(page.locator('.correlations-toggle')).toHaveCount(0);
+		await openAdvancedSettings(app);
+		const setting = page.locator('.toggle-container.correlations-toggle');
+		await expect(setting.locator('.toggle-label')).toContainText(CORRELATIONS_SETTING);
+		await expect(setting.locator('.toggle-hint')).toHaveText(
+			'Cherche des liens entre vos habitudes et vos symptômes, depuis la liste des symptômes. Encore peu fiable.');
+		const toggle = setting.locator('mat-slide-toggle');
+		await expect(toggle.locator('input')).not.toBeChecked();
+
+		// The warning: experimental and often wrong, the reverse correlations (the coffee drunk because of the fatigue),
+		// neither a cause nor a diagnosis
+		await toggle.locator('label').click();
+		const warning = page.locator('.correlations-warning');
+		await expect(warning.locator('.title')).toHaveText('Corrélations : une fonction expérimentale');
+		await expect(warning.locator('.help-part-title')).toHaveText(['Elle peut se tromper',
+			'Méfiez-vous des corrélations inverses', 'Ni une cause, ni un diagnostic']);
+		await expect(warning).toContainText('a de bonnes chances de mal fonctionner');
+		await expect(warning).toContainText('les jours de fatigue, vous buvez du café pour tenir');
+		await expect(warning).toContainText('comme si le café vous fatiguait');
+		await expect(warning).toContainText("c'est la fatigue qui vous fait boire du café");
+		await expect(warning).toContainText('à tout moment dans les paramètres avancés');
+		await expect(warning.locator('.confirm-button')).toHaveText('Activer quand même');
+		// Cancelled, then closed by its cross: still off
+		await warning.locator('.cancel-button').click();
+		await expect(warning).toHaveCount(0);
+		await expect(toggle.locator('input')).not.toBeChecked();
+		await toggle.locator('label').click();
+		await warning.locator('.sheet-close-button').click();
+		await expect(warning).toHaveCount(0);
+		await expect(toggle.locator('input')).not.toBeChecked();
+		await app.reload();
+		await app.goToManage('symptomLog');
+		await expect(symptom).toBeVisible();
+		await expect(page.locator('.correlations-button')).toHaveCount(0);
+
+		// Accepted: the button of the list and the link of the statistics, even after a restart
+		await enableCorrelations(app);
 		await app.goToManage('symptomLog');
 		await expect(page.locator('.correlations-button')).toBeVisible();
+		await app.reload();
+		await app.goToManage('symptomLog');
+		await expect(page.locator('.correlations-button')).toBeVisible();
+		await symptom.locator('.stats-btn').click();
+		await expect(page.locator('.occurrence-history .correlations-link')).toBeVisible();
+		await page.locator('.occurrence-history .close-button').click();
+
+		// Turned off at once, without the warning
+		await openAdvancedSettings(app);
+		await app.setToggle(CORRELATIONS_SETTING, false);
+		await expect(warning).toHaveCount(0);
+		await app.goToManage('symptomLog');
+		await expect(symptom).toBeVisible();
+		await expect(page.locator('.correlations-button')).toHaveCount(0);
 	});
 
 	test('their icons are glyphs of the Material Icons font', async ({ app, page }) => {
@@ -104,7 +152,8 @@ test.describe('Correlations', () => {
 		test.skip(!fontLoaded, 'Google Fonts unreachable: the icon names can\'t be checked');
 		// Every icon of the page, those of the sleep included: a name unknown to the font stays a word, wider than its box
 		const icons = ['join_inner', 'bedtime', 'nights_stay', 'wb_sunny', 'hotel', 'update', 'trending_up', 'trending_down',
-			'manage_search', 'hourglass_top', 'compare_arrows', 'call_split', 'medical_services', 'signal_cellular_alt'];
+			'manage_search', 'hourglass_top', 'compare_arrows', 'call_split', 'medical_services', 'signal_cellular_alt',
+			'warning_amber', 'science', 'swap_horiz'];
 		const unknown = await page.evaluate(names => names.filter(name => {
 			const icon = document.createElement('mat-icon');
 			icon.className = 'mat-icon material-icons';
@@ -120,6 +169,7 @@ test.describe('Correlations', () => {
 
 	test('without symptom, then without enough days, they say what is missing', async ({ app, page }) => {
 		await app.start();
+		await enableCorrelations(app);
 		// The page itself, without symptom
 		await page.goto('/#/correlations');
 		await expect(page.locator('.state-card.no-symptom')).toContainText('Ajoutez un symptôme');
@@ -227,6 +277,8 @@ test.describe('Correlations', () => {
 
 	test('the V1 has no button to them, nor their setting', async ({ app, page }) => {
 		await app.start();
+		// Even turned on in the V2
+		await enableCorrelations(app);
 		await app.setUiVersion('V1');
 		await app.addSymptom('Tête');
 		// The former title too
@@ -237,8 +289,9 @@ test.describe('Correlations', () => {
 		await expect(page.locator('.occurrence-history')).toBeVisible();
 		await expect(page.locator('.occurrence-history .correlations-link')).toHaveCount(0);
 		await page.locator('.occurrence-history .close-button').click();
-		await app.goToSettings('Symptômes');
-		await expect(app.settingsPanel('Symptômes').locator('.toggle-container').first()).toBeVisible();
+		await openAdvancedSettings(app);
+		await expect(app.settingsPanel('Avancé').locator('mat-list-option', { hasText: 'Forcer le chargement' }))
+			.toBeVisible();
 		await expect(page.locator('.correlations-toggle')).toHaveCount(0);
 	});
 });

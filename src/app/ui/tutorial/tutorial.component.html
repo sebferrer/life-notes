@@ -12,7 +12,7 @@
             <div *ngSwitchCase="'scene'" class="slide slide-scene">
                 <app-tutorial-scene [scene]="slide.scene"></app-tutorial-scene>
                 <div class="slide-text-scene">
-                    <h2>{{ slide.title | transloco }}</h2>
+                    <h2>{{ (classic && slide.classicTitle ? slide.classicTitle : slide.title) | transloco }}</h2>
                     <p [innerHTML]="(classic && slide.classicText ? slide.classicText : slide.text) | transloco"></p>
                 </div>
             </div>

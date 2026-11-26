@@ -1,0 +1,43 @@
+<div class="bottom-sheet-container closable-sheet export-csv">
+    <button mat-icon-button class="sheet-close-button v2-only" (click)="onCloseClick()"
+        [attr.aria-label]="'CLOSE' | transloco">
+        <mat-icon>close</mat-icon>
+    </button>
+    <div class="header-section">
+        <h2 class="title">{{ 'EXPORT_CSV' | transloco }}</h2>
+    </div>
+
+    <p class="intro">{{ 'EXPORT_CSV_INTRO' | transloco }}</p>
+
+    <!-- The same entries, one line per day or one line per entry -->
+    <div class="csv-layouts" role="radiogroup">
+        <button *ngFor="let choice of choices" type="button" class="csv-layout {{ choice.layout }}" role="radio"
+            [class.selected]="choice.layout === selected" [attr.aria-checked]="choice.layout === selected"
+            (click)="choose(choice.layout)">
+            <span class="csv-layout-icon"><mat-icon>{{ choice.icon }}</mat-icon></span>
+            <span class="csv-layout-text">
+                <span class="csv-layout-title">{{ choice.title | transloco }}</span>
+                <span class="csv-layout-description">{{ choice.text | transloco }}</span>
+            </span>
+            <mat-icon class="csv-layout-check">{{ choice.layout === selected ? 'radio_button_checked' : 'radio_button_unchecked' }}</mat-icon>
+        </button>
+    </div>
+
+    <p *ngIf="empty" class="csv-message">{{ 'EXPORT_CSV_EMPTY' | transloco }}</p>
+    <p *ngIf="errorKey" class="csv-message error">{{ errorKey | transloco }}</p>
+
+    <div class="actions">
+        <button mat-stroked-button class="save-button" [class.saved]="saved.has(selected)"
+            [disabled]="!ready || saved.has(selected)" (click)="onSaveClick()">
+            <mat-icon>{{ saved.has(selected) ? 'check' : 'save_alt' }}</mat-icon>
+            <span>{{ (saved.has(selected) ? 'EXPORT_CSV_SAVED' : 'EXPORT_CSV_SAVE') | transloco }}</span>
+        </button>
+        <button mat-flat-button color="primary" class="confirm-button share-button" [disabled]="!ready"
+            (click)="onShareClick()">
+            <mat-icon>share</mat-icon>
+            <span>{{ 'EXPORT_CSV_SHARE' | transloco }}</span>
+        </button>
+    </div>
+
+    <app-spacer-item></app-spacer-item>
+</div>

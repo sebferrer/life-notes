@@ -34,7 +34,7 @@ export interface ISettings {
 	eventColors: IEventPalettes;
 	// When the invitation to rate the app was shown (ms), 0 if never: it is shown only once (see ReviewService)
 	reviewPromptDate: number;
-	// V2: the buttons opening the correlations (list of symptoms, statistics of a symptom). Missing in the settings
-	// saved before them: shown.
+	// V2: the buttons opening the correlations (list of symptoms, statistics of a symptom). Experimental: off unless
+	// turned on in the advanced settings, after a warning (missing: off).
 	showCorrelations?: boolean;
 }

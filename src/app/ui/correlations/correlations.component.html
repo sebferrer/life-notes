@@ -86,10 +86,10 @@
 	</div>
 
 	<ng-template #loading>
-		<div class="loading">
-			<mat-spinner diameter="44"></mat-spinner>
-			<span>{{ t('CORRELATIONS_ANALYZING') }}</span>
-		</div>
+		<!-- The mock-up of the results, with what is happening (the analysis can take a few seconds) -->
+		<app-page-skeleton kind="correlations" class="loading">
+			<p class="analyzing">{{ t('CORRELATIONS_ANALYZING') }}</p>
+		</app-page-skeleton>
 	</ng-template>
 </ng-template>
 

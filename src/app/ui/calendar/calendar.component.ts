@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { Subject, BehaviorSubject } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { NavigationStart, Router } from '@angular/router';
+import { Subject, BehaviorSubject, Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import { DaysService, ImporterExporterService } from 'src/app/infra';
 import { getDetailedDate } from 'src/app/util/date.utils';
 import { DayOverviewViewModel } from 'src/app/models/day.overview.view.model';
@@ -19,7 +21,17 @@ import { BottomSheetInfoComponent } from '../bottom-sheet/bottom-sheet-info';
 import { BottomSheetShareMonthComponent, IShareMonthData } from '../bottom-sheet/bottom-sheet-share-month';
 import { getShareableSymptoms, hasSleepToShare } from 'src/app/models/month-share.model';
 import { SleepChartMode } from '../sleep-stats';
+import { NavigationMemoryService } from 'src/app/infra/navigation-memory.service';
 import * as moment from 'moment';
+
+// What the calendar showed, found again with the back button (see NavigationMemoryService)
+interface ICalendarState {
+	month: number;
+	year: number;
+	showAllSymptoms: boolean;
+	sleepChartMode: SleepChartMode;
+	scrollY: number;
+}
 
 // Symptoms of one scale (V2): their rings share one legend
 export interface IPieGroup {
@@ -32,7 +44,7 @@ export interface IPieGroup {
 	templateUrl: './calendar.component.html',
 	styleUrls: ['./calendar.component.scss']
 })
-export class CalendarComponent implements OnInit {
+export class CalendarComponent implements OnInit, OnDestroy {
 
 	public overviews: DayOverviewViewModel[];
 	public overviews$: Subject<DayOverviewViewModel[]>;
@@ -69,6 +81,9 @@ export class CalendarComponent implements OnInit {
 	public weekDays: number[];
 
 	public debug: string;
+	private subscriptions = new Subscription();
+	// Back from a day: the position of the page, once the month is drawn again
+	private restoredScrollY: number = null;
 
 	constructor(
 		public globalService: GlobalService,
@@ -76,7 +91,9 @@ export class CalendarComponent implements OnInit {
 		public translocoService: TranslocoService,
 		public importerExporterService: ImporterExporterService,
 		private dialog: MatDialog,
-		private bottomSheet: MatBottomSheet
+		private bottomSheet: MatBottomSheet,
+		private router: Router,
+		private navigationMemory: NavigationMemoryService
 	) {
 		this.pieCharts = new Map<string, CalendarPieChartViewModel>();
 		this.bedTimeChart = new BedTimeChartViewModel('line');
@@ -96,10 +113,32 @@ export class CalendarComponent implements OnInit {
 		this.month = detailedDate.month;
 		this.year = detailedDate.year;
 		this.today = getDetailedDate(moment().format('YYYY-MM-DD'));
+		// Back from a day opened from the calendar (or another page): the month shown then, as it was
+		const state = this.navigationMemory.restore<ICalendarState>('calendar');
+		if (state != null) {
+			this.month = state.month;
+			this.year = state.year;
+			this.showAllSymptoms = state.showAllSymptoms;
+			this.sleepChartMode = state.sleepChartMode;
+			this.restoredScrollY = state.scrollY;
+		}
+		this.subscriptions.add(this.router.events.pipe(filter(event => event instanceof NavigationStart)).subscribe(() => {
+			this.navigationMemory.save<ICalendarState>('calendar', {
+				month: this.month,
+				year: this.year,
+				showAllSymptoms: this.showAllSymptoms,
+				sleepChartMode: this.sleepChartMode,
+				scrollY: window.scrollY
+			});
+		}));
 		// The symptoms are loaded again with each month: their charts follow (subscribed once, before the template)
 		this.symptoms$.subscribe(symptoms => this.updateSymptomCharts(symptoms));
-		this.updateCalendar(this.today.month, this.today.year);
+		this.updateCalendar(this.month, this.year);
 		this.symptomMap = this.globalService.symptomMap;
+	}
+
+	public ngOnDestroy(): void {
+		this.subscriptions.unsubscribe();
 	}
 
 	public htmltoPDF() {
@@ -204,6 +243,11 @@ export class CalendarComponent implements OnInit {
 			this.previousOverviews$.next(this.previousOverviews);
 			this.calculateEmptySlots();
 			this.updateCharts();
+			if (this.restoredScrollY != null) {
+				const scrollY = this.restoredScrollY;
+				this.restoredScrollY = null;
+				this.navigationMemory.scrollWhenReady(() => scrollY);
+			}
 		});
 	}
 

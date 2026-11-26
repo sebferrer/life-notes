@@ -498,3 +498,126 @@ test.describe('Share of the month as an image', () => {
 		await expect(page.locator('.share-month-button')).toHaveCount(0);
 	});
 });
+
+// Year in Pixels of the calendar: the button of its header once the year is drawn, then the sheet and its image
+async function openShareYearSheet(page: Page): Promise<void> {
+	await page.locator('.year-in-pixels-button').click();
+	await expect(page.locator(`#pixel-${TODAY}`)).toBeVisible();
+	await page.locator('.share-year-button').click();
+	await expect(page.locator('.share-year .share-preview img')).toBeVisible({ timeout: 15_000 });
+}
+
+// Pixels of the preview image close to a color ("rgb(r, g, b)")
+function colorPixels(page: Page, color: string): Promise<number> {
+	const [r, g, b] = color.match(/\d+/g).map(Number);
+	return page.locator('.share-year .share-preview img').evaluate((img: HTMLImageElement, rgb) => {
+		const canvas = document.createElement('canvas');
+		canvas.width = img.naturalWidth;
+		canvas.height = img.naturalHeight;
+		const context = canvas.getContext('2d');
+		context.drawImage(img, 0, 0);
+		const data = context.getImageData(0, 0, canvas.width, canvas.height).data;
+		let count = 0;
+		for (let i = 0; i < data.length; i += 4) {
+			if (Math.abs(data[i] - rgb[0]) < 6 && Math.abs(data[i + 1] - rgb[1]) < 6 && Math.abs(data[i + 2] - rgb[2]) < 6) {
+				count++;
+			}
+		}
+		return count;
+	}, [r, g, b]);
+}
+
+// Image of Year in Pixels of a symptom (V2), as the one of a month
+test.describe('Share of the year as an image', () => {
+
+	test('the image of the year and its message go to the share sheet of the browser', async ({ app, page }) => {
+		await recordWebShare(page);
+		await setUp(app);
+		await openShareYearSheet(page);
+
+		const sheet = page.locator('.share-year');
+		await expect(sheet.locator('.title')).toHaveText('Partager l\'année');
+		expect(await page.locator('.share-year .share-preview img')
+			.evaluate((img: HTMLImageElement) => [img.naturalWidth, img.naturalHeight])).toEqual([1080, 1350]);
+		// Only Tête has an intensity: nothing to choose
+		await expect(sheet.locator('.share-choice')).toHaveCount(0);
+
+		// What the image shows: a column per month, a pixel per day
+		const card = sheet.locator('.share-card-stage .year-share-card');
+		await expect(card.locator('.card-month')).toHaveText('2026');
+		await expect(card.locator('.card-month')).toHaveCSS('color', BRAND_GREEN);
+		await expect(card.locator('.card-title')).toHaveText('Tête');
+		await expect(card.locator('.card-month-initial')).toHaveText(['j', 'f', 'm', 'a', 'm', 'j', 'j', 'a', 's', 'o', 'n', 'd']);
+		await expect(card.locator('.card-pixel')).toHaveCount(12 * 31);
+		const march = card.locator('.card-pixel-month').nth(2).locator('.card-pixel');
+		// Today 6/10; the days before without intensity, those to come neutral
+		await expect(march.nth(17)).toHaveClass(/color-pain-3/);
+		await expect(march.nth(16)).toHaveClass(/color-default/);
+		await expect(march.nth(18)).toHaveClass(/color-none/);
+		// 30th of February
+		await expect(card.locator('.card-pixel-month').nth(1).locator('.card-pixel').nth(29)).toHaveClass(/color-missing/);
+		await expect(card.locator('.card-stat')).toHaveText(['1javec symptôme', '6/10moyenne', '6/10maximum']);
+		await expect(card.locator('.card-footer')).toContainText('life-notes.fr');
+		await expect(sheet.locator('.actions')).toBeInViewport({ ratio: 1 });
+
+		// The day really drawn in the image, in its color
+		const dayColor = await march.nth(17).evaluate(pixel => getComputedStyle(pixel).backgroundColor);
+		expect(await colorPixels(page, dayColor)).toBeGreaterThan(500);
+
+		await sheet.locator('.confirm-button').click();
+		await expect(sheet).toHaveCount(0);
+		const [shared] = await page.evaluate(() => (window as any).webShares);
+		expect(shared.text).toBe('Mon suivi « Tête » en 2026, avec Life Notes : https://life-notes.fr');
+		expect(shared.title).toBe('Tête – 2026');
+		expect(shared.files.map(file => [file.name, file.type])).toEqual([['life-notes-2026.png', 'image/png']]);
+		expect(pngSize(Buffer.from(shared.files[0].header))).toEqual({ width: 1080, height: 1350 });
+	});
+
+	test('the symptom shown by the page first, the others to choose; the image saved', async ({ app, page }) => {
+		await setUp(app);
+		await app.targetSymptom('Ventre');
+		await app.goToTimeline();
+		await app.setDayIntensity(4, YESTERDAY);
+		await app.targetSymptom('Tête');
+		await app.goToCalendar();
+		await openShareYearSheet(page);
+
+		const sheet = page.locator('.share-year');
+		const card = sheet.locator('.share-card-stage .year-share-card');
+		await expect(sheet.locator('.share-choice')).toHaveText(['Tête', 'Ventre']);
+		await expect(sheet.locator('.share-choice.selected')).toHaveText('Tête');
+		await sheet.locator('.share-choice', { hasText: 'Ventre' }).click();
+		await expect(card.locator('.card-title')).toHaveText('Ventre');
+		await expect(card.locator('.card-pixel-month').nth(2).locator('.card-pixel').nth(16)).toHaveClass(/color-pain-2/);
+		await expect(sheet.locator('.share-preview img')).toBeVisible({ timeout: 15_000 });
+
+		const [download] = await Promise.all([
+			page.waitForEvent('download'),
+			sheet.locator('.save-button').click()
+		]);
+		expect(download.suggestedFilename()).toBe('life-notes-2026.png');
+		const chunks: Buffer[] = [];
+		for await (const chunk of await download.createReadStream()) {
+			chunks.push(chunk as Buffer);
+		}
+		expect(pngSize(Buffer.concat(chunks))).toEqual({ width: 1080, height: 1350 });
+		await expect(sheet.locator('.save-button')).toContainText('Enregistrée');
+		await sheet.locator('.sheet-close-button').click();
+		await expect(page.locator('mat-bottom-sheet-container')).toHaveCount(0);
+	});
+
+	test('no share for a year without intensity, nor in the V1', async ({ app, page }) => {
+		await setUp(app);
+		await page.locator('.year-in-pixels-button').click();
+		await expect(page.locator('.share-year-button')).toBeVisible();
+		// 2025: nothing entered
+		await page.locator('.year-nav').first().click();
+		await expect(page.locator('.year-header .year')).toHaveText('2025');
+		await expect(page.locator('.share-year-button')).toHaveCount(0);
+
+		await app.setUiVersion('V1');
+		await page.goto('/#/yearinpixels/2026');
+		await expect(page.locator(`#pixel-${TODAY}`)).toBeVisible();
+		await expect(page.locator('.share-year-button')).toHaveCount(0);
+	});
+});
