@@ -1,5 +1,8 @@
 import { test, expect, Page, BrowserContext } from '@playwright/test';
 import { App, CURRENT_VERSION, NOW, TODAY, YESTERDAY, shiftDate } from '../support/app';
+import {
+	CORRELATIONS_SETTING, enableCorrelations, importCorrelationDays, openAdvancedSettings, openCorrelations
+} from '../support/correlation-data';
 
 // Main screens compared to their approved screenshots (__screenshots__). After a wanted UI change, approve
 // the new screenshots with: npm run test:visual:update
@@ -12,6 +15,15 @@ let app: App;
 async function screen(name: string, options: { fullPage?: boolean } = {}): Promise<void> {
 	await app.fontsReady();
 	await expect(page).toHaveScreenshot(`${name}.png`, { fullPage: options.fullPage });
+}
+
+// The slide of a scene of the tutorial, shown without its animation
+async function slideToScene(scene: string): Promise<void> {
+	await expect(page.locator(`.scene-${scene}`)).toBeAttached();
+	const index = await page.locator('ion-slide').evaluateAll((slides, name) =>
+		slides.findIndex(slide => slide.querySelector(`.scene-${name}`) != null), scene);
+	await page.locator('ion-slides').evaluate((slides: any, i) => slides.slideTo(i, 0), index);
+	await page.waitForTimeout(500);
 }
 
 async function setDarkMode(dark: boolean): Promise<void> {
@@ -87,11 +99,31 @@ for (const theme of ['light', 'dark']) {
 			await screen(`${theme}-calendar-all-symptoms`);
 		});
 
+		// The image of the month, always drawn in the light theme
+		test('share of the month', async () => {
+			await app.goToCalendar();
+			// The calendar behind the sheet from its top, whatever the test before did
+			await page.evaluate(() => window.scrollTo(0, 0));
+			await page.locator('.share-month-button').click();
+			await expect(page.locator('.share-month .share-preview img')).toBeVisible({ timeout: 15_000 });
+			await screen(`${theme}-share-month`);
+			await page.locator('.share-month .sheet-close-button').click();
+			await expect(page.locator('mat-bottom-sheet-container')).toHaveCount(0);
+		});
+
 		test('year in pixels', async () => {
 			await app.goToCalendar();
 			await page.locator('.year-in-pixels-button').click();
 			await expect(page.locator(`#pixel-${TODAY}`)).toBeVisible();
+			// Shown once the symptoms are read too
+			await expect(page.locator('.share-year-button')).toBeVisible();
 			await screen(`${theme}-year-in-pixels`, { fullPage: true });
+			// The image of the year, always drawn in the light theme
+			await page.locator('.share-year-button').click();
+			await expect(page.locator('.share-year .share-preview img')).toBeVisible({ timeout: 15_000 });
+			await screen(`${theme}-share-year`);
+			await page.locator('.share-year .sheet-close-button').click();
+			await expect(page.locator('mat-bottom-sheet-container')).toHaveCount(0);
 		});
 
 		test('manage menu and medications', async () => {
@@ -109,6 +141,53 @@ for (const theme of ['light', 'dark']) {
 			await app.goToManage('symptomLog');
 			await expect(page.locator('.symptom-card:not(.add-card)')).toHaveCount(2);
 			await screen(`${theme}-symptoms`);
+		});
+
+		test('correlations: their setting and warning, without enough data, and their help', async () => {
+			// Off by default: turned on in the advanced settings, once their warning is accepted
+			await app.goToTimeline();
+			await openAdvancedSettings(app);
+			await page.waitForTimeout(500);
+			await screen(`${theme}-settings-advanced`, { fullPage: true });
+			// The manual save, unfolded then folded again
+			await page.locator('.manual-save-toggle').click();
+			await expect(page.locator('#generateBackupButton')).toBeVisible();
+			await page.waitForTimeout(300);
+			await screen(`${theme}-settings-manual-save`, { fullPage: true });
+			await page.locator('.manual-save-toggle').click();
+			await expect(page.locator('#generateBackupButton')).toHaveCount(0);
+			await app.settingsToggle(CORRELATIONS_SETTING).locator('label').click();
+			const warning = page.locator('.correlations-warning');
+			await expect(warning).toBeVisible();
+			await page.waitForTimeout(500);
+			await screen(`${theme}-correlations-warning`);
+			await warning.locator('.confirm-button').click();
+			await expect(warning).toBeHidden();
+
+			await app.goToManage('symptomLog');
+			await page.locator('.manage-list-header .correlations-button').click();
+			await expect(page.locator('.state-card.not-enough')).toBeVisible();
+			await screen(`${theme}-correlations-not-enough`);
+			// While the analysis runs
+			await app.holdLoading('app-correlations', 'analysis');
+			await expect(page.locator('.page-skeleton')).toBeVisible();
+			await screen(`${theme}-skeleton-correlations`);
+			await app.goToManage('symptomLog');
+			await page.locator('.manage-list-header .correlations-button').click();
+			await expect(page.locator('.state-card.not-enough')).toBeVisible();
+			await page.locator('.correlations-page .info-button').click();
+			const sheet = page.locator('.correlations-help');
+			await expect(sheet).toBeVisible();
+			await page.waitForTimeout(500);
+			await screen(`${theme}-correlations-help`);
+			await sheet.locator('.sheet-close-button').click();
+			await expect(sheet).toBeHidden();
+
+			// Back to the defaults for the other screens: off, the advanced settings hidden
+			await openAdvancedSettings(app);
+			await app.setToggle(CORRELATIONS_SETTING, false);
+			await app.goToSettings('Personnalisation');
+			await app.setToggle('Afficher les paramètres avancés', false);
 		});
 
 		test('statistics of an event', async () => {
@@ -144,6 +223,20 @@ for (const theme of ['light', 'dark']) {
 			await screen(`${theme}-settings-appearance`, { fullPage: true });
 		});
 
+		test('import / export, and the export as CSV', async () => {
+			await app.goToTimeline();
+			await app.goToSettings('Importer / Exporter');
+			await page.waitForTimeout(500);
+			await screen(`${theme}-settings-import-export`, { fullPage: true });
+			await page.locator('.data-action', { hasText: 'Exporter en CSV' }).click();
+			const sheet = page.locator('.export-csv');
+			await expect(sheet.locator('.save-button')).toBeEnabled();
+			await page.waitForTimeout(500);
+			await screen(`${theme}-export-csv`);
+			await sheet.locator('.sheet-close-button').click();
+			await expect(sheet).toBeHidden();
+		});
+
 		test('event sheets', async () => {
 			await app.goToTimeline();
 			await app.eventRows(undefined, 'symptomLog').click();
@@ -172,11 +265,36 @@ for (const theme of ['light', 'dark']) {
 			await expect(intensity).toBeHidden();
 		});
 
+		// The pages held in their loading state: their mock-up, without its light (animations disabled)
+		test('skeletons of the pages being loaded', async () => {
+			const skeleton = page.locator('.page-skeleton');
+			await app.goToTimeline();
+			await app.holdLoading('app-timeline', 'daysContents$');
+			await expect(skeleton).toBeVisible();
+			await screen(`${theme}-skeleton-timeline`);
+			await app.goToCalendar();
+			await app.holdLoading('app-calendar', 'overviews$');
+			await expect(skeleton).toBeVisible();
+			await screen(`${theme}-skeleton-calendar`, { fullPage: true });
+			await app.goToTimeline();
+			await app.goToCalendar();
+			await page.locator('.year-in-pixels-button').click();
+			await expect(page.locator(`#pixel-${TODAY}`)).toBeVisible();
+			await app.holdLoading('app-year-in-pixels', 'monthDays');
+			await expect(skeleton).toBeVisible();
+			await screen(`${theme}-skeleton-year-in-pixels`, { fullPage: true });
+			await app.goToManage('symptomLog');
+			await app.holdLoading('app-symptoms', 'symptoms$');
+			await expect(skeleton).toBeVisible();
+			await screen(`${theme}-skeleton-list`);
+			// Leaves the page held
+			await app.goToTimeline();
+		});
+
 		test('tutorial', async () => {
 			await page.goto('/#/tutorial');
-			for (const [index, name] of [[1, 'create-symptom'], [10, 'backup-save']] as const) {
-				await page.locator('ion-slides').evaluate((slides: any, i) => slides.slideTo(i, 0), index);
-				await page.waitForTimeout(500);
+			for (const name of ['create-symptom', 'backup-save', 'csv-export']) {
+				await slideToScene(name);
 				await screen(`${theme}-tutorial-${name}`);
 			}
 		});
@@ -191,8 +309,7 @@ test('V1 timeline', async () => {
 	await screen('light-timeline-classic');
 	// The tutorial follows the version of the interface
 	await page.goto('/#/tutorial');
-	await page.locator('ion-slides').evaluate((slides: any) => slides.slideTo(3, 0));
-	await page.waitForTimeout(500);
+	await slideToScene('day-overview');
 	await screen('light-tutorial-day-overview-classic');
 	await app.setUiVersion('V2');
 });
@@ -266,4 +383,39 @@ test('sleep of the month', async ({ browser }) => {
 		await expect(card).toHaveScreenshot(`${theme}-sleep-curves.png`);
 	}
 	await sleepContext.close();
+});
+
+test('correlations', async ({ browser }) => {
+	// Two months of entries with links: a database of its own, so that the other screens keep their data
+	const correlationsContext = await browser.newContext({
+		viewport: { width: 390, height: 844 },
+		deviceScaleFactor: 2,
+		isMobile: true,
+		hasTouch: true,
+		locale: 'fr-FR',
+		timezoneId: 'Europe/Paris',
+		baseURL: test.info().project.use.baseURL
+	});
+	const correlationsPage = await correlationsContext.newPage();
+	await correlationsPage.clock.setFixedTime(NOW);
+	const correlationsApp = new App(correlationsPage);
+	await correlationsApp.start();
+	await enableCorrelations(correlationsApp);
+	await correlationsApp.addSymptom('Tête');
+	await correlationsApp.addSymptom('Ventre');
+	await correlationsApp.goToTimeline();
+	await correlationsApp.addEvent('meal', { key: 'Pâtes' });
+	await importCorrelationDays(correlationsApp, 60);
+	for (const theme of ['light', 'dark']) {
+		if (theme === 'dark') {
+			await correlationsApp.goToSettings('Apparence');
+			await correlationsApp.setToggle('Mode sombre', true);
+		}
+		await openCorrelations(correlationsApp);
+		// The days behind the first link
+		await correlationsPage.locator('.correlation-card .days-toggle').first().click();
+		await correlationsApp.fontsReady();
+		await expect(correlationsPage).toHaveScreenshot(`${theme}-correlations.png`, { fullPage: true });
+	}
+	await correlationsContext.close();
 });

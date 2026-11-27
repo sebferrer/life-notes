@@ -1,0 +1,109 @@
+<!-- V1: the spinner, where it always was -->
+<app-spinner *ngIf="classic; else skeleton" class="view-spinner"></app-spinner>
+
+<!-- V2: the mock-up of the page. Its shapes are .sk, its cards (.sk-card) and grids (.sk-shine) swept by the light -->
+<ng-template #skeleton>
+    <div class="page-skeleton kind-{{ kind }}" aria-busy="true" [ngSwitch]="kind">
+        <ng-content></ng-content>
+
+        <!-- Timeline: cards of days, each with its wake-up, events and bedtime on a rail -->
+        <ng-container *ngSwitchCase="'timeline'">
+            <div *ngFor="let events of dayEvents" class="sk-card sk-day">
+                <div class="sk-day-header">
+                    <span class="sk sk-date"></span>
+                    <span class="sk sk-dot"></span>
+                    <span class="sk sk-icon"></span>
+                    <span class="sk sk-icon"></span>
+                </div>
+                <div class="sk-rail">
+                    <div class="sk-row">
+                        <span class="sk sk-time"></span><span class="sk sk-marker"></span><span class="sk sk-label"></span>
+                    </div>
+                    <div *ngFor="let event of events" class="sk-row">
+                        <span class="sk sk-time"></span><span class="sk sk-marker"></span>
+                        <span class="sk sk-event" [class.tall]="event === 1"></span>
+                    </div>
+                    <div class="sk-row">
+                        <span class="sk sk-time"></span><span class="sk sk-marker"></span><span class="sk sk-label"></span>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+
+        <!-- Calendar: the month, then the intensities of the month -->
+        <ng-container *ngSwitchCase="'calendar'">
+            <div class="sk-card sk-calendar">
+                <div class="sk-calendar-header">
+                    <span class="sk sk-nav"></span><span class="sk sk-month"></span><span class="sk sk-nav"></span>
+                </div>
+                <div class="sk-calendar-grid">
+                    <span *ngFor="let day of weekDays" class="sk-weekday"><span class="sk"></span></span>
+                    <span *ngFor="let cell of monthCells" class="sk sk-cell"></span>
+                </div>
+                <div class="sk-calendar-actions"><span class="sk"></span><span class="sk"></span></div>
+            </div>
+            <div class="sk-card sk-chart">
+                <div class="sk-chart-header"><span class="sk sk-tile"></span><span class="sk sk-chart-title"></span></div>
+                <div class="sk-ring-box"><span class="sk-ring"></span></div>
+                <div class="sk-legend"><span *ngFor="let item of legend" class="sk"></span></div>
+            </div>
+        </ng-container>
+
+        <!-- Year in Pixels: the grid of the year, in its card -->
+        <div *ngSwitchCase="'year'" class="sk-shine sk-year">
+            <span></span>
+            <span *ngFor="let month of months" class="sk-year-label"><span class="sk"></span></span>
+            <ng-container *ngFor="let day of monthDays">
+                <span class="sk-year-label"><span class="sk"></span></span>
+                <span *ngFor="let month of months" class="sk sk-pixel"></span>
+            </ng-container>
+        </div>
+
+        <!-- Manage lists: one card per entry, its bubble, its name and its details -->
+        <div *ngSwitchCase="'list'" class="sk-list">
+            <div *ngFor="let item of listItems" class="sk-card sk-item">
+                <span class="sk sk-bubble"></span>
+                <span class="sk-lines">
+                    <span class="sk sk-title" [style.width]="titleWidths[item]"></span>
+                    <span class="sk sk-line" [style.width]="lineWidths[item]"></span>
+                </span>
+                <span class="sk sk-actions"></span>
+            </div>
+        </div>
+
+        <!-- PDF report: the page of the report, a card per symptom with its month and its chart -->
+        <div *ngSwitchCase="'report'" class="sk-report">
+            <div class="sk-card sk-document">
+                <div class="sk-report-header"><span class="sk sk-report-title"></span><span class="sk sk-report-brand"></span></div>
+                <span class="sk sk-section"></span>
+                <div class="sk-report-row">
+                    <div *ngFor="let card of [0, 1]" class="sk-report-card">
+                        <span class="sk sk-report-card-title"></span>
+                        <div class="sk-mini-grid"><span *ngFor="let cell of monthCells" class="sk"></span></div>
+                        <span class="sk-mini-ring"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Correlations: the summary, then cards of links -->
+        <ng-container *ngSwitchCase="'correlations'">
+            <div class="sk-card sk-summary">
+                <span class="sk sk-tile"></span>
+                <span class="sk-lines"><span class="sk sk-title"></span><span class="sk sk-line"></span></span>
+            </div>
+            <span class="sk sk-section"></span>
+            <div *ngFor="let card of correlations" class="sk-card sk-correlation">
+                <div class="sk-correlation-head">
+                    <span class="sk sk-bubble"></span>
+                    <span class="sk-lines">
+                        <span class="sk sk-pill"></span>
+                        <span class="sk sk-title" [style.width]="titleWidths[card + 1]"></span>
+                    </span>
+                </div>
+                <span class="sk sk-bar"></span>
+                <span class="sk sk-bar short"></span>
+            </div>
+        </ng-container>
+    </div>
+</ng-template>

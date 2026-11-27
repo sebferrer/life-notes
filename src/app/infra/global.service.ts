@@ -209,7 +209,22 @@ export class GlobalService {
 	// - pie charts of the calendar one under the other, each with its legend, for every symptom even without any
 	//   entry in the month (V2: rings, one per symptom with its days and its average, two by two with one legend
 	//   per scale, symptoms without entry on demand), their help in a dialog instead of a sheet
-	// - spinner of a view being loaded at the top left instead of in the middle of the screen
+	// - spinner at the top left while a view loads (V2: a skeleton of the page, grey shapes laid out as its content,
+	//   shown after 150 ms only, then the page fades in; see PageSkeletonComponent)
+	// - no share of the month as an image under the calendar (V2: next to Year in Pixels, when a symptom has
+	//   intensities in the month or when it has a complete night of sleep)
+	// - list of symptoms titled "Your symptom list" (V2: "Symptoms"), without correlations (V2, experimental, off by
+	//   default: once turned on in the advanced settings, a button at the end of the header of the list opens them, the
+	//   statistics of a symptom too)
+	// - Import / Export section of the settings as a plain list (V2: where the data is in a banner, the backup as two
+	//   tiles and the import under them, then the PDF and CSV exports, each with the icon tile of its color)
+	// - no share of the year as an image on Year in Pixels (V2: a button at the end of its header, when a symptom has
+	//   intensities in the year)
+	// - no foldable grid of icons in the editor of a custom type: every icon at once (V2: its first rows, the others
+	//   unfolded with a button)
+	// - no share on the slide of Year in Pixels in the tutorial
+	// - advanced settings: the manual save and the forced import shown at once (V2: the experimental features, then,
+	//   below a line, the troubleshooting with a "Manual save" row unfolding them)
 	private _uiVersion: string = 'v2';
 	public get uiVersion(): string { return this._uiVersion; }
 	public set uiVersion(value: string) {
@@ -219,6 +234,17 @@ export class GlobalService {
 
 	public get isUiV1(): boolean {
 		return this._uiVersion === 'v1';
+	}
+
+	// V2: the buttons opening the correlations, once turned on in the advanced settings (see ISettings.showCorrelations)
+	private _showCorrelations = false;
+	public get showCorrelations(): boolean { return this._showCorrelations; }
+	public set showCorrelations(value: boolean) {
+		this._showCorrelations = value === true;
+	}
+
+	public get correlationsShown(): boolean {
+		return !this.isUiV1 && this._showCorrelations;
 	}
 
 	// 'bars' or 'curves': charts of the sleep shown first (V2)

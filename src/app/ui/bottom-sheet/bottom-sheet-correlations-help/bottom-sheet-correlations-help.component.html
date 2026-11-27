@@ -1,0 +1,40 @@
+<div class="bottom-sheet-container closable-sheet correlations-help">
+    <button mat-icon-button class="sheet-close-button" (click)="onCloseClick()"
+        [attr.aria-label]="'CLOSE' | transloco">
+        <mat-icon>close</mat-icon>
+    </button>
+    <div class="header-section">
+        <mat-icon class="info-icon" fontSet="material-icons-outlined">info</mat-icon>
+        <h2 class="title">{{ 'CORRELATIONS_HELP_TITLE' | transloco }}</h2>
+        <span class="beta-badge">{{ 'CORRELATIONS_BETA' | transloco }}</span>
+    </div>
+
+    <div class="content-body">
+        <p class="intro">{{ 'CORRELATIONS_HELP_INTRO' | transloco }}</p>
+
+        <section *ngFor="let section of sections" class="help-part">
+            <span class="help-part-icon"><mat-icon>{{ section.icon }}</mat-icon></span>
+            <div class="help-part-text">
+                <div class="help-part-title">{{ section.title | transloco }}</div>
+                <p>{{ section.text | transloco: { hours: hours } }}</p>
+                <div *ngIf="section.icon === 'signal_cellular_alt'" class="help-levels">
+                    <span *ngFor="let level of levels" class="help-level">
+                        <span class="confidence-dots">
+                            <span *ngFor="let dot of levels" class="dot" [class.filled]="dot <= level"></span>
+                        </span>
+                        {{ 'CORRELATIONS_CONFIDENCE_' + level | transloco }}
+                    </span>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="actions">
+        <button mat-flat-button color="primary" (click)="onCloseClick()" class="confirm-button">
+            {{ 'CLOSE' | transloco }}
+        </button>
+    </div>
+
+    <app-spacer-item></app-spacer-item>
+
+</div>

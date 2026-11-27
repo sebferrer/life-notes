@@ -53,7 +53,10 @@ export const CUSTOM_TYPE_ICONS = [
 	// Health
 	'medication', 'vaccines', 'healing', 'medical_services', 'monitor_heart',
 	'favorite', 'bloodtype', 'thermostat', 'psychology', 'visibility',
-	'air', 'sick', 'monitor_weight', 'female',
+	'air', 'sick', 'monitor_weight',
+	// Menstrual cycle (with water_drop, bloodtype, thermostat above): the period, the cycle, ovulation, fertile days,
+	// the flow (a drop half full), pregnancy
+	'female', 'woman', 'event_repeat', 'egg', 'local_florist', 'opacity', 'pregnant_woman',
 	// Mood and rest
 	'mood', 'sentiment_neutral', 'mood_bad', 'bedtime', 'hotel', 'self_improvement', 'bolt',
 	// Activities and outdoors

@@ -1,0 +1,143 @@
+.bottom-sheet-container.export-csv {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 1rem 1.5rem 1rem;
+    gap: 1rem;
+    box-sizing: border-box;
+    width: 100%;
+
+    .header-section .title {
+        margin: 0;
+        font-size: 1.3rem;
+        font-weight: 700;
+        text-align: center;
+        color: var(--text-strong);
+    }
+
+    .intro {
+        margin: 0;
+        line-height: 1.45;
+        color: var(--text-medium);
+    }
+
+    .csv-layouts {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+    }
+
+    // A card per layout, the chosen one outlined in the primary color
+    .csv-layout {
+        display: flex;
+        align-items: center;
+        gap: 0.85rem;
+        width: 100%;
+        padding: 0.85rem 0.85rem 0.85rem 0.75rem;
+        border-radius: 14px;
+        border: 1px solid var(--border-medium);
+        background-color: transparent;
+        color: var(--text-strong);
+        font: inherit;
+        text-align: left;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+
+        &:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 1px;
+        }
+
+        .csv-layout-icon {
+            flex: 0 0 2.5rem;
+            height: 2.5rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--surface-variant);
+            color: var(--text-medium);
+        }
+
+        .csv-layout-text {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.15rem;
+        }
+
+        .csv-layout-title {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .csv-layout-description {
+            font-size: 0.85rem;
+            line-height: 1.35;
+            color: var(--text-medium);
+        }
+
+        .csv-layout-check {
+            flex-shrink: 0;
+            color: var(--text-medium);
+        }
+
+        &.selected {
+            border-color: var(--primary);
+            background-color: rgba(var(--primary-rgb), 0.08);
+
+            .csv-layout-icon {
+                background-color: var(--primary);
+                color: #ffffff;
+            }
+
+            .csv-layout-check {
+                color: var(--primary);
+            }
+        }
+    }
+
+    .csv-message {
+        margin: 0;
+        text-align: center;
+        color: var(--text-medium);
+
+        &.error {
+            color: var(--danger);
+        }
+    }
+
+    .actions {
+        display: flex;
+        gap: 0.75rem;
+
+        button {
+            flex: 1;
+            min-height: 3.5rem;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            // Long labels of some languages on two lines rather than cut
+            line-height: 1.2;
+            white-space: normal;
+
+            .mat-button-wrapper {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.5rem;
+            }
+
+            .mat-icon {
+                flex-shrink: 0;
+            }
+        }
+
+        // Done: in the color of a success, not greyed as a disabled button
+        .save-button.saved {
+            color: var(--success);
+            border-color: var(--success);
+        }
+    }
+}

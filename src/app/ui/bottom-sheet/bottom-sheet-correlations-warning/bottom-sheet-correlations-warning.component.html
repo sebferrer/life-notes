@@ -1,0 +1,36 @@
+<div class="bottom-sheet-container closable-sheet correlations-help correlations-warning">
+    <button mat-icon-button class="sheet-close-button" (click)="onCancelClick()"
+        [attr.aria-label]="'CLOSE' | transloco">
+        <mat-icon>close</mat-icon>
+    </button>
+    <div class="header-section">
+        <mat-icon class="info-icon">warning_amber</mat-icon>
+        <h2 class="title">{{ 'CORRELATIONS_WARNING_TITLE' | transloco }}</h2>
+    </div>
+
+    <div class="content-body">
+        <p class="intro">{{ 'CORRELATIONS_WARNING_INTRO' | transloco }}</p>
+
+        <section *ngFor="let section of sections" class="help-part">
+            <span class="help-part-icon"><mat-icon>{{ section.icon }}</mat-icon></span>
+            <div class="help-part-text">
+                <div class="help-part-title">{{ section.title | transloco }}</div>
+                <p>{{ section.text | transloco }}</p>
+            </div>
+        </section>
+
+        <p class="setting-note">{{ 'CORRELATIONS_WARNING_SETTING' | transloco }}</p>
+    </div>
+
+    <div class="actions">
+        <button mat-stroked-button (click)="onCancelClick()" class="cancel-button">
+            {{ 'CANCEL' | transloco }}
+        </button>
+        <button mat-flat-button color="primary" (click)="onConfirmClick()" class="confirm-button">
+            {{ 'CORRELATIONS_WARNING_ENABLE' | transloco }}
+        </button>
+    </div>
+
+    <app-spacer-item></app-spacer-item>
+
+</div>

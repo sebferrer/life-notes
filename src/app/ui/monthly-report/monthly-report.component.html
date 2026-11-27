@@ -199,7 +199,8 @@
 								<div class="report-row-block pdf-block">
 									<div class="section-title">{{ t('REPORT_SLEEP') }}</div>
 									<app-sleep-stats [overviews]="overviews" [previousOverviews]="previousOverviews"
-										[timeFormat]="globalService.timeFormat" [report]="true"></app-sleep-stats>
+										[timeFormat]="globalService.timeFormat" [report]="true"
+										[initialMode]="sleepChartMode"></app-sleep-stats>
 								</div>
 							</div>
 
@@ -237,5 +238,5 @@
 </div>
 
 <ng-template #loading>
-	<mat-spinner class="view-spinner"></mat-spinner>
+	<app-page-skeleton kind="report"></app-page-skeleton>
 </ng-template>

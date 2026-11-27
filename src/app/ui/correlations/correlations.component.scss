@@ -1,0 +1,527 @@
+.correlations-page {
+    padding-bottom: 1.5rem;
+}
+
+.page-header {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin: 0.5rem 0.5rem 0 0.25rem;
+
+    .back-button,
+    .info-button {
+        color: var(--text-medium);
+    }
+
+    .title {
+        margin: 0 0 0 0.25rem;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--text-strong);
+    }
+
+    .beta-badge {
+        margin-left: 0.4rem;
+    }
+
+    .info-button {
+        margin-left: auto;
+    }
+}
+
+// Two sentences, one per line
+.intro {
+    margin: 0 1.25rem 0.25rem 1.25rem;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    color: var(--text-medium);
+
+    span {
+        display: block;
+    }
+}
+
+// Same cards as the calendar
+%card {
+    margin: 0.75rem;
+    background-color: var(--surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 16px;
+    box-shadow: 0 1px 3px var(--shadow);
+}
+
+%icon-tile {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 12px;
+
+    mat-icon {
+        font-size: 1.35rem;
+        width: 1.35rem;
+        height: 1.35rem;
+    }
+
+    .svg-icon {
+        width: 1.35rem;
+        height: 1.35rem;
+    }
+}
+
+// Above the mock-up of the results (see PageSkeletonComponent)
+.loading .analyzing {
+    margin: 0.75rem 1rem 0 1rem;
+    color: var(--text-medium);
+    font-size: 0.9rem;
+}
+
+// No symptom, not enough days, nothing found
+.state-card {
+    @extend %card;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 1.5rem 1.25rem;
+    text-align: center;
+
+    .state-icon {
+        @extend %icon-tile;
+        width: 3rem;
+        height: 3rem;
+        border-radius: 50%;
+        color: var(--primary);
+        background-color: rgba(var(--primary-rgb), 0.12);
+    }
+
+    .state-title {
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: var(--text-strong);
+    }
+
+    .state-text {
+        margin: 0;
+        line-height: 1.5;
+        font-size: 0.9rem;
+        color: var(--text-medium);
+    }
+
+    .state-button {
+        margin-top: 0.25rem;
+        border-radius: 12px;
+    }
+
+    .progress {
+        width: 100%;
+        max-width: 16rem;
+        height: 8px;
+        margin-top: 0.4rem;
+        border-radius: 4px;
+        overflow: hidden;
+        background-color: var(--surface-variant);
+
+        .progress-fill {
+            display: block;
+            height: 100%;
+            border-radius: 4px;
+            background-color: var(--primary);
+        }
+    }
+
+    .progress-label {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text-medium);
+    }
+}
+
+.summary-card {
+    @extend %card;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.9rem;
+
+    .summary-icon {
+        @extend %icon-tile;
+        color: var(--primary);
+        background-color: rgba(var(--primary-rgb), 0.12);
+    }
+
+    .summary-text {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .summary-title {
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: var(--text-strong);
+    }
+
+    .summary-period {
+        font-size: 0.8rem;
+        color: var(--text-medium);
+    }
+
+    .summary-figures {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        width: 100%;
+
+        .figure {
+            padding: 0.2rem 0.6rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-medium);
+            background-color: var(--surface-variant);
+        }
+    }
+}
+
+.symptom-filter {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0 0.75rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    .filter-chip {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        height: 2.1rem;
+        padding: 0 0.85rem;
+        border: 1px solid var(--border-medium);
+        border-radius: 999px;
+        font-family: inherit;
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--text-strong);
+        background-color: var(--surface);
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+
+        .chip-count {
+            min-width: 1.1rem;
+            padding: 0 0.3rem;
+            border-radius: 999px;
+            font-size: 0.7rem;
+            line-height: 1.1rem;
+            color: var(--text-medium);
+            background-color: var(--surface-variant);
+        }
+
+        &.active {
+            border-color: var(--primary);
+            color: #ffffff;
+            background-color: var(--primary);
+
+            .chip-count {
+                color: var(--primary);
+                background-color: #ffffff;
+            }
+        }
+    }
+}
+
+.correlation-section {
+    margin-top: 1rem;
+
+    .section-title {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        margin: 0 1rem -0.25rem 1rem;
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+        text-transform: uppercase;
+        color: var(--text-medium);
+
+        mat-icon {
+            font-size: 1.1rem;
+            width: 1.1rem;
+            height: 1.1rem;
+        }
+    }
+
+    // Color of the bar of the factor: the symptom when it is worse, green when it is better
+    &.worse {
+        --correlation-color: var(--color-event-symptomLog);
+
+        .section-title mat-icon {
+            color: var(--color-event-symptomLog-icon);
+        }
+    }
+
+    &.better {
+        --correlation-color: var(--success);
+
+        .section-title mat-icon {
+            color: var(--success);
+        }
+    }
+}
+
+.correlation-card {
+    @extend %card;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    padding: 0.9rem 0.9rem 0.6rem 0.9rem;
+
+    &.weak {
+        border-style: dashed;
+        border-color: var(--border-medium);
+        box-shadow: none;
+    }
+}
+
+.card-header {
+    display: flex;
+    gap: 0.75rem;
+
+    .factor-icon {
+        @extend %icon-tile;
+        color: var(--event-on-color);
+        background-color: var(--event-color);
+
+        @each $type in meal, med, sport, log, custom {
+            &.#{$type} {
+                --event-color: var(--color-event-#{$type});
+                --event-on-color: var(--color-event-#{$type}-on);
+            }
+        }
+
+        &.sleep {
+            --event-color: var(--card-icon-sleep);
+            --event-on-color: #ffffff;
+        }
+    }
+
+    .card-heading {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.3rem;
+        min-width: 0;
+    }
+
+    .symptom-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.2rem;
+        max-width: 100%;
+        padding: 0.1rem 0.55rem 0.1rem 0.4rem;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--color-event-symptomLog-soft-text);
+        background-color: var(--color-event-symptomLog-soft);
+        .symptom-name {
+            min-width: 0;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        mat-icon {
+            flex-shrink: 0;
+            font-size: 0.9rem;
+            width: 0.9rem;
+            height: 0.9rem;
+            color: var(--color-event-symptomLog-icon);
+        }
+    }
+
+    .sentence {
+        margin: 0;
+        font-size: 1rem;
+        line-height: 1.35;
+        color: var(--text-strong);
+        overflow-wrap: anywhere;
+
+        strong {
+            font-weight: 700;
+        }
+    }
+}
+
+.comparison {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+
+    .row-header {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.75rem;
+    }
+
+    .row-label {
+        min-width: 0;
+        font-size: 0.8rem;
+        color: var(--text-medium);
+        overflow-wrap: anywhere;
+    }
+
+    .row-value {
+        flex-shrink: 0;
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--text-medium);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .row-bar {
+        height: 8px;
+        margin-top: 0.25rem;
+        border-radius: 4px;
+        overflow: hidden;
+        background-color: var(--surface-variant);
+    }
+
+    .row-fill {
+        display: block;
+        height: 100%;
+        min-width: 3px;
+        border-radius: 4px;
+        background-color: var(--text-weak);
+        opacity: 0.6;
+    }
+
+    .row-detail {
+        margin-top: 0.15rem;
+        font-size: 0.72rem;
+        color: var(--text-weak);
+    }
+
+    .factor-row {
+        .row-label,
+        .row-value {
+            color: var(--text-strong);
+        }
+
+        .row-fill {
+            background-color: var(--correlation-color);
+            opacity: 1;
+        }
+    }
+}
+
+.card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    min-height: 2.25rem;
+    padding-top: 0.4rem;
+    border-top: 1px solid var(--border-subtle);
+
+    .confidence {
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text-medium);
+    }
+
+    .days-toggle {
+        display: flex;
+        align-items: center;
+        gap: 0.1rem;
+        padding: 0.35rem 0.25rem 0.35rem 0.5rem;
+        border: none;
+        border-radius: 8px;
+        font-family: inherit;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--primary);
+        background: transparent;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+
+        mat-icon {
+            font-size: 1.2rem;
+            width: 1.2rem;
+            height: 1.2rem;
+        }
+    }
+}
+
+.card-days {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    padding-bottom: 0.4rem;
+
+    .days-title {
+        font-size: 0.75rem;
+        color: var(--text-medium);
+    }
+
+    .days-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+    }
+
+    .day-chip {
+        padding: 0.25rem 0.6rem;
+        border-radius: 999px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        text-decoration: none;
+        color: var(--text-strong);
+        background-color: var(--surface-variant);
+        -webkit-tap-highlight-color: transparent;
+    }
+}
+
+.weak-toggle {
+    display: flex;
+    align-items: center;
+    margin: 0.75rem auto 0 auto;
+    border-radius: 12px;
+    color: var(--primary);
+
+    mat-icon {
+        margin-right: 0.35rem;
+        font-size: 1.2rem;
+        width: 1.2rem;
+        height: 1.2rem;
+        vertical-align: middle;
+    }
+}
+
+.local-note {
+    margin: 1.25rem 1.5rem 0 1.5rem;
+    text-align: center;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    color: var(--text-weak);
+
+    // In the line of the text
+    mat-icon {
+        margin-right: 0.25rem;
+        font-size: 0.95rem;
+        width: 0.95rem;
+        height: 0.95rem;
+        vertical-align: -0.15rem;
+    }
+}

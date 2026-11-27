@@ -112,6 +112,9 @@ $dark-event-variants: (surface: #1e1e1e, soft-weight: 30%, on: #ffffff, on-filte
     --surface: #ffffff;
     --surface-variant: #f5f5f5;
     --surface-translucent: rgba(255, 255, 255, 0.8);
+    // Mock-up of a page being loaded (see PageSkeletonComponent): its shapes, and the light sweeping them
+    --skeleton: #eceef2;
+    --skeleton-shine: rgba(255, 255, 255, 0.75);
 
     --text-strong: rgba(0, 0, 0, 0.87);
     --text-medium: rgba(0, 0, 0, 0.6);
@@ -124,6 +127,9 @@ $dark-event-variants: (surface: #1e1e1e, soft-weight: 30%, on: #ffffff, on-filte
 
     --primary: #3f51b5;
     --primary-rgb: 63, 81, 181;
+    // Green of the logo, darker for the texts: name and address of the app, dates, on the PDF report and the shared
+    // images
+    --brand-green: #1A7F37;
     --accent: #e91e63;
     --danger: #d32f2f;
     --warning: #ff9800;
@@ -157,6 +163,8 @@ $dark-event-variants: (surface: #1e1e1e, soft-weight: 30%, on: #ffffff, on-filte
     --surface: #1e1e1e;
     --surface-variant: #2a2a2a;
     --surface-translucent: rgba(30, 30, 30, 0.8);
+    --skeleton: #2b2c30;
+    --skeleton-shine: rgba(255, 255, 255, 0.06);
 
     --text-strong: rgba(255, 255, 255, 0.87);
     --text-medium: rgba(255, 255, 255, 0.6);
@@ -169,6 +177,7 @@ $dark-event-variants: (surface: #1e1e1e, soft-weight: 30%, on: #ffffff, on-filte
 
     --primary: #7986cb;
     --primary-rgb: 121, 134, 203;
+    --brand-green: #1A7F37;
     --accent: #f06292;
     --danger: #ef5350;
     --warning: #ffb74d;
@@ -375,14 +384,27 @@ mat-spinner {
     left: 20vw;
 }
 
-// V2: the spinner of a view being loaded, in the middle of the screen (its size is set by mat-spinner)
-body:not(.ui-v1) mat-spinner.view-spinner {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    margin: auto;
+// V1: the spinner of a view being loaded (see PageSkeletonComponent), where the former mat-spinner was
+app-spinner.view-spinner {
+    position: absolute;
+    top: 30vh;
+    left: 20vw;
+}
+
+// V2: a page fades in once its data is loaded, after its skeleton or at once (see PageSkeletonComponent). Opacity
+// only: run by the compositor, as the skeleton.
+body:not(.ui-v1) .page-content-in {
+    animation: page-content-in 0.2s ease-out;
+}
+
+@keyframes page-content-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 ion-range {
@@ -470,6 +492,56 @@ body:not(.ui-v1) .v1-only {
 .event-bottom-sheet.review-prompt-panel .mat-bottom-sheet-container {
     max-height: 90vh !important;
     height: auto !important;
+}
+
+// Share of the month as an image: as high as its preview
+.event-bottom-sheet.share-month-panel .mat-bottom-sheet-container {
+    max-height: 90vh !important;
+    height: auto !important;
+}
+
+// Export as CSV: as high as its two layouts
+.event-bottom-sheet.export-csv-panel .mat-bottom-sheet-container {
+    max-height: 90vh !important;
+    height: auto !important;
+}
+
+// Help of the correlations: as high as its text
+.event-bottom-sheet.correlations-help-panel .mat-bottom-sheet-container {
+    max-height: 90vh !important;
+    height: auto !important;
+}
+
+// Feature in beta (the correlations)
+.beta-badge {
+    display: inline-flex;
+    align-items: center;
+    height: 1.25rem;
+    padding: 0 0.5rem;
+    border-radius: 999px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: var(--primary);
+    background-color: rgba(var(--primary-rgb), 0.14);
+}
+
+// Strength of a correlation: 1 to 3 filled dots
+.confidence-dots {
+    display: inline-flex;
+    gap: 3px;
+
+    .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background-color: var(--border-medium);
+
+        &.filled {
+            background-color: var(--primary);
+        }
+    }
 }
 
 // Landscape phones: half of the screen height is too small for the add/edit sheets

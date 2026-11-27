@@ -3,10 +3,18 @@
         <button mat-icon-button routerLink="/manage">
             <mat-icon>arrow_back</mat-icon>
         </button>
-        <h1 class="manage-list-title">{{ 'SYMPTOMS_TITLE' | transloco }}</h1>
+        <!-- V2: a short title, the button of the correlations fits on its line -->
+        <h1 class="manage-list-title">{{ (globalService.isUiV1 ? 'SYMPTOMS_TITLE' : 'MANAGE_SYMPTOMS') | transloco }}</h1>
+        <!-- V2: what might influence the symptoms, an action of the page at the end of its header: a small tonal button
+            with its name (an icon alone wouldn't say what it opens). "Beta" is on their page. Unless hidden in the
+            settings. -->
+        <button *ngIf="globalService.correlationsShown" class="correlations-button" routerLink="/correlations">
+            <mat-icon>join_inner</mat-icon>
+            <span class="correlations-button-label">{{ 'CORRELATIONS_TITLE' | transloco }}</span>
+        </button>
     </header>
 
-    <div *ngIf="symptoms$ | async as symptoms; else loading" class="manage-list">
+    <div *ngIf="symptoms$ | async as symptoms; else loading" class="manage-list page-content-in">
         <button class="manage-item manage-add-item symptom-card add-card" (click)="openAddDialog()">
             <span class="manage-item-bubble"><mat-icon>add</mat-icon></span>
             <span class="manage-item-title symptom-label">{{ 'ADD_NEW_SYMPTOM_LABEL' | transloco }}</span>
@@ -67,5 +75,5 @@
 </div>
 
 <ng-template #loading>
-    <mat-spinner class="view-spinner"></mat-spinner>
+    <app-page-skeleton kind="list"></app-page-skeleton>
 </ng-template>

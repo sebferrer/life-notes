@@ -1,0 +1,57 @@
+<div class="month-share-card" [class.sleep]="sleepOverviews">
+	<div class="card-header">
+		<div class="card-month">{{ monthLabel }}</div>
+		<div class="card-title" [style.font-size.px]="titleSize">{{ shownTitle }}</div>
+	</div>
+
+	<!-- Sleep: the card of the calendar, its figures and both charts (durations and schedule of the nights) -->
+	<ng-container *ngIf="sleepOverviews; else symptom">
+		<app-sleep-stats class="card-sleep" [overviews]="sleepOverviews" [previousOverviews]="sleepPreviousOverviews"
+			[timeFormat]="globalService.timeFormat" [report]="true" [initialMode]="sleepMode"
+			[pixelRatio]="sleepPixelRatio"></app-sleep-stats>
+	</ng-container>
+
+	<!-- A symptom: its calendar in the colors of its intensities -->
+	<ng-template #symptom>
+		<div *ngIf="weekDays.length > 0" class="card-weekdays">
+			<div *ngFor="let day of weekDays">{{ 'DAY-OF-WEEK-VERY-SHORT-' + day | transloco }}</div>
+		</div>
+		<div class="card-days">
+			<div *ngFor="let slot of slots" class="card-day empty"></div>
+			<div *ngFor="let cell of days" class="card-day color-{{ cell.color }}">{{ cell.day }}</div>
+		</div>
+
+		<div class="card-legend">
+			<span *ngFor="let item of stats.legend" class="legend-item"><span class="swatch"
+					[style.background-color]="item.color"></span>{{ item.label }}</span>
+		</div>
+
+		<div class="card-stats">
+			<div class="card-stat">
+				<div class="stat-value">{{ stats.days }}<small>{{ 'CALENDAR_INTENSITY_DAY_UNIT' | transloco }}</small></div>
+				<div class="stat-label">{{ daysLabel | transloco }}</div>
+			</div>
+			<div *ngIf="stats.average != null" class="card-stat">
+				<div class="stat-value">{{ format(stats.average) }}<small>/{{ painScale }}</small></div>
+				<div class="stat-label">{{ 'SHARE_CARD_AVERAGE' | transloco }}</div>
+			</div>
+			<div *ngIf="stats.improvement != null; else worst" class="card-stat improvement">
+				<div class="stat-value">{{ improvement }}<small *ngIf="!invertedScale">{{ 'CALENDAR_INTENSITY_DAY_UNIT' |
+						transloco }}</small></div>
+				<div class="stat-label">{{ 'SHARE_CARD_VERSUS' | transloco: { month: previousMonthLabel } }}</div>
+			</div>
+			<ng-template #worst>
+				<div *ngIf="stats.worst != null" class="card-stat">
+					<div class="stat-value">{{ format(stats.worst) }}<small>/{{ painScale }}</small></div>
+					<div class="stat-label">{{ (invertedScale ? 'SHARE_CARD_MIN' : 'SHARE_CARD_MAX') | transloco }}</div>
+				</div>
+			</ng-template>
+		</div>
+	</ng-template>
+
+	<div class="card-footer">
+		<img src="assets/img/app-icon.png" alt="">
+		<span class="card-brand">Life Notes</span>
+		<span class="card-site">{{ site }}</span>
+	</div>
+</div>

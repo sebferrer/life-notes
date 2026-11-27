@@ -4,3 +4,10 @@ $panel-colors: (symptoms: #EC407A, language: #42A5F5, time: #FFA726, backup: #66
 // Dark theme: muted tones of the same hues and luminance, as the event colors (see $dark-event-colors in styles.scss)
 $panel-dark-colors: (symptoms: #BE476E, language: #3875A8, time: #966823, backup: #3E7E42, tutorial: #9C56A8,
     appearance: #7F63AE, customization: #337D75, advanced: #60747D, developer: #8C695D, about: #626DAB);
+
+// Icon tile color of each action of the Import / Export section (V2, settings page and tutorial), and of the manual
+// save of the advanced settings (V2)
+$data-action-colors: (save: #42A5F5, share: #26A69A, import: #FFA726, pdf: #EF5350, csv: #66BB6A,
+    manual: #78909C);
+$data-action-dark-colors: (save: #3875A8, share: #337D75, import: #966823, pdf: #A84846, csv: #3E7E42,
+    manual: #60747D);

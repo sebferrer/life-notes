@@ -20,7 +20,7 @@ import { IStatsIntensity } from 'src/app/models/occurrence-stats.model';
 @Component({
 	selector: 'app-symptoms',
 	templateUrl: './symptoms.component.html',
-	styleUrls: ['../manage/manage-list.scss']
+	styleUrls: ['../manage/manage-list.scss', './symptoms.component.scss']
 })
 export class SymptomsComponent implements OnInit, OnDestroy {
 
@@ -32,7 +32,7 @@ export class SymptomsComponent implements OnInit, OnDestroy {
 
 	constructor(
 		private translocoService: TranslocoService,
-		private globalService: GlobalService,
+		public globalService: GlobalService,
 		private settingsService: SettingsService,
 		private symptomsService: SymptomsService,
 		private daysService: DaysService,

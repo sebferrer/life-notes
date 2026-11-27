@@ -8,6 +8,7 @@ const SCENES = [
 	'target-symptom',
 	'day-overview',
 	'calendar',
+	'year-in-pixels',
 	'add-event',
 	'edit-event',
 	'manage',
@@ -15,11 +16,15 @@ const SCENES = [
 	'backup-why',
 	'backup-save',
 	'backup-restore',
-	'pdf-report'
+	'pdf-report',
+	'csv-export'
 ];
 
-// Slides whose text describes the screens differently in the V1 (the day, the history of the manage lists)
-const CLASSIC_TEXTS = ['day-overview', 'add-event', 'manage'];
+// Slides whose text describes the screens differently in the V1 (the day, the history of the manage lists, no share
+// of the month)
+const CLASSIC_TEXTS = ['day-overview', 'add-event', 'manage', 'year-in-pixels'];
+// Slides whose title too
+const CLASSIC_TITLES = ['year-in-pixels'];
 
 @Component({
 	selector: 'app-tutorial',
@@ -41,8 +46,9 @@ export class TutorialComponent {
 	) {
 		const sceneSlides: ISlide[] = SCENES.map((scene, i) => {
 			const key = 'TUTORIAL_' + scene.toUpperCase().replace(/-/g, '_');
+			const classicTitle = CLASSIC_TITLES.includes(scene) ? key + '_TITLE_CLASSIC' : undefined;
 			const classicText = CLASSIC_TEXTS.includes(scene) ? key + '_TEXT_CLASSIC' : undefined;
-			return { index: i + 2, label: 'scene', scene, title: key + '_TITLE', text: key + '_TEXT', classicText };
+			return { index: i + 2, label: 'scene', scene, title: key + '_TITLE', text: key + '_TEXT', classicTitle, classicText };
 		});
 		this.slides = [
 			{

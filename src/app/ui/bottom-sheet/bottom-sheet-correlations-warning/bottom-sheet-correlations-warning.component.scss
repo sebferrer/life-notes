@@ -1,0 +1,21 @@
+// What differs from the help of the correlations: a warning, and two buttons
+.bottom-sheet-container.correlations-help.correlations-warning {
+    .header-section .info-icon {
+        color: var(--warning);
+    }
+
+    // The parts of the warning, in the color of the icon above them
+    .help-part .help-part-icon {
+        color: var(--warning);
+        background-color: rgba(255, 152, 0, 0.14);
+    }
+
+    .content-body .setting-note {
+        text-align: center;
+        font-size: 0.85rem;
+    }
+
+    .actions {
+        gap: 0.75rem;
+    }
+}

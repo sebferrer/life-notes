@@ -5,6 +5,7 @@ export interface ISlide {
 	text: string;
 	// Illustration (see TutorialSceneComponent)
 	scene?: string;
-	// Text of the classic timeline design, when it differs
+	// Title and text of the V1 interface, when they differ
+	classicTitle?: string;
 	classicText?: string;
 }

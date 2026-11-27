@@ -1722,6 +1722,403 @@
     box-shadow: 0 u(3) u(8) rgba(0, 0, 0, 0.3);
 }
 
+// V2 Import / Export: the actions with the icon tile of their color (see settings.component.scss)
+.m-section-label {
+    margin: u(5) 0 u(3) u(1);
+    font-size: u(6);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--primary);
+}
+
+.m-data-tiles {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: u(4);
+    margin-bottom: u(3);
+}
+
+.m-data-action {
+    position: relative;
+    display: flex;
+    border: 1px solid var(--border-medium);
+    border-radius: u(7);
+    background-color: var(--surface);
+    font-size: u(7.5);
+    font-weight: 600;
+    line-height: 1.2;
+
+    .m-data-icon {
+        flex: 0 0 u(16);
+        width: u(16);
+        height: u(16);
+        border-radius: u(5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ffffff;
+        background-color: var(--data-color);
+
+        mat-icon {
+            font-size: u(10);
+            width: u(10);
+            height: u(10);
+        }
+    }
+
+    .m-data-chevron {
+        margin-left: auto;
+        color: var(--text-medium);
+    }
+
+    @each $action, $color in $data-action-colors {
+        &.data-#{$action} {
+            --data-color: #{$color};
+
+            :host-context(.dark-theme) & {
+                --data-color: #{map-get($data-action-dark-colors, $action)};
+            }
+        }
+    }
+}
+
+.m-data-tile {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: u(4);
+    padding: u(6);
+}
+
+.m-data-row {
+    align-items: center;
+    gap: u(6);
+    height: u(24);
+    margin-bottom: u(3);
+    padding: 0 u(3) 0 u(5);
+}
+
+// End of the calendar of the month and its buttons (Year in Pixels, share of the month)
+.m-calendar-end {
+    .m-day.level-none {
+        visibility: hidden;
+    }
+}
+
+.m-calendar-actions {
+    display: flex;
+    justify-content: center;
+    gap: u(8);
+    margin-top: u(8);
+
+    // V1: the stroked button alone
+    &.classic-actions {
+        margin-top: u(10);
+    }
+}
+
+.m-text-button {
+    display: inline-flex;
+    align-items: center;
+    gap: u(3);
+    height: u(18);
+    padding: 0 u(6);
+    border-radius: u(6);
+    color: var(--primary);
+    font-size: u(7.5);
+    font-weight: 600;
+
+    &.stroked {
+        border: 1px solid var(--border-medium);
+    }
+
+    mat-icon {
+        font-size: u(10);
+        width: u(10);
+        height: u(10);
+    }
+}
+
+// Year in Pixels: a column per month, a pixel per day
+.m-year-header {
+    display: flex;
+    align-items: center;
+    gap: u(5);
+    padding: u(7) u(8) u(4) u(8);
+    font-size: u(9.5);
+    font-weight: 700;
+
+    mat-icon {
+        color: var(--text-medium);
+    }
+}
+
+.m-year {
+    padding: 0 u(8) u(3) u(8);
+    font-size: u(8);
+    font-weight: 700;
+    text-align: center;
+    color: var(--primary);
+}
+
+// V2: the share of the year, at the end of the header
+.m-share-year {
+    margin-left: auto;
+    width: u(18);
+    height: u(18);
+    border-radius: u(6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--surface-variant);
+
+    mat-icon {
+        color: var(--primary);
+        font-size: u(10);
+        width: u(10);
+        height: u(10);
+    }
+}
+
+// The image of the year: its pixels in small
+.m-share-year-grid {
+    display: grid;
+    grid-template-columns: repeat(12, u(5.5));
+    gap: u(0.8);
+
+    .m-year-month {
+        gap: u(0.4);
+    }
+
+    .m-pixel {
+        height: u(1.5);
+        border-radius: u(0.3);
+    }
+}
+
+.m-year-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: u(1.5);
+    padding: 0 u(8) u(6) u(8);
+}
+
+.m-year-month {
+    display: flex;
+    flex-direction: column;
+    gap: u(1);
+}
+
+.m-year-initial {
+    margin-bottom: u(1);
+    text-align: center;
+    font-size: u(5.5);
+    font-weight: 700;
+    color: var(--text-medium);
+}
+
+.m-pixel {
+    height: u(3.6);
+    border-radius: u(0.8);
+
+    &.level-none {
+        visibility: hidden;
+    }
+
+    &.level-future {
+        background-color: var(--surface-variant);
+    }
+}
+
+// Share of the month: the image to send
+.m-share-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: u(3);
+    margin: u(8) auto 0 auto;
+    padding: u(6) u(8);
+    width: fit-content;
+    border-radius: u(6);
+    border: 1px solid var(--border-medium);
+    // The image, on the surface of the app (its days to come in the neutral color)
+    background-color: var(--surface);
+
+    .m-share-preview-title {
+        font-size: u(8);
+        font-weight: 700;
+    }
+
+    .m-share-preview-month {
+        font-size: u(6.5);
+        color: var(--text-medium);
+
+        &::first-letter {
+            text-transform: uppercase;
+        }
+    }
+
+    .m-share-preview-brand {
+        font-size: u(5.5);
+        font-weight: 700;
+        color: var(--primary);
+    }
+}
+
+.m-wide-button {
+    gap: u(4);
+
+    mat-icon {
+        font-size: u(10);
+        width: u(10);
+        height: u(10);
+    }
+}
+
+// Export as CSV: the two layouts of the sheet
+.m-csv-layout {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: u(5);
+    margin-top: u(5);
+    padding: u(4) u(5);
+    border-radius: u(7);
+    border: 1px solid var(--border-medium);
+
+    &.selected {
+        border-color: var(--primary);
+        background-color: rgba(var(--primary-rgb), 0.08);
+
+        .m-csv-layout-icon {
+            background-color: var(--primary);
+            color: #ffffff;
+        }
+    }
+}
+
+.m-csv-layout-icon {
+    flex: 0 0 u(16);
+    height: u(16);
+    border-radius: u(5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--surface-variant);
+    color: var(--text-medium);
+
+    mat-icon {
+        font-size: u(10);
+        width: u(10);
+        height: u(10);
+    }
+}
+
+.m-csv-layout-text {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.m-csv-layout-title {
+    font-size: u(7.5);
+    font-weight: 600;
+}
+
+.m-csv-layout-description {
+    font-size: u(6);
+    color: var(--text-medium);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+// The file opened in a spreadsheet, with the chart of a column
+.m-spreadsheet-bar {
+    display: flex;
+    align-items: center;
+    gap: u(4);
+    padding: u(5) u(6);
+    border-bottom: 1px solid var(--border-subtle);
+    background-color: var(--surface);
+    font-size: u(6.5);
+    font-weight: 600;
+
+    mat-icon {
+        flex-shrink: 0;
+        color: #2E7D32;
+        font-size: u(11);
+        width: u(11);
+        height: u(11);
+
+        :host-context(.dark-theme) & {
+            color: #66BB6A;
+        }
+    }
+
+    span {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+.m-spreadsheet {
+    display: grid;
+    grid-template-columns: u(12) 1.1fr 1.3fr 1fr;
+    font-size: u(6);
+    background-color: var(--surface);
+
+    .m-cell {
+        height: u(11);
+        padding: 0 u(3);
+        border-right: 1px solid var(--border-subtle);
+        border-bottom: 1px solid var(--border-subtle);
+        display: flex;
+        align-items: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        &.number {
+            justify-content: flex-end;
+        }
+
+        &.selected {
+            background-color: rgba(var(--primary-rgb), 0.12);
+        }
+    }
+
+    .m-corner,
+    .m-column,
+    .m-line {
+        justify-content: center;
+        background-color: var(--surface-variant);
+        color: var(--text-medium);
+    }
+
+    .m-head {
+        font-weight: 700;
+    }
+}
+
+.m-chart {
+    display: block;
+    width: calc(100% - #{u(16)});
+    height: u(26);
+    margin: u(6) u(8);
+    border-bottom: 1px solid var(--border-medium);
+    border-left: 1px solid var(--border-medium);
+
+    polyline {
+        fill: none;
+        stroke: var(--primary);
+        stroke-width: 1.5;
+        vector-effect: non-scaling-stroke;
+        stroke-linejoin: round;
+    }
+}
+
 // ---------------------------------------------------------------------------------------------------------------
 // Classic design of a day (timeline style setting)
 // ---------------------------------------------------------------------------------------------------------------
@@ -1917,22 +2314,35 @@
 }
 
 .scene-backup-save {
-    .s1 { @include box(6, 6, 200, 112); }
-    .s2 { @include box(116, 136, 178, 80); }
-    .s3 { @include box(6, 244, 236, 80); }
+    // The tiles on the right, each one above its window
+    .s1 { @include box(94, 6, 200, 112); }
+    .s2 { @include box(6, 140, 170, 80); }
+    .s3 { @include box(58, 238, 236, 80); }
 }
 
 .scene-backup-restore {
-    .s1 { @include box(6, 6, 186, 84); }
-    .s2 { @include box(104, 104, 190, 82); }
-    .s3 { @include box(6, 212, 206, 98); }
-    .s4 { @include box(70, 334, 224, 30); }
+    .s1 { @include box(6, 6, 200, 116); }
+    .s2 { @include box(104, 132, 190, 82); }
+    .s3 { @include box(6, 228, 206, 98); }
+    .s4 { @include box(70, 340, 224, 30); }
 }
 
 .scene-pdf-report {
-    .s1 { @include box(6, 6, 200, 64); }
-    .s2 { @include box(94, 88, 200, 110); }
-    .s3 { @include box(6, 210, 214, 164); }
+    .s1 { @include box(6, 6, 200, 86); }
+    .s2 { @include box(94, 98, 200, 110); }
+    .s3 { @include box(6, 216, 214, 160); }
+}
+
+.scene-year-in-pixels {
+    .s1 { @include box(6, 6, 214, 84); }
+    .s2 { @include box(6, 112, 150, 196); }
+    .s3 { @include box(166, 150, 128, 172); }
+}
+
+.scene-csv-export {
+    .s1 { @include box(6, 6, 200, 86); }
+    .s2 { @include box(84, 100, 210, 132); }
+    .s3 { @include box(6, 246, 212, 128); }
 }
 
 .scene-new-ui {
@@ -1964,6 +2374,35 @@
 
 .scene-add-event.classic {
     .s1 { height: u(27); }
+}
+
+.scene-backup-save.classic {
+    // The list on the left, the save to its window on the right
+    .s1 { @include box(6, 6, 200, 112); }
+    .s2 { @include box(116, 136, 178, 80); }
+    .s3 { @include box(6, 244, 236, 80); }
+}
+
+.scene-backup-restore.classic {
+    .s1 { @include box(6, 6, 186, 84); }
+    .s2 { @include box(104, 104, 190, 82); }
+    .s3 { @include box(6, 212, 206, 98); }
+    .s4 { @include box(70, 334, 224, 30); }
+}
+
+.scene-pdf-report.classic {
+    .s1 { @include box(6, 6, 200, 64); }
+    .s2 { @include box(94, 88, 200, 110); }
+    .s3 { @include box(6, 210, 214, 164); }
+}
+
+.scene-csv-export.classic {
+    .s1 { height: u(64); }
+}
+
+// No share of the month: the year in the middle
+.scene-year-in-pixels.classic {
+    .s2 { left: u(75); }
 }
 
 .scene-edit-event.classic {

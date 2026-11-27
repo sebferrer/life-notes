@@ -13,6 +13,8 @@ import { BottomSheetForceLoadWarningComponent } from '../bottom-sheet/bottom-she
 import { BottomSheetInfoComponent } from '../bottom-sheet/bottom-sheet-info';
 import { BottomSheetAutoOverviewHelpComponent } from '../bottom-sheet/bottom-sheet-auto-overview-help';
 import { BottomSheetExportPdfComponent } from '../bottom-sheet/bottom-sheet-export-pdf';
+import { BottomSheetExportCsvComponent } from '../bottom-sheet/bottom-sheet-export-csv';
+import { BottomSheetCorrelationsWarningComponent } from '../bottom-sheet/bottom-sheet-correlations-warning';
 import { DialogSelectBackupComponent } from '../dialog/dialog-select-backup';
 import { DialogInfoComponent } from '../dialog/dialog-info';
 import { BackupService } from 'src/app/infra/backup.service';
@@ -62,6 +64,10 @@ export class SettingsComponent implements OnInit {
 	public landscapeMode: boolean;
 	public uiVersion: string;
 	public sleepChartMode: string;
+	// V2: the buttons opening the correlations, off by default (experimental, advanced settings)
+	public showCorrelations = false;
+	// V2: the manual save of the advanced settings (and the forced import), folded until asked for
+	public manualSaveOpen = false;
 	// When the invitation to rate the app was shown, 0 if never (developer mode)
 	public reviewPromptDate = 0;
 	public eventPalettes: IEventPalettes;
@@ -143,6 +149,7 @@ export class SettingsComponent implements OnInit {
 			this.landscapeMode = !!settings.landscapeMode;
 			this.uiVersion = settings.uiVersion || 'v2';
 			this.sleepChartMode = settings.sleepChartMode || 'bars';
+			this.showCorrelations = settings.showCorrelations === true;
 			this.eventPalettes = completeEventPalettes(settings.eventColors);
 			this.reviewPromptDate = settings.reviewPromptDate || 0;
 		});
@@ -208,6 +215,24 @@ export class SettingsComponent implements OnInit {
 
 	public setUiVersion(): void {
 		this.settingsService.setUiVersion(this.uiVersion).subscribe();
+	}
+
+	// Turned on only once the warning is accepted (experimental, reverse correlations): the toggle goes back off when it
+	// is cancelled or closed. Turned off at once.
+	public setShowCorrelations(): void {
+		if (!this.showCorrelations) {
+			this.settingsService.setShowCorrelations(false).subscribe();
+			return;
+		}
+		this.bottomSheet.open(BottomSheetCorrelationsWarningComponent, {
+			panelClass: ['event-bottom-sheet', 'correlations-help-panel']
+		}).afterDismissed().subscribe(result => {
+			if (result?.answer === 'yes') {
+				this.settingsService.setShowCorrelations(true).subscribe();
+			} else {
+				this.showCorrelations = false;
+			}
+		});
 	}
 
 	public setSleepChartMode(): void {
@@ -527,6 +552,13 @@ export class SettingsComponent implements OnInit {
 			if (result) {
 				this.router.navigate(['/monthlyreport', result.year + '-' + result.month]);
 			}
+		});
+	}
+
+	// The entries for a spreadsheet: one line per day or per entry, saved or shared from the sheet
+	public openExportCsvSheet(): void {
+		this.bottomSheet.open(BottomSheetExportCsvComponent, {
+			panelClass: ['event-bottom-sheet', 'export-csv-panel']
 		});
 	}
 }

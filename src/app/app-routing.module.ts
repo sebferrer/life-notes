@@ -19,6 +19,7 @@ import { CustomEntriesComponent } from './ui/custom-entries';
 import { ManageComponent } from './ui/manage';
 import { MonthlyReportComponent } from './ui/monthly-report';
 import { YearInPixelsComponent } from './ui/year-in-pixels';
+import { CorrelationsComponent } from './ui/correlations';
 
 const routes: Routes = [
 	{
@@ -88,6 +89,11 @@ const routes: Routes = [
 	{
 		path: 'manage',
 		component: ManageComponent
+	},
+	{
+		// Links between the entries and the symptoms (beta, from the manage menu of the V2)
+		path: 'correlations',
+		component: CorrelationsComponent
 	},
 	{
 		path: 'settings',

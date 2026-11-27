@@ -152,6 +152,42 @@
         </div>
     </ng-template>
 
+    <!-- V2 Import / Export: an action with the icon tile of its color, as a tile (the backup) or a row -->
+    <ng-template #dataAction let-kind="kind" let-icon="icon" let-label="label" let-tile="tile" let-anchor="anchor"
+        let-tap="tap" let-step="step">
+        <div class="m-data-action data-{{ kind }}" [class.m-data-tile]="tile" [class.m-data-row]="!tile"
+            [class.tap]="tap" [attr.data-anchor]="anchor">
+            <span class="m-data-icon"><mat-icon>{{ icon }}</mat-icon></span>
+            <span class="m-data-title">{{ t(label) }}</span>
+            <mat-icon *ngIf="!tile" class="m-data-chevron">chevron_right</mat-icon>
+            <span *ngIf="tap && step" class="step">{{ step }}</span>
+        </div>
+    </ng-template>
+
+    <!-- V2 Import / Export: the two tiles of the backup -->
+    <ng-template #backupTiles let-tap="tap">
+        <div class="m-section-label">{{ t('SETTINGS_SECTION_BACKUP') }}</div>
+        <div class="m-data-tiles">
+            <ng-container
+                *ngTemplateOutlet="dataAction; context: { kind: 'save', icon: 'save_alt', label: 'EXPORT_SAVE', tile: true, anchor: tap ? 'save' : null, tap: tap }">
+            </ng-container>
+            <ng-container
+                *ngTemplateOutlet="dataAction; context: { kind: 'share', icon: 'share', label: 'EXPORT_FILE', tile: true, anchor: tap ? 'share' : null, tap: tap }">
+            </ng-container>
+        </div>
+    </ng-template>
+
+    <!-- V2 Import / Export: the reports and spreadsheets; tap is the one highlighted -->
+    <ng-template #exportRows let-tap="tap">
+        <div class="m-section-label">{{ t('SETTINGS_SECTION_EXPORTS') }}</div>
+        <ng-container
+            *ngTemplateOutlet="dataAction; context: { kind: 'pdf', icon: 'picture_as_pdf', label: 'EXPORT_PDF', anchor: tap === 'pdf' ? 'pdf' : null, tap: tap === 'pdf', step: 1 }">
+        </ng-container>
+        <ng-container
+            *ngTemplateOutlet="dataAction; context: { kind: 'csv', icon: 'table_chart', label: 'EXPORT_CSV', anchor: tap === 'csv' ? 'csv' : null, tap: tap === 'csv', step: 1 }">
+        </ng-container>
+    </ng-template>
+
     <!-- ===================================================================================== -->
     <!-- Scenes                                                                                -->
     <!-- ===================================================================================== -->
@@ -182,10 +218,10 @@
                     </ng-template>
                 </div>
             </div>
-            <!-- The list of the symptoms and its sheet are the same in both versions -->
+            <!-- The list of the symptoms and its sheet: the same in both versions, but the short title of the V2 -->
             <div class="screen page s2" data-anchor="list">
                 <div class="m-list-header">
-                    <mat-icon>arrow_back</mat-icon><span>{{ t('SYMPTOMS_TITLE') }}</span>
+                    <mat-icon>arrow_back</mat-icon><span>{{ t(classic ? 'SYMPTOMS_TITLE' : 'MANAGE_SYMPTOMS') }}</span>
                 </div>
                 <div class="m-add-card tap" data-anchor="add-card">
                     <span class="m-add-bubble"><mat-icon>add</mat-icon></span>
@@ -634,7 +670,14 @@
 
         <!-- Save a backup: Save (Android save dialog) or Share (Android share sheet) -->
         <ng-container *ngSwitchCase="'backup-save'">
-            <div class="screen page padded s1">
+            <!-- V2: the two tiles of the backup. V1: the list -->
+            <div *ngIf="!classic" class="screen page padded s1">
+                <div class="m-card m-settings-card">
+                    <ng-container *ngTemplateOutlet="settingsHeader; context: { row: settingsRows[3] }"></ng-container>
+                    <ng-container *ngTemplateOutlet="backupTiles; context: { tap: true }"></ng-container>
+                </div>
+            </div>
+            <div *ngIf="classic" class="screen page padded s1">
                 <div class="m-card m-settings-card">
                     <ng-container *ngTemplateOutlet="settingsHeader; context: { row: settingsRows[3] }"></ng-container>
                     <ng-container *ngTemplateOutlet="backupItem; context: { icon: 'dynamic_feed', label: 'IMPORT' }">
@@ -667,7 +710,16 @@
 
         <!-- Restore a backup: Import > file > confirmation > done -->
         <ng-container *ngSwitchCase="'backup-restore'">
-            <div class="screen page padded s1">
+            <!-- V2: the import under the tiles of the backup. V1: the list -->
+            <div *ngIf="!classic" class="screen page padded s1">
+                <div class="m-card m-settings-card">
+                    <ng-container *ngTemplateOutlet="backupTiles"></ng-container>
+                    <ng-container
+                        *ngTemplateOutlet="dataAction; context: { kind: 'import', icon: 'settings_backup_restore', label: 'IMPORT', anchor: 'import', tap: true, step: 1 }">
+                    </ng-container>
+                </div>
+            </div>
+            <div *ngIf="classic" class="screen page padded s1">
                 <div class="m-card m-settings-card">
                     <ng-container
                         *ngTemplateOutlet="backupItem; context: { icon: 'dynamic_feed', label: 'IMPORT', anchor: 'import', tap: true, step: 1 }">
@@ -700,7 +752,12 @@
 
         <!-- PDF report: Export as PDF > month > report -->
         <ng-container *ngSwitchCase="'pdf-report'">
-            <div class="screen page padded s1">
+            <div *ngIf="!classic" class="screen page padded s1">
+                <div class="m-card m-settings-card">
+                    <ng-container *ngTemplateOutlet="exportRows; context: { tap: 'pdf' }"></ng-container>
+                </div>
+            </div>
+            <div *ngIf="classic" class="screen page padded s1">
                 <div class="m-card m-settings-card">
                     <ng-container *ngTemplateOutlet="backupItem; context: { icon: 'share', label: 'EXPORT_FILE' }">
                     </ng-container>
@@ -784,6 +841,118 @@
                     <span class="m-fab"><mat-icon>save_alt</mat-icon></span>
                     <span class="step">3</span>
                 </div>
+            </div>
+        </ng-container>
+
+        <!-- Under the calendar: Year in Pixels, and (V2) the month shared as an image -->
+        <ng-container *ngSwitchCase="'year-in-pixels'">
+            <div class="screen page s1">
+                <div class="m-card m-calendar m-calendar-end">
+                    <div class="m-calendar-grid">
+                        <span *ngFor="let cell of calendarLastWeeks" class="m-day level-{{ cell.level }}"
+                            [class.future]="cell.future" [class.today]="cell.today">{{ cell.day }}</span>
+                    </div>
+                    <div class="m-calendar-actions" [class.classic-actions]="classic">
+                        <span class="m-text-button tap" [class.stroked]="classic" data-anchor="yip">
+                            <mat-icon>grid_on</mat-icon>{{ t('YEAR_IN_PIXELS') }}<span class="step">1</span>
+                        </span>
+                        <span *ngIf="!classic" class="m-text-button">
+                            <mat-icon>share</mat-icon>{{ t('SHARE_MONTH_BUTTON') }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="screen page s2" data-anchor="year">
+                <div class="m-year-header">
+                    <mat-icon>arrow_back</mat-icon>
+                    <span>{{ t('YEAR_IN_PIXELS') }}</span>
+                    <!-- V2: the share of the year -->
+                    <span *ngIf="!classic" class="m-share-year tap" data-anchor="share-year">
+                        <mat-icon>share</mat-icon><span class="step">2</span>
+                    </span>
+                </div>
+                <div class="m-year">{{ today.year }}</div>
+                <div class="m-year-grid">
+                    <span *ngFor="let month of yearMonths" class="m-year-month">
+                        <span class="m-year-initial">{{ monthInitial(t('MONTH-' + month.month)) }}</span>
+                        <span *ngFor="let level of month.cells" class="m-pixel level-{{ level }}"></span>
+                    </span>
+                </div>
+            </div>
+            <div *ngIf="!classic" class="screen sheet s3" data-anchor="share-sheet">
+                <div class="m-sheet-title centered">{{ t('SHARE_YEAR_TITLE') }}</div>
+                <div class="m-share-preview">
+                    <span class="m-share-preview-month">{{ today.year }}</span>
+                    <span class="m-share-preview-title">{{ t('TUTORIAL_MOCK_SYMPTOM_1') }}</span>
+                    <span class="m-share-year-grid">
+                        <span *ngFor="let month of yearMonths" class="m-year-month">
+                            <span *ngFor="let level of month.cells" class="m-pixel level-{{ level }}"></span>
+                        </span>
+                    </span>
+                    <span class="m-share-preview-brand">Life Notes</span>
+                </div>
+                <div class="m-button m-wide-button"><mat-icon>share</mat-icon>{{ t('SHARE_MONTH_SHARE') }}</div>
+            </div>
+        </ng-container>
+
+        <!-- Export as CSV: Settings > Import / Export > CSV > layout > spreadsheet -->
+        <ng-container *ngSwitchCase="'csv-export'">
+            <div *ngIf="!classic" class="screen page padded s1">
+                <div class="m-card m-settings-card">
+                    <ng-container *ngTemplateOutlet="exportRows; context: { tap: 'csv' }"></ng-container>
+                </div>
+            </div>
+            <div *ngIf="classic" class="screen page padded s1">
+                <div class="m-card m-settings-card">
+                    <ng-container *ngTemplateOutlet="backupItem; context: { icon: 'picture_as_pdf', label: 'EXPORT_PDF' }">
+                    </ng-container>
+                    <ng-container
+                        *ngTemplateOutlet="backupItem; context: { icon: 'table_chart', label: 'EXPORT_CSV', anchor: 'csv', tap: true, step: 1 }">
+                    </ng-container>
+                </div>
+            </div>
+            <div class="screen sheet s2" data-anchor="csv-sheet">
+                <div class="m-sheet-title centered">{{ t('EXPORT_CSV') }}</div>
+                <div class="m-csv-layout selected glow">
+                    <span class="m-csv-layout-icon"><mat-icon>calendar_view_day</mat-icon></span>
+                    <span class="m-csv-layout-text">
+                        <span class="m-csv-layout-title">{{ t('EXPORT_CSV_DAYS_TITLE') }}</span>
+                        <span class="m-csv-layout-description">{{ t('EXPORT_CSV_DAYS_TEXT') }}</span>
+                    </span>
+                </div>
+                <div class="m-csv-layout">
+                    <span class="m-csv-layout-icon"><mat-icon>format_list_bulleted</mat-icon></span>
+                    <span class="m-csv-layout-text">
+                        <span class="m-csv-layout-title">{{ t('EXPORT_CSV_EVENTS_TITLE') }}</span>
+                        <span class="m-csv-layout-description">{{ t('EXPORT_CSV_EVENTS_TEXT') }}</span>
+                    </span>
+                </div>
+                <div class="m-actions tap" data-anchor="csv-actions">
+                    <span class="m-button stroked">{{ t('EXPORT_CSV_SAVE') }}</span>
+                    <span class="m-button">{{ t('EXPORT_CSV_SHARE') }}</span>
+                    <span class="step">2</span>
+                </div>
+            </div>
+            <!-- The file opened in a spreadsheet: a column, then its chart -->
+            <div class="screen page s3" data-anchor="spreadsheet">
+                <div class="m-spreadsheet-bar"><mat-icon>table_chart</mat-icon><span>{{ csvFileName }}</span></div>
+                <div class="m-spreadsheet">
+                    <span class="m-cell m-corner"></span>
+                    <span class="m-cell m-column">A</span><span class="m-cell m-column">B</span><span class="m-cell m-column">C</span>
+                    <span class="m-cell m-line">1</span>
+                    <span class="m-cell m-head">{{ t('CSV_DATE') }}</span>
+                    <span class="m-cell m-head selected">{{ t('CSV_SYMPTOM_COLUMN', { name: t('TUTORIAL_MOCK_SYMPTOM_1'), max: 10 }) }}</span>
+                    <span class="m-cell m-head">{{ t('CSV_SLEEP') }}</span>
+                    <ng-container *ngFor="let row of csvRows; let i = index">
+                        <span class="m-cell m-line">{{ i + 2 }}</span>
+                        <span class="m-cell">{{ row.date }}</span>
+                        <span class="m-cell number selected">{{ row.intensity }}</span>
+                        <span class="m-cell number">{{ row.sleep }}</span>
+                    </ng-container>
+                </div>
+                <svg class="m-chart" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true">
+                    <polyline [attr.points]="csvChartPoints"></polyline>
+                </svg>
             </div>
         </ng-container>
 

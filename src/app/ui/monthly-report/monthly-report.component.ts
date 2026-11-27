@@ -18,6 +18,7 @@ import { MatDialog } from '@angular/material/dialog';
 import * as moment from 'moment';
 import { ActivatedRoute } from '@angular/router';
 import { endOfToday } from 'date-fns';
+import { SleepChartMode } from '../sleep-stats';
 
 // Card of the most frequent entries of an event type, in the modern report
 interface IReportStatCard {
@@ -46,6 +47,8 @@ export class MonthlyReportComponent implements OnInit, OnDestroy {
 	public symptomRows: ISymptom[][] = [];
 	public statRows: IReportStatCard[][] = [];
 	public sleepRows: { title: string, chart: ALineChartViewModel }[][] = [];
+	// Mode of the sleep when opened from the share of the calendar (the one shown there), else the one of the settings
+	public sleepChartMode: SleepChartMode;
 	private readonly todayDate = moment().format('YYYY-MM-DD');
 	private resizeObserver: any;
 	private fitFrame: number;
@@ -101,6 +104,8 @@ export class MonthlyReportComponent implements OnInit, OnDestroy {
 
 	public ngOnInit(): void {
 		const monthYear = this.route.snapshot.paramMap.get('monthyear').split('-');
+		// Checked by the sleep card: anything else than 'bars' or 'curves' is ignored
+		this.sleepChartMode = this.route.snapshot.queryParamMap.get('sleep') as SleepChartMode;
 		this.month = parseInt(monthYear[1]);
 		this.year = parseInt(monthYear[0]);
 		this.today = getDetailedDate(moment().format('YYYY-MM-DD'));

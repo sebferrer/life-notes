@@ -213,7 +213,7 @@ export class Phone {
 		if ((await header.getAttribute('aria-expanded')) !== 'true') {
 			await header.click();
 		}
-		const save = panel.locator('mat-list-option').filter({ has: this.page.locator('mat-icon', { hasText: /^\s*save_alt\s*$/ }) });
+		const save = panel.locator('mat-list-option, .data-action').filter({ has: this.page.locator('mat-icon', { hasText: /^\s*save_alt\s*$/ }) });
 		const [download] = await Promise.all([this.page.waitForEvent('download'), save.click()]);
 		const stream = await download.createReadStream();
 		const chunks: Buffer[] = [];

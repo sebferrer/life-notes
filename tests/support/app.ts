@@ -108,6 +108,22 @@ export class App {
 		await this.closeDialogs();
 	}
 
+	// Puts the page shown back in its loading state, for good: the data of its component (host element) replaced by an
+	// observable that never emits, or emptied (dev build: window.ng). The loading of a page is otherwise too quick to
+	// be seen.
+	public async holdLoading(host: string, property: string): Promise<void> {
+		await expect(this.page.locator(host)).toBeAttached();
+		await this.page.evaluate(({ host, property }) => {
+			const ng = (window as any).ng;
+			const component = ng.getComponent(document.querySelector(host));
+			// next() too: a load still running may push into it
+			component[property] = property.endsWith('$')
+				? { subscribe: () => ({ unsubscribe: () => undefined }), next: () => undefined, complete: () => undefined }
+				: null;
+			ng.applyChanges(component);
+		}, { host, property });
+	}
+
 	public async goToTimeline(): Promise<void> {
 		await this.page.locator('#menu-icon-timeline').click();
 		await expect(this.page.locator('.day-card, .timeline-tile').first()).toBeVisible();
@@ -251,7 +267,7 @@ export class App {
 		const sheet = this.page.locator('.edit-custom-type');
 		await sheet.locator('.custom-type-label-input').fill(label);
 		if (options.icon) {
-			await sheet.locator(`.icon-choice[data-icon="${options.icon}"]`).click();
+			await this.chooseCustomTypeIcon(options.icon);
 		}
 		if (options.color != null) {
 			await sheet.locator('button.color-choice').nth(options.color).click();
@@ -265,6 +281,17 @@ export class App {
 		await sheet.locator('.confirm-button').click();
 		await expect(sheet).toBeHidden();
 		await expect(this.page.locator('.manage-tile.custom', { hasText: label })).toBeVisible();
+	}
+
+	// Icon of the open sheet of an event type, the grid unfolded first (V2: only its first rows are shown)
+	public async chooseCustomTypeIcon(icon: string): Promise<void> {
+		const sheet = this.page.locator('.edit-custom-type');
+		const choice = sheet.locator(`.icon-choice[data-icon="${icon}"]`);
+		if ((await choice.getAttribute('aria-hidden')) === 'true') {
+			await sheet.locator('.icons-toggle').click();
+			await expect(choice).not.toHaveAttribute('aria-hidden', 'true');
+		}
+		await choice.click();
 	}
 
 	// Adds an entry of an event type created by the user, as addEvent
@@ -340,7 +367,7 @@ export class App {
 		await this.goToSettings('Importer / Exporter');
 		const [download] = await Promise.all([
 			this.page.waitForEvent('download'),
-			this.page.locator('mat-list-option', { hasText: 'Sauvegarder' }).click()
+			this.page.locator('mat-list-option, .data-action', { hasText: 'Sauvegarder' }).click()
 		]);
 		const stream = await download.createReadStream();
 		const chunks: Buffer[] = [];

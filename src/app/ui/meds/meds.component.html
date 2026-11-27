@@ -10,7 +10,7 @@
         </button>
     </header>
 
-    <div *ngIf="meds$ | async as meds; else loading" class="manage-list">
+    <div *ngIf="meds$ | async as meds; else loading" class="manage-list page-content-in">
         <div *ngFor="let med of meds" class="manage-item">
             <div class="manage-item-bubble">
                 <span class="svg-icon pill"></span>
@@ -61,5 +61,5 @@
 </button>
 
 <ng-template #loading>
-    <mat-spinner class="view-spinner"></mat-spinner>
+    <app-page-skeleton kind="list"></app-page-skeleton>
 </ng-template>

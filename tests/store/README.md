@@ -22,3 +22,17 @@ Play itself refuses transparent images). `extras/light-monthly-report.png` is th
 
 Options: `STORE_LANGS=fr` (one language only), `STORE_OUT=<folder>` (another output folder), `STORE_PDF_ONLY=1`
 (only the PDF report, the other screenshots are kept). The PDF itself is saved in `tests/results`.
+
+## Phone of the website
+
+`website-demo.spec.ts` makes the screens of the phone that can be played with on the home page of the website
+(life-notes-website, `assets/img/demo/{en,fr}`): two weeks of the timeline, the calendar of the current month and the
+four before it (with their charts), and the built-in event types. Whole pages at 2x, cut into WebP images, and `demo.json`
+(the height of each page, where its buttons are). Same data as the Google Play screenshots.
+
+It only runs with an output folder, then its content is copied to the website:
+
+    npm run build
+    set WEBSITE_DEMO_OUT=<folder>&& npx playwright test --config=playwright.store.config.ts website-demo
+
+Build a released state of the app: the website must not show a feature that isn't published yet.

@@ -1,4 +1,5 @@
 import { Component, Inject, ViewEncapsulation, NgZone } from '@angular/core';
+import { Router } from '@angular/router';
 import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
 import { TranslocoService } from '@ngneat/transloco';
 import { DaysService } from 'src/app/infra';
@@ -54,7 +55,8 @@ export class DialogOccurrenceHistoryComponent {
         private daysService: DaysService,
         public globalService: GlobalService,
         private translocoService: TranslocoService,
-        private zone: NgZone
+        private zone: NgZone,
+        private router: Router
     ) {
         this.tab = data.tab || (globalService.isUiV1 ? 'history' : 'stats');
         // Sort descending: most recent first
@@ -63,6 +65,12 @@ export class DialogOccurrenceHistoryComponent {
 
     public onClose(): void {
         this.bottomSheetRef.dismiss({ hasChanges: this.hasChanges, reopen: false });
+    }
+
+    // The correlations of the symptom, filtered on it
+    public openCorrelations(): void {
+        this.onClose();
+        this.router.navigate(['/correlations'], { queryParams: { symptom: this.data.key } });
     }
 
     // In numbers, in the order of the language: 18/03/2026, 18.03.2026 in German, 2026/03/18 in Japanese

@@ -1,0 +1,36 @@
+:host {
+    display: block;
+}
+
+// Only its transform is animated, on a layer of its own: the compositor turns it, without the main thread
+.spinner-rotor {
+    width: 100%;
+    height: 100%;
+    animation: app-spinner-turn 1s linear infinite;
+    will-change: transform;
+
+    svg {
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
+
+    // Three quarters of a ring, as thick as the one of mat-spinner (10 % of its diameter), in the primary color
+    circle {
+        fill: none;
+        stroke: var(--primary);
+        stroke-width: 10;
+        // 2π × 45 ≈ 283
+        stroke-dasharray: 212 283;
+    }
+}
+
+@keyframes app-spinner-turn {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}

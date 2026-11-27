@@ -23,6 +23,9 @@ The tests use the installed Google Chrome. Without it, run `npx playwright insta
 A single test or file: `npx playwright test --config=playwright.config.ts tests/e2e/timeline.spec.ts -g "deleted"`.
 Add `--headed` to watch it, or `--ui` for the interactive mode.
 
+At most 3 browsers run in parallel, so that the tests don't take the whole processor (6, the default of
+Playwright on a 12-thread CPU, keep it at 100%). `PW_WORKERS=n` changes it for one run.
+
 ## What is tested
 
 - `unit/`: pure logic of `src`, without browser
@@ -35,21 +38,62 @@ Add `--headed` to watch it, or `--ui` for the interactive mode.
     figures, hours of the day), sleep of the nights of a month
   - invitation to rate the app: due once, to the users who know the app (days with data, since how long), never
     right after a strong symptom (every value of both scales: up to 2 of 5, up to 4 of 10, reversed when inverted)
+  - image of the month of a symptom: the symptoms that can be shared, its figures (as its ring in the calendar, both
+    scales), the improvement on the previous month only once the month is over and only when it is better; the sleep
+    of a month can be shared from its first complete night
+  - correlation engine: ranks, median, q-values of Benjamini-Hochberg; the stratified permutation test (finds a
+    strong link, no false alarm on independent data, strata keeping apart what must not be compared, same result
+    every time); the links found in generated days (a meal then a stomach ache within hours, compared with the
+    same hours of the other days; short nights then headaches, a single card for the short nights and the late
+    bedtimes; nights too short or too long for the person then fatigue; an irregular schedule then dizziness; a mood
+    lower the day after a drink; a sport with fewer symptoms; the quantity of a custom type) and those not found (a
+    habit and a symptom of the same season, the soup eaten the evenings without curry, a medication taken because of
+    a symptom, nor linked to the other symptoms of these days, random data); a few striking days stay a weak lead;
+    two years analyzed in less than 5 s
+  - export as CSV: one line per day (a column per measure: intensity of the day of each symptom, sleep of the night
+    before, dose of each medication, quantity or count of each custom type, counts of meals, sports and notes) or one
+    line per entry (as the backup); an empty cell for nothing logged, never 0; the days without entry left out; ";"
+    and 1,5 in the languages with a decimal comma, "," and 1.5 otherwise; byte order mark for Excel; quotes, line
+    breaks and texts starting like a formula; the columns translated in every language
 - `e2e/`: user flows, in French, each test starting from a fresh app (empty database)
   - first launch, symptoms (inverted intensity scale too), timeline (every event type, edit, delete, wake-up/bedtime, intensity, V1),
-    day view, calendar (V1 too, V2: intensities of the symptoms entered as rings, V1: pie charts, sleep of the month as bars or curves), Year in Pixels, manage lists (refreshed from their header, confirmed in a sheet), statistics of an event, settings (the help of the automatic overview, illustrated in V1 and V2), backups (export, import, another phone, invalid files),
+    day view, calendar (V1 too, V2: intensities of the symptoms entered as rings, V1: pie charts, sleep of the month as bars or curves), Year in Pixels, manage lists (refreshed from their header, confirmed in a sheet), statistics of an event, settings (the help of the automatic overview, illustrated in V1 and V2; the advanced ones: in V2 the experimental features, then, below a line, the manual save and the forced import folded under a row, in V1 all at once), backups (export, import, another phone, invalid files),
     PDF report (V2: each symptom as in the calendar, V1: the classic report, both saved as a PDF), tutorial (illustrated
-    with the screens of the version of the interface, no text cut on a small phone, the last slide only gives the
-    contact address), small screens, the cross of every
+    with the screens of the version of the interface, no text cut on a small phone, the
+    last slide only gives the contact address), small screens, the cross of every
     bottom sheet
+  - share of the month as an image (calendar of the V2, when a symptom has intensities or the month a complete night):
+    the month and the address in a dark green (the name of the app on the PDF report too); a PNG of 1080 x 1350 and its
+    message given to the share sheet of the browser, downloaded without one; on Android (bridge of Capacitor faked),
+    written in the cache by Filesystem then given to Share with its message, a share sheet left without choosing
+    an app being no error; the image saved (downloaded on the web, on Android written in the cache then given to the
+    "Save as" of the system by FileSaver, as the PDF report; the sheet stays open, leaving the "Save as" is no error);
+    the choice of the symptom, the sleep after the symptoms (alone when no symptom has an intensity: the sleep card of
+    the calendar, its figures and both charts, taller than 1350 and checked on the pixels of the image, in the mode of
+    the card, bars or curves, the PDF report opened from the share too), the comparison with the previous month, the
+    PDF report of the same month from the sheet, no share for a month without intensity nor night, nor in V1
   - languages: the texts built by the code follow each language (order of the dates, month numbers in Japanese,
     capitals of the German nouns and of the Spanish titles, singular), the language of the page, the day of an
     entry in a time zone behind UTC
-  - event types created by the user: creation (the icons must all exist in the Material Icons font), entries
+  - share of Year in Pixels as an image (V2, when a symptom has intensities in the year): a PNG of 1080 x 1350 in the
+    frame of the image of a month, a pixel per day in its color (checked on the pixels of the image), its message given
+    to the share sheet of the browser, the symptom shown by the page first and the others to choose, the image saved;
+    no share for a year without intensity, nor in V1
+  - event types created by the user: creation (the icons must all exist in the Material Icons font; V2: their first
+    rows, the others unfolded with a button, unfolded at once for the icon of the type edited; V1: all of them), entries
     from the timeline, colors per theme, limit of 10 types, edition, renaming and deletion of entries, deletion
     of a type with its entries, backups, PDF report; restart in the dark theme, several types sharing entry
     names, English quantities, 12 hour format, length limits, entries of a missing type, incomplete types in a
     backup, identical entries of the same minute, quantities hidden by their type
+  - back from a day (button of the day page, or back of the phone/browser): the timeline (V1 and V2) with the same day
+    at the same place on the screen, even beyond the first days loaded, several times in a row; the calendar on the
+    month browsed and at the same position; opened from the toolbar instead, both start again (today, current month)
+  - export as CSV (Settings > Import / Export): the files downloaded, one line per day or per entry, in the format of a
+    French spreadsheet; nothing to export without entries; the last entry of the list in V1
+  - loading of the pages (held in their loading state by `app.holdLoading`): in V2 a mock-up of each page (timeline,
+    calendar, Year in Pixels, lists, correlations with what they are doing), never a spinner; shown after 150 ms only, its
+    light and its fading animating only transform and opacity (run by the compositor, so not frozen by the loading), the
+    page fading in once loaded; in V1 the spinner, without fading
   - versions of the interface: the V2 for new users only, the users of a former version (`app.startAsFormerUser`,
     settings written in the database before the app starts) keep the V1 and get a popup once; what differs in V1
     (see `GlobalService.uiVersion`); when the app starts, only the chosen version is ever drawn (no flash)
@@ -62,7 +106,20 @@ Add `--headed` to watch it, or `--ui` for the interactive mode.
     published before the V2; September and October 2026, some of its entries typed in its own interface). Imported,
     every day and symptom is found again as it was; a phone with the settings of a 2025 version (five fields) gets
     the V1, the popup and the defaults of then
-- `visual/`: main screens in light and dark themes, the V1 screens and the popup of the V2, compared pixel by pixel to
+  - correlations (V2, experimental): off by default, turned on in the advanced settings only once their warning is
+    accepted (the engine is often wrong, the reverse correlations with the coffee drunk because of the fatigue; cancelled
+    or closed, they stay off; turned off at once). Then a small tonal button on the line of the title of the list of
+    symptoms ("Symptômes" in V2), with the link of the statistics of a symptom (none in the manage menu, none in V1 even
+    turned on), the help
+    of the information point (not a cause, not a diagnosis), their icons in the icon font, what is missing without
+    symptom or before 14 days; with 60 generated days imported (`support/correlation-data.ts`): the links in sentences
+    with their figures, the strength of the signal, the latest days behind a link each opening its day, the filter by
+    symptom, the weak leads on demand; the statistics of a symptom open its correlations filtered on it
+- `visual/`: main screens in light and dark themes (the correlations too: the advanced settings and their warning, empty
+  and with generated days; the Import /
+  Export section and the sheet of the CSV export; the mock-ups of the timeline, calendar, Year in Pixels, a list and the
+  correlations while they load), the V1
+  screens and the popup of the V2, compared pixel by pixel to
   `visual/__screenshots__`
 
 Every test fails on any JavaScript error, console error or failed request of the page, even when the screen

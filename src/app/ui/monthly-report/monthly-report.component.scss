@@ -129,7 +129,8 @@
         align-items: flex-end;
         justify-content: space-between;
         padding-bottom: 18px;
-        border-bottom: 3px solid var(--primary);
+        // The green of the logo, as the name of the app
+        border-bottom: 3px solid var(--brand-green);
 
         .report-title {
             font-size: 34px;
@@ -149,7 +150,7 @@
             font-weight: 700;
             letter-spacing: 2px;
             text-transform: uppercase;
-            color: var(--primary);
+            color: var(--brand-green);
         }
     }
 

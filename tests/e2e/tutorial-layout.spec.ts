@@ -2,10 +2,13 @@ import { test, expect, TODAY } from '../support/app';
 import { LANGUAGE_CODES } from '../../src/app/models/language.model';
 
 // Arrows expected in each illustrated slide (see SCENE_ARROWS in tutorial-scene.component.ts)
-const SCENE_ARROWS = {
-	'create-symptom': 2, 'target-symptom': 2, 'day-overview': 2, 'calendar': 1, 'add-event': 2, 'edit-event': 2,
-	'manage': 1, 'settings': 1, 'backup-why': 0, 'backup-save': 2, 'backup-restore': 3, 'pdf-report': 2
+const SCENE_ARROWS: { [scene: string]: number } = {
+	'create-symptom': 2, 'target-symptom': 2, 'day-overview': 2, 'calendar': 1, 'year-in-pixels': 2, 'add-event': 2,
+	'edit-event': 2, 'manage': 1, 'settings': 1, 'backup-why': 0, 'backup-save': 2,
+	'backup-restore': 3, 'pdf-report': 2, 'csv-export': 2
 };
+// The V1 interface has no share of the year
+const CLASSIC_SCENE_ARROWS: { [scene: string]: number } = { ...SCENE_ARROWS, 'year-in-pixels': 1 };
 
 // A translation key shown instead of its text (e.g. TUTORIAL_CALENDAR_TITLE)
 const UNTRANSLATED = /\b[A-Z][A-Z0-9]+(_[A-Z0-9]+)+\b/;
@@ -24,12 +27,13 @@ for (const { language, classic } of VARIANTS) {
 			await app.setUiVersion('V1');
 		}
 		await page.goto('/#/tutorial');
-		await expect(page.locator('.scene.classic')).toHaveCount(classic ? Object.keys(SCENE_ARROWS).length : 0);
-		await expect(page.locator('ion-slide')).toHaveCount(2 + Object.keys(SCENE_ARROWS).length);
+		const sceneArrows = classic ? CLASSIC_SCENE_ARROWS : SCENE_ARROWS;
+		await expect(page.locator('.scene.classic')).toHaveCount(classic ? Object.keys(sceneArrows).length : 0);
+		await expect(page.locator('ion-slide')).toHaveCount(2 + Object.keys(sceneArrows).length);
 
 		const scenes = page.locator('app-tutorial-scene');
-		await expect(scenes).toHaveCount(Object.keys(SCENE_ARROWS).length);
-		for (const [scene, arrows] of Object.entries(SCENE_ARROWS)) {
+		await expect(scenes).toHaveCount(Object.keys(sceneArrows).length);
+		for (const [scene, arrows] of Object.entries(sceneArrows)) {
 			const root = page.locator(`.scene-${scene}`);
 			await root.scrollIntoViewIfNeeded();
 			await expect(root.locator('.arrow-line'), scene).toHaveCount(arrows);

@@ -4,7 +4,7 @@ import { Page } from '@playwright/test';
 // Settings > Import / Export > Export as PDF, for the current month (March 2026)
 async function openReport(app: App, page: Page): Promise<void> {
 	await app.goToSettings('Importer / Exporter');
-	await page.locator('mat-list-option', { hasText: 'Exporter en PDF' }).click();
+	await page.locator('mat-list-option, .data-action', { hasText: 'Exporter en PDF' }).click();
 	await page.locator('.export-pdf .confirm-button').click();
 	await expect(page).toHaveURL(/#\/monthlyreport\/2026-0?3$/);
 }

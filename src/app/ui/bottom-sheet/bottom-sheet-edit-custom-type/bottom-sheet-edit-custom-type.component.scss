@@ -143,6 +143,39 @@
         }
     }
 
+    // V2: folded to its first rows (max-height set by the component), unfolded smoothly
+    .icon-grid.collapsible {
+        overflow: hidden;
+        transition: max-height 0.25s ease;
+    }
+
+    .icons-toggle {
+        display: flex;
+        align-items: center;
+        gap: 0.15rem;
+        margin: 0.4rem auto 0 auto;
+        padding: 0.35rem 0.5rem 0.35rem 0.85rem;
+        border: none;
+        border-radius: 999px;
+        background-color: transparent;
+        color: var(--primary);
+        font: inherit;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+
+        &:focus-visible {
+            outline: 2px solid var(--primary);
+        }
+
+        mat-icon {
+            font-size: 1.3rem;
+            width: 1.3rem;
+            height: 1.3rem;
+        }
+    }
+
     .color-row {
         display: flex;
         flex-wrap: wrap;

@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { Subject, BehaviorSubject } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { NavigationStart, Router } from '@angular/router';
+import { Subject, BehaviorSubject, Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import { DaysService, ImporterExporterService } from 'src/app/infra';
 import { getDetailedDate } from 'src/app/util/date.utils';
 import { DayOverviewViewModel } from 'src/app/models/day.overview.view.model';
@@ -16,7 +18,20 @@ import { DialogInfoComponent } from '../dialog/dialog-info';
 import { MatDialog } from '@angular/material/dialog';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { BottomSheetInfoComponent } from '../bottom-sheet/bottom-sheet-info';
+import { BottomSheetShareMonthComponent, IShareMonthData } from '../bottom-sheet/bottom-sheet-share-month';
+import { getShareableSymptoms, hasSleepToShare } from 'src/app/models/month-share.model';
+import { SleepChartMode } from '../sleep-stats';
+import { NavigationMemoryService } from 'src/app/infra/navigation-memory.service';
 import * as moment from 'moment';
+
+// What the calendar showed, found again with the back button (see NavigationMemoryService)
+interface ICalendarState {
+	month: number;
+	year: number;
+	showAllSymptoms: boolean;
+	sleepChartMode: SleepChartMode;
+	scrollY: number;
+}
 
 // Symptoms of one scale (V2): their rings share one legend
 export interface IPieGroup {
@@ -29,7 +44,7 @@ export interface IPieGroup {
 	templateUrl: './calendar.component.html',
 	styleUrls: ['./calendar.component.scss']
 })
-export class CalendarComponent implements OnInit {
+export class CalendarComponent implements OnInit, OnDestroy {
 
 	public overviews: DayOverviewViewModel[];
 	public overviews$: Subject<DayOverviewViewModel[]>;
@@ -53,9 +68,22 @@ export class CalendarComponent implements OnInit {
 	// V2: the pie charts of the symptoms without any entry (intensity or occurrence) in the month are hidden, unless all are asked for
 	public showAllSymptoms = false;
 	private symptomKeysWithEntry = new Set<string>();
+	// V2: whether the share button is shown: symptoms with an intensity in the month (their order is the one of the
+	// sheet, see openShareSheet), or a complete night of sleep
+	public shareableSymptoms: ISymptom[] = [];
+	public shareableSleep = false;
+	// Month of the days loaded (overviews): the arrows change the month of the header at once, its days come later
+	private loadedMonth: number;
+	private loadedYear: number;
+	// V2: mode of the sleep card, the one of the settings until changed with its buttons: the shared image and the PDF
+	// report opened from the share draw the sleep in the same one
+	public sleepChartMode: SleepChartMode;
 	public weekDays: number[];
 
 	public debug: string;
+	private subscriptions = new Subscription();
+	// Back from a day: the position of the page, once the month is drawn again
+	private restoredScrollY: number = null;
 
 	constructor(
 		public globalService: GlobalService,
@@ -63,7 +91,9 @@ export class CalendarComponent implements OnInit {
 		public translocoService: TranslocoService,
 		public importerExporterService: ImporterExporterService,
 		private dialog: MatDialog,
-		private bottomSheet: MatBottomSheet
+		private bottomSheet: MatBottomSheet,
+		private router: Router,
+		private navigationMemory: NavigationMemoryService
 	) {
 		this.pieCharts = new Map<string, CalendarPieChartViewModel>();
 		this.bedTimeChart = new BedTimeChartViewModel('line');
@@ -75,6 +105,7 @@ export class CalendarComponent implements OnInit {
 		this.overviews$ = new Subject<DayOverviewViewModel[]>();
 		this.previousOverviews = new Array<DayOverviewViewModel>();
 		this.previousOverviews$ = new Subject<DayOverviewViewModel[]>();
+		this.sleepChartMode = globalService.sleepChartMode === 'curves' ? 'curves' : 'bars';
 	}
 
 	public ngOnInit(): void {
@@ -82,10 +113,32 @@ export class CalendarComponent implements OnInit {
 		this.month = detailedDate.month;
 		this.year = detailedDate.year;
 		this.today = getDetailedDate(moment().format('YYYY-MM-DD'));
+		// Back from a day opened from the calendar (or another page): the month shown then, as it was
+		const state = this.navigationMemory.restore<ICalendarState>('calendar');
+		if (state != null) {
+			this.month = state.month;
+			this.year = state.year;
+			this.showAllSymptoms = state.showAllSymptoms;
+			this.sleepChartMode = state.sleepChartMode;
+			this.restoredScrollY = state.scrollY;
+		}
+		this.subscriptions.add(this.router.events.pipe(filter(event => event instanceof NavigationStart)).subscribe(() => {
+			this.navigationMemory.save<ICalendarState>('calendar', {
+				month: this.month,
+				year: this.year,
+				showAllSymptoms: this.showAllSymptoms,
+				sleepChartMode: this.sleepChartMode,
+				scrollY: window.scrollY
+			});
+		}));
 		// The symptoms are loaded again with each month: their charts follow (subscribed once, before the template)
 		this.symptoms$.subscribe(symptoms => this.updateSymptomCharts(symptoms));
-		this.updateCalendar(this.today.month, this.today.year);
+		this.updateCalendar(this.month, this.year);
 		this.symptomMap = this.globalService.symptomMap;
+	}
+
+	public ngOnDestroy(): void {
+		this.subscriptions.unsubscribe();
 	}
 
 	public htmltoPDF() {
@@ -158,6 +211,7 @@ export class CalendarComponent implements OnInit {
 		this.wakeUpChart.timeFormat = this.globalService.timeFormat;
 		this.wakeUpChart.update(this.overviews);
 		this.sleepChart.update(this.overviews, this.previousOverviews);
+		this.shareableSleep = hasSleepToShare(this.overviews, this.previousOverviews);
 	}
 
 	private updateSymptomCharts(symptoms: ISymptom[]): void {
@@ -169,6 +223,7 @@ export class CalendarComponent implements OnInit {
 			this.intensitySummaries.set(symptom.key, getIntensitySummary(this.pieCharts.get(symptom.key),
 				this.overviews, symptom.key, !!symptom.invertedScale, this.globalService.painScale));
 		});
+		this.shareableSymptoms = getShareableSymptoms(symptoms, this.overviews);
 	}
 
 	public updateCalendar(month: number, year: number): void {
@@ -181,11 +236,18 @@ export class CalendarComponent implements OnInit {
 			}
 			this.overviews = days.map(day => new DayOverviewViewModel(day));
 			this.previousOverviews = previousDays.map(day => new DayOverviewViewModel(day));
+			this.loadedMonth = month;
+			this.loadedYear = year;
 
 			this.overviews$.next(this.overviews);
 			this.previousOverviews$.next(this.previousOverviews);
 			this.calculateEmptySlots();
 			this.updateCharts();
+			if (this.restoredScrollY != null) {
+				const scrollY = this.restoredScrollY;
+				this.restoredScrollY = null;
+				this.navigationMemory.scrollWhenReady(() => scrollY);
+			}
 		});
 	}
 
@@ -252,6 +314,36 @@ export class CalendarComponent implements OnInit {
 				titleKey: 'CALENDAR_HELP_DIALOG_TITLE',
 				contentKeys: ['CALENDAR_HELP_DIALOG_CONTENT_1', 'CALENDAR_HELP_DIALOG_CONTENT_2']
 			}
+		});
+	}
+
+	// V2: the days of the month of the header are being loaded, the ones shown are still those of the month before
+	public get loadingMonth(): boolean {
+		return this.loadedMonth !== this.month || this.loadedYear !== this.year;
+	}
+
+	// V2: the month of a symptom or the sleep as an image, with its message. Never while another month is loaded (its
+	// name with the days of the one before). The symptom shown by the calendar first: the target symptom may have changed
+	// in the toolbar since the symptoms were loaded, in the order of that time.
+	public openShareSheet(): void {
+		if (this.loadingMonth) {
+			return;
+		}
+		const symptoms = this.organizeSymptoms(this.symptoms.filter(symptom => symptom != null)
+			.sort((a, b) => (a.label || '').localeCompare(b.label || '')));
+		const data: IShareMonthData = {
+			month: this.loadedMonth,
+			year: this.loadedYear,
+			symptoms: getShareableSymptoms(symptoms, this.overviews),
+			overviews: this.overviews,
+			previousOverviews: this.previousOverviews,
+			weekDays: this.globalService.calendarBlockView ? [] : this.weekDays,
+			emptySlots: this.emptySlots.length,
+			sleepChartMode: this.sleepChartMode
+		};
+		this.bottomSheet.open(BottomSheetShareMonthComponent, {
+			panelClass: ['event-bottom-sheet', 'share-month-panel'],
+			data
 		});
 	}
 

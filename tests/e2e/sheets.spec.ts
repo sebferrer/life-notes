@@ -177,10 +177,15 @@ test.describe('Bottom sheets', () => {
 		const { content } = await app.exportBackup();
 
 		// PDF report
-		await page.locator('mat-list-option', { hasText: 'Exporter en PDF' }).click();
+		await page.locator('mat-list-option, .data-action', { hasText: 'Exporter en PDF' }).click();
 		await page.locator('.export-pdf .sheet-close-button').click();
 		await expect(sheets).toHaveCount(0);
 		await expect(page).toHaveURL(/#\/settings$/);
+
+		// Export as CSV
+		await page.locator('mat-list-option, .data-action', { hasText: 'Exporter en CSV' }).click();
+		await page.locator('.export-csv .sheet-close-button').click();
+		await expect(sheets).toHaveCount(0);
 
 		// Import, its confirmation then an invalid file
 		await app.importBackup({ name: 'backup.json', mimeType: 'application/json',
@@ -192,7 +197,7 @@ test.describe('Bottom sheets', () => {
 		await expect(sheets).toHaveCount(0);
 
 		// Help
-		await page.locator('.help-container', { hasText: 'Pourquoi les sauvegardes sont-elles manuelles' }).click();
+		await page.locator('.help-container, .data-banner', { hasText: 'Pourquoi les sauvegardes sont-elles manuelles' }).click();
 		await page.locator('.bottom-sheet-container.info .sheet-close-button').click();
 		await expect(sheets).toHaveCount(0);
 
@@ -200,6 +205,8 @@ test.describe('Bottom sheets', () => {
 		await app.goToSettings('Personnalisation');
 		await app.setToggle('Afficher les paramètres avancés', true);
 		await app.settingsPanel('Avancé').locator('mat-expansion-panel-header').first().click();
+		// V2: under the manual save
+		await page.locator('.manual-save-toggle').click();
 		await page.locator('mat-list-option', { hasText: 'Forcer le chargement' }).click();
 		await page.locator('.force-load-warning .sheet-close-button').click();
 		await expect(sheets).toHaveCount(0);
